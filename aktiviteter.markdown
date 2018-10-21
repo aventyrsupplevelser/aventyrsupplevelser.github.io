@@ -578,7 +578,7 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
 <div id="glotternvagbeskrivning">
 
 <div class="buttondiv"> <a href="https://www.google.com/maps/dir/?api=1&destination=58.697130,16.189644" class="button vagbeskbutton">Vägbeskrivning till Glotterns Vildmarkspark<br>(öppnar i Google Maps)</a></div>
-<a href="/hittahit">Gammaldags vägbeskrivning. </a>
+<a href="hittahit">Gammaldags vägbeskrivning. </a>
 </div>
 
 </div>
