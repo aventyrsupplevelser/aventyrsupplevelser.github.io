@@ -1,0 +1,10 @@
+url: http://aventyrsupplevelser.github.io
+
+permalink: pretty
+
+defaults:
+    -
+        scope:
+            path: ""
+        values:
+            layout: "default"

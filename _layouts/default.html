@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta name="viewport" content="width=600, initial-scale=1">
+
+    <title>
+      {% if page.title == nil %}
+       {{ page.title }}
+      {% else %}
+       {{ page.title }} –
+      {% endif %}
+      Äventyrsupplevelser
+    </title>
+   
+    
+    
+    <style type="text/css" media="screen">
+        body {
+            display: flex;
+            justify-content: center;
+            font-family: "helvetica neue", Helvetica Neue, Futura, sans-serif;
+            font-size:18px;
+            letter-spacing:0.02em;
+            line-height:1.6em;
+        }
+        
+        /* utan denna blir länkade bilder fucked */
+        img {
+            display: block;
+        }
+
+        div {
+            box-sizing: border-box;
+        }
+
+        p {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .divreverse {
+            flex-direction: row-reverse;
+        }
+        
+        . {
+            background-color:;
+            margin: 0 -9999px;
+            padding: 0 9999px;
+        }
+        
+        h1 {
+            line-height:1.4em;
+            font-family:;
+            font-size:37px;
+        }
+        
+        h2 {
+            font-weight:400;
+            margin: 0;
+        }
+        
+        h3 {
+            font-family:;
+            font-size:px;
+            font-weight:500;
+            margin-bottom: 0;
+        }
+
+        a {
+            text-decoration: underline;
+            color:black;
+        }
+
+        ul {
+            list-style-type:none;
+            display:flex;
+            
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 12px;
+            font-style:;
+        }
+        
+        .timmar {
+            font-weight:700;
+        }
+        
+        .pengar {
+            font-weight:400;
+        }
+
+       
+        @media (max-width: 1200px) {
+            /* Single column stuff here */
+            #logga {
+                width: 600px;
+            }
+
+            #centerdiv {
+                width: 600px;
+            }
+            .mainpic{
+                width:67%;
+            }
+
+        }
+        
+        @media (min-width: 1200px) {
+            /* Multicolumn stuff here */
+
+            #centerdiv {
+                width: 1200px;
+            }
+
+               #headerall{
+                   box-sizing:border-box;
+                   display:flex;
+                   flex-wrap:wrap;
+                   flex-direction:row;
+                   justify-content: space-between;
+                   align-items:center;
+                   max-width:1200px;
+               }
+               
+               #headerlogo {
+                   width:px;
+                   
+               }
+               
+               #mainnavdiv {
+                   margin-right:px;
+                   
+               }
+
+               .mainpic{
+                   width:350px;
+                   border-radius: 2px;
+                   
+               }
+
+               
+               .navitem{
+                   padding:6px;
+               }
+               
+               #maincontainer {
+                   width: 1100px;
+                   display:flex;
+                   flex-wrap:wrap;
+                   justify-content:space-between;
+                   
+                   
+               }
+                   
+               .mainsection{
+                   max-width:350px;
+                   display:flex;
+                   flex-direction:column;
+                   align-items:;
+                  
+               }
+                   
+               .maintext{
+                   padding:px;
+                   margin-bottom:20px;
+               }
+               
+               .buttondiv{
+                   padding: px;
+                   
+               }
+               
+               .button {
+                 text-decoration: none;
+                 border-radius: 3px;
+                 background-color:;
+                 color: black;
+                 text-align:center;
+                 padding: 15px 20px;
+                 border: solid 2px;
+                 cursor: pointer;
+                 display: inline-block;
+                 margin-bottom:30px;
+                 font-size:25px;
+                 
+         }
+         
+               .button:hover 
+                 {
+               background:black; 
+               color:white;
+               text-decoration:none;
+               
+                }
+                #butikservicebygge{
+                    align-items:center;
+                }
+                
+                #arligbesiktning {
+                    display:flex;
+                    flex-wrap:wrap;
+                }
+                
+                #loggor {  
+                  display:flex;
+                  flex-wrap:wrap;
+                  }
+            
+                .logosclass {
+                  padding:40px;
+                  margin:2px;
+                  max-width:px;
+                  max-height:80px;
+                  }
+                  
+                  .produkt {
+                      margin-right:20px;
+                      margin-bottom:10px;
+                  }
+                  
+                  .produktkategori
+                  {
+                      display:flex;
+                      flex-wrap:wrap;
+                  }
+                  .kontaktknappar
+                  {
+                      display:flex;
+                      flex-wrap:wrap;
+                  }
+                  
+                  .kontaktbutton {
+                    box-sizing:border-box;
+                    text-decoration: none;
+                    background-color:;
+                    color: black;
+                    text-align:center;
+                    padding: 20px 30px;
+                    border: solid 2px black;
+                    cursor: ;
+                    display: inline-block;
+                    font-size:25px;
+                    margin:20px 20px 20px 0px;
+                }
+                    
+                    .kontaktbutton:hover {
+                    background:black; 
+                    color:white;
+                    text-decoration:underline;
+                    
+                    
+                }
+                
+                .navbutton{
+                    box-sizing:border-box;
+                    text-decoration: none;
+                    color: black;
+                    text-align:center;
+                    padding: 10px 15px;
+                    border: solid 2px black;
+                    display: inline-block;
+                    margin:10px;
+                }
+                
+                .navbutton:hover {
+                background:black; 
+                color:white;
+                text-decoration:;
+            }
+                    
+                #aktiviteter {
+                    max-width:1200px;
+                    
+                }
+
+
+                /* 
+                 * Paket
+                 */
+                
+                
+                #aktiviteternav{
+                    padding-top:10px;
+                    padding-bottom:10px;
+                }
+                
+                .paket {
+                    box-sizing:border-box;
+                    display:flex;
+                    flex-wrap:wrap;
+                    align-items:center;
+                   border-bottom:;
+                }
+                
+                .pakettext {
+                    box-sizing:border-box;
+                    width:700px;
+                    padding: 30px;
+                }
+                .paketmedia {
+                    width:500px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+
+                .paketmediarow {
+                    display:flex;
+                    justify-content: space-between;
+                    margin-bottom: 5px;
+                }
+                
+                .paketmediarow:last-child {
+                   margin-bottom: 0;
+                }
+
+                .paketactualpic
+                {
+                    width:248px;
+                }
+                
+                .mediaspace {
+                    width:px;
+                }
+               
+                .tid {
+                    display:flex;
+                    align-items:center;
+                    width:px;
+                    border:;
+                }
+               
+               .tidsikon {
+                   width:40px;
+                   height:40px;
+                   
+                }
+                
+                .timmar {
+                    padding-left:10px;
+                    padding-right:30px;
+                }
+                
+                .pengar {
+                    display:flex;
+                    align-items:center;
+                }
+                
+                .pengarikon {
+                    width:40px;
+                    height:40px;
+                }
+                
+                .fran {
+                    padding-left:10px;
+                    padding-right:30px;
+                    
+                }
+                
+                .pristabellbutton {
+                    box-sizing:border-box;
+                    text-decoration: none;
+                    background-color:;
+                    color: black;
+                    text-align:center;
+                    padding: 5px 10px;
+                    border: solid 2px black;
+                    display: inline-block;
+                    margin:5px;
+                    }
+                
+                .pristabellbutton:hover {
+                background:black; 
+                color:white;
+                text-decoration:underline;
+            }
+            
+            .paketinfo{
+                display:flex;
+                justify-content:;
+                margin-top:20px;
+            }
+            
+            
+            #aktul {
+                padding:0px;
+            }
+            
+            #kontaktforbokning {
+                padding-top:5px;
+                padding-bottom:15px;
+    
+            }
+            
+            #helavagbeskrivningar {
+                padding-top:5px;
+                padding-bottom:15px;
+            }
+            
+            #nardetardags{
+                padding-bottom:20px;
+            }
+            
+            .vagbeskbutton {
+                font-size:25px;
+                padding:20px;
+            }
+               
+               #content {
+                   
+               }
+        
+            
+        
+    </style>
+    
+    
+    
+    <!-- Favicon craziness -->
+    <link rel="shortcut icon" href="/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/favicons/apple-touch-icon-152x152.png">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/assets/favicons/favicon-32x32.png" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/assets/favicons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/assets/favicons/browserconfig.xml">  
+</head>
+<body>
+    <div id="centerdiv">
+        <header>
+            <div id="headerall">
+                <div id="headerlogo">
+                    <a href="/"> <img id="logga" src="/images/aventyrsupplevelser.png" width="800px"></a>
+                </div>
+                <div id="mainnavdiv">
+                    <a href="/hittahit" class="navitem">hitta hit</a>
+                    <a href="/omoss" class="navitem">om oss</span></a>
+                    <a href="/english" class="navitem">english</li></a>
+                </div>
+            </div>
+        </header>
+        <div id="content">
+            {{ content }}
+        </div>
+        <script type="text/javascript">
+            if (!("ontouchstart" in document.documentElement)) {
+                document.documentElement.className += " no-touch";
+            }
+        </script>
+        <footer>
+            <p>info@aventyrsupplevelser.com</p>
+        </footer>
+    </div>
+</body>
+</html>
