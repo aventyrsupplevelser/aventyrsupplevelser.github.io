@@ -8,3 +8,8 @@ defaults:
             path: ""
         values:
             layout: "default"
+    -
+        scope:
+            path: "sorsjon"
+        values:
+            layout: "sorsjon"
