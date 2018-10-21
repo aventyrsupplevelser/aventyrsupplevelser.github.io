@@ -84,6 +84,7 @@
             margin-top: 50px;
             font-size: 12px;
             font-style:;
+            
         }
         
         .timmar {
@@ -93,7 +94,13 @@
         .pengar {
             font-weight:400;
         }
-
+        
+        .nygradiv {
+            background-color:#F5F5F5;
+            padding:20px 1000px 20px 1000px;
+            margin-left:-1000px;
+            margin-right:-1000px;
+        }
        
         @media (max-width: 1200px) {
             /* Single column stuff here */
@@ -125,6 +132,7 @@
                    justify-content: space-between;
                    align-items:center;
                    max-width:1200px;
+                   padding-bottom:20px;
                }
                
                #headerlogo {
@@ -229,6 +237,7 @@
                   {
                       display:flex;
                       flex-wrap:wrap;
+                      margin:20px 0px 0px 0px;
                   }
                   .kontaktknappar
                   {
@@ -418,7 +427,33 @@
                    
                }
         
+            #butiksloggor {
+                display:flex;
+                flex-wrap:wrap;
+                max-width:850px;
+                padding:15px 0px;
+            }
             
+            .butiklogosclass
+            {
+                padding:20px;
+            }
+            
+            #footer {
+                display:;
+                max-width:px;
+                justify-content:;
+            }
+            
+            .footeritem {
+                padding-left:20px;
+                text-decoration: none;
+                color:grey;
+            }
+            
+          .footeritem:hover {
+              text-decoration: underline;
+          }
         
     </style>
     
@@ -466,7 +501,9 @@
             }
         </script>
         <footer>
-            <p>info@aventyrsupplevelser.com</p>
+        <div id="footer">
+            <a class="footeritem" href="tel:+461161175">+46 (0) 11 611 75</a> <a class="footeritem" href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+            </div>
         </footer>
     </div>
 </body>
