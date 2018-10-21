@@ -53,6 +53,11 @@ background:black;
 color:white;
 text-decoration:none;
  }
+ 
+#hide {
+    display:none;
+}
+ 
 </style>
 
 <div id="aktiviteternav" class="">
@@ -108,6 +113,8 @@ Klättra om du är äldre 3 år gammal.
     
     
 </div>
+
+<div id="hide">
 
 <div id="safunkardet" markdown="1">
 
@@ -209,3 +216,5 @@ Hittade du inte svaret på din fråga? Det är osannolikt att du har läst orden
 </div>
 kom i god tid  
 Skriv på pappret  
+
+</div>
