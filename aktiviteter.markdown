@@ -133,7 +133,7 @@ align-items:center;
    
    #annatintro {
        width:650px;
-       padding:50px 0px 25px 30px;
+       padding:0px 0px 25px 30px;
       }
    
    .annattext {
@@ -386,7 +386,7 @@ Vi kan även anordna paddlingskurser och guidade paddlingar.
 <div id="andramojligheter" class="gradiv">
 
 <div id="annatintro" markdown="1">
-## Andra aktiviteter
+# Andra aktiviteter
 
 Om du har en idé till något speciellt du vill göra – tveka inte att fråga oss. Många av våra aktiviteter kan vi även ta med oss till er. 
 </div>
