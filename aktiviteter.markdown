@@ -111,8 +111,14 @@ align-items:center;
        margin-bottom:30px;
    }
 
+   .annatmediabox {
+       width:500px;
+       display:flex;
+       justify-content: space-between;
+   }
+   
    .annatpic {
-       width:250px;
+       width:248px;
        height:187.5px;
        padding-top:px;
        ;
@@ -393,35 +399,40 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
         <h3>Konferens och övernattning</h3> 
         Vi samarbetar med flera konferensanläggningar i Östergötland, bland annat Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller Sörsjön. 
         </div>
+        <div class="annatmediabox">
         <img src="/images/mat.jpg" class="annatpic">
         <img src="/images/sorsjonscamping.jpg" class="annatpic">
+        </div>
       </div>
       
      <div class="annatitem divreverse">
       
       <div class="annattext"> <h3>Klippklättring</h3>Vi anordnar prova på-arrengemang för klippklättring vid Ågelsjön utanför Norrköping. Ni får lära er säkra själva, och vi testar nedfirning och repelering. 
       </div> 
+      <div class="annatmediabox">
       <img src="/images/klattringuppe.jpg" class="annatpic">
       <img src="/images/klippklattring.jpg" class="annatpic">
-      
+      </div>
         </div>
             
      <div class="annatitem ">
       
       <div class="annattext"><h3>Flottregatta</h3> Med tunnor, rep och brädor ska ni i lag konstruera en egen farkost. När startskottet går gäller det att komma först i mål – utan att lagmedlemmarna hamnar i vattnet!
       </div> 
+      <div class="annatmediabox">
       <img src="/images/flottregatta.jpg" class="annatpic">
       <img src="/images/flottesjosatt.jpg" class="annatpic">
-      
+      </div>
         </div>
         
     <div class="annatitem divreverse"> 
         
      <div class="annattext"> <h3>Lådbilsrace</h3>Med hjul, axlar, muttrar och plywood ska varje grupp forma en lådbil. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
      </div>
+     <div class="annatmediabox">
      <img src="/images/ladbilsrace.jpg" class="annatpic">
      <img src="/images/ladbilassembly.jpg" class="annatpic">
-     
+     </div>
  </div>
 
 </div>
