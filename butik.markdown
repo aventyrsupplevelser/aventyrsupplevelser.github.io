@@ -31,16 +31,16 @@ title: butik
   
 <div>
   
-  <img class="logosclass"  src="/images/hrdistributor.jpg" height="90">
+  <img class="logosclass"  src="images/hrdistributor.jpg" height="90">
   
-  <img class="logosclass" src="/images/trubluelogo.png" height="90">
+  <img class="logosclass" src="images/trubluelogo.png" height="90">
   
-<img class="logosclass"  src="/images/zipstoplogo.png" height="90">
+<img class="logosclass"  src="images/zipstoplogo.png" height="90">
  
   <br>
-<img class="logosclass" src="/images/quickjumplogo.png" height="90">
-<img class="logosclass" src="/images/brakehawklogo.jpg" height="110">
-<img class="logosclass" src="/images/monkeyhardwarelogo.jpg" height="110">
+<img class="logosclass" src="images/quickjumplogo.png" height="90">
+<img class="logosclass" src="images/brakehawklogo.jpg" height="110">
+<img class="logosclass" src="images/monkeyhardwarelogo.jpg" height="110">
   </div>
  
  <div id="allaprodukter">
@@ -49,49 +49,49 @@ title: butik
          <h2>Headrush</h2>
          <div class="produktkategori">
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trublueprod.jpg" width="273">
+ 		<img src="images/trublueprod.jpg" width="273">
        <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
          <b>2 000 SEK</b>
        </h3>
@@ -103,18 +103,18 @@ title: butik
           <h2>Brakehawk</h2>
           <div class="produktkategori">
   	<div class="produkt">
-  		<img src="/images/trublueprod.jpg" width="273">
+  		<img src="images/trublueprod.jpg" width="273">
         <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
           <b>2 000 SEK</b>
         </h3></div>
      	<div class="produkt">
-     		<img src="/images/trublueprod.jpg" width="273">
+     		<img src="images/trublueprod.jpg" width="273">
            <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
              <b>2 000 SEK</b>
            </h3>
      	</div>
      	<div class="produkt">
-     		<img src="/images/trublueprod.jpg" width="273">
+     		<img src="images/trublueprod.jpg" width="273">
            <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
              <b>2 000 SEK</b>
            </h3>
@@ -125,25 +125,25 @@ title: butik
             <h2>Monkey Hardware</h2>
             <div class="produktkategori">
     	<div class="produkt">
-    		<img src="/images/trublueprod.jpg" width="273">
+    		<img src="images/trublueprod.jpg" width="273">
           <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
             <b>2 000 SEK</b>
           </h3>
     	</div>
      	<div class="produkt">
-     		<img src="/images/trublueprod.jpg" width="273">
+     		<img src="images/trublueprod.jpg" width="273">
            <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
              <b>2 000 SEK</b>
            </h3>
      	</div>
      	<div class="produkt">
-     		<img src="/images/trublueprod.jpg" width="273">
+     		<img src="images/trublueprod.jpg" width="273">
            <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
              <b>2 000 SEK</b>
            </h3>
      	</div>
      	<div class="produkt">
-     		<img src="/images/trublueprod.jpg" width="273">
+     		<img src="images/trublueprod.jpg" width="273">
            <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
              <b>2 000 SEK</b>
            </h3>

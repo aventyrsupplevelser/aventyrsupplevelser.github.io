@@ -8,7 +8,7 @@ title: home
 <div id="maincontainer">
 <div class="mainsection">
     <div>
-    <img src="/images/boyclimb.jpg" class="mainpic"> 
+    <img src="images/boyclimb.jpg" class="mainpic"> 
     </div>
     <div class="maintext">
     <h1>Sörsjöns Äventyrspark</h1>
@@ -19,7 +19,7 @@ title: home
 
 <div class="mainsection">
     <div>
-    <img src="/images/blinddov.jpg" class="mainpic"> 
+    <img src="images/blinddov.jpg" class="mainpic"> 
     </div>
     <div class="maintext">
     <h1>Äventyrspaket och teambuilding</h1>
@@ -29,7 +29,7 @@ Vi anordnar teambuilding och äventyr..Om du är en grupp från ett företag, sk
 
 <div class="mainsection">
     <div>
-    <img src="/images/trublufront.jpg" class="mainpic"> 
+    <img src="images/trublufront.jpg" class="mainpic"> 
     </div>
     <div class="maintext">
     <h1>Konstruktion och material</h1>
