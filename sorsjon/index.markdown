@@ -80,25 +80,25 @@ text-decoration:none;
 
 <div id="introserie">
 <div class="introitem">
-<img class="introseriepic" src="/images/sverige.jpg">
+<img class="introseriepic" src="/sorsjon/images/sverige.jpg">
 <div class="introitemtext">
 Leka bland sveriges största samling höghöjdsbanor – 19 banor från 2 till 20 meters höjd.
 </div>
 </div>
-<div class="introitem"><img class="introseriepic" src="/images/cykel.jpg" >
+<div class="introitem"><img class="introseriepic" src="/sorsjon/images/cykel.jpg" >
 <div class="introitemtext">
 Paddla och cykla genom himlen, eller rida på flygande elefanter.
 </div>
 </div>
 
 <div class="introitem">
-<img class="introseriepic" src="/images/linbanan.jpg">
+<img class="introseriepic" src="/sorsjon/images/linbanan.jpg">
 <div class="introitemtext">
  Flyga över en sjö i en 375 meter lång linbana! 
 </div>
 </div>
 <div class="introitem">
-<img class="introseriepic" src="/images/barn.jpg">
+<img class="introseriepic" src="/sorsjon/images/barn.jpg">
 <div class="introitemtext">
 Klättra om du är äldre 3 år gammal. 
 </div>
@@ -116,7 +116,7 @@ Låna utrustning
 30 min instruktion  
 2 timmars fri lek
 
-<img src="/images/banor.png" width="800">
+<img src="/sorsjon/images/banor.png" width="800">
 
 <div markdown="1">
 Det finns även: 
@@ -137,11 +137,11 @@ svamp och bärplockning
 
 <div markdown="1">
 ## Öppettider 
-<img src="/images/oppettider.png" width="800">
+<img src="/sorsjon/images/oppettider.png" width="800">
 </div>
 <div markdown="1">
 ## Priser 
-<img src="/images/priser.png" width="800">
+<img src="/sorsjon/images/priser.png" width="800">
 </div>
 
 
