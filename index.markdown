@@ -14,7 +14,7 @@ title: home
     <h1>Sörsjöns Äventyrspark</h1>
     En äventyrspark för alla åldrar, med höghöjdsbanor och ziplines. Drop in under sommarmånaderna och öppet vid bokning resten av året. 
     </div>
-    <div class="buttondiv"> <a href="/sorsjonsaventyrspark" class="button">Titta och boka</a></div>
+    <div class="buttondiv"> <a href="/sorsjon" class="button">Titta och boka</a></div>
 </div>
 
 <div class="mainsection">
