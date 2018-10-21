@@ -166,12 +166,12 @@ Vårt populäraste paket, som passar perfekt till grupper som vill svetsa sig sa
 
 <div class="paketinfo">
 <div class="tid">
-<img src="images/time.png" class="tidsikon">
+<img src="/images/time.png" class="tidsikon">
 <div class="timmar">2.5 h
 </div> 
 </div>
 <div class="pengar">
-<img src="images/cash.png" class="pengarikon">
+<img src="/images/cash.png" class="pengarikon">
 <div class="fran"> Från 5 000 SEK
 </div> 
 </div>
@@ -182,24 +182,24 @@ Vårt populäraste paket, som passar perfekt till grupper som vill svetsa sig sa
 <div class="paketmedia">
 <div class="paketmediarow">
 <div class="paketmediapic">
-<a href="images/cykel.jpg"> <img src="images/cykel.jpg" class="paketactualpic">
+<a href="/images/cykel.jpg"> <img src="/images/cykel.jpg" class="paketactualpic">
 </a>
 </div> 
 <div class="paketmediapic">
-<a href="images/klatterplank.jpg">
-<img src="images/klatterplank.jpg" class="paketactualpic">
+<a href="/images/klatterplank.jpg">
+<img src="/images/klatterplank.jpg" class="paketactualpic">
 </a>
 </div> 
 </div>
 <div class="paketmediarow">
 <div class="paketmediapic">
-<a href="images/linbana.jpg">
-<img src="images/linbana.jpg" class="paketactualpic">
+<a href="/images/linbana.jpg">
+<img src="/images/linbana.jpg" class="paketactualpic">
 </a> 
 </div> 
 <div class="paketmediapic">
-<a href="images/barnpappa.jpg"> 
-<img src="images/barnpappa.jpg" class="paketactualpic">
+<a href="/images/barnpappa.jpg"> 
+<img src="/images/barnpappa.jpg" class="paketactualpic">
 </a> 
 </div>
 </div>
@@ -217,9 +217,9 @@ Vi skräddarsyr ett personligt program till just er grupp, med en blandning av h
 Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
 <div class="paketinfo">
 <div class="tid">
-<img src="images/time.png" class="tidsikon"><div class="timmar">2 h / 3.5 h</div> </div>
+<img src="/images/time.png" class="tidsikon"><div class="timmar">2 h / 3.5 h</div> </div>
 <div class="pengar">
-<img src="images/cash.png" class="pengarikon">
+<img src="/images/cash.png" class="pengarikon">
 <div class="fran"> Från 4 500 SEK
 </div> 
 </div>
@@ -228,13 +228,13 @@ Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, s
 </div>
 <div class="paketmedia">  
     <div class="paketmediarow paketmediarowett">
-        <div class="paketmediapic"><a href="images/trapets.jpg"><img src="images/trapets.jpg" class="paketactualpic"></a></div> 
-        <div class="paketmediapic"><a href="images/pilbage.jpg"><img src="images/pilbage.jpg" class="paketactualpic"></a> </div> 
+        <div class="paketmediapic"><a href="/images/trapets.jpg"><img src="/images/trapets.jpg" class="paketactualpic"></a></div> 
+        <div class="paketmediapic"><a href="/images/pilbage.jpg"><img src="/images/pilbage.jpg" class="paketactualpic"></a> </div> 
     </div>
     <div class="paketmediarow paketmediarowtva">
-        <div class="paketmediapic"><a href="images/cykel.jpg"><img src="images/cykel.jpg" class="paketactualpic"></a></div> 
+        <div class="paketmediapic"><a href="/images/cykel.jpg"><img src="/images/cykel.jpg" class="paketactualpic"></a></div> 
             <div class="mediaspace"></div>
-        <div class="paketmediapic"><a href="images/klatterplank.jpg"><img src="images/klatterplank.jpg" class="paketactualpic"></a> </div> 
+        <div class="paketmediapic"><a href="/images/klatterplank.jpg"><img src="/images/klatterplank.jpg" class="paketactualpic"></a> </div> 
     </div>
   
  </div>
@@ -258,11 +258,11 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er.
 
 <div class="paketinfo">
     <div class="tid">
-        <img src="images/time.png" class="tidsikon">
+        <img src="/images/time.png" class="tidsikon">
         <div class="timmar">3 h</div>
     </div>
     <div class="pengar">
-    <img src="images/cash.png" class="pengarikon">
+    <img src="/images/cash.png" class="pengarikon">
     <div class="fran"> Från 4 000 SEK
     </div> 
     </div>
@@ -272,12 +272,12 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er.
 <div class="paketmedia">
 
   <div class="paketmediarow paketmediarowett">
-    <div class="paketmediapic"><a href="images/pojkar.jpg"><img src="images/pojkar.jpg" class="paketactualpic"></a></div> 
-    <div class="paketmediapic"><a href="images/klatterplank.jpg"><img src="images/klatterplank.jpg" class="paketactualpic"></a> </div> 
+    <div class="paketmediapic"><a href="/images/pojkar.jpg"><img src="/images/pojkar.jpg" class="paketactualpic"></a></div> 
+    <div class="paketmediapic"><a href="/images/klatterplank.jpg"><img src="/images/klatterplank.jpg" class="paketactualpic"></a> </div> 
   </div>
   <div class="paketmediarow paketmediarowtva"> 
-    <div class="paketmediapic"><a href="images/teamror.jpg"><img src="images/teamror.jpg" class="paketactualpic"></a> </div> 
-    <div class="paketmediapic"><a href="images/labyrintnyhej.jpg"><img src="images/labyrintnyhej.jpg" class="paketactualpic"></a> </div>
+    <div class="paketmediapic"><a href="/images/teamror.jpg"><img src="/images/teamror.jpg" class="paketactualpic"></a> </div> 
+    <div class="paketmediapic"><a href="/images/labyrintnyhej.jpg"><img src="/images/labyrintnyhej.jpg" class="paketactualpic"></a> </div>
   </div>
 </div>
 
@@ -297,11 +297,11 @@ Fungerar hela året, och vi tar gärna med oss glöden till er.
 
 <div class="paketinfo">
 <div class="tid">
-<img src="images/time.png" class="tidsikon">
+<img src="/images/time.png" class="tidsikon">
 <div class="timmar">3 h</div>
 </div>
 <div class="pengar">
-<img src="images/cash.png" class="pengarikon">
+<img src="/images/cash.png" class="pengarikon">
 <div class="fran"> Från 6 000 SEK
 </div> 
 </div>
@@ -311,22 +311,22 @@ Fungerar hela året, och vi tar gärna med oss glöden till er.
 <div class="paketmedia">  
 <div class="paketmediarow paketmediarowett">
 <div class="paketmediapic">
-<a href="images/elden.jpg">
-<img src="images/elden.jpg" class="paketactualpic"></a>
+<a href="/images/elden.jpg">
+<img src="/images/elden.jpg" class="paketactualpic"></a>
 </div> 
 <div class="paketmediapic">
-<a href="images/glas.jpg">
-<img src="images/glas.jpg" class="paketactualpic"></a> 
+<a href="/images/glas.jpg">
+<img src="/images/glas.jpg" class="paketactualpic"></a> 
 </div> 
 </div>
 <div class="paketmediarow paketmediarowtva">
 <div class="paketmediapic">
-<a href="images/halsbryt.jpg">
-<img src="images/halsbryt.jpg" class="paketactualpic"></a>
+<a href="/images/halsbryt.jpg">
+<img src="/images/halsbryt.jpg" class="paketactualpic"></a>
 </div> 
 <div class="paketmediapic">
-<a href="images/glodvandring.jpg">
-<img src="images/glodvandring.jpg" class="paketactualpic"></a>
+<a href="/images/glodvandring.jpg">
+<img src="/images/glodvandring.jpg" class="paketactualpic"></a>
 </div> 
 </div>
   
@@ -352,22 +352,22 @@ Vi kan även anordna paddlingskurser och guidade paddlingar.
 <div class="paketmedia">
 <div class="paketmediarow">
 <div class="paketmediapic">
-<a href="images/kajak.jpg">
-<img src="images/kajak.jpg" class="paketactualpic"></a>
+<a href="/images/kajak.jpg">
+<img src="/images/kajak.jpg" class="paketactualpic"></a>
 </div> 
 <div class="paketmediapic">
-<a href="images/paddlinggrabbar.jpg">
-<img src="images/paddlinggrabbar.jpg" class="paketactualpic"></a>
+<a href="/images/paddlinggrabbar.jpg">
+<img src="/images/paddlinggrabbar.jpg" class="paketactualpic"></a>
 </div> 
 </div>
 <div class="paketmediarow"> 
 <div class="paketmediapic">
-<a href="images/kajakvatten.jpg">
-<img src="images/kajakvatten.jpg" class="paketactualpic"></a> 
+<a href="/images/kajakvatten.jpg">
+<img src="/images/kajakvatten.jpg" class="paketactualpic"></a> 
 </div> 
 <div class="paketmediapic">
-<a href="images/kanothyra.jpg">
-<img src="images/kanothyra.jpg" class="paketactualpic"></a> 
+<a href="/images/kanothyra.jpg">
+<img src="/images/kanothyra.jpg" class="paketactualpic"></a> 
 </div>
 </div>
 </div>
@@ -393,16 +393,16 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
         <h3>Konferens och övernattning</h3> 
         Vi samarbetar med flera konferensanläggningar i Östergötland, bland annat Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller Sörsjön. 
         </div>
-        <img src="images/mat.jpg" class="annatpic">
-        <img src="images/sorsjonscamping.jpg" class="annatpic">
+        <img src="/images/mat.jpg" class="annatpic">
+        <img src="/images/sorsjonscamping.jpg" class="annatpic">
       </div>
       
      <div class="annatitem divreverse">
       
       <div class="annattext"> <h3>Klippklättring</h3>Vi anordnar prova på-arrengemang för klippklättring vid Ågelsjön utanför Norrköping. Ni får lära er säkra själva, och vi testar nedfirning och repelering. 
       </div> 
-      <img src="images/klattringuppe.jpg" class="annatpic">
-      <img src="images/klippklattring.jpg" class="annatpic">
+      <img src="/images/klattringuppe.jpg" class="annatpic">
+      <img src="/images/klippklattring.jpg" class="annatpic">
       
         </div>
             
@@ -410,8 +410,8 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
       
       <div class="annattext"><h3>Flottregatta</h3> Med tunnor, rep och brädor ska ni i lag konstruera en egen farkost. När startskottet går gäller det att komma först i mål – utan att lagmedlemmarna hamnar i vattnet!
       </div> 
-      <img src="images/flottregatta.jpg" class="annatpic">
-      <img src="images/flottesjosatt.jpg" class="annatpic">
+      <img src="/images/flottregatta.jpg" class="annatpic">
+      <img src="/images/flottesjosatt.jpg" class="annatpic">
       
         </div>
         
@@ -419,8 +419,8 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
         
      <div class="annattext"> <h3>Lådbilsrace</h3>Med hjul, axlar, muttrar och plywood ska varje grupp forma en lådbil. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
      </div>
-     <img src="images/ladbilsrace.jpg" class="annatpic">
-     <img src="images/ladbilassembly.jpg" class="annatpic">
+     <img src="/images/ladbilsrace.jpg" class="annatpic">
+     <img src="/images/ladbilassembly.jpg" class="annatpic">
      
  </div>
 
@@ -532,10 +532,10 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
 <div id="dagsbox">
   
  <div class="dagskolumn"> 
-<div class="dagsitem"> <img src="images/boots.png" class="dagsicon"><div class="dagstext">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</div>
+<div class="dagsitem"> <img src="/images/boots.png" class="dagsicon"><div class="dagstext">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</div>
   </div>
  <div class="dagsitem">
-   <img src="images/swim.jpg" class="dagsicon">
+   <img src="/images/swim.jpg" class="dagsicon">
   <div class="dagstext">Ta med badkläder!</div>
     </div>
   
@@ -543,10 +543,10 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
   
   <div class="dagskolumn">
  <div class="dagsitem">
-   <img src="images/dass.png" class="dagsicon">
+   <img src="/images/dass.png" class="dagsicon">
   <div class="dagstext">Dass finns både vid Sörsjön och Glottern.</div>
     </div>
-<div class="dagsitem"> <img src="images/karta.png" class="dagsicon">
+<div class="dagsitem"> <img src="/images/karta.png" class="dagsicon">
  <div class="dagstext">Se till att du åker till den rätta av <a href="#vagbeskrivningar">våra två platser!</a> </div></div>
 </div>
   

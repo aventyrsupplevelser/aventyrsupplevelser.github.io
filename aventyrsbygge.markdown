@@ -100,7 +100,7 @@ p {
 
   <div class="byggeinforow">
   <div>
-  <img src= "images/20.png" class="infolisticon"></div>
+  <img src= "/images/20.png" class="infolisticon"></div>
   
  <div class="byggeinfotex"><b>20 års erfarenhet</b> – vår passion för äventyr har lett oss till att ha varit med och byggt på en stor del av Nordens höghöjdsbanor.</div>
   
@@ -109,7 +109,7 @@ p {
   <div class="byggeinforow">
 
   <div>
-  <img src= "images/sakerhet.png" class="infolisticon"></div>
+  <img src= "/images/sakerhet.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Säkerhet är viktigast. Vi bygger enligt den <b>europeiska säkerhetsnormen</b> EN15 567-1, och erbjuder rådgivning om vilka säkerhetssystem som gör äventyret smidigare för dina besökare. </div>
   
@@ -118,7 +118,7 @@ p {
   <div class="byggeinforow">
 
   <div>
-  <img src= "images/trad.png" class="infolisticon"></div>
+  <img src= "/images/trad.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi tycker väldigt mycket om naturen, och hjälper er därför med smarta lösningar för att påverka <b>trädens fysiologi</b> så lite som möjligt.  </div>
   
@@ -130,7 +130,7 @@ p {
   <div class="byggeinforow">
 
   <div>
-  <img src= "images/ide.png" class="infolisticon"></div>
+  <img src= "/images/ide.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Under åren har vi studerat äventyrsparker runt om hela världen, vilket gör oss till experter på att tillsammans med dig arbeta fram <b> idéer som gör din äventyrsbana unik.</b> 
  </div>
@@ -140,7 +140,7 @@ p {
   <div class="byggeinforow">
 
   <div >
-  <img src= "images/erca.jpg" class="infolisticon"></div>
+  <img src= "/images/erca.jpg" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är medlemmar i ERCA (<b>European Ropes Course Association</b>), där vår personal har genomfört utbildningar i utbildning, räddning och inspektion.</div>
   
@@ -148,7 +148,7 @@ p {
     <div class="byggeinforow">
 
   <div>
-  <img src= "images/swedishflag.png" class="infolisticon"></div>
+  <img src= "/images/swedishflag.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är drivande i branchorganisation <b>Svenska Höghöjdsbanor</b>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
   

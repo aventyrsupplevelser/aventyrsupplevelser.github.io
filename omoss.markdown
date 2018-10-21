@@ -55,7 +55,7 @@ Anders Rylén startade Äventyrsupplevelser vid Glottern utanför Norrköping å
 
 <div id="pappapic">
  
-<img src="images/snowdoniapappa.jpg" width="400px">
+<img src="/images/snowdoniapappa.jpg" width="400px">
   </div>
   
   </div>
