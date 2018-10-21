@@ -388,7 +388,7 @@ Vi kan även anordna paddlingskurser och guidade paddlingar.
 <div id="annatintro" markdown="1">
 ## Andra aktiviteter
 
-Om du har en ide till något speciellt du vill göra – tveka inte att fråga oss. Många av våra aktiviteter kan vi även ta med oss till er. 
+Om du har en idé till något speciellt du vill göra – tveka inte att fråga oss. Många av våra aktiviteter kan vi även ta med oss till er. 
 </div>
 
 <div id="annatbox">
@@ -407,7 +407,7 @@ Om du har en ide till något speciellt du vill göra – tveka inte att fråga o
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi anordnar prova på-arrengemang för klippklättring vid Ågelsjön utanför Norrköping. Ni får lära er säkra själva, och vi testar nedfirning och repelering. 
+      <div class="annattext"> <h3>Klippklättring</h3>Vi anordnar prova på-arrangemang för klippklättring vid Ågelsjön utanför Norrköping. Ni får lära er säkra själva, och vi testar nedfirning och repelering. 
       </div> 
       <div class="annatmediabox">
       <img src="/images/klattringuppe.jpg" class="annatpic">
