@@ -234,13 +234,13 @@ Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, s
 </div>
 <div class="paketmedia">  
     <div class="paketmediarow paketmediarowett">
-        <div class="paketmediapic"><a href="/images/trapets.jpg"><img src="/images/trapets.jpg" class="paketactualpic"></a></div> 
+        <div class="paketmediapic"><a href="/images/stolphang.jpg"><img src="/images/stolphang.jpg" class="paketactualpic"></a></div> 
         <div class="paketmediapic"><a href="/images/pilbage.jpg"><img src="/images/pilbage.jpg" class="paketactualpic"></a> </div> 
     </div>
     <div class="paketmediarow paketmediarowtva">
-        <div class="paketmediapic"><a href="/images/cykel.jpg"><img src="/images/cykel.jpg" class="paketactualpic"></a></div> 
+        <div class="paketmediapic"><a href="/images/solitar.jpg"><img src="/images/solitar.jpg" class="paketactualpic"></a></div> 
             <div class="mediaspace"></div>
-        <div class="paketmediapic"><a href="/images/klatterplank.jpg"><img src="/images/klatterplank.jpg" class="paketactualpic"></a> </div> 
+        <div class="paketmediapic"><a href="/images/rodd.jpg"><img src="/images/rodd.jpg" class="paketactualpic"></a> </div> 
     </div>
   
  </div>
@@ -279,7 +279,7 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er.
 
   <div class="paketmediarow paketmediarowett">
     <div class="paketmediapic"><a href="/images/pojkar.jpg"><img src="/images/pojkar.jpg" class="paketactualpic"></a></div> 
-    <div class="paketmediapic"><a href="/images/klatterplank.jpg"><img src="/images/klatterplank.jpg" class="paketactualpic"></a> </div> 
+    <div class="paketmediapic"><a href="/images/stock.jpg"><img src="/images/stock.jpg" class="paketactualpic"></a> </div> 
   </div>
   <div class="paketmediarow paketmediarowtva"> 
     <div class="paketmediapic"><a href="/images/teamror.jpg"><img src="/images/teamror.jpg" class="paketactualpic"></a> </div> 
