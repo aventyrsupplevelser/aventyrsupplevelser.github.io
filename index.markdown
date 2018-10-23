@@ -12,7 +12,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Sörsjöns Äventyrspark</h1>
-    En äventyrspark för alla åldrar, med höghöjdsbanor och ziplines. Drop in under sommarmånaderna och öppet vid bokning resten av året. 
+    Sveriges största äventyrspark, med höghöjdsbanor och ziplines för alla åldrar. Här har vi öppet för drop in under sommarmånaderna och öppet vid bokning resten av året. 
     </div>
     <div class="buttondiv"> <a href="/sorsjon" class="button">Titta och boka</a></div>
 </div>
@@ -23,7 +23,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Äventyrspaket och teambuilding</h1>
-Vi anordnar teambuilding och äventyr..Om du är en grupp från ett företag, skola eller som privatperson kan du utforska våra olika aktiviteter och paket här. Teambuilding "vi anordnar". </div>
+Vi anordnar teambuilding och vildmarksupplevelser åt företag, skolor och privatpersoner.  </div>
 <div class="buttondiv"> <a href="/aktiviteter" class="button">Upptäck aktiviteter</a></div>
 </div>
 
