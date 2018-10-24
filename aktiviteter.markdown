@@ -407,7 +407,7 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi anordnar prova på-arrangemang för klippklättring vid Ågelsjön utanför Norrköping. Ni får lära er säkra själva, och vi testar nedfirning och repelering. 
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum under 2019 kommer snart. 
       </div> 
       <div class="annatmediabox">
       <img src="/images/klattringuppe.jpg" class="annatpic">
