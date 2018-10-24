@@ -26,7 +26,7 @@ title: aventyrsbygge
 }
 
 .infolisticon {
- width:80px;
+ width:60px;
  max-height:px;
 }
 
@@ -101,27 +101,27 @@ p {
 
   <div class="byggeinforow">
   <div>
-  <img src= "/images/20.png" class="infolisticon"></div>
+  <img src= "/images/twentybw.png" class="infolisticon"></div>
   
- <div class="byggeinfotex"><b>20 års erfarenhet</b> – vår passion för äventyr har lett oss till att ha varit med och byggt på en stor del av Nordens höghöjdsbanor.</div>
-  
-    </div>
-  
-  <div class="byggeinforow">
-
-  <div>
-  <img src= "/images/sakerhet.png" class="infolisticon"></div>
-  
- <div class="byggeinfotex">Säkerhet är viktigast. Vi bygger enligt den <b>europeiska säkerhetsnormen</b> EN15 567-1, och erbjuder rådgivning om vilka säkerhetssystem som gör äventyret smidigare för dina besökare. </div>
+ <div class="byggeinfotex"><b>25 års erfarenhet</b> – vår passion för äventyr har lett oss till att ha varit med och byggt många utav Sveriges höghöjdsbanor.</div>
   
     </div>
   
   <div class="byggeinforow">
 
   <div>
-  <img src= "/images/trad.png" class="infolisticon"></div>
+  <img src= "/images/safetybw.png" class="infolisticon"></div>
   
- <div class="byggeinfotex">Vi tycker väldigt mycket om naturen, och hjälper er därför med smarta lösningar för att påverka <b>trädens fysiologi</b> så lite som möjligt.  </div>
+ <div class="byggeinfotex">Säkerhet är viktigast. Vi bygger enligt den <b>europeiska säkerhetsnormen</b> EN15 567-1, samt erbjuder rådgivning om vilka säkerhetssystem som gör äventyret smidigare för dina besökare. </div>
+  
+    </div>
+  
+  <div class="byggeinforow">
+
+  <div>
+  <img src= "/images/treebw.png" class="infolisticon"></div>
+  
+ <div class="byggeinfotex">Vi tycker väldigt mycket om naturen och hjälper er därför med smarta lösningar för att påverka <b>trädens fysiologi</b> så lite som möjligt.  </div>
   
     </div>
   </div>
@@ -151,7 +151,7 @@ p {
   <div>
   <img src= "/images/swedishflag.png" class="infolisticon"></div>
   
- <div class="byggeinfotex">Vi är drivande i branchorganisation <b>Svenska Höghöjdsbanor</b>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
+ <div class="byggeinfotex">Vi är drivande i branchorganisation <a href="https://www.sverigeshb.info/"><b>Svenska Höghöjdsbanor</b></a>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
   
     </div>
     
@@ -169,7 +169,7 @@ p {
    Vad har vi byggt?
   </h2>
  <p>
-Vi har byggt totalt 43 km linbanor, 43 höghöjdsbanor med 180 plattformar, och dessutom assisterat byggande av lika många till som konsulter. </p>
+Vi har byggt totalt 6 km linbanor, 73 höghöjdsbanor med 548 plattformar, och dessutom assisterat byggande av lika många till som konsulter. </p>
 </div>
 
 <div class="cvlista">
