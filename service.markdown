@@ -29,7 +29,7 @@ title: Service
      
  <div class="servicetext">
  
-  Vi är officiellt servicecenter för Headrush Technologies, och genomför besiktningar och reparationer av produkterna Trueblue, Zipstop och Quickjump. 
+  Vi är officiellt servicecenter för Headrush Technologies och genomför årlig service och reparationer av produkterna Trublue, Zipstop och Quickjump. 
  
 </div>
  <img class="logosclass"  src="/images/headrushservicecenter.png">
@@ -42,7 +42,7 @@ title: Service
     <div id="arligbesiktning">
 	<div class="produkt">
 		<img src="/images/trublueservice.jpg" width="350">
-      <h3 class="desc" style="font-size:22px">Trublue och TBXL <br>
+      <h3 class="desc" style="font-size:22px">Trublue, TBXL och TB Speed<br>
         <b>2 000 SEK</b>
       </h3>
 	</div>
@@ -57,7 +57,7 @@ title: Service
 		<img src="/images/zipstopservice.jpg" width="350">
       <h3 class="desc" style="font-size:22px">
         Zipstop och ZSIR <br>
-        <b>2 500 SEK</b>
+        <b>4 500 SEK</b>
       </h3>
 	</div>
     </div>
