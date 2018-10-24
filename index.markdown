@@ -12,7 +12,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Sörsjöns Äventyrspark</h1>
-    Sveriges största äventyrspark, med höghöjdsbanor och ziplines för alla åldrar.
+    Sveriges största äventyrspark, med 19 höghöjdsbanor och ziplines som passar för alla åldrar.
     </div>
     <div class="buttondiv"> <a href="/sorsjon" class="button">Titta och boka</a></div>
 </div>
@@ -33,7 +33,7 @@ Vi anordnar teambuilding och vildmarksupplevelser åt företag, skolor och priva
     </div>
     <div class="maintext">
     <h1>Konstruktion och material</h1>
-    Vi kan hjälpa dig att bygga höghöjdsbanor och ziplines, samt är återförsäljare och servicecenter för Headrush Technologies. 
+    Vi hjälper dig att bygga höghöjdsbanor och ziplines, samt är återförsäljare och servicecenter för Headrush. 
     </div>
     <div class="buttondiv"><a href="/konstruktionbutik" class="button">Bygg och handla</a></div>
 </div>
