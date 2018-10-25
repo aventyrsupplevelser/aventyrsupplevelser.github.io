@@ -26,7 +26,7 @@ title: aventyrsbygge
 }
 
 .infolisticon {
- width:60px;
+ width:55px;
  max-height:px;
 }
 
@@ -101,7 +101,7 @@ p {
 
   <div class="byggeinforow">
   <div>
-  <img src= "/images/twentybw.png" class="infolisticon"></div>
+  <img src= "/images/twentyfive.png" class="infolisticon"></div>
   
  <div class="byggeinfotex"><b>25 års erfarenhet</b> – vår passion för äventyr har lett oss till att ha varit med och byggt många utav Sveriges höghöjdsbanor.</div>
   
@@ -131,7 +131,7 @@ p {
   <div class="byggeinforow">
 
   <div>
-  <img src= "/images/ide.png" class="infolisticon"></div>
+  <img src= "/images/ideabw.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Under åren har vi studerat äventyrsparker runt om hela världen, vilket gör oss till experter på att tillsammans med dig arbeta fram <b> idéer som gör din äventyrsbana unik.</b> 
  </div>
@@ -141,7 +141,7 @@ p {
   <div class="byggeinforow">
 
   <div >
-  <img src= "/images/erca.jpg" class="infolisticon"></div>
+  <img src= "/images/ercabw.jpg" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är medlemmar i ERCA (<b>European Ropes Course Association</b>), där vår personal har genomfört utbildningar i utbildning, räddning och inspektion.</div>
   
@@ -149,7 +149,7 @@ p {
     <div class="byggeinforow">
 
   <div>
-  <img src= "/images/swedishflag.png" class="infolisticon"></div>
+  <img src= "/images/team.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är drivande i branchorganisation <a href="https://www.sverigeshb.info/"><b>Svenska Höghöjdsbanor</b></a>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
   
