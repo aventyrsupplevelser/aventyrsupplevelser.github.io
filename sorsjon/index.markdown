@@ -114,6 +114,11 @@ Klättra om du är äldre 3 år gammal.
     
 </div>
 
+<div>
+<h2>
+Denna sidan är under konstruktion. 
+</h2>
+
 <div id="hide">
 
 <div id="safunkardet" markdown="1">
