@@ -3,8 +3,6 @@ title: home
 ---
 <html lang="en">
 
-
-
 <div id="maincontainer">
 <div class="mainsection">
     <div>
@@ -22,7 +20,7 @@ title: home
     <img src="/images/blinddov.jpg" class="mainpic"> 
     </div>
     <div class="maintext">
-    <h1>Äventyrspaket och teambuilding</h1>
+    <h1>Vildmarkspaket och teambuilding</h1>
 Vi anordnar teambuilding och vildmarksupplevelser åt företag, skolor och privatpersoner.  </div>
 <div class="buttondiv"> <a href="/aktiviteter" class="button">Upptäck aktiviteter</a></div>
 </div>
