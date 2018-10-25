@@ -5,7 +5,7 @@ title: butik
 
  
 
-<div class="" style="padding-top:10px;">
+<div>
   <h1>
     Butik
   </h1>
