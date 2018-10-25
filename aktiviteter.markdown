@@ -434,7 +434,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   
 
   
-<div id="varliggerparkerna" class="gradiv">
+<div id="varliggerparkerna">
     <h1>
        Var ligger parkerna?
     </h1>

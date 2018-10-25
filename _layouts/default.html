@@ -189,6 +189,10 @@
                     align-items:center;
                 }
                 
+                .chooserbutton {
+                    font-size:32px;
+                }
+                
                 /* 
                  *  Service 
                  */
@@ -289,6 +293,123 @@
                  justify-content:space-between;
                  margin:20px 0px 0px 0px;
              }
+             
+             /* 
+              *  Bygge 
+              */
+             
+             #intro {
+               background-color:#F5F5F5;
+               padding:30px 1000px 13px 1000px;
+               margin-left:-1000px;
+               margin-right:-1000px;
+               padding-bottom:40px;
+             }
+
+             #byggeinfolist {
+               display: flex;
+               flex-wrap:wrap;
+               justify-content: space-between;
+               font-size:18px;
+             }
+
+             .infolistcolumn {
+               box-sizing:border-box;
+               max-width:550px;
+               padding:0px 20px;
+             }
+
+             .infolisticon {
+              width:55px;
+             }
+
+             .byggeinfotex {
+               padding:10px 10px 10px 20px;
+               width:500px;
+             }
+
+             .byggeinforow {
+               box-sizing:border-box;
+               display:flex;
+               height:150px;
+               align-items:center;
+             }
+
+             #cvavsnitt {
+                 background-color:#F5F5F5;
+                 padding:30px 1000px 13px 1000px;
+                 margin-left:-1000px;
+                 margin-right:-1000px;
+             }
+
+             .cvlista {
+               display: flex;
+               flex-wrap: wrap;
+               background-color: ;
+               max-width:1000px;
+               padding-bottom:30px;
+             }
+
+             .cvlista > div {
+               box-sizing:border-box;
+               background-color: F5F5F5;
+               margin:5px;
+               line-height: 50px;
+               font-size:20px;
+               margin-bottom:;
+               border: solid 2px;
+
+             }
+
+             #forklaring {
+                 width:600px;
+                 font-size:18px;
+                 margin-bottom:30px;
+             }
+
+             .place {
+              color:black;
+              padding:5px 15px 5px 15px;
+              display: block;
+             }
+
+             .place:hover 
+             {
+               background:black; 
+               color:white;
+               text-decoration:underline;
+             }
+             
+             /* 
+              *  Hitta hit
+              */
+             
+             #hittahitcontainer {
+                 display:flex;
+                 flex-wrap:wrap;
+                 align-items:center;
+                 margin:20px 0px;
+             }
+     
+             #karta {
+         
+             }
+  
+             #mapslinks {
+                 padding:0px 0px 0px 50px;
+         
+             }
+     
+             #gammaldags {
+                 width:600px;
+        
+             }
+     
+             #hittahitintro {
+                 width:600px;
+       
+             }
+             
                 
                 /* 
                  *  Om oss 
@@ -313,28 +434,6 @@
                   text-decoration:underline;
               }
               
-             
-                
-                .navbutton{
-                    box-sizing:border-box;
-                    text-decoration: none;
-                    color: black;
-                    text-align:center;
-                    padding: 10px 15px;
-                    border: solid 2px black;
-                    display: inline-block;
-                    margin:10px;
-                }
-                
-                .navbutton:hover {
-                background:black; 
-                color:white;
-                text-decoration:;
-            }
-                    
-                
-
-
                 /* 
                  * Aktiviteter
                  */
@@ -352,6 +451,23 @@
                 #aktul {
                     padding:0px;
                 }
+                
+                .navbutton{
+                    box-sizing:border-box;
+                    text-decoration: none;
+                    color: black;
+                    text-align:center;
+                    padding: 10px 15px;
+                    border: solid 2px black;
+                    display: inline-block;
+                    margin:10px;
+                }
+                
+                .navbutton:hover {
+                background:black; 
+                color:white;
+                text-decoration:;
+            }
                 
                 .paket {
                     box-sizing:border-box;
@@ -467,7 +583,6 @@
                 flex-direction:column;
             }
 
-
             #annatintro {
                 width:650px;
                 padding:0px 0px 25px 30px;
@@ -479,20 +594,14 @@
                 margin-bottom:21px;
             }
             
-           
-            
             #kontaktforbokning {
                 padding-top:5px;
                 padding-bottom:15px;
             }
             
-            
-            
             #nardetardags{
                 padding-bottom:20px;
             }
-            
-           
             
             #pristabell {
                 padding-top:10px;
@@ -580,35 +689,15 @@
                  padding:0px 60px 0px 40px
             }
             
-            #helavagbeskrivningar {
-                padding-top:5px;
-                padding-bottom:15px;
-            }
-
             #varliggerparkerna {
                 padding-top:2px;
                 padding-bottom:30px;
             }
-
-              #vagbeskrivningarintro
-              {margin-bottom:px;
-                width:560px;
-              }
   
               #vagbeskrivningar{
                   padding:0px 0px 0px 50px;
                   width:600px;
                 }
-
-
-            #glotternvagbtext
-              {
-                  width:400px;
-               }
-   
-               .vagbimg {
-                   width:400px;
-               }
    
                #vagbcontainer {
                    display:flex;
@@ -621,8 +710,11 @@
                    padding:20px;
                }
                
+               
+               /* 
+                *  Footer
+                */
               
-            
             .footeritem {
                 padding-left:20px;
                 text-decoration: none;
@@ -633,9 +725,6 @@
               text-decoration: underline;
           }
           
-          .chooserbutton {
-              font-size:32px;
-          }
           
       }
         

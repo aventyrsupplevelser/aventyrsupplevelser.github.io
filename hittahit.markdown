@@ -2,37 +2,6 @@
 title: Hitta hit
 ---
 
-<style>
-  
-  
-     #hittahitcontainer {
-         display:flex;
-         flex-wrap:wrap;
-         align-items:center;
-         margin:20px 0px;
-     }
-     
-     #karta {
-         
-     }
-  
-     #mapslinks {
-         padding:0px 0px 0px 50px;
-         
-     }
-     
-     #gammaldags {
-         width:600px;
-        
-     }
-     
-     #hittahitintro {
-         width:600px;
-       
-     }
-  
-</style>
-
    <div id="hittahitintro">
     <h1>
        Hitta hit

@@ -4,94 +4,22 @@ title: aventyrsbygge
 
 <style>
 
-#intro {
-  background-color:#F5F5F5;
-  padding:30px 1000px 13px 1000px;
-  margin-left:-1000px;
-  margin-right:-1000px;
-}
-
-#byggeinfolist {
-  display: flex;
-  flex-wrap:wrap;
-  justify-content: space-between;
-  margin-left:px;
-  font-size:18px;
-}
-
-.infolistcolumn {
-  box-sizing:border-box;
-  max-width:550px;
-  padding:0px 20px;
-}
-
-.infolisticon {
- width:55px;
- max-height:px;
-}
-
-.byggeinfotex {
-  padding:10px 10px 10px 20px;
-  width:500px;
-}
-
-.byggeinforow {
-  box-sizing:border-box;
-  display:flex;
-  height:150px;
-  width:;
-  align-items:center;
-}
-
-p {
-  font-size:19px;
-}
-
-.cvlista {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: ;
-  max-width:1000px;
-  padding-bottom:30px;
-}
-
-.cvlista > div {
-  box-sizing:border-box;
-  background-color: F5F5F5;
-  margin:5px;
-  line-height: 50px;
-  font-size:20px;
-  margin-bottom:;
-  border: solid 2px;
-
-}
-
-.place {
- color:black;
- padding:5px 15px 5px 15px;
- display: block;
-}
-
-.place:hover 
-{
-  background:black; 
-  color:white;
-  text-decoration:underline;
-}
-
+    p {
+      font-size:19px;
+    }
 
 </style>
 
 <div id="byggesidan">
   
-<div id="intro" style="padding-bottom:40px;">
+<div id="intro">
  
 <h1>
   Äventyrsbygge
 </h1>
 
 <p>
-  Vi tror på att människor i Sverige behöver uppleva mer äventyr, därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
+Vi tror på att människor i Sverige behöver uppleva mer äventyr, därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
 </p>
 </div>
 
@@ -161,9 +89,9 @@ p {
 
 </div>
 
-<div id="cvavsnitt" style="background-color:#F5F5F5;padding:30px 1000px 13px 1000px;margin-left:-1000px;margin-right:-1000px;">
+<div id="cvavsnitt">
   
-<div id="forklaring" style="width:600px;font-size:18px;margin-bottom:30px;">
+<div id="forklaring">
   
  <h2>
    Vad har vi byggt?
