@@ -140,11 +140,7 @@ vandrings och cykelstigar
 svamp och bärplockning   
 </div>
 
-
-    
 </div>
-
-
 
 
 <div markdown="1">

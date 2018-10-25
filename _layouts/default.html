@@ -20,7 +20,7 @@
         body {
             display: flex;
             justify-content: center;
-            font-family: "helvetica neue", Helvetica Neue, Futura, sans-serif;
+            font-family: "helvetica neue", Helvetica, Futura, sans-serif;
             font-size:18px;
             letter-spacing:0.02em;
             line-height:1.6em;
@@ -52,7 +52,6 @@
         
         h1 {
             line-height:1.4em;
-            font-family:;
             font-size:37px;
         }
         
@@ -62,8 +61,6 @@
         }
         
         h3 {
-            font-family:;
-            font-size:px;
             font-weight:500;
             margin-bottom: 0;
         }
@@ -77,15 +74,12 @@
             list-style-type:none;
             display:flex;
             margin-top:0px;
-            
         }
         
         footer {
             text-align: center;
             margin-top: 50px;
-            font-size: 12px;
-            font-style:;
-            
+            font-size: 12px;            
         }
         
         .timmar {
@@ -137,23 +131,15 @@
                    padding-top:20px;
                }
                
-               #headerlogo {
-                   width:px;
-                   
-               }
-               
-               #mainnavdiv {
-                   margin-right:px;
-                   
-               }
+               /* 
+                * homepage
+                */
 
                .mainpic{
                    width:370px;
-                   border-radius: 2px;
-                   
+                   border-radius: 2px; 
                }
 
-               
                .navitem{
                    padding:6px;
                }
@@ -163,26 +149,16 @@
                    display:flex;
                    flex-wrap:wrap;
                    justify-content:space-between;
-                   
-                   
                }
                    
                .mainsection{
                    max-width:370px;
                    display:flex;
                    flex-direction:column;
-                   align-items:;
-                  
                }
                    
                .maintext{
-                   padding:px;
                    margin-bottom:20px;
-               }
-               
-               .buttondiv{
-                   padding: px;
-                   
                }
                
                .button {
@@ -197,18 +173,42 @@
                  display: inline-block;
                  margin-bottom:30px;
                  font-size:27px;
-                 
-         }
+                }
          
-               .button:hover 
-                 {
+               .button:hover {
                background:black; 
                color:white;
                text-decoration:none;
-               
-                }
+              }
+              
+              /* 
+               * Bygge Butik Service 
+               */
+                
                 #butikservicebygge{
                     align-items:center;
+                }
+                
+                /* 
+                 *  Service 
+                 */
+                
+                .servicetext {
+                    width:550px;
+                    margin-right:50px;  
+                }
+                
+                #serviceintro
+                {
+                    display:flex;
+                    width:1080px;
+                    align-items:center;
+                    justify-content:space-between;
+                    margin-bottom:20px;
+                }
+                
+                .servicetexttva{
+                    width:630px;
                 }
                 
                 #arligbesiktning {
@@ -229,31 +229,13 @@
                   flex-wrap:wrap;
                   }
             
-                .logosclass {
+                .headrushlogo {
                   
                   margin:2px;
                   max-width:px;
                   max-height:110px;
                   }
                   
-                  .produkt {
-                      max-width:273px;
-                      margin-right:20;
-                      margin-bottom:10px;
-                  }
-                  
-                  .produktkategori>h3
-                  {
-                      font-size:35px;
-                     
-                  }
-                  
-                  .produktkategoribox{
-                      display:flex;
-                      flex-wrap:wrap;
-                      justify-content:space-between;
-                      margin:20px 0px 0px 0px;
-                  }
                   .kontaktknappar
                   {
                       display:flex;
@@ -268,7 +250,6 @@
                     text-align:center;
                     padding: 20px 30px;
                     border: solid 2px black;
-                    cursor: ;
                     display: inline-block;
                     font-size:25px;
                     margin:20px 20px 20px 0px;
@@ -278,21 +259,51 @@
                     background:black; 
                     color:white;
                     text-decoration:underline;
-                    
-                    
                 }
+                
+                /* 
+                 * Butik
+                 */
+        
+             #butiksloggor {
+                 display:flex;
+                 flex-wrap:wrap;
+                 max-width:850px;
+                 padding:20px 0px 0px 0px;
+             }
+            
+             .butiklogosclass
+             {
+                 padding:20px;
+             }
+             
+             .produkt {
+                 max-width:273px;
+                 margin-right:20;
+                 margin-bottom:10px;
+             }
+             
+             .produktkategoribox{
+                 display:flex;
+                 flex-wrap:wrap;
+                 justify-content:space-between;
+                 margin:20px 0px 0px 0px;
+             }
+                
+                /* 
+                 *  Om oss 
+                 */
                 
                 .omosskontakt {
                   box-sizing:border-box;
-                  text-decoration: none;
+                  text-decoration:none;
                   background-color:;
                   color: black;
                   text-align:center;
                   padding: 10px 20px;
                   border: solid 2px black;
-                  cursor: ;
                   display: inline-block;
-                  font-size:px;
+                  font-size:;
                   margin:25px 10px 25px 0px;
               }
                   
@@ -302,25 +313,7 @@
                   text-decoration:underline;
               }
               
-              .priskontaktbuttons {
-                box-sizing:border-box;
-                text-decoration: none;
-                background-color:;
-                color: black;
-                text-align:center;
-                padding: 10px 20px;
-                border: solid 2px black;
-                cursor: ;
-                display: inline-block;
-                font-size:20px;
-                margin:25px 10px 25px 0px;
-            }
-                
-                .priskontaktbuttons:hover {
-                background:black; 
-                color:white;
-                text-decoration:underline;
-            }
+             
                 
                 .navbutton{
                     box-sizing:border-box;
@@ -339,20 +332,25 @@
                 text-decoration:;
             }
                     
+                
+
+
+                /* 
+                 * Aktiviteter
+                 */
+                
                 #aktiviteter {
                     max-width:1200px;
                     
                 }
-
-
-                /* 
-                 * Paket
-                 */
-                
                 
                 #aktiviteternav{
                     padding-top:0px;
                     padding-bottom:10px;
+                }
+                
+                #aktul {
+                    padding:0px;
                 }
                 
                 .paket {
@@ -361,7 +359,6 @@
                     flex-wrap:wrap;
                     align-items:center;
                     margin-bottom:30px;
-                   border-bottom:;
                 }
                 
                 .pakettext {
@@ -391,21 +388,19 @@
                     width:248px;
                 }
                 
-                .mediaspace {
-                    width:px;
+                .paketinfo{
+                    display:flex;
+                    margin-top:20px;
                 }
                
                 .tid {
                     display:flex;
                     align-items:center;
-                    width:px;
-                    border:;
                 }
                
                .tidsikon {
                    width:40px;
                    height:40px;
-                   
                 }
                 
                 .timmar {
@@ -426,13 +421,11 @@
                 .fran {
                     padding-left:10px;
                     padding-right:30px;
-                    
                 }
                 
                 .pristabellbutton {
                     box-sizing:border-box;
-                    text-decoration: none;
-                    background-color:;
+                    text-decoration:none;
                     color: black;
                     text-align:center;
                     padding: 5px 10px;
@@ -447,58 +440,188 @@
                 text-decoration:underline;
             }
             
-            .paketinfo{
+            .annatitem {
                 display:flex;
-                justify-content:;
-                margin-top:20px;
+                flex-wrap:wrap;
+                align-items:center;
+                height:187.5px;
+                margin-bottom:30px;
+            }
+
+            .annatmediabox {
+                width:500px;
+                display:flex;
+                justify-content: space-between;
+            }
+
+            .annatpic {
+                width:248px;
+                height:187.5px;
+                padding-top:px;
+                ;
+            }
+
+            #annatbox {
+                display:flex;
+                flex-wrap:wrap;
+                flex-direction:column;
+            }
+
+
+            #annatintro {
+                width:650px;
+                padding:0px 0px 25px 30px;
+               }
+
+            .annattext {
+                width: 700px;
+                padding:0px 30px 0px 30px;
+                margin-bottom:21px;
             }
             
-            
-            #aktul {
-                padding:0px;
-            }
+           
             
             #kontaktforbokning {
                 padding-top:5px;
                 padding-bottom:15px;
+            }
+            
+            
+            
+            #nardetardags{
+                padding-bottom:20px;
+            }
+            
+           
+            
+            #pristabell {
+                padding-top:10px;
+                padding-bottom:20px;
+            }    
     
+            table {
+                font-family: ;
+                border-collapse: collapse;
+                width ;
+            }
+
+            td, th {
+                border: 2px  #A4A4A4;
+                text-align: left;
+                padding: 8px 10px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #F5F5F5;
+            }
+            
+            .notbold{
+                font-weight:normal
+            }
+
+            #kanotkontakt {
+                width:1200px;
+                display:flex;
+                flex-wrap:wrap;
+                align-items:;
+                justify-content:;
+            }
+
+            .priskontakt {
+                padding-left:100px;
+            }
+
+            .priskontaktcontainer {
+                display:flex;
+            }
+            
+            .priskontaktbuttons {
+              box-sizing:border-box;
+              text-decoration: none;
+              color: black;
+              text-align:center;
+              padding: 10px 20px;
+              border: solid 2px black;
+              display: inline-block;
+              font-size:20px;
+              margin:25px 10px 25px 0px;
+          }
+              
+              .priskontaktbuttons:hover {
+              background:black; 
+              color:white;
+              text-decoration:underline;
+          }
+
+            #dagsbox {
+            display: flex;
+            flex-wrap:wrap;
+            justify-content:space-between;
+            width:1200px;
+
+            }
+
+            .dagscolumn
+            {width:600px;  
+            }
+
+            .dagsicon{
+            width:65px;
+            }
+            .dagsitem {
+            padding:px; 
+            display:flex;
+            width:600px;
+            height:100px;
+            align-items:center;
+            }
+
+            .dagstext {
+                 padding:0px 60px 0px 40px
             }
             
             #helavagbeskrivningar {
                 padding-top:5px;
                 padding-bottom:15px;
             }
-            
-            #nardetardags{
-                padding-bottom:20px;
+
+            #varliggerparkerna {
+                padding-top:2px;
+                padding-bottom:30px;
             }
-            
-            .vagbeskbutton {
-                font-size:25px;
-                padding:20px;
-            }
-               
-               #content {
-                   
+
+              #vagbeskrivningarintro
+              {margin-bottom:px;
+                width:560px;
+              }
+  
+              #vagbeskrivningar{
+                  padding:0px 0px 0px 50px;
+                  width:600px;
+                }
+
+
+            #glotternvagbtext
+              {
+                  width:400px;
                }
-        
-            #butiksloggor {
-                display:flex;
-                flex-wrap:wrap;
-                max-width:850px;
-                padding:20px 0px 0px 0px;
-            }
-            
-            .butiklogosclass
-            {
-                padding:20px;
-            }
-            
-            #footer {
-                display:;
-                max-width:px;
-                justify-content:;
-            }
+   
+               .vagbimg {
+                   width:400px;
+               }
+   
+               #vagbcontainer {
+                   display:flex;
+                   flex-wrap:wrap;
+                   align-items:center;
+               }
+               
+               .vagbeskbutton {
+                   font-size:25px;
+                   padding:20px;
+               }
+               
+              
             
             .footeritem {
                 padding-left:20px;
@@ -513,6 +636,8 @@
           .chooserbutton {
               font-size:32px;
           }
+          
+      }
         
     </style>
     

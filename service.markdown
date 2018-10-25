@@ -2,26 +2,6 @@
 title: Service
 ---
 
-<style>
-    .servicetext {
-        width:550px;
-        margin-right:50px;  
-    }
-    #serviceintro
-    {
-        display:flex;
-        width:1080px;
-        align-items:center;
-        justify-content:space-between;
-        margin-bottom:20px;
-    }
-    .servicetexttva{
-        width:630px;
-        
-    }
-</style>
-
-
  <h1>
  Service</h1>
  
@@ -32,11 +12,10 @@ title: Service
   Vi är officiellt servicecenter för Headrush Technologies och genomför årlig service och reparationer av produkterna Trublue, Zipstop och Quickjump. 
  
 </div>
- <img class="logosclass"  src="/images/headrushservicecenter.png">
-
+ <img class="headrushlogo"  src="/images/headrushservicecenter.png">
   </div>
 
-<div class="">
+<div>
 
 	<h2>Priser för årlig besiktning</h2>
     <div id="arligbesiktning">
