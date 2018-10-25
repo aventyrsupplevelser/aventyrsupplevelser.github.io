@@ -116,7 +116,7 @@ Klättra om du är äldre 3 år gammal.
 
 <div>
 <h2>
-Denna sidan är under konstruktion. 
+Sidan är under konstruktion. 
 </h2>
 
 <div id="hide">
