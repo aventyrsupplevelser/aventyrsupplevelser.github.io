@@ -33,8 +33,12 @@ tr:nth-child(even) {
     justify-content:;
 }
 
-.prisochkontakt {
-    padding-left:50px;
+.priskontakt {
+    padding-left:100px;
+}
+
+.priskontaktcontainer {
+    display:flex;
 }
   
 .notbold{
@@ -492,8 +496,8 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
   </tr>
   
 </table>
-   <p>
-   Detta är baspaket, kan förlängas vid överenskommelse. Hör av dig till oss för att boka.
+   <p style="display:inline-block;">
+   Detta är baspaket, kan förlängas vid överenskommelse. 
   </p>
   
   <div id="kanotkontakt">
@@ -525,13 +529,16 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
     </table>
 </div>
 
-   <div class="prisochkontakt">
-       
-  <div><a href="mailto:info@aventyrsupplevelser.com" class="kontaktbutton">info@aventyrsupplevelser.com</a></div>
+   
+       <div class="priskontakt">
+       <h3>Hör av dig till oss för att boka:</h3>
+       <div class="priskontaktcontainer">
+  <div><a href="mailto:info@aventyrsupplevelser.com" class="priskontaktbuttons">info@aventyrsupplevelser.com</a></div>
 
-  <div><a href="tel:+461161175" class="kontaktbutton">+46 (0) 11 611 75</a></div>
+  <div><a href="tel:+461161175" class="priskontaktbuttons">+46 (0) 11 611 75</a></div>
 </div>
 
+</div>
 </div>
 </div>
 
