@@ -168,11 +168,11 @@ align-items:center;
     <div class="pakettext" markdown="1">
 ## Sörsjöns Äventyrspark
 
-Efter en kort instruktion får ni fri lek för bland trädhängande kanoter, cyklar, wakeboards och linbanor. 
+I Sveriges största äventyrspark kan du göra dina barndomsklätterfantasier till verklighet. Drömde du om att svinga dig i lianer som Tarzan, eller kanske om att cykla mellan träden? 
 
-Vi har sveriges största samling höghöjdsbanor och linbanor – 19 banor från 2 till 20 meters höjd, och dessutom en 375 meter lång linbana. 
+Med 19 banor från 2 till 20 meters höjd, och dessutom en 375 meter lång linbana över en sjö, finns här något för alla - väck lekfullheten till liv och möt rädslorna, njut av naturen eller utmana musklerna. 
 
-Vårt populäraste paket, som passar perfekt till grupper som vill svetsa sig samman med en utmanande höghöjdsupplevelse.
+Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att överkomma utmaningar och hjälpa varandra till vår fulla potential. 
 
 <div class="paketinfo">
 <div class="tid">
@@ -220,14 +220,19 @@ Vårt populäraste paket, som passar perfekt till grupper som vill svetsa sig sa
     
   <div class="pakettext" markdown="1">
 ## Vildmarksäventyr i Glottern 
+
+
   
-En naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. 
-Vi skräddarsyr ett personligt program till just er grupp, med en blandning av höghöjdsäventyr och teambuilding. 
+En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. Ensamna mitt ute i skogen och med en egen instruktör leker vi och tävlar, hämtar vatten från sjön och kokar kaffe över öppen eld. 
+
+Allt efter era önskemål och behov, skräddarsyr vi ett unikt program med fokus på att svetsa just er grupps sammanhållning ännu starkare. 
 
 Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
+ 
+
 <div class="paketinfo">
 <div class="tid">
-<img src="/images/time.png" class="tidsikon"><div class="timmar">2 h / 3.5 h</div> </div>
+<img src="/images/time.png" class="tidsikon"><div class="timmar">3.5 h</div> </div>
 <div class="pengar">
 <img src="/images/cash.png" class="pengarikon">
 <div class="fran"> Från 4 500 SEK
@@ -297,11 +302,13 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er.
     <div class="pakettext" markdown="1">
 ## Glödvandring
 
-Är det möjligt att gå på elden? Detta handlar om att fokusera och göra det vi inte trodde var möjligt.
+Är det möjligt att gå på elden? Detta handlar om att genomföra det vi inte tror är möjligt, och upptäcka att vi plötsligt tycker det är lätt. 
 
-Som uppvärmning går vi på _krossat glas_, och bryter av pilbågspilar med hjälp av halsgropen. 
+Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att stanna i fokus, ända tills vi kan samla oss till att ta steget. 
 
-Fungerar hela året, och vi tar gärna med oss glöden till er.
+Finns det annat i vardagen eller på arbetsplatsen som verkar omöjligt?
+
+Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er.
 
 
 
@@ -349,11 +356,13 @@ Fungerar hela året, och vi tar gärna med oss glöden till er.
 
 ## Hyra kanot
 
-Om du vill du ha lugn och ro, och njuta av naturen så kan du hyra kanoter av oss. 
+Om du letar efter lugn och ro, vill upptäcka hemliga vikar och njuta av naturen så kan du hyra kanoter av oss. 
 
-Du kan antingen komma och hämta dem själv och paddla vart du vill, eller också komma till Glottern eller Sörsjön där vi har kanoter liggandes nästan alltid.
-Vi har både kanadensare (öppna kanoter), och kajaker (stängda) 
-Vi kan även anordna paddlingskurser och guidade paddlingar.
+Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. 
+
+Vi kan dessutom anordna paddlingskurser eller paddlingar med guide.
+
+Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 
 <div class="paketinfo">
 <a href="#pristabell" class="pristabellbutton">Pristabell</a>
@@ -392,7 +401,7 @@ Vi kan även anordna paddlingskurser och guidade paddlingar.
 <div id="annatintro" markdown="1">
 # Andra aktiviteter
 
-Om du har en idé till något speciellt du vill göra – tveka inte att fråga oss. Många av våra aktiviteter kan vi även ta med oss till er. 
+Om du har en speciell idé till en annan aktivitet du vill genomföra så vill vi gärna hjälpa dig – vi är hungriga efter nya utmaningar. Våra paket är anpassningsbara och många kan vi även ta med oss till er. 
 </div>
 
 <div id="annatbox">
@@ -401,7 +410,7 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
         
         <div class="annattext">
         <h3>Konferens och övernattning</h3> 
-        Vi samarbetar med flera konferensanläggningar i Östergötland, bland annat Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller Sörsjön. 
+        Vi samarbetar med flera konferensanläggningar i Östergötland, bland annat Sandvik Gård, Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller Sörsjön. 
         </div>
         <div class="annatmediabox">
         <img src="/images/mat.jpg" class="annatpic">
@@ -411,7 +420,7 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum under 2019 kommer snart. 
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum för 2019 presenteras under våren.
       </div> 
       <div class="annatmediabox">
       <img src="/images/klattringuppe.jpg" class="annatpic">
@@ -431,7 +440,7 @@ Om du har en idé till något speciellt du vill göra – tveka inte att fråga 
         
     <div class="annatitem divreverse"> 
         
-     <div class="annattext"> <h3>Lådbilsrace</h3>Med hjul, axlar, muttrar och plywood ska varje grupp forma en lådbil. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
+     <div class="annattext"> <h3>Lådbilsrace</h3> En lådbil ska formas med hjälp av hjul, axlar, muttrar och plywood. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
      </div>
      <div class="annatmediabox">
      <img src="/images/ladbilsrace.jpg" class="annatpic">
