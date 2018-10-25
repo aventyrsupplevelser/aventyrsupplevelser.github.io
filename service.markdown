@@ -36,26 +36,26 @@ title: Service
 
   </div>
 
-<div class="gradiv">
+<div class="">
 
 	<h2>Priser för årlig besiktning</h2>
     <div id="arligbesiktning">
-	<div class="produkt">
+	<div class="serviceprodukt">
 		<img src="/images/trublueservice.jpg" width="350">
-      <h3 class="desc" style="font-size:22px">Trublue, TBXL och TB Speed<br>
+      <h3 class="desc" style="font-size:21px">Trublue, TBXL och TB Speed<br>
         <b>2 000 SEK</b>
       </h3>
 	</div>
-	<div class="produkt">
+	<div class="serviceprodukt">
 		<img src="/images/quickjumpservice.jpg" width="350">
-      <h3 class="desc" style="font-size:22px">
+      <h3 class="desc" style="font-size:21px">
         Quickjump och QJXL <br>
         <b>2 500 SEK</b>
       </h3>
 	</div>
-	<div class="produkt">
+	<div class="serviceprodukt">
 		<img src="/images/zipstopservice.jpg" width="350">
-      <h3 class="desc" style="font-size:22px">
+      <h3 class="desc" style="font-size:21px">
         Zipstop och ZSIR <br>
         <b>4 500 SEK</b>
       </h3>
