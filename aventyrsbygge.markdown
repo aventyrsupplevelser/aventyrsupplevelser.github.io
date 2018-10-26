@@ -19,7 +19,7 @@ title: aventyrsbygge
 </h1>
 
 <p>
-Vi tror på att människor i Sverige behöver uppleva mer äventyr, därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
+Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</strong>! Därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
 </p>
 </div>
 
@@ -31,7 +31,7 @@ Vi tror på att människor i Sverige behöver uppleva mer äventyr, därför hj
   <div>
   <img src= "/images/twentyfive.png" class="infolisticon"></div>
   
- <div class="byggeinfotex"><b>25 års erfarenhet</b> – vår passion för äventyr har lett oss till att ha varit med och byggt många utav Sveriges höghöjdsbanor.</div>
+ <div class="byggeinfotex"><b>25 års erfarenhet</b> – vår hängivenhet till äventyr har lett oss till att ha varit med och byggt många utav Sveriges höghöjdsbanor.</div>
   
     </div>
   
@@ -85,6 +85,8 @@ Vi tror på att människor i Sverige behöver uppleva mer äventyr, därför hj
     
      </div>
     
+</div>
+
 </div>
 
 </div>

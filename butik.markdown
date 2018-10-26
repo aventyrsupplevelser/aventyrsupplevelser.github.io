@@ -9,7 +9,7 @@ title: butik
   
  <div style="max-width:750px;">
   
-<p>Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush</a>, <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>. Vissa produkter har vi på lager och andra måste beställas. Kontakta oss om du vill veta mer om våra produkter eller beställa. 
+<p>Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush</a>, <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>. Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller ring om du vill veta mer om våra produkter eller beställa. 
 </p>
    
 </div>

@@ -69,6 +69,10 @@
             text-decoration: underline;
             color:black;
         }
+        
+        a:hover {
+            
+        }
 
         ul {
             list-style-type:none;
@@ -79,7 +83,8 @@
         footer {
             text-align: center;
             margin-top: 50px;
-            font-size: 12px;            
+            font-size: 12px;
+            margin-bottom:500px;         
         }
         
         /* 
@@ -131,6 +136,7 @@
        
         @media (max-width: 1200px) {
             /* Single column stuff here */
+            
             #logga {
                 width: 600px;
             }
@@ -331,11 +337,7 @@
               */
              
              #intro {
-               background-color:#F5F5F5;
-               padding:30px 1000px 13px 1000px;
-               margin-left:-1000px;
-               margin-right:-1000px;
-               padding-bottom:40px;
+                 width:600px;
              }
 
              #byggeinfolist {
@@ -343,6 +345,8 @@
                flex-wrap:wrap;
                justify-content: space-between;
                font-size:18px;
+               background-color:#F5F5F5;
+               
              }
 
              .infolistcolumn {
@@ -368,10 +372,7 @@
              }
 
              #cvavsnitt {
-                 background-color:#F5F5F5;
-                 padding:30px 1000px 13px 1000px;
-                 margin-left:-1000px;
-                 margin-right:-1000px;
+                 padding:30px 0px 13px 0px;
              }
 
              .cvlista {
@@ -403,6 +404,8 @@
               color:black;
               padding:5px 15px 5px 15px;
               display: block;
+              text-decoration:none;
+              
              }
 
              .place:hover 
@@ -442,6 +445,17 @@
        
              }
              
+             .hittahitbutton {
+                 font-size:35px;
+                 padding:23px;
+             }
+             
+             #snabbvagbesk {
+                 font-size:30px;
+                 margin-bottom:20px;
+                 line-height:1.55em;
+             }
+             
                 
                 /* 
                  *  Om oss 
@@ -465,6 +479,27 @@
                   color:white;
                   text-decoration:underline;
               }
+              
+              #omosscontainer{
+              display:;
+              }
+              #pappapic{
+              box-sizing:border-box;
+              max-width:px;
+              }
+            .omosstext  {
+              box-sizing:border-box;
+              max-width:600px;
+              padding:40px;
+              font-size:px;
+              }
+  
+              .omossavsnitt {
+                  display:flex;
+                  align-items:center; 
+                  margin-bottom:60px;
+              }
+  
               
                 /* 
                  * Aktiviteter
@@ -616,8 +651,8 @@
             }
 
             #annatintro {
-                width:650px;
-                padding:0px 0px 25px 30px;
+                width:600px;
+                padding:0px 0px 25px 0px;
                }
 
             .annattext {
@@ -638,12 +673,14 @@
             #pristabell {
                 padding-top:10px;
                 padding-bottom:20px;
-            }    
+            }   
+            
+            .tabelllink {
+                text-decoration:none;
+            } 
     
             table {
-                font-family: ;
                 border-collapse: collapse;
-                width ;
             }
 
             td, th {

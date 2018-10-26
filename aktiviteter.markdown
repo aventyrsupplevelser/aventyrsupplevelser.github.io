@@ -5,14 +5,16 @@ title: Äventyrspaket och teambuilding
 <div id="aktiviteternav" class="gradiv">
     
 <ul id="aktul">
-   <li><a class="navbutton" href="#aktiviteter">Aktivitetspaket</a></li>
+   <li><a class="navbutton" href="#aktivitetspaket">Aktivitetspaket</a></li>
    <li><a class="navbutton" href="#pristabell">Priser och bokning</a></li>
    <li><a class="navbutton" href="#nardetardags">När det är dags</a></li>
   <li><a class="navbutton" href="#varliggerparkerna">Var ligger parkerna?</a></li>
 </ul>
+    <div id="aktivitetspaket">
     <h1>
     Aktivitetspaket
     </h1>
+    </div>
 </div>
 <div id="aktiviteter">
 <div id="sorsjonsaventyrspark" class="paket divreverse">
@@ -21,7 +23,7 @@ title: Äventyrspaket och teambuilding
 
 I Sveriges största äventyrspark kan du göra dina barndomsklätterfantasier till verklighet. Drömde du om att svinga dig i lianer som Tarzan, eller kanske om att cykla mellan träden? 
 
-Med 19 banor från 2 till 20 meters höjd, och dessutom en 375 meter lång linbana över en sjö, finns här något för alla - väck lekfullheten till liv och möt rädslorna, njut av naturen eller utmana musklerna. 
+Med 19 banor från 2 till 20 meters höjd, och dessutom en 375 meter lång linbana över en sjö, finns här något för alla - väck lekfullheten till liv och möt rädslorna, njut av naturen eller utmana musklerna!
 
 Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att överkomma utmaningar och hjälpa varandra till vår fulla potential. 
 
@@ -76,7 +78,7 @@ Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att öv
   
 En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. Ensamna mitt ute i skogen och med en egen instruktör leker vi och tävlar, hämtar vatten från sjön och kokar kaffe över öppen eld. 
 
-Allt efter era önskemål och behov, skräddarsyr vi ett unikt program med fokus på att svetsa just er grupps sammanhållning ännu starkare. 
+Vi skräddarsyr ett unikt program med fokus på att svetsa just er grupps sammanhållning ännu starkare. 
 
 Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
  
@@ -117,7 +119,7 @@ Vi designar roliga samarbetsövningar som tränar er förmåga att lyssna på va
 
 Genom att möta situationer ni inte befinner er i till vardags, upptäcker ni nya egenskaper hos varandra och kan därmed utmana de ofta omedvetet invanda rollerna och mönstren ni har på jobbet eller i skolan.
 
-Vårt teambuildingpaket är lätt att packa ihop och ta med till er. 
+Vårt teambuildingpaket är lätt att packa ihop och ta med till er!
 
 
 
@@ -159,7 +161,7 @@ Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål
 
 Finns det annat i vardagen eller på arbetsplatsen som verkar omöjligt?
 
-Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er.
+Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
 
 
@@ -209,12 +211,9 @@ Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er.
 
 Om du letar efter lugn och ro, vill upptäcka hemliga vikar och njuta av naturen så kan du hyra kanoter av oss. 
 
-Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. 
+Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 
 Vi kan dessutom anordna paddlingskurser eller paddlingar med guide.
-
-Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
-
 <div class="paketinfo">
 <a href="#pristabell" class="pristabellbutton">Pristabell</a>
 </div>
@@ -252,12 +251,12 @@ Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 <div id="annatintro" markdown="1">
 # Andra aktiviteter
 
-Om du har en speciell idé till en annan aktivitet du vill genomföra så vill vi gärna hjälpa dig – vi är hungriga efter nya utmaningar. Våra paket är anpassningsbara och många kan vi även ta med oss till er. 
+Om du har en speciell idé till en annan aktivitet du vill genomföra så vill vi gärna hjälpa dig – vi är hungriga efter nya utmaningar! Våra paket är anpassningsbara och många kan vi även ta med oss till er. 
 </div>
 
 <div id="annatbox">
               
-    <div class="annatitem ">
+    <div class="annatitem divreverse">
         
         <div class="annattext">
         <h3>Konferens och övernattning</h3> 
@@ -269,7 +268,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
         </div>
       </div>
       
-     <div class="annatitem divreverse">
+     <div class="annatitem ">
       
       <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum för 2019 presenteras under våren.
       </div> 
@@ -279,7 +278,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
       </div>
         </div>
             
-     <div class="annatitem ">
+     <div class="annatitem divreverse">
       
       <div class="annattext"><h3>Flottregatta</h3> Med tunnor, rep och brädor ska ni i lag konstruera en egen farkost. När startskottet går gäller det att komma först i mål – utan att lagmedlemmarna hamnar i vattnet!
       </div> 
@@ -289,7 +288,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
       </div>
         </div>
         
-    <div class="annatitem divreverse"> 
+    <div class="annatitem "> 
         
      <div class="annattext"> <h3>Lådbilsrace</h3> En lådbil ska formas med hjälp av hjul, axlar, muttrar och plywood. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
      </div>
@@ -319,7 +318,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
     
   </tr>
   <tr>
-    <td>Sörsjöns Äventyrspark</td>
+    <td><a href="#sorsjonsaventyrspark" class="tabelllink">Sörsjöns Äventyrspark</a></td>
     <td>2.5 h</td>
     <td>4 000 SEK</td>
     <td>400 SEK exkl. moms</td>
@@ -328,7 +327,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
      
   </tr>
   <tr>
-    <td>Äventyr i Glottern</td>
+    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
     <td>3.5 h</td>
     <td>5 000 SEK</td>
     <td>500 SEK exkl. moms</td>
@@ -337,7 +336,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
      
   </tr>
   <tr>
-    <td>Teambuilding</td>
+    <td><a href="#teambuilding" class="tabelllink">Teambuilding</a></td>
     <td>3.5 h</td>
     <td>3 000 SEK</td>
     <td>350 SEK exkl. moms</td>
@@ -346,7 +345,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
      
   </tr>
   <tr>
-    <td>Glödvandring</td>
+    <td><a href="#glodvandring" class="tabelllink">Glödvandring</a></td>
     <td>2 h</td>
      <td>3 500 SEK</td>
     <td>400 SEK exkl. moms</td>
@@ -364,7 +363,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   
   <div id="kanot">
   <h3>
-    Kanotuthyrning
+    <a href="#hyrakanot" class="tabelllink">Kanotuthyrning</a>
   </h3>
   <table>
   <tr> 
@@ -391,7 +390,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 
    
        <div class="priskontakt">
-       <h3>Hör av dig till oss för att boka:</h3>
+       <h2>Boka på mail eller telefon!</h2>
        <div class="priskontaktcontainer">
   <div><a href="mailto:info@aventyrsupplevelser.com" class="priskontaktbuttons">info@aventyrsupplevelser.com</a></div>
 
@@ -456,7 +455,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="glotternvagbeskrivning">
 
 <div class="buttondiv"> <a href="https://www.google.com/maps/dir/?api=1&destination=58.697130,16.189644" class="button vagbeskbutton">Vägbeskrivning till Glotterns Vildmarkspark<br>(öppnar i Google Maps)</a></div>
-<a href="/hittahit">Gammaldags vägbeskrivning. </a>
+<a href="#gammaldags">Gammaldags vägbeskrivning. </a>
 </div>
 
 </div>

@@ -10,7 +10,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Sörsjöns Äventyrspark</h1>
-    Sveriges största äventyrspark, med 19 höghöjdsbanor och ziplines som passar för alla åldrar.
+    Sveriges största äventyrspark – här finns 19 höghöjdsbanor med ziplines som passar för alla åldrar!
     </div>
     <div class="buttondiv"> <a href="/sorsjon" class="button">Titta och boka</a></div>
 </div>
@@ -21,7 +21,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Vildmarkspaket och teambuilding</h1>
-Vi anordnar teambuilding och vildmarksupplevelser åt företag, skolor och privatpersoner.  </div>
+Vi anordnar teambuilding och vildmarks-upplevelser åt företag, skolor och privatpersoner.  </div>
 <div class="buttondiv"> <a href="/aktiviteter" class="button">Upptäck aktiviteter</a></div>
 </div>
 

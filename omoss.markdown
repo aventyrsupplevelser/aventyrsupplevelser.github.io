@@ -2,31 +2,6 @@
 title: Om oss
 ---
 
-<style>
-  
-  #omosscontainer{
-  display:;
-  }
-  #pappapic{
-  box-sizing:border-box;
-  max-width:px;
-  }
-.omosstext  {
-  box-sizing:border-box;
-  max-width:600px;
-  padding:40px;
-  font-size:px;
-  }
-  
-  .omossavsnitt {
-      display:flex;
-      align-items:center; 
-      margin-bottom:60px;
-  }
-  
-  
-</style>
-
 <h1>
   Om oss
 </h1>
@@ -39,14 +14,14 @@ title: Om oss
  <div class="omsossbild"> 
      <img src="/images/beslutsamhet.jpg" width="450px">
  </div>
- <div class="omosstext">
-  Vi drivs av känslan av att uppleva människor utmana sina gränser, att se dem med ett skratt klara av det som de inte trodde var möjligt. Vårt måtto är att allt är möjligt, och vi vill ge människor äventyrsupplevelser som beviser det. 
+ <div class="omosstext" markdown="1">
+ Vi drivs av känslan av att uppleva människor utmana sina gränser, att se dem med ett skratt klara av det som de inte trodde var möjligt. Vårt måtto är: **allt är möjligt**, och vi vill ge människor äventyrsupplevelser som bevisar det! 
  </div>
 </div>
  <div class="omossavsnitt">
   
-  <div class="omosstext">
-Anders och Lillemor Rylén startade Äventyrsupplevelser vid Glottern utanför Norrköping år 1995. Med ett liv av vildmarksäventyr från alla delar av världen bakom sig, arbetar de nu för att göra upplevelsen av att komma ut i naturen och testa sina gränser tillgänglig för alla. Det ledde dem till att år 2008 börja bygga Sörsjöns Äventyrspark, som har utvecklat sig till att bli Sveriges överlägset största samling höghöjdsbanor och linbanor. 
+  <div class="omosstext" markdown="1">
+**Anders** och **Lillemor Rylén** startade Äventyrsupplevelser vid Glottern utanför Norrköping år 1995. Med ett liv av vildmarksäventyr från alla delar av världen bakom sig, arbetar de nu för att göra upplevelsen av att komma ut i **naturen** och testa sina gränser tillgänglig för alla. Det ledde dem till att år 2008 börja bygga Sörsjöns Äventyrspark, som har utvecklat sig till att bli Sveriges överlägset största samling höghöjdsbanor och linbanor. 
 </div>
   <div class="omsossbild">
   <img src="/images/andersochlillen.jpg" width="450px">
@@ -57,8 +32,8 @@ Anders och Lillemor Rylén startade Äventyrsupplevelser vid Glottern utanför N
     <div class="omsossbild">
         <img src="/images/employees.jpg" width="450px">
     </div>
-<div class="omosstext">
-Vi har 3 anställda året runt, och ökar på med ytterligare 7-8 personer under sommarhalvåret. Hör gärna av dig om du är intresserad av att arbeta med oss. 
+<div class="omosstext" markdown="1">
+Vi har 3 anställda året runt, och ökar på med ytterligare 7-8 personer under sommarhalvåret. **Hör gärna av dig** om du är intresserad av att arbeta med oss. 
    <div class="kontaktknappar">
   
   <div><a href="mailto:info@aventyrsupplevelser.com" class="omosskontakt">info@aventyrsupplevelser.com</a></div>

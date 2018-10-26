@@ -17,7 +17,7 @@ title: Service
 
 <div>
 
-	<h2>Priser för årlig besiktning</h2>
+	<h2>Priser för årlig service</h2>
     <div id="arligbesiktning">
 	<div class="serviceprodukt">
 		<img src="/images/trublueservice.jpg" width="350">
