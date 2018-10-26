@@ -44,7 +44,7 @@ title: Service
 </div>
 <div class="servicetexttva">
 Priserna gäller exklusive moms och utan kostnader för reservdelar.     
-Kontakta oss för att boka besiktning eller reparation.
+Skriv mail eller ring för att boka besiktning eller reparation.
 </div>
 <div class="kontaktknappar">  
 <div>
