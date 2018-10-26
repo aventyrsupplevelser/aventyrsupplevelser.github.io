@@ -1,44 +1,44 @@
 ---
 title: butik
 ---
-
-<div>
   <h1>
     Butik
   </h1>
+<div id="butikintro">
+   
+ <div id="butikintrotext">
   
- <div style="max-width:750px;">
   
 <p>Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush</a>, <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>. Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller ring om du vill veta mer om våra produkter eller beställa. 
 </p>
    
-</div>
+
   
  <div class="kontaktknappar">
   
-<div><a href="mailto:info@aventyrsupplevelser.com" class="kontaktbutton">info@aventyrsupplevelser.com</a></div>
+<div><a href="mailto:info@aventyrsupplevelser.com" class="omosskontakt">info@aventyrsupplevelser.com</a></div>
 
-<div><a href="tel:+461161175" class="kontaktbutton">+46 (0) 11 611 75</a></div>
-  
+<div><a href="tel:+461161175" class="omosskontakt">+46 (0) 11 611 75</a></div>
   </div>
-    
+    </div>
+    <div id="butiksloggor">
+  
+      <a href="#headrush"><img class="butiklogosclass"  src="/images/hrdistributor.jpg" height="60"></a>
+  
+      <a href="#headrush"><img class="butiklogosclass" src="/images/trubluelogo.png" height="60"></a>
+  
+    <a href="#headrush"><img class="butiklogosclass"  src="/images/zipstoplogo.png" height="60"></a>
+ 
+      <br>
+    <a href="#headrush"><img class="butiklogosclass" src="/images/quickjumplogo.png" height="60"></a>
+     <a href="#brakehawk"><img class="butiklogosclass" src="/images/brakehawklogo.jpg" height="75"></a>
+     <a href="#moneky"><img class="butiklogosclass" src="/images/monkeyhardwarelogo.jpg" height="75"></a>
+      </div>
 </div>
 
 
   
-<div id="butiksloggor">
-  
-  <img class="butiklogosclass"  src="/images/hrdistributor.jpg" height="90">
-  
-  <img class="butiklogosclass" src="/images/trubluelogo.png" height="90">
-  
-<img class="butiklogosclass"  src="/images/zipstoplogo.png" height="90">
- 
-  <br>
-<img class="butiklogosclass" src="/images/quickjumplogo.png" height="90">
-<img class="butiklogosclass" src="/images/brakehawklogo.jpg" height="110">
-<img class="butiklogosclass" src="/images/monkeyhardwarelogo.jpg" height="110">
-  </div>
+
  
  <div id="allaprodukter">
      
