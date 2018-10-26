@@ -31,8 +31,8 @@ title: butik
  
       <br>
     <a href="#headrush"><img class="butiklogosclass" src="/images/quickjumplogo.png" height="60"></a>
-     <a href="#brakehawk"><img class="butiklogosclass" src="/images/brakehawklogo.jpg" height="75"></a>
-     <a href="#moneky"><img class="butiklogosclass" src="/images/monkeyhardwarelogo.jpg" height="75"></a>
+     <a href="#brakehawk"><img class="butiklogosclass" src="/images/brakehawklogo.jpg" height="70"></a>
+     <a href="#moneky"><img class="butiklogosclass" src="/images/monkeyhardwarelogo.jpg" height="70"></a>
       </div>
 </div>
 
