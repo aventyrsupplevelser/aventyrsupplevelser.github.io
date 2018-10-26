@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <meta name="viewport" content="width=1200">
+    <meta name="viewport" content="width=600">
 
     <title>
       {% if page.title == nil %}
@@ -88,12 +88,56 @@
         }
         
         /* 
-         * mobil homepage
+         *  general header
          */
         
+        .navitem{
+            margin:0px 8px;
+            text-decoration:none;
+            padding-bottom:3px;
+            border-bottom:2px solid;
+        }
+        
+        .navitem:hover {
+            padding-bottom:6px;
+            
+        }
+        
         /* 
-         * mobil butik service bygge
+         *  general home
          */
+        
+        .button {
+          text-decoration: none;
+          border-radius: 3px;
+          background-color:;
+          color: black;
+          text-align:center;
+          padding: 17px 22px;
+          border: solid 2px;
+          cursor: pointer;
+          display: inline-block;
+          margin-bottom:30px;
+          font-size:27px;
+         }
+  
+        .button:hover {
+        background:black; 
+        color:white;
+        text-decoration:none;
+       }
+        
+        
+        
+        /* 
+         * general butik service bygge
+         */
+        
+        
+        
+        .chooserbutton {
+            font-size:32px;
+        }
         
         /* 
          * mobil service
@@ -119,6 +163,20 @@
          * mobil hitta hit
          */
         
+        /* 
+         *  Footer
+         */
+       
+     .footeritem {
+         padding-left:20px;
+         text-decoration: none;
+         color:grey;
+     }
+     
+   .footeritem:hover {
+       text-decoration: underline;
+   }
+        
         .timmar {
             font-weight:700;
         }
@@ -136,11 +194,82 @@
        
         @media (max-width: 1200px) {
             /* Single column stuff here */
+                       
+
+                        #centerdiv {
+                            width: 600px;
+                        }
+                        
+                        #headerall {
+                            padding-bottom:20px;
+                        }
+                        
+                        #logga {
+                            width: 600px;
+                        }
+                        
+                        .navitem{
+                            font-size:20px;
+                            margin:0px 8px;
+                            text-decoration:none;
+                            padding-bottom:3px;
+                            border-bottom:2px solid;
+                        }
+                        
+                        /* 
+                         * mobil homepage
+                         */
+                        .mainpic{
+                            width:100%;
+                        }
+                        
+                        #mainnavdiv {
+                            padding-left:20px;
+                        }
+                        
+                        .maintext{
+                            margin-bottom:25px;
+                            padding:0px 15px;
+                        }
+                        
+                        .buttondiv {
+                            padding:0px 15px;
+                            text-align:;
+                            
+                        }
+                        
+                        .button {
+                            font-size:40px;
+                        }
+                        
+                        /* 
+                         * mobil chooser
+                         */
+                        
+                        #butikservicebygge {
+                            text-align:center;
+                        }
+                        
+                        /* 
+                         * mobil footer
+                         */
+                        
+                        footer {
+                            width:600px;
+                            text-align: left;
+                            margin-top: 50px;
+                            font-size: 18px;
+                            margin-bottom:1000px;         
+                        }
+                        
+                        .footeritem {
+                            line-height:1.65em;
+                        }
             
 
         }
         
-        @media (min-width: 0px) {
+        @media (min-width: 1200px) {
             /* Multicolumn stuff here */
 
             #centerdiv {
@@ -165,22 +294,9 @@
 
                .mainpic{
                    width:370px;
-                   border-radius: 2px; 
+                    border-radius: 2px; 
                }
-
-               .navitem{
-                   margin:0px 8px;
-                   text-decoration:none;
-                   padding-bottom:3px;
-                   border-bottom:2px solid;
-               }
-               
-               .navitem:hover {
-                   padding-bottom:6px;
-                   
-               }
-                   
-               
+                  
                #maincontainer {
                    width: 1200px;
                    display:flex;
@@ -198,37 +314,15 @@
                    margin-bottom:20px;
                }
                
-               .button {
-                 text-decoration: none;
-                 border-radius: 3px;
-                 background-color:;
-                 color: black;
-                 text-align:center;
-                 padding: 17px 22px;
-                 border: solid 2px;
-                 cursor: pointer;
-                 display: inline-block;
-                 margin-bottom:30px;
-                 font-size:27px;
-                }
-         
-               .button:hover {
-               background:black; 
-               color:white;
-               text-decoration:none;
-              }
+               
               
               /* 
                * Bygge Butik Service 
                */
                 
-                #butikservicebygge{
-                    align-items:center;
-                }
-                
-                .chooserbutton {
-                    font-size:32px;
-                }
+              #butikservicebygge{
+                  align-items:center;
+              }
                 
                 /* 
                  *  Service 
@@ -786,20 +880,6 @@
                    padding:20px;
                }
                
-               
-               /* 
-                *  Footer
-                */
-              
-            .footeritem {
-                padding-left:20px;
-                text-decoration: none;
-                color:grey;
-            }
-            
-          .footeritem:hover {
-              text-decoration: underline;
-          }
           
           
       }
