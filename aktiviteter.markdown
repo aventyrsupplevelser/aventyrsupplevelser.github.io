@@ -305,7 +305,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 
 
 <div id="pristabell" class="">
-    <h1 >Priser och bokning</h1>
+    <h1 class="mobilpadding">Priser och bokning</h1>
 
 <table class="desktoptable">
   <tr>
@@ -403,7 +403,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   </tr>
   
 </table>
-   <p style="display:inline-block;">
+   <p style="display:inline-block;" class="mobilpadding">
    Detta är baspaket, kan förlängas vid överenskommelse. 
   </p>
   
@@ -411,7 +411,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   
   <div id="kanot">
   <h3>
-    <a href="#hyrakanot" class="tabelllink">Kanotuthyrning</a>
+    <a href="#hyrakanot" class="tabelllink kanotuthyrning">Kanotuthyrning</a>
   </h3>
   <table>
   <tr> 
@@ -450,11 +450,11 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 </div>
 
 <div id="nardetardags" class="">
-<h1>
+<h1 class="mobilpadding">
   När det är dags
 </h1>
   
-<div id="dagsbox">
+<div id="dagsbox" class="mobilpadding">
   
  <div class="dagskolumn"> 
 <div class="dagsitem"> <img src="/images/boots.png" class="dagsicon"><div class="dagstext">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</div>
