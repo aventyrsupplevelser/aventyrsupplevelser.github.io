@@ -482,7 +482,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 
   
 <div id="varliggerparkerna">
-    <h1>
+    <h1 class="mobilpadding">
        Var ligger parkerna?
     </h1>
 
@@ -503,7 +503,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="glotternvagbeskrivning">
 
 <div class="buttondiv"> <a href="https://www.google.com/maps/dir/?api=1&destination=58.697130,16.189644" class="button vagbeskbutton">Vägbeskrivning till Glotterns Vildmarkspark<br>(öppnar i Google Maps)</a></div>
-<a href="#gammaldags">Gammaldags vägbeskrivning. </a>
+<a class="mobilpadding" href="/hittahit/#gammaldags">Gammaldags vägbeskrivning. </a>
 </div>
 
 </div>
