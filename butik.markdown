@@ -60,7 +60,7 @@ Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller r
          <b>22 950 SEK</b>
        </h3>
        <p class="mobilpadding">
-Trublue Autobelay är speciellt anpassad till klätterväggar men fungerar även bra i en Äventyrspark. </p>   
+Trublue Autobelay är speciellt anpassad till klätterväggar men fungerar även bra i en äventyrspark. </p>   
  	</div>
  	<div class="produkt">
  		<img src="/images/trubueautobelay.jpg"  class="produktimg">
