@@ -155,9 +155,17 @@
          * mobil aktiviteter
          */
         
+        
         /* 
-         * mobil omoss
+         * general omoss
          */
+        
+          
+          .omosskontakt:hover {
+          background:black; 
+          color:white;
+          text-decoration:underline;
+      }
         
         /* 
          * mobil hitta hit
@@ -194,6 +202,12 @@
        
         @media (max-width: 1200px) {
             /* Single column stuff here */
+            
+                        .mobilreverse 
+                        {
+                            display:flex;
+                            flex-direction:column-reverse;
+                        }
                        
 
                         #centerdiv {
@@ -209,7 +223,7 @@
                         }
                         
                         .navitem{
-                            font-size:20px;
+                            font-size:22px;
                             margin:0px 8px;
                             text-decoration:none;
                             padding-bottom:3px;
@@ -243,6 +257,30 @@
                         }
                         
                         /* 
+                         * mobil omoss
+                         */
+                        
+                        .omsossbild {
+                            width:600px;
+                        }
+                        
+                        .omosstext {
+                            padding:20px 10px 20px 10px;
+                        }
+                        
+                        .omosskontakt {
+                          box-sizing:border-box;
+                          text-decoration:none;
+                          color: black;
+                          text-align:center;
+                          padding: 14px 23px;
+                          border: solid 2px black;
+                          display: inline-block;
+                          font-size:30px;
+                          margin:10px 10px 10px 0px;
+                      }
+                        
+                        /* 
                          * mobil chooser
                          */
                         
@@ -263,7 +301,7 @@
                         }
                         
                         .footeritem {
-                            line-height:1.65em;
+                            line-height:1.7em;
                         }
             
 
@@ -561,6 +599,7 @@
                  *  Om oss 
                  */
                 
+                
                 .omosskontakt {
                   box-sizing:border-box;
                   text-decoration:none;
@@ -573,20 +612,8 @@
                   font-size:;
                   margin:25px 10px 25px 0px;
               }
-                  
-                  .omosskontakt:hover {
-                  background:black; 
-                  color:white;
-                  text-decoration:underline;
-              }
+             
               
-              #omosscontainer{
-              display:;
-              }
-              #pappapic{
-              box-sizing:border-box;
-              max-width:px;
-              }
             .omosstext  {
               box-sizing:border-box;
               max-width:600px;
@@ -599,6 +626,11 @@
                   align-items:center; 
                   margin-bottom:60px;
               }
+              
+              .omsossbild{
+                   width:450px;
+              }
+             
   
               
                 /* 
