@@ -457,11 +457,11 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="dagsbox" class="mobilpadding">
   
  <div class="dagskolumn"> 
-<div class="dagsitem"> <img src="/images/boots.png" class="dagsicon"><div class="dagstext">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</div>
+<div class="dagsitem"> <img src="/images/boots.png" class="dagsicon"><div class="dagstext"><p>Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</p></div>
   </div>
  <div class="dagsitem">
    <img src="/images/swim.jpg" class="dagsicon">
-  <div class="dagstext">Ta med badkläder!</div>
+  <div class="dagstext"><p>Ta med badkläder!</p></div>
     </div>
   
   </div>
@@ -469,10 +469,10 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   <div class="dagskolumn">
  <div class="dagsitem">
    <img src="/images/dass.png" class="dagsicon">
-  <div class="dagstext">Dass finns både vid Sörsjön och Glottern.</div>
+  <div class="dagstext"><p>Dass finns både vid Sörsjön och Glottern.</p></div>
     </div>
 <div class="dagsitem"> <img src="/images/karta.png" class="dagsicon">
- <div class="dagstext">Se till att du åker till den rätta av <a href="#vagbeskrivningar">våra två platser!</a> </div></div>
+ <div class="dagstext"><p>Se till att du åker till den rätta av <a href="#vagbeskrivningar">våra två platser!</a></p></div></div>
 </div>
   
   </div>
