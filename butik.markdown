@@ -6,21 +6,25 @@ title: butik
   </h1>
 <div id="butikintro">
    
- <div id="butikintrotext">
+ <div id="butikintrotext" markdown="1">
   
   
-<p>Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush</a>, <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>. Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller ring om du vill veta mer om våra produkter eller beställa. 
-</p>
+Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush,</a> <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>.  
+ 
+Vi kan även beställa hem personlig säkerhetsutrustning såsom selar, slingor och hjälmar från exempelvis Petzl och Beal samt instegssäkringar från ISC.  
+
+Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller ring om du vill veta mer om våra produkter eller beställa. 
    
 
   
- <div class="kontaktknappar">
-  
-<div><a href="mailto:info@aventyrsupplevelser.com" class="omosskontakt">info@aventyrsupplevelser.com</a></div>
+<div class="kontaktknappar">
+
+<div><a href="mailto:info@aventyrsupplevelser.com" class="omosskontakt">info@aventyrsupplevelser.com</a>
+</div>
 
 <div><a href="tel:+461161175" class="omosskontakt">+46 (0) 11 611 75</a></div>
-  </div>
-    </div>
+</div>
+</div>
     <div id="butiksloggor">
   
       <a href="#headrush"><img class="butiklogosclass"  src="/images/hrdistributor.jpg" height="60"></a>
