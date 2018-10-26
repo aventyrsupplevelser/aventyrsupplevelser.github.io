@@ -21,7 +21,7 @@ title: home
     </div>
     <div class="maintext">
     <h1>Vildmarkspaket och teambuilding</h1>
-Vi anordnar <strong>teambuilding och vildmarks</strong>-upplevelser åt företag, skolor och privatpersoner.  </div>
+Vi anordnar teambuilding och vildmarks-upplevelser åt företag, skolor och privatpersoner.  </div>
 <div class="buttondiv"> <a href="/aktiviteter" class="button">Upptäck aktiviteter</a></div>
 </div>
 
@@ -31,7 +31,7 @@ Vi anordnar <strong>teambuilding och vildmarks</strong>-upplevelser åt företag
     </div>
     <div class="maintext">
     <h1>Konstruktion och material</h1>
-    Vi hjälper dig att <strong>bygga höghöjdsbanor</strong> och ziplines, samt är återförsäljare och servicecenter för <strong>Headrush</strong>. 
+    Vi hjälper dig att bygga höghöjdsbanor och ziplines, samt är återförsäljare och servicecenter för Headrush. 
     </div>
     <div class="buttondiv"><a href="/konstruktionbutik" class="button">Bygg och handla</a></div>
 </div>
