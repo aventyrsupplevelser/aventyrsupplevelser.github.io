@@ -43,11 +43,11 @@ Båda parkerna ligger vid **väg 55** mellan Åby och Katrineholm. Från E4:an 
 
 ### Till Sörsjöns Äventyrspark
  
-Sväng av 55:an vid **skyltning mot "Sörsjön"** och följ skyltar i cirka 6 km. Vid Sörsjöns Camping – fortsätt till **den stora parkeringen**, och gå cirka 100 m förbi badplatsen **till höger om sjön**.  
+Sväng av 55:an vid **skyltning mot "Sörsjön"** och följ skyltar i cirka 6 km. Vid Sörsjöns Camping – fortsätt till den **stora parkeringen**, och gå cirka 100 m förbi badplatsen till **höger om sjön**.  
   
 ### Till Glotterns Vildmarkspark
  
-Sväng av 55:an mot **"Äventyrsbana", "Glotternskogen"**. Följ grusvägen i 3.4 km till en liten **parkeringsficka** med **träskylten "Äventyr"** på vänster sida. Parkera där och **följ skyltarna** i 5 minuter.  
+Sväng av 55:an mot **"Äventyrsbana"**, "Glotternskogen". Följ grusvägen i 3.4 km till en liten **parkeringsficka** med träskylten "Äventyr" på vänster sida. Parkera där och **följ skyltarna** i 5 minuter.  
 </div>
 
   
