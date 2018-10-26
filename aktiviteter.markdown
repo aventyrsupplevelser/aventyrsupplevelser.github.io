@@ -307,7 +307,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="pristabell" class="">
     <h1 >Priser och bokning</h1>
 
-<table>
+<table class="desktoptable">
   <tr>
     <th>Aktivitetspaket</th>
     <th>Tid</th>
@@ -349,6 +349,54 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
     <td>2 h</td>
      <td>3 500 SEK</td>
     <td>400 SEK exkl. moms</td>
+    <td> 350 SEK</td>
+     <td>250 SEK</td>
+    
+  </tr>
+  
+</table>
+<table class="mobiltable">
+  <tr>
+    <th>Aktivitets-<br>paket</th>
+    <th>Tid</th>
+    <th>Lägsta pris <br>per grupp</th>
+    <th>Företag <span class='notbold'><br>(per person<br>exkl. moms)</span> </th>
+    <th>Privat-<br>personer <span class='notbold'><br>(per person)</span> </th>
+    <th>Skolor <span class='notbold'><br>(per person)</span></th>
+    
+  </tr>
+  <tr>
+    <td><a href="#sorsjonsaventyrspark" class="tabelllink">Sörsjöns Äventyrspark</a></td>
+    <td>2.5 h</td>
+    <td>4 000 SEK</td>
+    <td>400 SEK</td>
+    <td>350 SEK</td>
+     <td>350 SEK</td>
+     
+  </tr>
+  <tr>
+    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
+    <td>3.5 h</td>
+    <td>5 000 SEK</td>
+    <td>500 SEK</td>
+    <td>400 SEK</td>
+     <td>300 SEK</td>
+     
+  </tr>
+  <tr>
+    <td><a href="#teambuilding" class="tabelllink">Teambuilding</a></td>
+    <td>3.5 h</td>
+    <td>3 000 SEK</td>
+    <td>350 SEK</td>
+    <td>300 SEK</td>
+     <td>250 SEK</td>
+     
+  </tr>
+  <tr>
+    <td><a href="#glodvandring" class="tabelllink">Glödvandring</a></td>
+    <td>2 h</td>
+     <td>3 500 SEK</td>
+    <td>400 SEK</td>
     <td> 350 SEK</td>
      <td>250 SEK</td>
     
