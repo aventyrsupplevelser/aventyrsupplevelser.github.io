@@ -11,7 +11,7 @@ title: Äventyrspaket och teambuilding
   <li><a class="navbutton" href="#varliggerparkerna">Var ligger parkerna?</a></li>
 </ul>
     <div id="aktivitetspaket">
-    <h1>
+    <h1 class="mobilpadding">
     Aktivitetspaket
     </h1>
     </div>
