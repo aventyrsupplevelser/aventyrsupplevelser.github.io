@@ -35,7 +35,7 @@ Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att öv
 </div>
 <div class="pengar">
 <img src="/images/cash.png" class="pengarikon">
-<div class="fran"> Från 5 000 SEK
+<div class="fran"> Från 4 000 SEK
 </div> 
 </div>
 <a href="#pristabell" class="pristabellbutton">Pristabell
@@ -85,10 +85,10 @@ Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, s
 
 <div class="paketinfo">
 <div class="tid">
-<img src="/images/time.png" class="tidsikon"><div class="timmar">3.5 h</div> </div>
+<img src="/images/time.png" class="tidsikon"><div class="timmar">3  h</div> </div>
 <div class="pengar">
 <img src="/images/cash.png" class="pengarikon">
-<div class="fran"> Från 4 500 SEK
+<div class="fran"> Från 5 500 SEK
 </div> 
 </div>
 <a href="#pristabell" class="pristabellbutton">Pristabell</a>
@@ -127,7 +127,7 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er!
 <div class="paketinfo">
     <div class="tid">
         <img src="/images/time.png" class="tidsikon">
-        <div class="timmar">3 h</div>
+        <div class="timmar">2 h</div>
     </div>
     <div class="pengar">
     <img src="/images/cash.png" class="pengarikon">
@@ -168,11 +168,11 @@ Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 <div class="paketinfo">
 <div class="tid">
 <img src="/images/time.png" class="tidsikon">
-<div class="timmar">3 h</div>
+<div class="timmar">1.5 h</div>
 </div>
 <div class="pengar">
 <img src="/images/cash.png" class="pengarikon">
-<div class="fran"> Från 6 000 SEK
+<div class="fran"> Från 5 000 SEK
 </div> 
 </div>
 <a href="#pristabell" class="pristabellbutton">Pristabell</a>
@@ -322,35 +322,35 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
     <td>2.5 h</td>
     <td>4 000 SEK</td>
     <td>400 SEK exkl. moms</td>
-    <td>350 SEK</td>
-     <td>350 SEK</td>
-     
-  </tr>
-  <tr>
-    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
-    <td>3.5 h</td>
-    <td>5 000 SEK</td>
-    <td>500 SEK exkl. moms</td>
     <td>400 SEK</td>
      <td>300 SEK</td>
      
   </tr>
   <tr>
+    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
+    <td>3 h</td>
+    <td>5 500 SEK</td>
+    <td>550 SEK exkl. moms</td>
+    <td>550 SEK</td>
+     <td>400 SEK</td>
+     
+  </tr>
+  <tr>
     <td><a href="#teambuilding" class="tabelllink">Teambuilding</a></td>
-    <td>3.5 h</td>
-    <td>3 000 SEK</td>
-    <td>350 SEK exkl. moms</td>
-    <td>300 SEK</td>
+    <td>2 h</td>
+    <td>4 000 SEK</td>
+    <td>400 SEK exkl. moms</td>
+    <td>400 SEK</td>
      <td>250 SEK</td>
      
   </tr>
   <tr>
     <td><a href="#glodvandring" class="tabelllink">Glödvandring</a></td>
-    <td>2 h</td>
-     <td>3 500 SEK</td>
-    <td>400 SEK exkl. moms</td>
-    <td> 350 SEK</td>
-     <td>250 SEK</td>
+    <td>1.5 h</td>
+     <td>5 000 SEK</td>
+    <td>450 SEK exkl. moms</td>
+    <td> 450 SEK</td>
+     <td>450 SEK</td>
     
   </tr>
   
@@ -370,35 +370,35 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
     <td>2.5 h</td>
     <td>4 000 SEK</td>
     <td>400 SEK</td>
-    <td>350 SEK</td>
-     <td>350 SEK</td>
-     
-  </tr>
-  <tr>
-    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
-    <td>3.5 h</td>
-    <td>5 000 SEK</td>
-    <td>500 SEK</td>
     <td>400 SEK</td>
      <td>300 SEK</td>
      
   </tr>
   <tr>
+    <td><a href="#aventyriglottern" class="tabelllink">Äventyr i Glottern</a></td>
+    <td>3 h</td>
+    <td>5 500 SEK</td>
+    <td>550 SEK</td>
+    <td>550 SEK</td>
+     <td>400 SEK</td>
+     
+  </tr>
+  <tr>
     <td><a href="#teambuilding" class="tabelllink">Teambuilding</a></td>
-    <td>3.5 h</td>
-    <td>3 000 SEK</td>
-    <td>350 SEK</td>
-    <td>300 SEK</td>
+    <td>2 h</td>
+    <td>4 000 SEK</td>
+    <td>400 SEK</td>
+    <td>400 SEK</td>
      <td>250 SEK</td>
      
   </tr>
   <tr>
     <td><a href="#glodvandring" class="tabelllink">Glödvandring</a></td>
-    <td>2 h</td>
-     <td>3 500 SEK</td>
-    <td>400 SEK</td>
-    <td> 350 SEK</td>
-     <td>250 SEK</td>
+    <td>1.5 h</td>
+     <td>5 000 SEK</td>
+    <td>450 SEK</td>
+    <td> 450 SEK</td>
+     <td>450 SEK</td>
     
   </tr>
   
@@ -418,20 +418,18 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   <th>Kanottyp</th>
     <th>1 dag</th>
     <th>4 dagar</th>
-    <th>7 dagar</th>
     </tr> 
     
     <tr>
     <td>Kanadensare</td>
-    <td>250 SEK</td>
-      <td>900 SEK</td>
-      <td>1 500 SEK</td>
+    <td>300 SEK</td>
+      <td>1000 SEK</td>
+      
     </tr>
     <tr>
     <td>Kajak</td>
-    <td>300 SEK</td>
-      <td>100 SEK</td>
-      <td>1 700 SEK</td>
+    <td>350 SEK</td>
+      <td>1000 SEK</td>
     </tr>
     </table>
 </div>
