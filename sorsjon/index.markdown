@@ -4,59 +4,7 @@ title: home
 <html lang="en">
 <style>
     
-.introseriepic {
-    border-radius: px; 
-    width:500px;
-    height:px;
-}
 
-.introitem {
-    width:550px;
-    margin-bottom:20px;
-}
-
-#introserie {
-    display:flex;
-    flex-wrap:wrap;
-}
-
-.introitemtext {
-    width:500px;
-    padding:10px;
-}
-
-#vagbcontainer {
-    display:;
-    align-items:;
-}
-
-#sorsjonvagbeskrivning {
-    padding:0px 30px;
-}
-
-.button {
-        text-decoration: none;
-        border-radius: 3px;
-        background-color:;
-        color: black;
-        text-align:center;
-        padding: 15px 20px;
-        border: solid 2px;
-        cursor: pointer;
-        display: inline-block;
-        margin-bottom:30px;
-        font-size:25px;
-}
-.button:hover 
-  {
-background:black; 
-color:white;
-text-decoration:none;
- }
- 
-#hide {
-    display:none;
-}
  
 </style>
 
@@ -76,7 +24,7 @@ text-decoration:none;
 </ul>
   
 </div>
-<div><h2>I Sörsjöns Äventyrspark kan du...</h2></div>
+<div><h2 class="mobilpadding">I Sörsjöns Äventyrspark kan du...</h2></div>
 <br>
 
 <div id="introsection">
@@ -117,7 +65,7 @@ Klättra om du är äldre 3 år gammal.
 <div>
     
 <div class="load-turitop" data-service="P1" data-lang="sv" data-embed="box"></div>
-<h2>
+<h2 class="mobilpadding">
 Sidan är under konstruktion. 
 </h2>
 

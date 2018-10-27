@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <meta name="viewport" content="width=600, initial-scale=1">
+    <meta name="viewport" content="width=600">
 
     <title>
       {% if page.title == nil %}
@@ -71,6 +71,14 @@
             
         }
         
+        .navitem{
+            font-size:22px;
+            margin:0px 8px;
+            text-decoration:none;
+            padding-bottom:3px;
+            border-bottom:2px solid;
+        }
+        
         footer {
             text-align: center;
             margin-top: 50px;
@@ -86,21 +94,47 @@
             font-weight:400;
         }
         
-        .navbutton{
-            box-sizing:border-box;
-            text-decoration: none;
-            color: black;
-            text-align:center;
-            padding: 10px 15px;
-            border: solid 2px black;
-            display: inline-block;
-            margin:10px;
-        }
+        
         
         .navbutton:hover {
         background:black; 
         color:white;
         text-decoration:;
+    }
+    
+   
+
+    #vagbcontainer {
+        display:;
+        align-items:;
+    }
+
+    #sorsjonvagbeskrivning {
+        padding:0px 30px;
+    }
+
+    .button {
+            text-decoration: none;
+            border-radius: 3px;
+            background-color:;
+            color: black;
+            text-align:center;
+            padding: 15px 20px;
+            border: solid 2px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom:30px;
+            font-size:25px;
+    }
+    .button:hover 
+      {
+    background:black; 
+    color:white;
+    text-decoration:none;
+     }
+ 
+    #hide {
+        display:none;
     }
         
        
@@ -114,9 +148,43 @@
             #centerdiv {
                 width: 600px;
             }
-            .mainpic{
-                width:67%;
+            
+            .mobilpadding {
+                padding:0px 10px;
             }
+            
+            .navbutton{
+                box-sizing:border-box;
+                text-decoration: none;
+                color: black;
+                text-align:center;
+                padding: 10px 15px;
+                border: solid 2px black;
+                display: inline-block;
+                font-size:25px;
+                margin:10px;
+            }
+            
+            #aktul {
+                padding:0px;
+                display:flex;
+                flex-wrap:wrap;
+            }
+            
+            .introseriepic { 
+                width:600px;
+            }
+            
+            .introitemtext {
+                padding:10px 10px 30px 10px;
+            }
+            
+            .load-turitop {
+                max-width:600px;
+            }
+            
+            
+            
 
         }
         
@@ -146,28 +214,46 @@
                    margin-right:px;
                    
                }
+               
+               .navbutton{
+                   box-sizing:border-box;
+                   text-decoration: none;
+                   color: black;
+                   text-align:center;
+                   padding: 10px 15px;
+                   border: solid 2px black;
+                   display: inline-block;
+                   margin:10px;
+               }
 
                
                .navitem{
                    padding:6px;
                }
                
-               #introsection {
-                   display:flex;
-                   flex-wrap:wrap;
-               }
-                
-               #introtext {
-                   width:600px;
-               }
-               
-               #introvideo {
-                   width:600px;
-               }
                
                #aktiviteternav{
                    padding-top:10px;
                    padding-bottom:10px;
+               }
+               
+               .introseriepic {
+                   width:500px;
+               }
+
+               .introitem {
+                   width:550px;
+                   margin-bottom:20px;
+               }
+
+               #introserie {
+                   display:flex;
+                   flex-wrap:wrap;
+               }
+
+               .introitemtext {
+                   width:500px;
+                   padding:10px;
                }
        }        
         
@@ -199,10 +285,10 @@
         <header>
             <div id="headerall">
                 <div id="headerlogo">
-                    <a href="/"> <img id="logga" src="/sorsjon/images/sorsjonlogga.png" width="800px"></a>
+                    <a href="/sorsjon"> <img id="logga" src="/sorsjon/images/sorsjonlogga.png" width="800px"></a>
                 </div>
                 <div id="mainnavdiv">
-                    <a href="/english" class="navitem">english</li></a>
+                    <a href="/english" class="navitem">English</li></a>
                 </div>
             </div>
         </header>
