@@ -215,7 +215,7 @@ Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa 
 
 Vi kan dessutom anordna paddlingskurser eller paddlingar med guide.
 <div class="paketinfo">
-<a href="#pristabell" class="pristabellbutton">Pristabell</a>
+<a href="#kanot" class="pristabellbutton">Pristabell</a>
 </div>
 </div>
 <div class="paketmedia">
