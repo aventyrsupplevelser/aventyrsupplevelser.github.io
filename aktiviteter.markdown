@@ -21,11 +21,11 @@ title: Äventyrspaket och teambuilding
     <div class="pakettext" markdown="1">
 ## Sörsjöns Äventyrspark
 
-I Sveriges största äventyrspark kan du göra dina barndomsklätterfantasier till verklighet. Drömde du om att svinga dig i lianer som Tarzan, eller kanske om att cykla mellan träden? 
+I <strong>Sveriges största äventyrspark</strong> kan du göra dina barndomsklätterfantasier till verklighet. Drömde du om att svinga dig i lianer som <strong>Tarzan</strong>, eller kanske om att cykla mellan träden? 
 
-Med 19 banor från 2 till 20 meters höjd, och dessutom en 375 meter lång linbana över en sjö, finns här något för alla - väck lekfullheten till liv och möt rädslorna, njut av naturen eller utmana musklerna!
+Med 19 banor från 2 till 20 meters höjd, och dessutom <em>en 375 meter lång linbana</em> över en sjö, finns här något för alla - väck <strong>lekfullheten</strong> till liv och möt rädslorna, njut av naturen eller utmana musklerna!
 
-Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att överkomma utmaningar och hjälpa varandra till vår fulla potential. 
+Genom att mötas i <em>sårbara</em> och <em>adrenalinfyllda situationer</em>, lär vi oss att överkomma utmaningar och hjälpa varandra till vår fulla potential. 
 
 <div class="paketinfo">
 <div class="tid">
@@ -76,11 +76,11 @@ Genom att mötas i sårbara och adrenalinfyllda situationer, lär vi oss att öv
 
 
   
-En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. Ensamna mitt ute i skogen och med en egen instruktör leker vi och tävlar, hämtar vatten från sjön och kokar kaffe över öppen eld. 
+En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. <strong>Ensamna mitt ute i skogen</strong> och med en egen instruktör leker vi och tävlar, hämtar vatten från sjön och kokar kaffe över öppen eld. 
 
-Vi skräddarsyr ett unikt program med fokus på att svetsa just er grupps sammanhållning ännu starkare. 
+Vi skräddarsyr ett unikt program med fokus på att svetsa just er grupps <strong>sammanhållning</strong> <em>ännu starkare</em>.  
 
-Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
+Utöver den vackra <strong>naturen</strong>, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
  
 
 <div class="paketinfo">
@@ -115,11 +115,13 @@ Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, s
   <div class="pakettext" markdown="1">
 ## Teambuilding
 
-Vi designar roliga samarbetsövningar som tränar er förmåga att lyssna på varandra och komma med nya utanför–boxen–lösningar till kluriga problem. 
+Vi designar roliga samarbetsövningar som tränar er förmåga att <strong>lyssna på varandra</strong> och komma med <em>nytänkande lösningar</em> till kluriga problem. 
 
-Genom att möta situationer ni inte befinner er i till vardags, upptäcker ni nya egenskaper hos varandra och kan därmed utmana de ofta omedvetet invanda rollerna och mönstren ni har på jobbet eller i skolan.
+Genom att möta situationer ni inte befinner er i till vardags, upptäcker ni nya egenskaper hos varandra och kan därmed <em>utmana de ofta omedvetet invanda rollerna</em> och mönstren ni har på jobbet eller i skolan.
 
-Vårt teambuildingpaket är lätt att packa ihop och ta med till er!
+Det finns inget som stärker gemenskapen mer än ett <strong>gott skratt</strong>!
+
+Vårt teambuildingpaket är <strong>lätt att packa ihop</strong> och ta med till er.
 
 
 
@@ -155,13 +157,13 @@ Vårt teambuildingpaket är lätt att packa ihop och ta med till er!
     <div class="pakettext" markdown="1">
 ## Glödvandring
 
-Är det möjligt att gå på elden? Detta handlar om att genomföra det vi inte tror är möjligt, och upptäcka att vi plötsligt tycker det är lätt. 
+<strong>Är det möjligt</strong> att <em>gå på elden</em>? Detta handlar om att genomföra det vi inte tror är möjligt, och upptäcka att vi plötsligt tycker det är lätt.
 
-Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att stanna i fokus, ända tills vi kan samla oss till att ta steget. 
+Vi gör <strong>fokuseringsövningar</strong> som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att <em>stanna i fokus</em>, ända tills vi kan samla oss till att <strong>ta steget. </strong>
 
 Finns det annat i vardagen eller på arbetsplatsen som verkar omöjligt?
 
-Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
+Glödvandringar <strong>fungerar året runt</strong>, och vi tar gärna med oss glöden till er!
 
 
 
@@ -209,11 +211,11 @@ Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
 ## Hyra kanot
 
-Om du letar efter lugn och ro, vill upptäcka hemliga vikar och njuta av naturen så kan du hyra kanoter av oss. 
+Om du letar efter <strong>lugn och ro</strong>, vill upptäcka hemliga vikar och <em>njuta av naturen</em> så kan du hyra kanoter av oss. 
 
-Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
+Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både <em>kanadensare</em> (öppna kanoter) och <em>kajaker</em> (stängda) till uthyrning.
 
-Vi kan dessutom anordna paddlingskurser eller paddlingar med guide.
+Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 <div class="paketinfo">
 <a href="#kanot" class="pristabellbutton">Pristabell</a>
 </div>
