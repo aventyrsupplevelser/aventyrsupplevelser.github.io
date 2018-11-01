@@ -4,13 +4,32 @@ title: home
 <html lang="en">
 <style>
     
+#konstruktion {
+    margin-bottom:30px;
+    width:600px;
+}
 
- 
+#presentkort{
+    display:flex;
+    margin-bottom:30px;
+    width:600px;
+}
+
+.presentkortclass {
+    padding-right:30px;
+}
+
+a.lightbox-button-turitop {
+    font-family:helvetica neue;
+    font-size:30px;
+    padding:20px 15px;
+}
+
 </style>
 
 <div id="aktiviteternav" class="">
     
-<ul id="aktul">
+<ul id="aktul" style="display:none;">
     <li><a class="navbutton" href="#varliggerparkerna">Så funkar det</a></li>
    <li><a class="navbutton" href="#pristabell">Priser och öppettider</a></li>
    <li><a class="navbutton" href="#aktiviteter">Boka</a></li>
@@ -53,7 +72,7 @@ Paddla och cykla genom himlen, eller rida på flygande elefanter.
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/barn.jpg">
 <div class="introitemtext">
-Klättra om du är äldre 3 år gammal. 
+Klättra om du är mellan 3 och 99 år gammal. 
 </div>
 </div>
 </div>
@@ -62,14 +81,32 @@ Klättra om du är äldre 3 år gammal.
     
 </div>
 
-<div>
+<div id="konstruktion">
     
-<div class="load-turitop" data-service="P1" data-lang="sv" data-embed="box"></div>
-<h2 class="mobilpadding">
-Sidan är under konstruktion. 
-</h2>
+    <h3 class="mobilpadding">
+    Sidan är under konstruktion, färdig om ett par veckor. Gå till <a href="http://aventyrsupplevelser.com">aventyrsupplevelser.com</a> så länge, eller köp ett presentkort till någon julklapp!
+    </h3>
+    
+</div>
+
+<div id="presentkort" class="mobilpadding">
+<div class="load-turitop presentkortclass" data-service="P1" data-lang="sv" data-embed="button" data-gift="checked">Köp presentkort</div>
+
+
+</div>
+
+
+
+
+    
+
 
 <div id="hide">
+    
+    <div id="redeemgv" class="load-turitop presentkortclass" data-lang="sv" data-embed="redeemgv">Lös in presentkort</div>
+    
+    <div class="load-turitop" data-service="P1" data-lang="sv" data-embed="box"></div>
+    
 
 <div id="safunkardet" markdown="1">
 
