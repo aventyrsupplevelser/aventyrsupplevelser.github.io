@@ -103,6 +103,28 @@
             
         }
         
+        .hittaruntnav {
+            display:flex; 
+            align-items:center;
+            margin-bottom:px;
+        }
+        
+        i {
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 7px;
+        }
+
+        .arrow {
+            padding:0px 10px 0px 15px;
+        }
+
+        .arrowleft {
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+        }
+        
         /* 
          *  general home
          */
@@ -1325,7 +1347,7 @@
                 <div id="mainnavdiv">
                     <a href="/hittahit" class="navitem">Hitta hit</a>
                     <a href="/omoss" class="navitem">Om oss</a>
-                    <a href="/english" class="navitem">English</a>
+                    <a href="/english" style="display:none";class="navitem">English</a>
                 </div>
             </div>
         </header>
