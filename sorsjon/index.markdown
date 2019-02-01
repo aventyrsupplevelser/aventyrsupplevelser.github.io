@@ -237,7 +237,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div id="prisersection" class="greyback">
 <div id="prisercontainer">
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/Ageadult.png"></div>
+<div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/AgeAdult.png"></div>
 <div class="pricestext">
 <h3>Vuxen 16 år +</h3>
 
@@ -245,7 +245,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic1" src="/sorsjon/images/Ageteen.png"></div>
+<div class="prispicdiv"><img class="priserpic1" src="/sorsjon/images/AgeTeen.png"></div>
 <div class="pricestext">
 <h3>Ungdom 10-16 år</h3>
 
@@ -253,7 +253,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic2" src="/sorsjon/images/Ageyouth.png"></div>
+<div class="prispicdiv"><img class="priserpic2" src="/sorsjon/images/AgeYouth.png"></div>
 <div class="pricestext">
 <h3>Barn upp till 9 år</h3>
 
