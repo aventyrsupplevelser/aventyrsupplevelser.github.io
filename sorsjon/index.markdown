@@ -118,7 +118,7 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div id="harfinssocksosection" class="greyback">
 <div id="harfinnsocksa">
 <div class="harfinnselement">
-<img class="harfinnspic mobilkanot" src="/sorsjon/images/canoe.png">
+<img class="harfinnspic mobilkanot" src="/sorsjon/images/Canoe.png">
 <div>Vi hyr även ut kanoter...</div>
 </div>
 <div class="harfinnselement">
@@ -237,7 +237,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div id="prisersection" class="greyback">
 <div id="prisercontainer">
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/ageadult.png"></div>
+<div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/Ageadult.png"></div>
 <div class="pricestext">
 <h3>Vuxen 16 år +</h3>
 
@@ -245,7 +245,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic1" src="/sorsjon/images/ageteen.png"></div>
+<div class="prispicdiv"><img class="priserpic1" src="/sorsjon/images/Ageteen.png"></div>
 <div class="pricestext">
 <h3>Ungdom 10-16 år</h3>
 
@@ -253,7 +253,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 <div class="pricescolumn" markdown="1">	
-<div class="prispicdiv"><img class="priserpic2" src="/sorsjon/images/ageyouth.png"></div>
+<div class="prispicdiv"><img class="priserpic2" src="/sorsjon/images/Ageyouth.png"></div>
 <div class="pricestext">
 <h3>Barn upp till 9 år</h3>
 
