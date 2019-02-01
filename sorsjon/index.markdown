@@ -3,206 +3,457 @@ title: home
 ---
 <html lang="en">
 <style>
-    
-#konstruktion {
-    margin-bottom:30px;
-    width:600px;
-}
+   
 
-#presentkort{
-    display:flex;
-    margin-bottom:30px;
-    width:600px;
-}
+ a.lightbox-button-turitop {
+     font-family:helvetica neue;
+     font-size:22px;
+ 	font-weight:400;
+     padding:10px 15px;
+	 color:black;
+	 line-height:1.6em;
+	 border:black solid 3px;
+	 background:white;
+	 margin-top:20px;
+ }
+ 
+ a.lightbox-button-turitop:hover {
+	 border:black dotted 3px;
+	 color:black;
+	 background:white;
+ 	
+ }
+ 
+ .buy-now {
+	 padding:10px 15px;
+	 background:#014421;
+ }
+ 
+ 
+ a.lightbox-button-turitop-green {
+	 background-color:white;
+ 	
+ }
 
-.presentkortclass {
-    padding-right:30px;
-}
-
-a.lightbox-button-turitop {
-    font-family:helvetica neue;
-    font-size:30px;
-    padding:20px 15px;
-}
 
 </style>
 
 <div id="aktiviteternav" class="">
     
-<ul id="aktul" style="display:none;">
-    <li><a class="navbutton" href="#varliggerparkerna">Så funkar det</a></li>
-   <li><a class="navbutton" href="#pristabell">Priser och öppettider</a></li>
-   <li><a class="navbutton" href="#aktiviteter">Boka</a></li>
-  <li><a class="navbutton" href="#varliggerparkerna">Hitta hit</a></li>
-  <li><a class="navbutton" href="#varliggerparkerna">Vanliga frågor</a></li>
-  
-  
-  
-  
-  
-</ul>
-  
+	<ul id="aktul">
+		<li><a class="navbutton" href="#openinghours">Öppettider</a></li>
+		<li><a class="navbutton" href="#prices">Priser</a></li>
+		<li><a style="color:#014421;" class="navbutton bokanav" href="#book">Boka</a></li>
+	    <li><a class="navbutton webfind" href="#findus">Hitta hit</a></li>
+	    <li><a class="navbutton mobilfind" href="#findus">Hitta</a></li>
+	    <li><a class="navbutton webfragor" href="#faq">Vanliga frågor</a></li>
+		<li><a class="navbutton mobilfragor" href="#faq">Frågor</a></li>
+		<li><a class="navbutton webenglish" href="#english">English</a></li>
+		<li><a class="navbutton mobilenglish" href="#english">Eng.</a></li>
+		
+	</ul>
 </div>
-<div><h2 class="mobilpadding">I Sörsjöns Äventyrspark kan du...</h2></div>
-<br>
+
+<div id="sorsjonallcontent">
+<div id="introseriesection" class="greyback">
 
 <div id="introsection">
-
-
-
 <div id="introserie">
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/sverige.jpg">
-<div class="introitemtext">
-Leka bland sveriges största samling höghöjdsbanor – 19 banor från 2 till 20 meters höjd.
+<div class="introitemtext ">
+Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd...
 </div>
+</div>
+<div class="introitem">
+<img class="introseriepic" src="/sorsjon/images/barn.jpg">
+<div class="introitemtext mobilpadding">
+...för dig som är ungefär 3 till 99 år gammal...
+</div>
+</div>
+<div class="mobilintrotext mobilpadding">
+Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungefär 3 till 99 år gammal...
 </div>
 <div class="introitem"><img class="introseriepic" src="/sorsjon/images/cykel.jpg" >
-<div class="introitemtext">
-Paddla och cykla genom himlen, eller rida på flygande elefanter.
+<div class="introitemtext mobilpadding">
+...och vill uppleva att rida på flygande elefanter...
 </div>
 </div>
 
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/linbanan.jpg">
-<div class="introitemtext">
- Flyga över en sjö i en 375 meter lång linbana! 
+<div class="introitemtext mobilpadding">
+...eller flyga över en sjö i en 375 meter lång linbana!
 </div>
 </div>
-<div class="introitem">
-<img class="introseriepic" src="/sorsjon/images/barn.jpg">
-<div class="introitemtext">
-Klättra om du är mellan 3 och 99 år gammal. 
+<div class="mobilintrotext mobilpadding">
+...och vill uppleva att rida på flygande elefanter eller flyga över en sjö i en 375 meter lång linbana!
+</div>
+</div>
+  
+</div>
+</div>
+
+<div id="howtosection" class="whiteback">
+<div id="howtocontainer">
+<div>	
+<img class="howtopic" src="/sorsjon/images/HowTo1.png">
+<div class="howtotext">Du får först låna utrustning...</div>
+</div>
+<div class="mobilhowtotext">Du får först låna utrustning...</div>
+<div class="mobilhowtotext">...sen vi ger en 20 min instruktion...</div>
+<div>	
+<img class="howtopic" src="/sorsjon/images/HowTo2.png">
+<div class="howtotext">...sen vi ger en 20 min instruktion...</div>
+</div>
+<div>	
+<img class="howtopic" src="/sorsjon/images/HowTo3.png">
+<div class="howtotext">...och så 2 timmars fri lek bland träden! </div>
+</div>
+<div class="mobilhowtotext">...och så 2 timmars fri lek bland träden!</div>
+
+</div>
+</div>
+
+<div id="harfinssocksosection" class="greyback">
+<div id="harfinnsocksa">
+<div class="harfinnselement">
+<img class="harfinnspic mobilkanot" src="/sorsjon/images/canoe.png">
+<div>Vi hyr även ut kanoter...</div>
+</div>
+<div class="harfinnselement">
+<img class="harfinnspic" src="/sorsjon/images/Lake.png">
+<div>...det finns en superfin badplats...</div>
+</div>   
+<div class="harfinnselement">
+<img class="harfinnspic" src="/sorsjon/images/Campfire.png">
+<div>...och eldstad (för grillning)...</div>
+</div>
+<div class="harfinnselement">
+<img class="harfinnspic" src="/sorsjon/images/Outhouse.png">
+<div>...dass finns (bra att ha)...</div>
+</div>
+<div class="harfinnselement">
+<img class="harfinnspic" src="/sorsjon/images/HikeBike.png">
+<div>...och vandrings- och cykelstigar...</div>
+</div>
+<div class="harfinnselement">
+<img class="harfinnspic" src="/sorsjon/images/MushroomBerry.png">
+<div>...samt svamp och bär i skogen!</div>
 </div>
 </div>
 </div>
 
-    
-    
+<a id="openinghours"></a>
+<div id="oppettidersection" class="whiteback">
+<div class="currentarstid toparstid">	
+<div class="seasontitlecontainer">
+<img class="currentarstidpic" src="/sorsjon/images/SeasonWinter.png">
+<div class="currentseasontitletext"><h3>Vinter (aktuell årstid)</h3>1 nov - 5 april
+ </div>
+</div>
+<div class="currentseasondesc">
+<b></b>Endast skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
 </div>
 
-<div id="konstruktion">
-    
-    <h3 class="mobilpadding">
-    Sidan är under konstruktion, färdig om ett par veckor. Gå till <a href="http://aventyrsupplevelser.com">aventyrsupplevelser.com</a> så länge, eller köp ett presentkort till någon julklapp!
-    </h3>
-    
+<div id="oppettidercontainer">
+
+
+<div class="arstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
+<div class="seasontitlecontainer">	
+<div class="seasontitletext">
+	<h3>Vår</h3> 6 april - 14 juni </div>
+</div>
+<div class="seasondesc">
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
 </div>
 
-<div id="presentkort" class="mobilpadding">
-<div class="load-turitop presentkortclass" data-service="P1" data-lang="sv" data-embed="button" data-gift="checked">Köp presentkort</div>
-
-
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
+<div class="mobilarstidtext">
+<h3>Vår</h3> 6 april - 14 juni
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
 </div>
 
-
-
-
-    
-
-
-<div id="hide">
-    
-    <div id="redeemgv" class="load-turitop presentkortclass" data-lang="sv" data-embed="redeemgv">Lös in presentkort</div>
-    
-    <div class="load-turitop" data-service="P1" data-lang="sv" data-embed="box"></div>
-    
-
-<div id="safunkardet" markdown="1">
-
-
-Låna utrustning  
-30 min instruktion  
-2 timmars fri lek
-
-<img src="/sorsjon/images/banor.png" width="800">
-
-<div markdown="1">
-Det finns även: 
-
-Kanoter att hyra  
-badplats  
-eldstäder för grillning   
-vandrings och cykelstigar   
-svamp och bärplockning   
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
+<div class="mobilarstidtext">
+<h3>Sommar</h3> 15 juni - 18 aug 
+<br>
+<b>Dropin-öppet alla dagar kl. 10-17</b> (men bäst att <a href="#bokasection">boka</a>).
+Sista start kl. 15.
+<br>
+Stängt midsommarafton.
+</div>
 </div>
 
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
+<div class="mobilarstidtext">
+<h3>Höst</h3> 19 aug - 31 okt 
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
-
-
-<div markdown="1">
-## Öppettider 
-<img src="/sorsjon/images/oppettider.png" width="800">
-</div>
-<div markdown="1">
-## Priser 
-<img src="/sorsjon/images/priser.png" width="800">
 </div>
 
 
-<iframe src="https://adventurehero.se/widget/588b74684a9d4f00003efb04" frameborder="0" width="100%" height="800px"> </iframe>
-
-<div id="tankpa" markdown="1">
-oömma kläder och bra skor  
-ta med badkläder och fika!   
-För att inte fastna - lämna smycken hemma och sätt upp håret  
+<div class="arstid">	
+<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
+<div class="seasontitlecontainer">	
+<div class="seasontitletext"><h3>Sommar</h3> 
+15 juni - 18 aug </div>
+</div>
+<div class="seasondesc">
+<b>Dropin-öppet alla dagar kl. 10-17</b> (men bäst att <a href="#bokasection">boka</a>).
+Sista start kl. 15.
+<br>
+Stängt midsommarafton.
+</div>
+</div>
+<div class="arstid">	
+<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
+<div class="seasontitlecontainer">	
+<div class="seasontitletext"><h3>Höst</h3> 
+19 aug - 31 okt </div>
+</div>
+<div class="seasondesc">
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
+</div>
 </div>
 
-<div id="varliggerparkerna">
-    <h1>
-       Var ligger det?
-    </h1>
-    <div class="buttondiv"> <a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" class="button vagbeskbutton">Vägbeskrivning till Sörsjöns Äventyrspark <br>(öppnar i Google Maps) </a>
-    </div>
-<div id="vagbcontainer">
-    <div id="kartan">
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d132919.29280539582!2d16.12785865380364!3d58.63145344062151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46593619bd2f00e1%3A0xa5938d0ebbbc1da7!2zU8O2cnNqw7ZucyDDhHZlbnR5cnNwYXJr!5e0!3m2!1sen!2suk!4v1539984864433" width="600" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
+<a id="prices"></a>
+ 
+<div id="prisersection" class="greyback">
+<div id="prisercontainer">
+<div class="pricescolumn" markdown="1">	
+<div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/ageadult.png"></div>
+<div class="pricestext">
+<h3>Vuxen 16 år +</h3>
+
+<h3><b>400 kr</b></h3>
+</div>
+</div>
+<div class="pricescolumn" markdown="1">	
+<div class="prispicdiv"><img class="priserpic1" src="/sorsjon/images/ageteen.png"></div>
+<div class="pricestext">
+<h3>Ungdom 10-16 år</h3>
+
+<h3><b>300 kr</b></h3>
+</div>
+</div>
+<div class="pricescolumn" markdown="1">	
+<div class="prispicdiv"><img class="priserpic2" src="/sorsjon/images/ageyouth.png"></div>
+<div class="pricestext">
+<h3>Barn upp till 9 år</h3>
+
++ medföljande
+betalande vuxen 
+
+<h3><b>250 kr</b></h3>
+</div>
+</div>
+<div class="pricescolumn" markdown="1">	
+<div class="prispicdiv"><img class="priserpic4" src="/sorsjon/images/ExtendTime.png"></div>
+<div class="pricestext forlangningtext">
+<h3>Förlängning till heldag </h3>
+(endast sommar)
+
+<h3><b>150 kr</b></h3>
+</div>
+</div>
 </div>
 
-<div id="vagbeskrivningar">
+</div>
+
+<a id="book"></a>
+<div id="bokasection" class="whiteback">
+<div id="leftbok">
+<h2 class="bokningsrubrik mobilpadding">Direkt bokning</h2>
+<p id="bokningstext" class="mobilpadding">Hitta en tid som passar dig i kalendern nedan. Läs <a href="#faqsection">vanliga frågor</a> om du undrar något!</p>
+<div class="load-turitop bokningssystem" data-service="P1" data-lang="sv" data-embed="box">
+</div>
+</div>
+	<div id="rightbok" class="mobilpadding">
+	<div id="bokmail">
+	<div class="rightboktext">
+	<h2 class="bokningsrubrik">Skräddarsydd bokning</h2>
+	Är ni fler än 10 kan ni boka en tid utanför de i kalendern. Skriv ett mail till oss!
+	</div>
+	<div id="mailbuttondiv"><a class="mailbuttinlink" href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+	</div>
+	</div>
+	<div id="presentkort" class="rightboktext">
+	<h3 class="bokningsrubrik">Äventyr som present?</h3>
+	Vi säljer presentkort, så att den som får gåvan kan boka tiden!
+	<div class="load-turitop presentkortclass" data-service="P1" data-lang="sv" data-embed="button" data-gift="checked">Köp ett presentkort!</div>
+	</div>
+	</div>
+</div>
+
+
+<div id="tipssection" class="greyback">
+
+<div id="atttankapacontainer">
+<div class="tankpasection">
+
+<img class="tankpapic1 tankpapic" src="/sorsjon/images/SturdyShoes.png">
+<div class="tankpatext">
+<p>Tips är att ha på oömma kläder och bra skor när du kommer...</p>
+</div>
+</div>
+<div class="tankpasection">
+
+<img class="tankpapic2 tankpapic" src="/sorsjon/images/BathingClothes.png">
+<div class="tankpatext">
+<p>...det är trevligt att ta med badkläder och fika...</p>
+</div>
+</div>   
+<div class="tankpasection">
+<img class="tankpapic3 tankpapic haretpic" src="/sorsjon/images/HairUpJewelryOff.png">
+<div class="tankpatext">
+<p>...och för att inte fastna - lämna smycken hemma och sätt upp håret!</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<a id="findus"></a>
+<div id="hittahitsection" class="whiteback">
+<div id="vagbrightside">
+<div class="buttondiv">
+	<a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" class="button vagbeskbutton">
+		<img src="/sorsjon/images/mapicon.png" class="mapicon">
+		Vägbeskrivning till Sörsjöns Äventyrspark <br>(öppnar i Google Maps) </a>
+</div>
 
 <div id="sorsjonvagbeskrivning">
-
-<a href="/hittahit">Gammaldags vägbeskrivning. </a>
+<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> (men vi rekommenderar google maps). </a>
+</div>
+</div>
+<div id="hittahitcontainer">
+    <div id="kartan">
+<iframe class="kartaclass" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d132919.29280539582!2d16.12785865380364!3d58.63145344062151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46593619bd2f00e1%3A0xa5938d0ebbbc1da7!2zU8O2cnNqw7ZucyDDhHZlbnR5cnNwYXJr!5e0!3m2!1sen!2suk!4v1539984864433" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
 </div>
 
 
+</div>
+<div class="gammaldagsmobil">
+<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> (men vi rekommenderar google maps). </a>
+</div>
+</div>
+
+<a id="faq"></a>
+<div class="greyback" id="faqsection">
+<h2 class="sectiontitle2 mobilpadding">Vanliga frågor</h2>
+<div id="faqcontainer" class="mobilpadding">
+<div id="leftfaq" markdown="1">
+
+**Har ni även andra aktiviteter?** 
+
+Ja, vi som driver Sörsjöns Äventyrspark heter <a href="http://aventyrsupplevelser.com">Äventyrsupplevelser</a>, och vi anordnar även andra aktivitetspaket såsom teambuilding, 5-kamper, vildmarksäventyr, klättring och paddling med mera! Läs mer om dessa paket <a href="http://aventyrsupplevelser.com/teambuilding">här.</a>
+
+<br>
+
+**Tar ni kort?** 
+
+Javisst, vi tar emot både kort och kontanter på plats, men det är bättre att <a href="#book">boka</a> så ni inte behöver vänta när ni kommer!
+
+<br>
+**Har ni flera anläggningar och till vilken ska jag i så fall?**
+
+Sörsjöns Äventyrspark är vår huvudsakliga plats, där vi har 19 höghöjdsbanor och ziplines. Vi har anordnar även vissa aktiviteter vid Glotterns Vildmarkspark, där det oftast handlar om teamaktiviteter för bokade grupper. Förmodligen ska du till Sörsjön. Titta i bokningskonversationen om du osäker, eller fråga oss.
+
+<br>
+**Var finns ni?**
+
+Strax norr om Norrköping. Om ni vill hitta hit är det lättast att använda <a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark">Google Maps vägbeskrivning till oss</a>. När ni kommit till Sörsjöns Camping – fortsätt till den stora parkeringen, och gå cirka 100 m förbi badplatsen till höger om sjön. 
+
+<br>
+**Måste vi klättra samma bana när vi kommer som grupp?**
+
+Efter instruktionen får ni gärna sprida ut er och klättra som ni själva vill! Vi hjälper er att hitta en nivå som passar er, oftast rekommenderar vi att börja på grön eller gul.
+
+<br>
+**Finns det omklädningsrum?**
+
+Ja, både vid badplatsen (cirka 100 meter bort) och en smula längre bort på Sörsjöns Camping. 
+
+<br>
+**Hur mycket innan min tid behöver jag komma?**
+
+Kom gärna 10-15 minuter innan din bokade tid för avprickning och information. Instruktionen börjar på den tiden ni har bokat, så om ni kommer sent måste du vänta till nästa omgång (oftast 30 min senare).
+<br>
+
+</div>
+<div id="rightfaq" markdown="1">
+
+**Vad händer vid dåligt väder?**
+
+Vid åska i närheten gör vi en paus i klättrandet, annars fungerar de flesta väder med rätt kläder!
+
+<br>
+**Har ni skåp för värdesaker?**
+
+Vi har enkla skåp som ni gärna får låna ett hänglås till, men det kan vara bra att lämna värdesaker hemma. 
+
+<br>
+**Finns det toa?**
+
+Det finns en mulltoa vid badplatsen (cirka 100 meter bort) och fler vid Sörsjöns Camping. 
+
+<br>
+**Har ni kaffeservering?**
+
+Nej tyvärr, men på sommaren finns det kiosk vid badplatsen och uppe på Sörsjöns Camping 250 meter från oss. 
+
+<br>
+**Kan vi förlänga klättertiden?**
+
+Under sommarperioden går det vanligtvis bra att förlänga klättertiden, särskilt om ni säger till direkt när ni kommer. Under vår- och höstsäsong kan det också gå men säkrast är att <a href="mailto:info@aventyrsupplevelser.com">skriva ett mail</a> och fråga.
+
+<br>
+**Kan vi betala mot faktura?** 
+
+Ja det går bra för företag, skolor och föreningar, <a href="mailto:info@aventyrsupplevelser.com">maila</a> gärna faktureringsuppgifter i förväg!
+
+<br>
+**Hur många banor hinner vi klättra på 2 timmar?**
+
+Ni hinner normalt sett mellan 3-6 banor, beroende på vilka nivåer ni väljer. 
+
+<br>
+**Anordnar ni barnkalas?**
+
+Javisst! Det vanligaste upplägget är 1.5 timma klättring bland höghöjdsbanor här i Sörsjön Äventyrspark, eller klättervägg, linbana och pilbågskytte vid Glotterns Vildmarksanläggning. Båda alternativen kostar 2 000 SEK upp till och med 10 deltagare. 
+
+
 
 </div>
 
-</div>
-</div>
-
-
-
-
-
-<div markdown="1">
-## Frågor och svar
-Fråga 1: Har ni verkligen öppet?   
-Svar: Ja  
-
-Fråga 2: Vad kostar det?   
-Svar: Läs här.  
-
-Fråga 3: Är det för läskigt?  
-Svar: Nej vi har lätta banor.  
-
-Fråga 4: Har ni toalett?  
-Svar: Det finns på campingen som ligger bredvid.  
-
-Fråga 5: Tar ni kortbetalning på plats?  
-Svar: Ja, men det är bättre att boka här så ni inte behöver vänta på plats.  
-
-Hittade du inte svaret på din fråga? Det är osannolikt att du har läst ordentligt, men om du verkligen är säker på att du har så kan du ringa pappa och fråga, han svarar alltid i telefon. Men du får hitta telefonnummret själv.
-</div>
-
-
-    <div id="introtext" markdown="1">
-Öppet för dropin alla dagar på sommaren men det är bättre att <a href="#boka">boka</a> så behöver du inte vänta.
 
 </div>
-kom i god tid  
-Skriv på pappret  
+<div id="vanligasluttext" class="mobilpadding">
+Hittade du inte svaret på din fråga? <a href="mailto:info@aventyrsupplevelser.com">Skriv ett mail</a> eller ring till oss på <a class="" href="tel:+461161175">+46 (0) 11 611 75</a>.
+</div>
 
 </div>
+
+</div>
+		
+
+
+
+
+

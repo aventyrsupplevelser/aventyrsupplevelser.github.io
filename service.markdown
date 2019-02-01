@@ -2,7 +2,7 @@
 title: Service
 ---
 <div class="servicetextmobil">
- <h1>
+ <h1 class="pagetitle">
  Service</h1>
 </div>
  

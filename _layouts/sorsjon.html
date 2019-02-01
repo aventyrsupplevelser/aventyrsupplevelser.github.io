@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <meta name="viewport" content="width=600">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300" rel="stylesheet">
+
+
+	
+    <meta name="viewport" content="width=600,shrink-to-fit=no">
 
     <title>
       {% if page.title == nil %}
@@ -13,23 +17,32 @@
       {% endif %}
       Sörsjöns Äventyrspark
     </title>
-   
-    
-    
+       
     <style type="text/css" media="screen">
+		
+		
+		
         body {
-            display: flex;
-            justify-content: center;
-            font-family: "helvetica neue", Helvetica Neue, Futura, sans-serif;
-            font-size:19px;
+			display:flex;
+			justify-content:center;
+			font-family: 'Josefin Sans', sans-serif;
+            font-size:22px;
+			font-weight:300;
             letter-spacing:0.02em;
             line-height:1.6em;
-        }
+			overflow-x:hidden; 
+				}
+		
         
         /* utan denna blir länkade bilder fucked */
         img {
             display: block;
         }
+		
+	.center {
+		margin:0 auto;
+	}
+	
 
         div {
             box-sizing: border-box;
@@ -61,23 +74,47 @@
         }
 
         a {
-            text-decoration: underline;
+            border-bottom: 2px solid #000;
             color:black;
+			text-decoration:none;
+			
         }
+		
+		a:hover {
+			text-decoration:none;
+		    border-bottom: 2px dotted #000;
+			
+			
+		}
 
         ul {
             list-style-type:none;
             display:flex;
+			padding:0px;
             
         }
+		
+		#headerlogo {
+			margin-top:30px;
+		}
+		
+		
         
         .navitem{
             font-size:22px;
             margin:0px 8px;
             text-decoration:none;
-            padding-bottom:3px;
-            border-bottom:2px solid;
         }
+		
+		.sticky {		  
+		  position: fixed;
+		  position: -webkit-sticky;
+		  top: 0;
+		  width:100%;
+	  }
+	  
+	  .sticky + #sorsjonallcontent {
+	  }
         
         footer {
             text-align: center;
@@ -93,107 +130,488 @@
         .pengar {
             font-weight:400;
         }
-        
-        
-        
-        .navbutton:hover {
-        background:black; 
-        color:white;
-        text-decoration:;
-    }
-    
-   
-
-    #vagbcontainer {
-        display:;
-        align-items:;
-    }
-
-    #sorsjonvagbeskrivning {
-        padding:0px 30px;
-    }
-
-    .button {
-            text-decoration: none;
-            border-radius: 3px;
-            background-color:;
-            color: black;
-            text-align:center;
-            padding: 15px 20px;
-            border: solid 2px;
-            cursor: pointer;
-            display: inline-block;
-            margin-bottom:30px;
-            font-size:25px;
-    }
-    .button:hover 
-      {
-    background:black; 
-    color:white;
-    text-decoration:none;
-     }
- 
-    #hide {
-        display:none;
-    }
-        
+		
        
        
         @media (max-width: 1200px) {
             /* Single column stuff here */
-            #logga {
-                width: 600px;
+			
+			
+			
+            body {
+				-webkit-text-size-adjust: none;
             }
 
             #centerdiv {
-                width: 600px;
+                width:600px;
+            }
+			
+            #logga {
+                width:100%;
+				margin-bottom:15px;
             }
             
             .mobilpadding {
                 padding:0px 10px;
             }
-            
-            .navbutton{
-                box-sizing:border-box;
-                text-decoration: none;
-                color: black;
-                text-align:center;
-                padding: 10px 15px;
-                border: solid 2px black;
-                display: inline-block;
-                font-size:25px;
-                margin:10px;
-            }
+			
+			.whiteback{
+				padding:60px 0px;
+				background-color:;
+			}
+			
+			.greyback {
+				padding:60px 0px;
+				background-color:#F8F8F8;
+				
+			}
             
             #aktul {
-                padding:0px;
-                display:flex;
-                flex-wrap:wrap;
+				height:65px;
+	            padding:0px;
+				margin:0px 0px -65px 0px;
+	            display:flex;
+	            flex-wrap:wrap;
+				justify-content:space-between;
+				background-color:white;
             }
+			
+			#aktul2 {
+			display:none;
+        }
+		
+		
+		
+		
+		#sorsjonallcontent {
+			padding-top:65px;
+		}
+		
+			
+            .navbutton{
+                box-sizing:border-box;
+			   font-size:35px;
+                text-decoration: none;
+			   border:none;
+                color: black;
+                text-align:center;
+                padding: 15px 8px;
+                display: inline-block;
+				background-color:white;
+				font-weight:300;
+            }
+			
+           .navbutton:hover {
+   		margin-top:10px;
+           border:none;
+   		padding-bottom:25px;
+       }
+	   
+	   .navbutton:active {
+             border:none;
+	     	margin-top:0px;
+		   	padding-bottom:0px;	  
+	   }
+			
+			.webfragor {
+				display:none;
+			}
+			
+			.webenglish {
+				display:none;
+			}
+			.mobilenglish {
+				display:none;
+			}
+			
+			.webfind {
+				display:none;
+			}
+			
+			
+			#introserie {
+				display:flex;
+				flex-wrap:wrap;
+				justify-content:space-between;
+				
+			}
             
             .introseriepic { 
-                width:600px;
+                width:298px;
+				
             }
+			
+			.introitemtext {
+				display:none;
+			}
             
-            .introitemtext {
-                padding:10px 10px 30px 10px;
-            }
+            .mobilintrotext {
+				box-sizing:border-box;
+				width:600px;
+				font-size:;
+				padding:10px 10px 60px 10px;
+			 }
             
             .load-turitop {
                 max-width:600px;
             }
-            
-            
-            
+			
+			#howtocontainer {
+				display:flex;
+				flex-wrap:wrap;
+				align-items:center;
+				justify-content:center;
+				text-align:;
+			}
+			#howtocontainer > div {
+				width:px;
+			}
+			
+			
+			.howtopic {
+				box-sizing:border-box;
+				width:250px;
+				padding:20px;
+			}
+			
+			
+			
+			.howtotext {
+				display:none;
+			}
+			
+			.mobilhowtotext {
+				width:300px;
+				padding:30px 50px;
+				font-size:px;
+				text-align:center;
+			}
+			
+			.mobilhowtotext > div {
+				
+				
+				
+			}
+			
+			#harfinnsocksa {
+				display:flex;
+				flex-wrap:wrap;
+				justify-content:space-around;
+			}
+			
+			.harfinnselement {
+				display:flex;
+				flex-direction:column;
+				align-items:center;
+				height:300px;
+				padding:0px 10px 0px 10px;
+				margin-bottom:20px;
+				text-align:center;
+			}
+			
+			.harfinnselement > div {
+				width:270px;
+			}
+			
+			.harfinnspic {
+				height:180px;
+				margin-bottom:15px;
+				
+			}
+			.mobilkanot {
+				height:140px;
+				padding:40px 0px 0px 0px;
+			}
+			
+			.currentarstid {
+				display:flex;
+				flex-direction:column;
+				align-items:center;
+				text-align:center;
+				margin-bottom:80px;
+			}
+			
+			.currentarstidpic {
+				width:180px;
+			}
+			
+			.currentseasondesc {
+				width:460px;
+				padding:0px 45px;
+				text-align:left;
+			}
+			
+			.seasontitlecontainer {
+				display:flex;
+				flex-direction:column;
+				align-items:center;
+				margin-bottom:20px;
+			}
+			
+			.arstid {
+				display:none;
+			}
+			
+			.mobilarstid {
+				display:flex;
+				align-items:center;
+				justify-content:space-between;
+				margin-bottom:60px;
+				font-size:19px;
+			}
+			
+			.mobilarstidtext {
+				text-align:;
+				padding:0px 15px 0px 50px;
+			}
+			
+			.mobilarstidtext > h3 {
+				display:inline;
+				padding-right:15px;
+			}
+			
+			.seasonspic {
+				width:120px;
+				padding-left:20px;
+			}
+			
+			
+   	   	 #prisercontainer {
+   	       padding:0px 60px;
+   	   	 }
+		 
+		 .pricestext {
+			 font-size:19px;
+		 }
+		 
+		 .pricestext > h3 {
+			 margin:0;
+			 padding-top:7px;
+		 }
+	 
+   	   	 .seasontitlecontainer {
+   	   		 display:;
+   	   	 }
+	 
+   	        .priserpic1 {
+   	        	height:170px;
+				padding-left:17px;
+				
+   	        }
+	 
+   	        .priserpic2 {
+   	        	height:150px;
+   	        }
+	 
+   	        .priserpic3 {
+   	        	height:200px;
+				padding-left:17px;
+   	        }
+	 
+   	        .priserpic4 {
+   	        	height:120px;
+				margin-left:-12px;
+   	        }
+	 
+   	   	 .pricescolumn {
+   	   		 display:flex;
+   	   		 align-items:center;
+   	   		 margin-bottom:50px;
+   	   	 }
+		 
+		 .pricescolumn > h3 {
+		 }
+	 
+   	   	 .prispicdiv {
+   	   		 width:150px;
+   	   	 }
+	 
+   	   	 .pricestext {
+   	   		 padding-left:30px;
+   	   	 }
+			
+		 #bokasection {
+		 }
+		 
+		 .bokningssystem {
+			 margin-bottom:40px;
+		 }
+		 
+	   	 h2.bokningsrubrik {
+ 			font-family: 'Source Sans Pro', sans-serif;
+	   		 font-size:45px;
+			 margin-bottom:30px;
+			 line-height:1em;
+		 }
+		 
+		 h3.bokningsrubrik {
+			 margin:50px 0px 10px 0px;
+		 }
+		 
+		 #bokningstext {
+			 padding-bottom:20px;
+		 }
+		 
+		 .rightboktext {
+			 margin-bottom:15px;
+		 }
+		
+	   	 .mailbuttinlink {
+	   		 border-radius:3px;
+	   		 padding:10px 15px;
+	   		 border:solid 3px black;
+	   		 display:inline-block;
+	   		 text-decoration:none;
+	   	 }
+	 
+	   	 .mailbuttinlink:hover {
+	   		 border:dotted 3px black;
+	   	 }
+		 
+		 .tankpasection {
+			 display:flex;
+			 flex-direction:column;
+			 align-items:center;
+			 margin-bottom:45px;
+		 }
+		 
+		 .tankpatext {
+			 width:490px;
+			 text-align:center;
+		 }
+		 
+		
+		.tankpapic {
+			padding-bottom:10px;
+			width:240px;
+			
+		}
+		
+		.buttondiv {
+			padding:0px 15px;
+			margin-bottom:20px;
+		}
+		
+       .button {
+               text-decoration: none;
+               border-radius: 3px;
+               background-color:;
+               color: black;
+               text-align:;
+               padding: 10px 7px;
+               border: solid 3px;
+               cursor: pointer;
+               display: flex;
+   			justify-content:space-around;
+   			align-items:center;
+   			width:550px;
+       }
+
+       .button:hover 
+         {
+   		text-decoration:;
+           border: dotted 3px;
+        }
+		
+		.mapicon {
+			height:80px;
+		}
+			
+   	 .gammaldagslink {
+   		 border-radius:2px;
+   		 padding:7px 15px;
+   		 border:solid black 2px;
+         display:inline-block;
+   		 margin:10px 15px;
+		 font-size:19px;
+	 
+   	 }
+ 
+   	 .gammaldagslink:hover {
+   		 border-radius:2px;
+   		 padding:7px 15px;
+   		 border:dotted black 2px;
+   	 }
+	 
+	 .kartaclass {
+		 width:600px;
+	 }
+	 
+	 #sorsjonvagbeskrivning {
+		 display:none;
+	 }
+			
+	 #faqcontainer {
+		 margin-bottom:40px;
+	 }	
+			
+   	 .sectiontitle2 {
+   		 padding-bottom:30px;
+		font-family: 'Source Sans Pro', sans-serif;
+   		 font-size:45px;
+   	 }
+ 	
+			
+     #footer {
+         text-align:;
+         margin-top: 50px;
+         font-size:px;
+         margin-bottom:50px;         
+     }
+
+     .footeritem {
+         margin-left:20px;
+ 		border-bottom:1px solid black;
+         text-decoration: none;
+         color:;
+     }
+
+   	.footeritem:hover {
+       text-decoration: none;
+ 	  border-bottom:1px dotted black;
+
+  	 }	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
         }
         
         @media (min-width: 1200px) {
             /* Multicolumn stuff here */
+			
+			html {
+				overflow-x:hidden; 
+			}
 
             #centerdiv {
                 width: 1200px;
+				
             }
+			
+			.greyback {
+			padding:85px 1000px;
+			background-color:#F8F8F8;
+			margin-left:-1000px;
+			margin-right:-1000px;
+		}
+		
+		.whiteback {
+			padding:85px 0px;
+		}
+			
+			#logga {
+				width:1200px;
+			}
 
                #headerall{
                    box-sizing:border-box;
@@ -206,7 +624,8 @@
                }
                
                #headerlogo {
-                   width:px;
+				   margin-top:50px;
+                   
                    
                }
                
@@ -217,14 +636,32 @@
                
                .navbutton{
                    box-sizing:border-box;
+				   font-family: 'Amatic SC', sans-serif;
+				   font-size:60px;
+				   font-weight:500;
                    text-decoration: none;
+				   border:none;
                    color: black;
                    text-align:center;
-                   padding: 10px 15px;
-                   border: solid 2px black;
+                   padding: 35px 25px;
                    display: inline-block;
-                   margin:10px;
                }
+			   
+			   #aktul2 {
+				   display:none;
+			   }
+			   
+	   		.mobilfragor {
+	   			display:none;
+	   		}
+			
+			.mobilenglish {
+	   			display:none;
+			}
+			
+			.mobilfind {
+	   			display:none;
+			}
 
                
                .navitem{
@@ -237,24 +674,518 @@
                    padding-bottom:10px;
                }
                
+			   .mobilintrotext {
+				   display:none;
+			   }
+			   
                .introseriepic {
-                   width:500px;
+                   width:575px;
+				   border-radius:3px;
                }
 
                .introitem {
-                   width:550px;
+                   width:575px;
                    margin-bottom:20px;
                }
 
                #introserie {
                    display:flex;
                    flex-wrap:wrap;
+				   justify-content:space-between;
+				   margin-bottom:-20px;
                }
 
                .introitemtext {
-                   width:500px;
-                   padding:10px;
+				   text-align:center;
+                   width:565px;
+                   padding:15px 0px 15px 0px;
                }
+			   
+			   
+   			.mobilhowtotext {
+   				display:none;
+   			}
+		
+	   		#openinghours {
+	   		    display: block;
+	   		    position: relative;
+	   		    top: -100px;
+	   		    visibility: hidden;
+	   		}
+			
+			.mobilarstid {
+				display:none;
+			}
+				
+	   		#prices {
+	   			display: block;
+	   			position: relative;
+	   		    top: -100px;
+	   		    visibility: hidden;
+	   		}	
+        
+	   		#book {
+	   			display: block;
+	   			position: relative;
+	   		    top: -100px;
+	   		    visibility: hidden;
+	   		}	
+		
+	   		#findus {
+	   			display: block;
+	   			position: relative;
+	   		    top: -100px;
+	   		    visibility: hidden;
+	   		}	  
+		
+	   		#faq {
+	   			display: block;
+	   			position: relative;
+	   	    	top: -100px;
+	   		    visibility: hidden;
+	   		}	    
+	    
+	           .navbutton:hover {
+	   		margin-top:10px;
+	           border:none;
+	   		padding-bottom:25px;
+	       }
+    
+   
+
+	       #vagbcontainer {
+	           display:;
+	           align-items:;
+	       }
+
+	       #sorsjonvagbeskrivning {
+	           padding:0px 30px;
+	       }
+
+	       .button {
+	               text-decoration: none;
+	               border-radius: 3px;
+	               background-color:;
+	               color: black;
+	               text-align:;
+	               padding: 20px 10px;
+	               border: solid 3px;
+	               cursor: pointer;
+	               display: flex;
+	   			justify-content:space-around;
+	   			align-items:center;
+	               margin-bottom:px;
+	               font-size:24px;
+	   			width:600px;
+	       }
+	
+	       .button:hover 
+	         {
+	   		text-decoration:;
+	           border: dotted 3px;
+	        }
+	 
+	   	 .sectiontitle {
+	   		 display:none;
+	   		 padding-bottom:110px;
+			 font-family: 'Josefin Sans', sans-serif;
+	   		 font-size:80px;
+	   	 }
+	 
+	   	 .sectiontitle2 {
+	   		 display:;
+	   		 padding-bottom:90px;
+			 font-family: 'Josefin Sans', sans-serif;
+	   		 font-size:45px;
+	   	 }
+	 
+	   	#howtocontainer {
+	   		display:flex;
+	   		justify-content:space-between;
+	   		text-align:center;
+		
+	   	}
+     
+	        .howtopic {
+	        	height:300px;
+	   		padding-bottom:35px;
+	        }
+	 
+	   	 #prisersection {
+  		
+	   	 }
+	 
+	   	 #prisercontainer {
+	    		display:flex;
+	   		flex-wrap:wrap;
+	    		justify-content:flex-end;
+	    		text-align:;
+	   		width:100%;
+	   		margin:0 auto;
+	   		margin-bottom:-45px;
+	   	 }
+	 
+	   	 #oppettidercontainer {
+	   		margin-bottom:-70px;
+	    		display:flex;
+	   		flex-wrap:wrap;
+	    		justify-content:space-between;
+	   	 }
+	 
+	   	 .seasontitlecontainer {
+	   		 display:;
+	   	 }
+	 
+	        .priserpic1 {
+	        	height:215px;
+	   		margin-left:25px;
+	        }
+	 
+	        .priserpic2 {
+	        	height:165px;
+	        }
+	 
+	        .priserpic3 {
+	        	height:250px;
+	        }
+	 
+	        .priserpic4 {
+	        	height:130px;
+	        }
+	 
+	   	 .pricescolumn {
+	   		 width:50%;
+	   		 display:flex;
+	   		 align-items:center;
+	   		 margin-bottom:80px;
+	   	 }
+	 
+	   	 .prispicdiv {
+	   		 width:150px;
+	   	 }
+	 
+	   	 .pricestext {
+	   		 padding-left:30px;
+	   	 }
+	 
+	   	 .forlangningtext {
+	   	 }
+	 
+	   	 .oppetcolumn {
+	   		 width:;
+	   	 }
+	 
+	   	 .seasonspic {
+	   		 height:125px;
+	   	 }
+	 
+	   	 .seasontitletext {
+	   		 margin-top:30px;
+	   		 text-align:center;
+	   		 width:px;
+	   		 padding-left:px;
+	   	 }
+	 
+	   	  .seasontitletext > h3 {
+	   		  margin:0px;
+	   		  padding-bottom:5px;
+	   	  }
+	  
+	   	  .currentseasontitletext > h3 {
+	   		  margin:0px 0px 0px 0px;
+	   	  }
+	  
+	   	  .currentseasondesc > h3 {
+	   		  margin:0px 0px 5px 0px;
+	   	  }
+	 
+	 
+	   	 .seasondesc {
+	   		 width:360px;
+	   		 padding:30px 0px 0px 0px;
+	   		 font-size:19px;
+	   		 text-align:center;
+	   	 }
+	 
+	   	 .arstid {
+	   		 display:flex;
+	   		 flex-direction:column;
+	   		 align-items:center;
+	   		 justify-content:;
+	   		 width:360px;
+	   		 margin-bottom:80px;
+		 
+	   	 }
+	 
+	   	 .currentarstid {
+	   		 display:flex;
+	   		 justify-content:space-around;
+	   		 align-items:center;
+	   		 font-size:25px;
+	   		 padding:0px 0px;
+	   		 margin-bottom:80px;
+	   		 margin-left:0px;
+	   		 width:1200px;
+	   	 }
+	 
+	   	 .currentarstidpic {
+	   		 height:160px;
+	   	 }
+	 
+	   	 .currentseasondesc {
+	   		 font-size:25px;
+	   		 width:450px;
+	   	 }
+	 
+	   	 .currentseasontitletext {
+	   		 padding-left:60px;
+	   	 }
+	 
+	 
+	   	 .seasontitlecontainer {
+	   		 display:flex;
+	   		 justify-content:;
+	   		 align-items:center;
+	   		 margin-bottom:px;
+	   	 }
+	 
+	   	 #bokasection {
+	   		 display:flex;
+	   	 }
+	 
+	   	 #bokningstext {
+	   		 width:500px;
+	   		 margin-bottom:40px;
+	   	 }
+	
+	 
+	   	 #bokcontainer {
+	   		 display:flex;
+	   		 justify-content:;
+	   		 margin-top:50px;
+	   	 }
+	 
+	   	 #leftbok{
+	   		 width:600px;
+	   	 }
+	 
+	   	 #leftbok > h1{
+	   		 margin:0px 0px 20px 0px;
+	   	 }
+	 
+	 
+	 
+	   	 .bokningssystem {
+	   		 margin-left:-20px;
+	   	 }
+	 
+	 
+	 
+	   	 .bokningsrubrik {
+	   		 margin-bottom:20px;
+	   	 }
+	 
+	   	 h2.bokningsrubrik {
+			 font-family: 'Josefin Sans', sans-serif;
+	   		 font-size:45px;
+	   		 margin-bottom:60px;
+	   	 }
+	 
+	   	 #rightbok {
+	   		 margin-left:50px;
+	   		 width:px;
+		 
+	   	 }
+	 
+	   	 #bokmail {
+	   		 margin-bottom:60px;
+	   	 }
+	 
+	   	 .rightboktext {
+	   		 width:500px;
+	   		 margin-bottom:20px;
+	   	 }
+	 
+	   	 .mailbuttinlink {
+	   		 border-radius:3px;
+	   		 padding:10px 15px;
+	   		 border:solid 3px black;
+	   		 display:inline-block;
+	   		 text-decoration:none;
+	   		 font-size:px;
+	   	 }
+	 
+	   	 .mailbuttinlink:hover {
+	   		 border:dotted 3px black;
+	   	 }
+	 
+	   	 #presentkort {
+	   		 width:px;
+	   	 }
+	 
+	 
+	   	 #atttankapacontainer {
+	   		 display:flex;
+	   		 justify-content:space-between;
+	   	 }
+	 
+	   	 .tankpasection {
+		 
+	   	 }
+	 
+	   	 .tankpapic1 {
+	   		 width:270px;
+	   	 }
+	 
+	   	 .tankpapic2 {
+	   		 width:255px;
+	   	 }
+	 
+	   	 .tankpapic3 {
+	   		 width:350px;
+	   	 }
+		 
+		 .haretpic {
+			 margin:15px 0px;
+		 }
+	 
+	   	 .tankpasection {
+	   		 display:flex;
+	   		 flex-direction:column;
+	   		 align-items:center;
+	   		 width:px;
+	   		 font-size:21px;
+	   	 }
+	 
+	   	 .tankpatext {
+			 padding-top:20px;
+	   		 text-align:center;
+	   		 height:120px;
+	   		 width:360px;
+	   	 }
+	 
+	   	 .harfinnselement {
+	   		 display:flex;
+	   		 flex-direction:column;
+	   		 align-items:center;
+	   		 width:33%;
+	   		 margin-bottom:60px;
+	   	 }
+	 
+	   	 .harfinnspic {
+	   		 height:230px;
+	   		 padding:0px 20px 35px 20px;
+	   	 }
+	 
+	   	 #harfinnsocksa {
+	   		 display:flex;
+	   		 flex-wrap:wrap;
+	   		 justify-content:space-between;
+	   		 margin-bottom:-60px;
+	   	 }
+	 
+	   	 #hittahitcontainer {
+	   		 display:flex;
+	   		 align-items:center;
+	   		 justify-content:space-between;
+		 
+	   	 }
+		 
+		 .kartaclass {
+			 width:1200px;
+		 }
+		 
+		 .mapicon {
+			 height:100px;
+		 }
+	 
+	   	 #vagbrightside {
+	   		 display:flex;
+	   		 align-items:center;
+	   		 margin-bottom:30px;
+	   	 }
+	 
+	   	 .gammaldagslink {
+	   		 border-radius:2px;
+	   		 padding:15px;
+	   		 border:solid black 2px;
+	   		 width:px;
+	            display: flex;
+	   		 margin-left:25px;
+		 
+	   	 }
+	 
+	   	 .gammaldagslink:hover {
+	   		 border-radius:2px;
+	   		 padding:10 15px;
+	   		 border:dotted black 2px;
+	   	 }
+		 
+		 .gammaldagsmobil {
+			 display:none;
+		 }
+	 
+	        #faqcontainer {
+	        	display:flex;
+	   		justify-content:space-between;
+	   		margin:0px 0px 50px 0px;
+	        }
+	
+	   	#leftfaq {
+	   		width:550px;
+	   	}
+	
+	   	#rightfaq {
+	   		width:550px;
+	   	}
+	
+	   	#vanligasluttext {
+	   		width:1100px;
+	   	}
+	
+	       #footer {
+	           text-align: center;
+	           margin-top: 50px;
+	           font-size: 15px;
+	           margin-bottom:50px;         
+	       }
+	
+	       .footeritem {
+	           margin-left:20px;
+	   		border-bottom:1px solid black;
+	           text-decoration: none;
+	           color:;
+	       }
+    
+	     	.footeritem:hover {
+	         text-decoration: none;
+	   	  border-bottom:1px dotted black;
+	  
+	    	 }
+	 
+	   	  #aktul {
+			  height:105px;
+	   		padding:0 1000px;
+	     	margin-left:-1000px;
+	     	margin-right:-1000px;
+	   		margin-top:0px;
+			margin-bottom:-105px;
+	   		width:100%;
+	   		background-color:white;
+	   	  }
+		  
+		  #sorsjonallcontent {
+			  padding-top:105px;
+		  }
+		  
+	  
+	   	  a.anchor {
+	   	      display: block;
+	   	      position: relative;
+	   	      top: -50px;
+	   	  }
+        
+			  
        }        
         
     </style>
@@ -284,8 +1215,9 @@
     <div id="centerdiv">
         <header>
             <div id="headerall">
-                <div id="headerlogo">
-                    <a href="/sorsjon"> <img id="logga" src="/sorsjon/images/sorsjonlogga.png" width="800px"></a>
+				
+                <div id="headerlogo" style="padding-top:px;padding-bottom:px;">
+                    <a href="/sorsjon"> <img id="logga" src="/sorsjon/images/sorsjonsheader.png" width=""></a>
                 </div>
                 <div id="mainnavdiv" style="display:none;">
                     <a href="/english" class="navitem">English</li></a>
@@ -295,15 +1227,34 @@
         <div id="content">
             {{ content }}
         </div>
+		
+		
+		<script>
+		window.onscroll = function() {myFunction()};
+
+		var aktul = document.getElementById("aktul");
+		var sticky = aktul.offsetTop;
+
+		function myFunction() {
+		  if (window.pageYOffset >= sticky) {
+		    aktul.classList.add("sticky")
+		  } else {
+		    aktul.classList.remove("sticky");
+		  }
+		}
+		</script>
+		
+		
+		
         <script type="text/javascript">
             if (!("ontouchstart" in document.documentElement)) {
                 document.documentElement.className += " no-touch";
             }
         </script>
-        <footer>
-            <p>info@aventyrsupplevelser.com</p>
-            <script id="js-turitop" src="https://app.turitop.com/js/load-turitop.min.js" data-company="V196" data-ga="no" data-buttoncolor="green" data-afftag="ttafid"></script>
-        </footer>
+	        <div id="footer">
+	            <a class="footeritem" href="tel:+461161175">+46 (0) 11 611 75</a> <a class="footeritem" href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+				<script id="js-turitop" src="https://app.turitop.com/js/load-turitop.min.js" data-company="V196" data-ga="no" data-buttoncolor="green" data-afftag="ttafid"></script>
+	        </div>
     </div>
 </body>
 </html>

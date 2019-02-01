@@ -2,7 +2,7 @@
 title: Om oss
 ---
 
-<h1>
+<h1 class="pagetitle">
   Om oss
 </h1>
 

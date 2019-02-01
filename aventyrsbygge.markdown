@@ -14,7 +14,7 @@ title: aventyrsbygge
   
 <div id="intro">
  
-<h1>
+<h1 class="pagetitle">
   Äventyrsbygge
 </h1>
 
@@ -29,7 +29,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
 
   <div class="byggeinforow">
   <div>
-  <img src= "/images/twentyfive.png" class="infolisticon"></div>
+  <img src= "/images/25years.png" class="infolisticon"></div>
   
  <div class="byggeinfotex"><b>25 års erfarenhet</b> – vår hängivenhet till äventyr har lett oss till att ha varit med och byggt många utav Sveriges höghöjdsbanor.</div>
   
@@ -38,7 +38,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
   <div class="byggeinforow">
 
   <div>
-  <img src= "/images/safetybw.png" class="infolisticon"></div>
+  <img src= "/images/safety2.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Säkerhet är viktigast. Vi bygger enligt den <b>europeiska säkerhetsnormen</b> EN15 567-1, samt erbjuder rådgivning om vilka säkerhetssystem som gör äventyret smidigare för dina besökare. </div>
   
@@ -47,7 +47,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
   <div class="byggeinforow">
 
   <div>
-  <img src= "/images/treebw.png" class="infolisticon"></div>
+  <img src= "/images/lovetrees.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi tycker väldigt mycket om naturen och hjälper er därför med smarta lösningar för att påverka <b>trädens fysiologi</b> så lite som möjligt.  </div>
   
@@ -59,7 +59,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
   <div class="byggeinforow">
 
   <div>
-  <img src= "/images/ideabw.png" class="infolisticon"></div>
+  <img src= "/images/ideas.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Under åren har vi studerat äventyrsparker runt om hela världen, vilket gör oss till experter på att tillsammans med dig arbeta fram <b> idéer som gör din äventyrsbana unik.</b> 
  </div>
@@ -69,7 +69,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
   <div class="byggeinforow">
 
   <div >
-  <img src= "/images/ercabw.jpg" class="infolisticon"></div>
+  <img src= "/images/erca.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är medlemmar i ERCA (<b>European Ropes Course Association</b>), där vår personal har genomfört utbildningar i utbildning, räddning och inspektion.</div>
   
@@ -77,7 +77,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
     <div class="byggeinforow">
 
   <div>
-  <img src= "/images/team.png" class="infolisticon"></div>
+  <img src= "/images/foundation.png" class="infolisticon"></div>
   
  <div class="byggeinfotex">Vi är drivande i branchorganisation <a href="https://www.sverigeshb.info/"><b>Sveriges Höghöjdsbanor</b></a>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
   
