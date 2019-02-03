@@ -68,8 +68,8 @@ title: home
 	    <li><a class="navbutton mobilfind" href="#findus">Hitta hit</a></li>
 	    <li><a class="navbutton webfragor" href="#faq">Vanliga frågor</a></li>
 		<li><a class="navbutton mobilfragor" href="#faq">Frågor</a></li>
-		<li><a class="navbutton webenglish" href="#english">English</a></li>
-		<li><a class="navbutton mobilenglish" href="#english">English</a></li>
+		<li><a class="navbutton webenglish" style="display:none;" href="#english">English</a></li>
+		<li><a class="navbutton mobilenglish" style="display:none;" href="#english">English</a></li>
 		
 	</ul>
 </div>
