@@ -69,7 +69,7 @@ title: home
 	    <li><a class="navbutton webfragor" href="#faq">Vanliga frågor</a></li>
 		<li><a class="navbutton mobilfragor" href="#faq">Frågor</a></li>
 		<li><a class="navbutton webenglish" style="display:none;" href="#english">English</a></li>
-		<li><a class="navbutton mobilenglish" style="display:none;" href="#english">English</a></li>
+		<li><a class="navbutton mobilenglish" style="color:grey;" href="#english">English</a></li>
 		
 	</ul>
 </div>
