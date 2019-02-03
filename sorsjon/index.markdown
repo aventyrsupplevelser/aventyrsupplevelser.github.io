@@ -198,6 +198,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div class="mobilarstidtext">
 <h3>Vår</h3> 6 april - 14 juni
 <br>
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
 Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
@@ -219,6 +220,7 @@ Stängt midsommarafton.
 <div class="mobilarstidtext">
 <h3>Höst</h3> 19 aug - 31 okt 
 <br>
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
 Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
