@@ -4,6 +4,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300" rel="stylesheet">
+<link href="/AvenirNext.otf" rel="stylesheet">
 
 
 	
@@ -25,7 +26,8 @@
         body {
 			display:flex;
 			justify-content:center;
-			font-family: 'Josefin Sans', sans-serif;
+			margin:0;
+			font-family: 'Avenir', sans-serif;
             font-size:22px;
 			font-weight:300;
             letter-spacing:0.02em;
@@ -53,6 +55,9 @@
             margin-bottom: 0.5em;
         }
 
+        .footnote {
+			display:inline;
+        	font-size:18px;
         }
         
         h1 {
@@ -74,7 +79,7 @@
         }
 
         a {
-            border-bottom: 2px solid #000;
+            border-bottom: 1px solid #000;
             color:black;
 			text-decoration:none;
 			
@@ -82,10 +87,19 @@
 		
 		a:hover {
 			text-decoration:none;
-		    border-bottom: 2px dotted #000;
+		    border-bottom: 1px dotted #000;
 			
 			
 		}
+		
+		b {
+			font-weight:500;
+			}
+				
+		strong {
+			font-weight:500;
+			}		
+		
 
         ul {
             list-style-type:none;
@@ -148,7 +162,7 @@
 			
             #logga {
                 width:100%;
-				margin-bottom:15px;
+				margin-bottom:30px;
             }
             
             .mobilpadding {
@@ -167,12 +181,12 @@
 			}
             
             #aktul {
-				height:65px;
+				height:145px;
 	            padding:0px;
-				margin:0px 0px -65px 0px;
+				margin:0px 0px -145px 0px;
 	            display:flex;
 	            flex-wrap:wrap;
-				justify-content:space-between;
+				justify-content:space-around;
 				background-color:white;
             }
 			
@@ -184,18 +198,18 @@
 		
 		
 		#sorsjonallcontent {
-			padding-top:65px;
+			padding-top:145px;
 		}
 		
 			
             .navbutton{
                 box-sizing:border-box;
-			   font-size:35px;
+			   font-size:39px;
                 text-decoration: none;
 			   border:none;
                 color: black;
                 text-align:center;
-                padding: 15px 8px;
+                padding: 15px 12px;
                 display: inline-block;
 				background-color:white;
 				font-weight:300;
@@ -221,11 +235,15 @@
 				display:none;
 			}
 			.mobilenglish {
-				display:none;
+				display:;
 			}
 			
 			.webfind {
 				display:none;
+			}
+			
+			.bokanav {
+				font-weight:500;
 			}
 			
 			
@@ -516,6 +534,14 @@
 		.mapicon {
 			height:80px;
 		}
+		
+   	 #vagbrightside {
+   		 display:flex;
+		 flex-direction:column;
+   		 align-items:center;
+		 margin-bottom:15px;
+		 
+	 }
 			
    	 .gammaldagslink {
    		 border-radius:2px;
@@ -523,8 +549,6 @@
    		 border:solid black 2px;
          display:inline-block;
    		 margin:10px 15px;
-		 font-size:19px;
-	 
    	 }
  
    	 .gammaldagslink:hover {
@@ -610,7 +634,7 @@
 		}
 			
 			#logga {
-				width:1200px;
+				width:1000px;
 			}
 
                #headerall{
@@ -618,7 +642,7 @@
                    display:flex;
                    flex-wrap:wrap;
                    flex-direction:row;
-                   justify-content: space-between;
+                   justify-content:center;
                    align-items:center;
                    max-width:1200px;
                }
@@ -646,6 +670,13 @@
                    padding: 35px 25px;
                    display: inline-block;
                }
+			   
+	           .navbutton:hover {
+				   padding-top:10px;
+	   		margin-top:10px;
+	           border:none;
+	   		padding-bottom:px;
+	       }
 			   
 			   #aktul2 {
 				   display:none;
@@ -745,22 +776,11 @@
 	   		    visibility: hidden;
 	   		}	    
 	    
-	           .navbutton:hover {
-	   		margin-top:10px;
-	           border:none;
-	   		padding-bottom:25px;
-	       }
+	           
     
    
 
-	       #vagbcontainer {
-	           display:;
-	           align-items:;
-	       }
 
-	       #sorsjonvagbeskrivning {
-	           padding:0px 30px;
-	       }
 
 	       .button {
 	               text-decoration: none;
@@ -769,20 +789,19 @@
 	               color: black;
 	               text-align:;
 	               padding: 20px 10px;
-	               border: solid 3px;
+	               border: solid 2px;
 	               cursor: pointer;
 	               display: flex;
-	   			justify-content:space-around;
-	   			align-items:center;
+	   			   justify-content:space-around;
+	   			   align-items:center;
 	               margin-bottom:px;
 	               font-size:24px;
-	   			width:600px;
+	   			   width:600px;
 	       }
 	
-	       .button:hover 
-	         {
-	   		text-decoration:;
-	           border: dotted 3px;
+	       .button:hover {
+	   		   text-decoration:;
+	           border: dotted 2px;
 	        }
 	 
 	   	 .sectiontitle {
@@ -998,7 +1017,7 @@
 	   	 }
 	 
 	   	 #bokmail {
-	   		 margin-bottom:60px;
+	   		 margin-bottom:90px;
 	   	 }
 	 
 	   	 .rightboktext {
@@ -1061,7 +1080,7 @@
 			 padding-top:20px;
 	   		 text-align:center;
 	   		 height:120px;
-	   		 width:360px;
+	   		 width:370px;
 	   	 }
 	 
 	   	 .harfinnselement {
@@ -1098,6 +1117,13 @@
 		 .mapicon {
 			 height:100px;
 		 }
+		 
+       #vagbcontainer {
+       }
+
+       #sorsjonvagbeskrivning {
+           padding:0px 110px;
+       }
 	 
 	   	 #vagbrightside {
 	   		 display:flex;
@@ -1107,12 +1133,9 @@
 	 
 	   	 .gammaldagslink {
 	   		 border-radius:2px;
-	   		 padding:15px;
+	   		 padding:14px;
 	   		 border:solid black 2px;
-	   		 width:px;
-	            display: flex;
-	   		 margin-left:25px;
-		 
+	         display:inline-block;		 
 	   	 }
 	 
 	   	 .gammaldagslink:hover {

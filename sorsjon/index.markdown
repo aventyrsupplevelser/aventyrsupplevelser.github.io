@@ -12,16 +12,37 @@ title: home
      padding:10px 15px;
 	 color:black;
 	 line-height:1.6em;
-	 border:black solid 3px;
+	 border-bottom:black solid 1px;
 	 background:white;
 	 margin-top:20px;
+	 vertical-align:inherit;
+	 
  }
  
  a.lightbox-button-turitop:hover {
-	 border:black dotted 3px;
+	 border-bottom:black dotted 1px;
 	 color:black;
 	 background:white;
  	
+ }
+ 
+ .presentkortclass> a {
+	 border-top:none;
+	 border-left:none;
+	 border-right:none;
+	 border-radius:0;
+	 display:inline-block;
+	font-family: 'Avenir', sans-serif;
+     font-size:22px;
+	font-weight:300;
+     letter-spacing:0.02em;
+     line-height:1.6em;
+	 padding:0;
+	 margin:0;
+ }
+ 
+ .rightboktext> div {
+	 display:inline;
  }
  
  .buy-now {
@@ -32,7 +53,6 @@ title: home
  
  a.lightbox-button-turitop-green {
 	 background-color:white;
- 	
  }
 
 
@@ -45,11 +65,11 @@ title: home
 		<li><a class="navbutton" href="#prices">Priser</a></li>
 		<li><a style="color:#014421;" class="navbutton bokanav" href="#book">Boka</a></li>
 	    <li><a class="navbutton webfind" href="#findus">Hitta hit</a></li>
-	    <li><a class="navbutton mobilfind" href="#findus">Hitta</a></li>
+	    <li><a class="navbutton mobilfind" href="#findus">Hitta hit</a></li>
 	    <li><a class="navbutton webfragor" href="#faq">Vanliga frågor</a></li>
 		<li><a class="navbutton mobilfragor" href="#faq">Frågor</a></li>
 		<li><a class="navbutton webenglish" href="#english">English</a></li>
-		<li><a class="navbutton mobilenglish" href="#english">Eng.</a></li>
+		<li><a class="navbutton mobilenglish" href="#english">English</a></li>
 		
 	</ul>
 </div>
@@ -62,32 +82,32 @@ title: home
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/sverige.jpg">
 <div class="introitemtext ">
-Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd...
+Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd ...
 </div>
 </div>
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/barn.jpg">
 <div class="introitemtext mobilpadding">
-...för dig som är ungefär 3 till 99 år gammal...
+... för dig som är ungefär 3 till 99 år gammal ...
 </div>
 </div>
 <div class="mobilintrotext mobilpadding">
-Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungefär 3 till 99 år gammal...
+Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungefär 3 till 99 år gammal ...
 </div>
 <div class="introitem"><img class="introseriepic" src="/sorsjon/images/cykel.jpg" >
 <div class="introitemtext mobilpadding">
-...och vill uppleva att rida på flygande elefanter...
+... och vill uppleva att rida på flygande elefanter ...
 </div>
 </div>
 
 <div class="introitem">
 <img class="introseriepic" src="/sorsjon/images/linbanan.jpg">
 <div class="introitemtext mobilpadding">
-...eller flyga över en sjö i en 375 meter lång linbana!
+... eller flyga över en sjö i en 375 meter lång linbana!
 </div>
 </div>
 <div class="mobilintrotext mobilpadding">
-...och vill uppleva att rida på flygande elefanter eller flyga över en sjö i en 375 meter lång linbana!
+... och vill uppleva att rida på flygande elefanter eller flyga över en sjö i en 375 meter lång linbana!
 </div>
 </div>
   
@@ -98,19 +118,19 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div id="howtocontainer">
 <div>	
 <img class="howtopic" src="/sorsjon/images/HowTo1.png">
-<div class="howtotext">Du får först låna utrustning...</div>
+<div class="howtotext">När du kommer hit får du <br> först låna utrustning ...</div>
 </div>
-<div class="mobilhowtotext">Du får först låna utrustning...</div>
-<div class="mobilhowtotext">...sen vi ger en 20 min instruktion...</div>
+<div class="mobilhowtotext">När du kommer hit får du först låna utrustning ...</div>
+<div class="mobilhowtotext">... vi håller en 20 min instruktion ...</div>
 <div>	
 <img class="howtopic" src="/sorsjon/images/HowTo2.png">
-<div class="howtotext">...sen vi ger en 20 min instruktion...</div>
+<div class="howtotext">... vi håller en 20 min instruktion ...</div>
 </div>
 <div>	
 <img class="howtopic" src="/sorsjon/images/HowTo3.png">
-<div class="howtotext">...och så 2 timmars fri lek bland träden! </div>
+<div class="howtotext">... sen får ni 2 timmars fri lek<br>och klättring bland träden! </div>
 </div>
-<div class="mobilhowtotext">...och så 2 timmars fri lek bland träden!</div>
+<div class="mobilhowtotext">... och så 2 timmars fri lek och klättring bland träden!</div>
 
 </div>
 </div>
@@ -119,27 +139,27 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div id="harfinnsocksa">
 <div class="harfinnselement">
 <img class="harfinnspic mobilkanot" src="/sorsjon/images/Canoe.png">
-<div>Vi hyr även ut kanoter...</div>
+<div>Vi hyr även ut kanoter ...</div>
 </div>
 <div class="harfinnselement">
 <img class="harfinnspic" src="/sorsjon/images/Lake.png">
-<div>...det finns en superfin badplats...</div>
+<div>... det finns en superfin badplats ...</div>
 </div>   
 <div class="harfinnselement">
 <img class="harfinnspic" src="/sorsjon/images/Campfire.png">
-<div>...och eldstad (för grillning)...</div>
+<div>... eldstad (för grillning) ...</div>
 </div>
 <div class="harfinnselement">
 <img class="harfinnspic" src="/sorsjon/images/Outhouse.png">
-<div>...dass finns (bra att ha)...</div>
+<div>... dass (bra att ha) ...</div>
 </div>
 <div class="harfinnselement">
 <img class="harfinnspic" src="/sorsjon/images/HikeBike.png">
-<div>...och vandrings- och cykelstigar...</div>
+<div>... vandrings- och cykelstigar ...</div>
 </div>
 <div class="harfinnselement">
 <img class="harfinnspic" src="/sorsjon/images/MushroomBerry.png">
-<div>...samt svamp och bär i skogen!</div>
+<div>... samt svamp och bär i skogen!</div>
 </div>
 </div>
 </div>
@@ -211,7 +231,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 15 juni - 18 aug </div>
 </div>
 <div class="seasondesc">
-<b>Dropin-öppet alla dagar kl. 10-17</b> (men bäst att <a href="#bokasection">boka</a>).
+Dropin-öppet alla dagar kl. 10-17 <br>(men bäst att <a href="#bokasection">boka</a>).
 Sista start kl. 15.
 <br>
 Stängt midsommarafton.
@@ -288,9 +308,7 @@ betalande vuxen
 	<div id="bokmail">
 	<div class="rightboktext">
 	<h2 class="bokningsrubrik">Skräddarsydd bokning</h2>
-	Är ni fler än 10 kan ni boka en tid utanför de i kalendern. Skriv ett mail till oss!
-	</div>
-	<div id="mailbuttondiv"><a class="mailbuttinlink" href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+	Är ni fler än 10 kan ni boka en tid utanför de i kalendern. <a class="" href="mailto:info@aventyrsupplevelser.com">Maila oss och boka!</a>
 	</div>
 	</div>
 	<div id="presentkort" class="rightboktext">
@@ -309,20 +327,20 @@ betalande vuxen
 
 <img class="tankpapic1 tankpapic" src="/sorsjon/images/SturdyShoes.png">
 <div class="tankpatext">
-<p>Tips är att ha på oömma kläder och bra skor när du kommer...</p>
+<p>Vi rekommenderar att ha på oömma <br> kläder och bra skor när du kommer ...</p>
 </div>
 </div>
 <div class="tankpasection">
 
 <img class="tankpapic2 tankpapic" src="/sorsjon/images/BathingClothes.png">
 <div class="tankpatext">
-<p>...det är trevligt att ta med badkläder och fika...</p>
+<p>... det är trevligt att ta med <br>badkläder  och fika ...</p>
 </div>
 </div>   
 <div class="tankpasection">
 <img class="tankpapic3 tankpapic haretpic" src="/sorsjon/images/HairUpJewelryOff.png">
 <div class="tankpatext">
-<p>...och för att inte fastna - lämna smycken hemma och sätt upp håret!</p>
+<p>... och för att inte fastna - lämna smycken hemma och sätt upp håret!</p>
 </div>
 </div>
 </div>
@@ -333,13 +351,16 @@ betalande vuxen
 <div id="hittahitsection" class="whiteback">
 <div id="vagbrightside">
 <div class="buttondiv">
-	<a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" class="button vagbeskbutton">
+	<a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" class="button vagbeskbutton" target="_blank">
 		<img src="/sorsjon/images/mapicon.png" class="mapicon">
 		Vägbeskrivning till Sörsjöns Äventyrspark <br>(öppnar i Google Maps) </a>
 </div>
 
 <div id="sorsjonvagbeskrivning">
-<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> (men vi rekommenderar google maps). </a>
+<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> <span class="footnote">(men vi rekommenderar google maps)</span> </a>
+</div>
+<div class="gammaldagsmobil">
+<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> <span class="footnote">(men vi rekommenderar google maps)</span></a>
 </div>
 </div>
 <div id="hittahitcontainer">
@@ -349,9 +370,7 @@ betalande vuxen
 
 
 </div>
-<div class="gammaldagsmobil">
-<a class="gammaldagslink" href="http://aventyrsupplevelser.com/hittahit#gammaldags">Gammaldags vägbeskrivning<br> (men vi rekommenderar google maps). </a>
-</div>
+
 </div>
 
 <a id="faq"></a>
@@ -378,7 +397,7 @@ Sörsjöns Äventyrspark är vår huvudsakliga plats, där vi har 19 höghöjdsb
 <br>
 **Var finns ni?**
 
-Strax norr om Norrköping. Om ni vill hitta hit är det lättast att använda <a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark">Google Maps vägbeskrivning till oss</a>. När ni kommit till Sörsjöns Camping – fortsätt till den stora parkeringen, och gå cirka 100 m förbi badplatsen till höger om sjön. 
+Strax norr om Norrköping. Om ni vill hitta hit är det lättast att använda <a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" target="_blank">Google Maps vägbeskrivning till oss</a>. När ni kommit till Sörsjöns Camping – fortsätt till den stora parkeringen, och gå cirka 100 meter förbi badplatsen till höger om sjön. 
 
 <br>
 **Måste vi klättra samma bana när vi kommer som grupp?**
@@ -416,7 +435,7 @@ Det finns en mulltoa vid badplatsen (cirka 100 meter bort) och fler vid Sörsjö
 <br>
 **Har ni kaffeservering?**
 
-Nej tyvärr, men på sommaren finns det kiosk vid badplatsen och uppe på Sörsjöns Camping 250 meter från oss. 
+Nej, tyvärr, men på sommaren finns det kiosk vid badplatsen och uppe på Sörsjöns Camping 250 meter från oss. Ta gärna med eget fika!
 
 <br>
 **Kan vi förlänga klättertiden?**
@@ -426,7 +445,7 @@ Under sommarperioden går det vanligtvis bra att förlänga klättertiden, särs
 <br>
 **Kan vi betala mot faktura?** 
 
-Ja det går bra för företag, skolor och föreningar, <a href="mailto:info@aventyrsupplevelser.com">maila</a> gärna faktureringsuppgifter i förväg!
+Ja, det går bra för företag, skolor och föreningar. <a href="mailto:info@aventyrsupplevelser.com">Maila</a> gärna faktureringsuppgifter i förväg!
 
 <br>
 **Hur många banor hinner vi klättra på 2 timmar?**
@@ -436,7 +455,7 @@ Ni hinner normalt sett mellan 3-6 banor, beroende på vilka nivåer ni väljer.
 <br>
 **Anordnar ni barnkalas?**
 
-Javisst! Det vanligaste upplägget är 1.5 timma klättring bland höghöjdsbanor här i Sörsjön Äventyrspark, eller klättervägg, linbana och pilbågskytte vid Glotterns Vildmarksanläggning. Båda alternativen kostar 2 000 SEK upp till och med 10 deltagare. 
+Javisst! Det vanligaste upplägget är 1.5 timmes klättring bland höghöjdsbanor här i Sörsjön Äventyrspark, eller klättervägg, linbana och pilbågskytte vid Glotterns Vildmarksanläggning. Båda alternativen kostar 2&nbsp;000&nbsp;kr upp till och med 10 deltagare. 
 
 
 
