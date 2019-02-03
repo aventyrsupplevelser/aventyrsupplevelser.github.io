@@ -1,21 +1,23 @@
 ---
-title: Äventyrspaket och teambuilding
+title: Teambuilding
 ---
-
-<div id="aktiviteternav" class="gradiv">
+<div id="nyaktiviteternav">
+<h1 class="pagetitle">Teambuilding</h1>
     
 <ul id="aktul">
-   <li><a class="navbutton" href="#aktivitetspaket">Aktivitetspaket</a></li>
+   <li><a class="navbutton" style="display:none;" href="#aktivitetspaket">Aktivitetspaket</a></li>
    <li><a class="navbutton" href="#pristabell">Priser och bokning</a></li>
-   <li><a class="navbutton" href="#nardetardags">När det är dags</a></li>
+   <li><a class="navbutton" style="display:none;" href="#nardetardags">När det är dags</a></li>
   <li><a class="navbutton" href="#varliggerparkerna">Var ligger parkerna?</a></li>
 </ul>
-    <div id="aktivitetspaket">
-    <h1 class="mobilpadding">
-    Aktivitetspaket
-    </h1>
-    </div>
+
 </div>
+<div id="aktivitetspaket">
+<h1 class="mobilpadding">
+Aktivitetspaket
+</h1>
+</div>
+
 <div id="aktiviteter">
 <div id="sorsjonsaventyrspark" class="paket divreverse">
     <div class="pakettext" markdown="1">
@@ -29,12 +31,12 @@ Genom att mötas i <em>sårbara</em> och <em>adrenalinfyllda situationer</em>, l
 
 <div class="paketinfo">
 <div class="tid">
-<img src="/images/time.png" class="tidsikon">
+<img src="/images/time2.png" class="tidsikon">
 <div class="timmar">2.5 h
 </div> 
 </div>
 <div class="pengar">
-<img src="/images/cash.png" class="pengarikon">
+<img src="/images/money2.png" class="pengarikon">
 <div class="fran"> Från 4 000 SEK
 </div> 
 </div>
@@ -85,9 +87,9 @@ Utöver den vackra <strong>naturen</strong>, finns vid Glottern aktiviteter som 
 
 <div class="paketinfo">
 <div class="tid">
-<img src="/images/time.png" class="tidsikon"><div class="timmar">3  h</div> </div>
+<img src="/images/time2.png" class="tidsikon"><div class="timmar">3  h</div> </div>
 <div class="pengar">
-<img src="/images/cash.png" class="pengarikon">
+<img src="/images/money2.png" class="pengarikon">
 <div class="fran"> Från 5 500 SEK
 </div> 
 </div>
@@ -113,7 +115,7 @@ Utöver den vackra <strong>naturen</strong>, finns vid Glottern aktiviteter som 
 
 <div id="teambuilding" class="paket divreverse">
   <div class="pakettext" markdown="1">
-## Teambuilding
+## Samarbete
 
 Vi designar roliga samarbetsövningar som tränar er förmåga att <strong>lyssna på varandra</strong> och komma med <em>nytänkande lösningar</em> till kluriga problem. 
 
@@ -128,11 +130,11 @@ Vårt teambuildingpaket är <strong>lätt att packa ihop</strong> och ta med til
 
 <div class="paketinfo">
     <div class="tid">
-        <img src="/images/time.png" class="tidsikon">
+        <img src="/images/time2.png" class="tidsikon">
         <div class="timmar">2 h</div>
     </div>
     <div class="pengar">
-    <img src="/images/cash.png" class="pengarikon">
+    <img src="/images/money2.png" class="pengarikon">
     <div class="fran"> Från 4 000 SEK
     </div> 
     </div>
@@ -169,11 +171,11 @@ Glödvandringar <strong>fungerar året runt</strong>, och vi tar gärna med oss 
 
 <div class="paketinfo">
 <div class="tid">
-<img src="/images/time.png" class="tidsikon">
+<img src="/images/time2.png" class="tidsikon">
 <div class="timmar">1.5 h</div>
 </div>
 <div class="pengar">
-<img src="/images/cash.png" class="pengarikon">
+<img src="/images/money2.png" class="pengarikon">
 <div class="fran"> Från 5 000 SEK
 </div> 
 </div>
@@ -457,10 +459,10 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="dagsbox" class="mobilpadding">
   
  <div class="dagskolumn"> 
-<div class="dagsitem"> <img src="/images/boots.png" class="dagsicon"><div class="dagstext"><p class="annatp">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</p></div>
+<div class="dagsitem"> <img src="/images/sturdyclothes.png" class="dagsicon"><div class="dagstext"><p class="annatp">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</p></div>
   </div>
  <div class="dagsitem">
-   <img src="/images/swim.jpg" class="dagsicon">
+   <img src="/images/bathingclothes2.png" class="dagsicon">
   <div class="dagstext"><p class="annatp">Ta med badkläder!</p></div>
     </div>
   
@@ -468,10 +470,10 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
   
   <div class="dagskolumn">
  <div class="dagsitem">
-   <img src="/images/dass.png" class="dagsicon">
+   <img src="/images/outhouse.png" class="dagsicon">
   <div class="dagstext"><p class="annatp">Dass finns både vid Sörsjön och Glottern.</p></div>
     </div>
-<div class="dagsitem"> <img src="/images/karta.png" class="dagsicon">
+<div class="dagsitem"> <img src="/images/mapicon.png" class="dagsicon">
  <div class="dagstext"><p class="annatp">Se till att du åker till den rätta av <a href="#vagbeskrivningar">våra två platser!</a></p></div></div>
 </div>
   
@@ -488,7 +490,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 
 <div id="vagbcontainer">
     <div id="sorsjonochglottern">
-<iframe width="600px" height="400px" frameBorder="0" allowfullscreen   src="https://umap.openstreetmap.fr/en/map/aventyrsupplevelser_249961?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=null&onLoadPanel=undefined&captionBar=false&fullscreenControl=true"></iframe>
+<iframe class="themap" width="1200px" height="400px" frameBorder="0" allowfullscreen   src="https://umap.openstreetmap.fr/en/map/aventyrsupplevelser_249961?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=null&onLoadPanel=undefined&captionBar=false&fullscreenControl=true"></iframe>
 </div>
 
 <div id="vagbeskrivningar">
@@ -503,8 +505,8 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 <div id="glotternvagbeskrivning">
 
 <div class="buttondiv"> <a href="https://www.google.com/maps/dir/?api=1&destination=58.697130,16.189644" class="button vagbeskbutton">Vägbeskrivning till Glotterns Vildmarkspark<br>(öppnar i Google Maps)</a></div>
-<a class="mobilpadding" href="/hittahit/#gammaldags">Gammaldags vägbeskrivning. </a>
 </div>
+<a class="mobilpadding gammaldagsweb" href="/hittahit/#gammaldags">Gammaldags vägbeskrivning. </a>
 
 </div>
 </div>

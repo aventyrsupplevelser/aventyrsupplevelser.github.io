@@ -2,7 +2,7 @@
 title: butik
 ---
   <div class="mobilpadding">
-  <h1>
+  <h1 class="pagetitle">
     Butik
   </h1>
 </div>
