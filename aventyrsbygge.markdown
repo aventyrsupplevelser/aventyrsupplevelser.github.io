@@ -17,7 +17,7 @@ title: aventyrsbygge
 <h1 class="pagetitle">
   Äventyrsbygge
 </h1>
-
+<img class="pagetitleimg" src="/images/aventyrsbygge.png">
 <p>
 Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</strong>! Därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
 </p>

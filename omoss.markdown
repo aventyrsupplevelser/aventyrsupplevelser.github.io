@@ -5,6 +5,7 @@ title: Om oss
 <h1 class="pagetitle">
   Om oss
 </h1>
+<img class="pagetitleimg2" src="/images/omossbig.png">
 
 <div id="omosscontainer">
   

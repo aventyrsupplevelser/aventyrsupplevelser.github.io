@@ -2,7 +2,10 @@
 title: Teambuilding
 ---
 <div id="nyaktiviteternav">
+<div>
+<img class="pagetitleimg" src="/images/teambuildingtitle.png">
 <h1 class="pagetitle">Teambuilding</h1>
+</div>
     
 <ul id="aktul">
    <li><a class="navbutton" style="display:none;" href="#aktivitetspaket">Aktivitetspaket</a></li>
@@ -14,21 +17,35 @@ title: Teambuilding
 </div>
 <div id="aktivitetspaket">
 <h1 class="mobilpadding">
-Aktivitetspaket
 </h1>
 </div>
+<div id="annatintro" markdown="1">
+Här kan du läsa mer om våra teambuildingpaket för företag, skolor eller privatpersoner. Paketen är självklart anpassningsbara, och många av aktiviteterna kan vi även ta med oss till er. 
+</div>
+
 
 <div id="aktiviteter">
 <div id="sorsjonsaventyrspark" class="paket divreverse">
-    <div class="pakettext" markdown="1">
+<div class="pakettext" markdown="1">
 ## Sörsjöns Äventyrspark
+<div class="onerowteam">
+<div class="paketmediapic">
+<a href="/images/linbana.jpg">
+<img src="/images/linbana.jpg" class="paketactualpic">
+</a> 
+</div> 
+<div class="paketmediapic">
+<a href="/images/barnpappa.jpg"> 
+<img src="/images/barnpappa.jpg" class="paketactualpic">
+</a> 
+</div>
+</div>
 
-I <strong>Sveriges största äventyrspark</strong> kan du göra dina barndomsklätterfantasier till verklighet. Drömde du om att svinga dig i lianer som <strong>Tarzan</strong>, eller kanske om att cykla mellan träden? 
+Nu kan du göra dina barndomsklätterfantasier till verklighet! Drömde du om att svinga dig i lianer som <strong>Tarzan</strong>, eller kanske om att cykla mellan träden? 
 
-Med 19 banor från 2 till 20 meters höjd, och dessutom <em>en 375 meter lång linbana</em> över en sjö, finns här något för alla - väck <strong>lekfullheten</strong> till liv och möt rädslorna, njut av naturen eller utmana musklerna!
+Med 19 banor från 2 till 20 meters höjd, och dessutom <em>en 375 meter lång linbana</em> över en sjö, finns här något för alla - väck lekfullheten till liv, njut av naturen eller utmana musklerna!
 
-Genom att mötas i <em>sårbara</em> och <em>adrenalinfyllda situationer</em>, lär vi oss att överkomma utmaningar och hjälpa varandra till vår fulla potential. 
-
+Om du vill veta mer kan du gå till Sörsjöns Äventyrsparks egna <a href="/sorsjon">hemsida</a>.
 <div class="paketinfo">
 <div class="tid">
 <img src="/images/time2.png" class="tidsikon">
@@ -73,16 +90,19 @@ Genom att mötas i <em>sårbara</em> och <em>adrenalinfyllda situationer</em>, l
 
 <div id="aventyriglottern" class="paket gradiv">
     
-  <div class="pakettext" markdown="1">
+<div class="pakettext" markdown="1">
 ## Vildmarksäventyr i Glottern 
+<div class="onerowteam">
+<div class="paketmediapic"><a href="/images/solitar.jpg"><img src="/images/solitar.jpg" class="paketactualpic"></a></div> 
+<div class="mediaspace"></div>
+<div class="paketmediapic"><a href="/images/rodd.jpg"><img src="/images/rodd.jpg" class="paketactualpic"></a> </div> 
+</div>
 
-
-  
 En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. <strong>Ensamna mitt ute i skogen</strong> och med en egen instruktör leker vi och tävlar, hämtar vatten från sjön och kokar kaffe över öppen eld. 
 
-Vi skräddarsyr ett unikt program med fokus på att svetsa just er grupps <strong>sammanhållning</strong> <em>ännu starkare</em>.  
+Vi skräddarsyr ett unikt program med fokus på att svetsa just er grupp ännu starkare samman!
 
-Utöver den vackra <strong>naturen</strong>, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
+Utöver den vackra naturen, finns vid Glottern aktiviteter som höghöjdsbana, stolphopp, linbana ut till en ö, pilbågskytte, yxkastning och samarbetsbana. 
  
 
 <div class="paketinfo">
@@ -107,23 +127,26 @@ Utöver den vackra <strong>naturen</strong>, finns vid Glottern aktiviteter som 
         <div class="paketmediapic"><a href="/images/rodd.jpg"><img src="/images/rodd.jpg" class="paketactualpic"></a> </div> 
     </div>
   
- </div>
+</div>
   
   
   
 </div>
 
 <div id="teambuilding" class="paket divreverse">
-  <div class="pakettext" markdown="1">
+<div class="pakettext" markdown="1">
 ## Samarbete
+<div class="onerowteam"> 
+<div class="paketmediapic"><a href="/images/teamror.jpg"><img src="/images/teamror.jpg" class="paketactualpic"></a> </div> 
+<div class="paketmediapic"><a href="/images/labyrintnyhej.jpg"><img src="/images/labyrintnyhej.jpg" class="paketactualpic"></a> </div>
+</div>
+Vi designar roliga samarbetsövningar som handlar om att <strong>lyssna på varandra</strong> och komma med nytänkande lösningar till kluriga problem. 
 
-Vi designar roliga samarbetsövningar som tränar er förmåga att <strong>lyssna på varandra</strong> och komma med <em>nytänkande lösningar</em> till kluriga problem. 
+Genom att som grupp möta situationer ni inte befinner er i till vardags, upptäcker ni nya egenskaper hos varandra och kan förstå mer om de roller och mönster ni har på jobbet eller i skolan.
 
-Genom att möta situationer ni inte befinner er i till vardags, upptäcker ni nya egenskaper hos varandra och kan därmed <em>utmana de ofta omedvetet invanda rollerna</em> och mönstren ni har på jobbet eller i skolan.
+Vår erfarenhet säger också att det som stärker gemenskapen mest av allt är ett gott skratt!
 
-Det finns inget som stärker gemenskapen mer än ett <strong>gott skratt</strong>!
-
-Vårt teambuildingpaket är <strong>lätt att packa ihop</strong> och ta med till er.
+Ett samarbetspaket är lätt att packa ihop och ta med till er.
 
 
 
@@ -143,7 +166,7 @@ Vårt teambuildingpaket är <strong>lätt att packa ihop</strong> och ta med til
 </div>
 <div class="paketmedia">
 
-  <div class="paketmediarow paketmediarowett">
+<div class="paketmediarow paketmediarowett">
     <div class="paketmediapic"><a href="/images/pojkar.jpg"><img src="/images/pojkar.jpg" class="paketactualpic"></a></div> 
     <div class="paketmediapic"><a href="/images/stock.jpg"><img src="/images/stock.jpg" class="paketactualpic"></a> </div> 
   </div>
@@ -158,14 +181,24 @@ Vårt teambuildingpaket är <strong>lätt att packa ihop</strong> och ta med til
 <div id="glodvandring" class="paket gradiv">
     <div class="pakettext" markdown="1">
 ## Glödvandring
+<div class="onerowteam">
+<div class="paketmediapic">
+<a href="/images/halsbryt.jpg">
+<img src="/images/halsbryt.jpg" class="paketactualpic"></a>
+</div> 
+<div class="paketmediapic">
+<a href="/images/glodvandring.jpg">
+<img src="/images/glodvandring.jpg" class="paketactualpic"></a>
+</div> 
+</div>
 
-<strong>Är det möjligt</strong> att <em>gå på elden</em>? Detta handlar om att genomföra det vi inte tror är möjligt, och upptäcka att vi plötsligt tycker det är lätt.
+Är det möjligt att <em>gå på elden</em>? Detta handlar om att genomföra det vi inte tror är möjligt, och upptäcka att vi plötsligt tycker det är lätt.
 
-Vi gör <strong>fokuseringsövningar</strong> som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att <em>stanna i fokus</em>, ända tills vi kan samla oss till att <strong>ta steget. </strong>
+Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att stanna i fokus, ända tills vi kan samla oss till att <strong>ta steget. </strong>
 
 Finns det annat i vardagen eller på arbetsplatsen som verkar omöjligt?
 
-Glödvandringar <strong>fungerar året runt</strong>, och vi tar gärna med oss glöden till er!
+Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
 
 
@@ -193,7 +226,7 @@ Glödvandringar <strong>fungerar året runt</strong>, och vi tar gärna med oss 
 <img src="/images/glas.jpg" class="paketactualpic"></a> 
 </div> 
 </div>
-<div class="paketmediarow paketmediarowtva">
+<div class="paketmediarow paketmediarowtva onerowteam">
 <div class="paketmediapic">
 <a href="/images/halsbryt.jpg">
 <img src="/images/halsbryt.jpg" class="paketactualpic"></a>
@@ -213,9 +246,20 @@ Glödvandringar <strong>fungerar året runt</strong>, och vi tar gärna med oss 
 
 ## Hyra kanot
 
+<div class="onerowteam"> 
+<div class="paketmediapic">
+<a href="/images/kajak.jpg">
+<img src="/images/kajak.jpg" class="paketactualpic"></a> 
+</div> 
+<div class="paketmediapic">
+<a href="/images/paddlinggrabbar.jpg">
+<img src="/images/paddlinggrabbar.jpg" class="paketactualpic"></a> 
+</div>
+</div>
+
 Om du letar efter <strong>lugn och ro</strong>, vill upptäcka hemliga vikar och <em>njuta av naturen</em> så kan du hyra kanoter av oss. 
 
-Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både <em>kanadensare</em> (öppna kanoter) och <em>kajaker</em> (stängda) till uthyrning.
+Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker(stängda) till uthyrning.
 
 Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 <div class="paketinfo">
@@ -252,15 +296,11 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 
 <div id="andramojligheter" class="gradiv">
 
-<div id="annatintro" markdown="1">
-# Andra aktiviteter
 
-Om du har en speciell idé till en annan aktivitet du vill genomföra så vill vi gärna hjälpa dig – vi är hungriga efter nya utmaningar! Våra paket är anpassningsbara och många kan vi även ta med oss till er. 
-</div>
 
 <div id="annatbox">
               
-    <div class="annatitem divreverse">
+    <div class="annatitem ">
         
         <div class="annattext">
         <h3>Konferens och övernattning</h3> 
@@ -272,7 +312,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
         </div>
       </div>
       
-     <div class="annatitem ">
+     <div class="annatitem divreverse">
       
       <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum för 2019 presenteras under våren.
       </div> 
@@ -282,7 +322,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
       </div>
         </div>
             
-     <div class="annatitem divreverse">
+     <div class="annatitem ">
       
       <div class="annattext"><h3>Flottregatta</h3> Med tunnor, rep och brädor ska ni i lag konstruera en egen farkost. När startskottet går gäller det att komma först i mål – utan att lagmedlemmarna hamnar i vattnet!
       </div> 
@@ -292,7 +332,7 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
       </div>
         </div>
         
-    <div class="annatitem "> 
+    <div class="annatitem divreverse"> 
         
      <div class="annattext"> <h3>Lådbilsrace</h3> En lådbil ska formas med hjälp av hjul, axlar, muttrar och plywood. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till gruppmedlemmarna. 
      </div>
@@ -439,8 +479,8 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 </div>
 
    
-       <div class="priskontakt">
-       <h2>Boka på mail eller telefon!</h2>
+<div class="priskontakt">
+ <h2>Boka på mail eller telefon!</h2>
        <div class="priskontaktcontainer">
   <div><a href="mailto:info@aventyrsupplevelser.com" class="priskontaktbuttons">info@aventyrsupplevelser.com</a></div>
 
@@ -453,17 +493,16 @@ Om du har en speciell idé till en annan aktivitet du vill genomföra så vill v
 
 <div id="nardetardags" class="">
 <h1 class="mobilpadding">
-  När det är dags
 </h1>
   
 <div id="dagsbox" class="mobilpadding">
   
  <div class="dagskolumn"> 
-<div class="dagsitem"> <img src="/images/sturdyclothes.png" class="dagsicon"><div class="dagstext"><p class="annatp">Kom med oömma kläder för dagens väder - vi ställer inte in om det regnar.</p></div>
+<div class="dagsitem"> <img src="/images/sturdyclothes.png" class="dagsicon"><div class="dagstext"><p class="annatp">Tänk på att ha på oömma kläder för dagens väder - vi ställer inte in om det regnar.</p></div>
   </div>
  <div class="dagsitem">
    <img src="/images/bathingclothes2.png" class="dagsicon">
-  <div class="dagstext"><p class="annatp">Ta med badkläder!</p></div>
+  <div class="dagstext"><p class="annatp">Ta gärna med badkläder!</p></div>
     </div>
   
   </div>

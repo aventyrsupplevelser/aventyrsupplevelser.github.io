@@ -5,6 +5,7 @@ title: butik
   <h1 class="pagetitle">
     Butik
   </h1>
+  <img class="pagetitleimg2" src="/images/butik.png">
 </div>
 <div id="butikintro">
    

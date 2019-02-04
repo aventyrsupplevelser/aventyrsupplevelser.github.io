@@ -169,22 +169,22 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div class="currentarstid toparstid">	
 <div class="seasontitlecontainer">
 <img class="currentarstidpic" src="/sorsjon/images/SeasonWinter.png">
-<div class="currentseasontitletext"><h3>Vinter (aktuell årstid)</h3>1 nov - 5 april
+<div class="currentseasontitletext"><h3>Vinter (aktuell årstid)</h3>1 nov – 5 april
  </div>
 </div>
 <div class="currentseasondesc">
-<b></b>Endast skräddarsydda bokningar för grupper med minst 10 personer.
+Endast skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 
 <div id="oppettidercontainer">
 
 
-<div class="arstid">
+<div class="arstid sidtid">
 <img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext">
-	<h3>Vår</h3> 6 april - 14 juni </div>
+	<h3>Vår</h3> 6 april – 14 juni </div>
 </div>
 <div class="seasondesc">
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.
@@ -196,7 +196,7 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div class="mobilarstid">
 <img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
 <div class="mobilarstidtext">
-<h3>Vår</h3> 6 april - 14 juni
+<h3>Vår</h3> 6 april – 14 juni
 <br>
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.
 Skräddarsydda bokningar för grupper med minst 10 personer.
@@ -206,9 +206,9 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div class="mobilarstid">
 <img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
 <div class="mobilarstidtext">
-<h3>Sommar</h3> 15 juni - 18 aug 
+<h3>Sommar</h3> 15 juni – 18 aug 
 <br>
-<b>Dropin-öppet alla dagar kl. 10-17</b> (men bäst att <a href="#bokasection">boka</a>).
+<b>Dropin-öppet alla dagar kl. 10–17</b> (men bäst att <a href="#bokasection">boka</a>).
 Sista start kl. 15.
 <br>
 Stängt midsommarafton.
@@ -218,7 +218,7 @@ Stängt midsommarafton.
 <div class="mobilarstid">
 <img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
 <div class="mobilarstidtext">
-<h3>Höst</h3> 19 aug - 31 okt 
+<h3>Höst</h3> 19 aug – 31 okt 
 <br>
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.
 Skräddarsydda bokningar för grupper med minst 10 personer.
@@ -230,20 +230,19 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext"><h3>Sommar</h3> 
-15 juni - 18 aug </div>
+15 juni – 18 aug </div>
 </div>
 <div class="seasondesc">
-Dropin-öppet alla dagar kl. 10-17 <br>(men bäst att <a href="#bokasection">boka</a>).
-Sista start kl. 15.
-<br>
-Stängt midsommarafton.
+Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
+<span class="footnote">Sista start kl. 15.
+Stängt midsommarafton.</span>
 </div>
 </div>
-<div class="arstid">	
+<div class="arstid sidtid">	
 <img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext"><h3>Höst</h3> 
-19 aug - 31 okt </div>
+19 aug – 31 okt </div>
 </div>
 <div class="seasondesc">
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.

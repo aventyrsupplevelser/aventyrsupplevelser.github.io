@@ -4,11 +4,13 @@ title: Service
 <div class="servicetextmobil">
  <h1 class="pagetitle">
  Service</h1>
+<img class="pagetitleimg2" src="/images/servicecenter.png">
+ 
 </div>
  
- <div id="serviceintro">
+<div id="serviceintro">
      
- <div class="servicetext servicetextmobil" markdown="1">
+<div class="servicetext servicetextmobil" markdown="1">
 
 Vi är officiellt servicecenter för Headrush Technologies och genomför årlig service och reparationer av produkterna Trublue, Zipstop och Quickjump.  
 

@@ -2,8 +2,10 @@
 title: Hitta hit
 ---
 
-   <div id="hittahitintro" markdown="1">
+<div id="hittahitintro" markdown="1">
 <h1 class="pagetitle">Hitta hit</h1>
+<img class="pagetitleimg2" src="/images/hittahitbig.png">
+
 
 Vi har två parker, som båda ligger strax norr om **Norrköping**. Se till att du vet **vilken av platserna** du ska till. Lättaste sättet att hitta är att klicka på länkarna för att öppna en vägbeskrivning i Google Maps från din nuvarande plats.
 </div>

@@ -101,8 +101,8 @@
         }
 		
 		.pagetitle {
-			font-family:'Amatic SC';
-			font-size:80px;
+		display:none;	
+		font-size:80px;
 			margin:20px 0px;
 		}
         
@@ -111,7 +111,7 @@
          */
         
         .navitem{
-            margin:0px 8px;
+            margin:0px 12px;
             text-decoration:none;
             padding-bottom:3px;
             border-bottom:;
@@ -283,6 +283,15 @@
 							padding-top:12px;
 							display:flex;
 							justify-content:flex-start;
+						}
+						
+						.navpic {
+							height:45px;
+						}
+						
+						.pagetitleimg {
+							padding:25px 0px 0px 10px;
+							height:130px;
 						}
                         
                         .navitem{
@@ -556,7 +565,7 @@
                    }
                    
                    /* 
-                    * mobil aktiviteter
+                    * mobil teambuilding
                     */
                    
                    .navbutton{
@@ -581,9 +590,12 @@
                    display:flex;
                    flex-wrap:wrap;
                    padding:0px;
+				   margin-bottom:50px;
                    }
                    
                    .paket {
+					   display:flex;
+					   flex-direction:column-reverse;
                        margin-bottom:50px;
                    }
                
@@ -594,12 +606,19 @@
                    .paketactualpic {
                        width:297px;
                    }
-                   
-                   .paketmediarow {
+				   
+				   .onerowteam {
                        display:flex;
                        justify-content: space-between;
+					   width:600px;
                        margin-bottom:6px;
-                       
+					   margin-top:10px;
+					   margin-left:-10px;
+					   
+				   }
+                   
+                   .paketmediarow > div  {
+                       display:none;
                    }
                    
                    .tidsikon {
@@ -611,7 +630,7 @@
                    }   
                    
                    .annatpic {
-                       width:50%;
+                       width:49.5%;
                        height:100%;
                    }
                    
@@ -669,6 +688,7 @@
                         
                    #annatintro {
                        padding:0px 10px;
+					   margin-bottom:40px;
                    }
                    
                    .annattext {
@@ -678,6 +698,7 @@
                    
                    .annatmediabox {
                        display:flex;
+					   justify-content:space-between;
                    }
                    
                    .desktoptable {
@@ -802,12 +823,28 @@
 			   }
 			   
 	   		#rightnavstuff {
+				display:flex;
 	   			font-family:'Amatic SC';
 	   			font-size:40px;
 	   			margin:-47px 73px 0px 0px;
 		
-        
-	   	  }
+			}
+        		.navpic {
+					height:35px;
+        		}
+				
+				.pagetitleimg {
+					height:100px;
+					margin-bottom:15px;
+					
+				}
+				
+				.pagetitleimg2{
+				height:70px;
+				margin-bottom:30px;
+				}
+				
+	
                
                /* 
                 * homepage
@@ -1254,7 +1291,7 @@
                 
                 #aktul {
                     padding:0px;
-					margin:16px 0px 0px 35px;
+					margin:0px 0px 0px 35px;
                 }
                 
                 .navbutton{
@@ -1276,6 +1313,9 @@
                 border: dotted 2px black;
             }
             
+		   .onerowteam {
+                display:none;
+			}
                 
                 .paket {
                     box-sizing:border-box;
@@ -1393,7 +1433,7 @@
             }
 
             #annatintro {
-                width:600px;
+                width:570px;
                 padding:0px 0px 25px 0px;
                }
 
@@ -1409,6 +1449,7 @@
             }
             
             #nardetardags{
+				padding-top:40px;
                 padding-bottom:20px;
             }
             
@@ -1570,8 +1611,8 @@
                     <div id="leftnavstuff">
                     </div>
                     <div id="rightnavstuff">
-                        <a href="/hittahit" class="navitem">Hitta hit</a>
-                        <a href="/omoss" class="navitem">Om oss</a>
+                        <a href="/hittahit" class="navitem"><img class="navpic" src="/images/hittahit.png"></a>
+                        <a href="/omoss" class="navitem"><img class="navpic" src="/images/omoss.png"></a>
                         <a href="/english" style="display:none" class="navitem">English</a>
                     </div>
                 </div>
