@@ -22,7 +22,7 @@ title: Om oss
  <div class="omossavsnitt mobilreverse">
   
   <div class="omosstext" markdown="1">
-**Lillemor** och **Anders Rylén** startade Äventyrsupplevelser vid Glottern utanför Norrköping år 1995. Med ett liv av vildmarksäventyr från alla delar av världen bakom sig, arbetar de nu för att göra upplevelsen av att komma ut i **naturen** och testa sina gränser tillgänglig för alla. Det ledde dem till att år 2008 börja bygga Sörsjöns Äventyrspark, som har utvecklat sig till att bli Sveriges överlägset största samling höghöjdsbanor och linbanor. 
+**Lillemor** och **Anders Rylén** startade Äventyrsupplevelser vid Glottern utanför Norrköping år 1995. Med ett liv av vildmarksäventyr från alla delar av världen bakom sig, arbetar de nu för att göra upplevelsen av att komma ut i **naturen** och testa sina gränser tillgänglig för alla. Det ledde dem till att år 2008 börja bygga Sörsjöns Äventyrspark, som har utvecklat sig till att bli Sveriges största samling höghöjdsbanor och linbanor. 
 </div>
   <div>
   <img src="/images/andersochlillen.jpg" class="omsossbild">

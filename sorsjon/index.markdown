@@ -61,18 +61,84 @@ title: home
 <div id="aktiviteternav" class="">
     
 	<ul id="aktul">
-		<li><a class="navbutton" href="#openinghours">Öppettider</a></li>
-		<li><a class="navbutton" href="#prices">Priser</a></li>
-		<li><a style="color:#014421;" class="navbutton bokanav" href="#book">Boka</a></li>
-	    <li><a class="navbutton webfind" href="#findus">Hitta hit</a></li>
-	    <li><a class="navbutton mobilfind" href="#findus">Hitta hit</a></li>
-	    <li><a class="navbutton webfragor" href="#faq">Vanliga frågor</a></li>
-		<li><a class="navbutton mobilfragor" href="#faq">Frågor</a></li>
-		<li><a class="navbutton webenglish" style="display:none;" href="#english">English</a></li>
-		<li><a class="navbutton mobilenglish" style="color:grey;" href="#english">English</a></li>
+		<li>
+			<a class="navbutton" href="#openinghours">
+			<img class="navimgsmall" src="/sorsjon/images/oppettidercaps.png">
+			<img class="navimgline" src="/sorsjon/images/line.png">
+			</a>
+		</li>
+		<li>
+			<a class="navbutton" href="#prices">
+				<img class="navimgcaps" src="/sorsjon/images/prisercaps.png">
+				<img class="navimgline" src="/sorsjon/images/line.png">
+			</a>
+		</li>
+		<li>
+			<a style="color:#014421;" class="navbutton bokanav" href="#book">
+				<img class="navimgcaps" src="/sorsjon/images/bokacaps.png">
+				<img class="navimgline" src="/sorsjon/images/line.png">
+			</a>
+		</li>
+	    <li>
+			<a class="navbutton webfind" href="#findus"><img class="navimgcaps" src="/sorsjon/images/hittahitcaps.jpg">
+			<img class="navimgline" src="/sorsjon/images/line.png">
+			
+			</a>
+		</li>
+	    
+	    <li>
+			<a class="navbutton webfragor" href="#faq">
+				<img class="navimgsmall2" src="/sorsjon/images/vanligacaps.png">
+				<img class="navimgline" src="/sorsjon/images/line.png">
+				
+			</a>
+		</li>
+		
 		
 	</ul>
+	
+	<li style="display:none;">
+		<a class="navbutton webenglish" href="#english">English</a>
+	</li>
+	
+	<ul id="aktulmobil">
+		<li>
+			<a class="navbutton" href="#openinghours">
+			<img class="navimgsmall" src="/sorsjon/images/oppettidercaps.png">
+			</a>
+		</li>
+		<li>
+			<a class="navbutton" href="#prices">
+				<img class="navimg" src="/sorsjon/images/prisercaps.png">
+			</a>
+		</li>
+		<li>
+			<a style="color:#014421;" class="navbutton bokanav" href="#book">
+				<img class="navimg" src="/sorsjon/images/bokacaps.png">
+			</a>
+		</li>
+	    
+	    <li>
+			<a class="navbutton mobilfind" href="#findus">
+				<img class="navimgcaps" src="/sorsjon/images/hittahitcaps.jpg">
+			</a>
+		</li>
+	    
+		<li>
+			<a class="navbutton mobilfragor" href="#faq">				
+				<img class="navimgsmall2" src="/sorsjon/images/fragorcaps.png">
+			</a>
+		</li>
+		
+		
+		
+	</ul>
+	
+	
+	
+	
 </div>
+
 
 <div id="sorsjonallcontent">
 <div id="introseriesection" class="greyback">
@@ -80,7 +146,7 @@ title: home
 <div id="introsection">
 <div id="introserie">
 <div class="introitem">
-<img class="introseriepic" src="/sorsjon/images/sverige.jpg">
+<img class="introseriepic" src="/sorsjon/images/skybana.jpg">
 <div class="introitemtext ">
 Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd ...
 </div>
@@ -376,7 +442,9 @@ betalande vuxen
 
 <a id="faq"></a>
 <div class="greyback" id="faqsection">
-<h2 class="sectiontitle2 mobilpadding">Vanliga frågor</h2>
+<h2 class="sectiontitle2 mobilpadding">				
+	<img class="vanligatitle" src="/sorsjon/images/vanligacaps.png">
+</h2>
 <div id="faqcontainer" class="mobilpadding">
 <div id="leftfaq" markdown="1">
 

@@ -259,7 +259,7 @@ Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
 Om du letar efter <strong>lugn och ro</strong>, vill upptäcka hemliga vikar och <em>njuta av naturen</em> så kan du hyra kanoter av oss. 
 
-Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker(stängda) till uthyrning.
+Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 
 Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 <div class="paketinfo">

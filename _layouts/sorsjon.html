@@ -121,11 +121,12 @@
         }
 		
 		.sticky {		  
-		  position: fixed;
-		  position: -webkit-sticky;
+		 
 		  top: 0;
 		  width:100%;
 	  }
+	  position: fixed;
+	  position: -webkit-sticky;
 	  
 	  .sticky + #sorsjonallcontent {
 	  }
@@ -180,8 +181,8 @@
 				
 			}
             
-            #aktul {
-				height:145px;
+            #aktulmobil {
+				height:px;
 	            padding:0px;
 				margin:0px 0px -145px 0px;
 	            display:flex;
@@ -190,7 +191,7 @@
 				background-color:white;
             }
 			
-			#aktul2 {
+			#aktul {
 			display:none;
         }
 		
@@ -216,15 +217,38 @@
             }
 			
            .navbutton:hover {
-   		margin-top:10px;
+   		margin-top:px;
            border:none;
-   		padding-bottom:25px;
+   		padding-bottom:px;
        }
 	   
 	   .navbutton:active {
              border:none;
 	     	margin-top:0px;
 		   	padding-bottom:0px;	  
+	   }
+	   
+	   .navimg {
+		   height:42px;
+		   margin-top:px;
+	   }
+	   
+	   .navimgsmall {
+		   height:50px;
+		   margin-top:-7px;
+	   }
+	   .navimgsmall2 {
+		   height:46px;
+		   margin-top:-2px;
+	   }
+	   
+	   .navimgcaps {
+		   height:40px;
+	   }
+	   
+	   .navimgboka {
+		   height:50px;
+		   margin-top:-2px;
 	   }
 			
 			.webfragor {
@@ -574,6 +598,10 @@
 		font-family: 'Source Sans Pro', sans-serif;
    		 font-size:45px;
    	 }
+	 
+	 .vanligatitle {
+		 width:500px;	
+	  }
  	
 			
      #footer {
@@ -655,6 +683,37 @@
                    margin-right:px;
                    
                }
+			   
+			   .navimg {
+				   height:65px;
+				   margin-top:px;
+			   }
+			   
+			   .navimgsmall {
+				   height:47px;
+				   margin-top:-7px;
+			   }
+			   .navimgsmall2 {
+				   height:44px;
+				   margin-top:-2px;
+			   }
+			   
+			   .navimgcaps {
+				   height:40px;
+			   }
+			   
+			   .navimgboka {
+				   height:50px;
+				   margin-top:-2px;
+			   }
+			   
+			   .mobilfind {
+				   display:none;
+			   }
+			   
+			   .mobilenglish {
+				   display:none;
+			   }
                
                .navbutton{
                    box-sizing:border-box;
@@ -665,19 +724,32 @@
 				   border:none;
                    color: black;
                    text-align:center;
-                   padding: 35px 35px;
-                   display: inline-block;
+                   padding: 35px 0px;
+                   display: flex;
+				   flex-direction:column;
+				   align-items:center;
                }
 			   
 	           .navbutton:hover {
-				   padding-top:10px;
-	   			   margin-top:10px;
+				   padding-top:px;
+	   			   margin-top:px;
 	      		   border:none;
 	   			   padding-bottom:px;
 	       }
+		   
+		   .navbutton:hover .navimgline {
+			   visibility:visible;
+		   }
+		  
 			   
 			   #aktul2 {
 				   display:none;
+			   }
+			   
+			   .navimgline {
+				   padding-top:15px;
+				   visibility:hidden;
+				   width:100px;
 			   }
 			   
 	   		.mobilfragor {
@@ -712,7 +784,13 @@
 	 			margin-bottom:-105px;
 	 	   		width:100%;
 	 	   		background-color:white;
+				display:flex;
+				justify-content:space-between;
 	 	   	  }
+			  
+			  #aktulmobil {
+				  display:none;
+			  }
 		  
 	 		  #sorsjonallcontent {
 	 			  padding-top:105px;
@@ -834,10 +912,15 @@
 	 
 	   	 .sectiontitle2 {
 	   		 display:;
+			 margin-left:370px;
 	   		 padding-bottom:90px;
 			 font-family: 'Josefin Sans', sans-serif;
 	   		 font-size:45px;
 	   	 }
+		 
+		 .vanligatitle {
+			 height:60px;
+		 }
 	 
 	   	#howtocontainer {
 	   		display:flex;
@@ -958,7 +1041,7 @@
 	   	 }
 		 
 		 .sidtid {
-			 margin-top:-160px;
+			 margin-top:-190px;
 		 }
 	 
 	   	 .currentarstid {
