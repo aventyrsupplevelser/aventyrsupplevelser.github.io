@@ -516,9 +516,9 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
  <div class="dagstext"><p class="annatp">Se till att du åker till den rätta av <a href="#vagbeskrivningar">våra två platser!</a></p></div></div>
 </div>
   
-  </div>
+</div>
   
-  </div>
+</div>
   
 
   
