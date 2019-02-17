@@ -529,7 +529,9 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 
 <div id="vagbcontainer">
     <div id="sorsjonochglottern">
-<iframe class="themap" width="1200px" height="400px" frameBorder="0" allowfullscreen   src="https://umap.openstreetmap.fr/en/map/aventyrsupplevelser_249961?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=null&onLoadPanel=undefined&captionBar=false&fullscreenControl=true"></iframe>
+<iframe class="themap" width="1200px" height="400px" frameBorder="0" allowfullscreen src="https://umap.openstreetmap.fr/en/map/var-ligger-parkerna_294133?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=false&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=false&onLoadPanel=undefined&captionBar=false"></iframe>
+
+
 </div>
 
 <div id="vagbeskrivningar">
