@@ -64,24 +64,24 @@ title: home
 		<li>
 			<a class="navbutton" href="#openinghours">
 			<img class="navimgsmall" src="/sorsjon/images/oppettidercaps.png">
-			<img class="navimgline" src="/sorsjon/images/line.png">
+			<img class="navimglineoppet navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 		<li>
 			<a class="navbutton" href="#prices">
 				<img class="navimgcaps" src="/sorsjon/images/prisercaps.png">
-				<img class="navimgline" src="/sorsjon/images/line.png">
+				<img class="navimgline navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 		<li>
 			<a style="color:#014421;" class="navbutton bokanav" href="#book">
 				<img class="navimgcaps" src="/sorsjon/images/bokacaps.png">
-				<img class="navimgline" src="/sorsjon/images/line.png">
+				<img class="navimglineboka navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 	    <li>
 			<a class="navbutton webfind" href="#findus"><img class="navimgcaps" src="/sorsjon/images/hittahitcaps.jpg">
-			<img class="navimgline" src="/sorsjon/images/line.png">
+			<img class="navimglinehitta navimglinehover" src="/sorsjon/images/line.png">
 			
 			</a>
 		</li>
@@ -89,7 +89,7 @@ title: home
 	    <li>
 			<a class="navbutton webfragor" href="#faq">
 				<img class="navimgsmall2" src="/sorsjon/images/vanligacaps.png">
-				<img class="navimgline" src="/sorsjon/images/line.png">
+				<img class="navimglinefragor navimglinehover" src="/sorsjon/images/line.png">
 				
 			</a>
 		</li>

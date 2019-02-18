@@ -543,12 +543,14 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 </div>
 
 
-<div id="glotternvagbeskrivning">
+<div  id="glotternvagbeskrivning">
 
 <div class="buttondiv"> <a href="https://www.google.com/maps/dir/?api=1&destination=58.697130,16.189644" class="button vagbeskbutton">Vägbeskrivning till Glotterns Vildmarkspark<br>(öppnar i Google Maps)</a></div>
 </div>
-<a class="mobilpadding gammaldagsweb" href="/hittahit/#gammaldags">Gammaldags vägbeskrivning. </a>
-
+<div class="mobilpadding">
+	<a class="gammaldagsweb" href="/hittahit/#gammaldags">Gammaldags vägbeskrivning. 
+	</a>
+</div>
 </div>
 </div>
 

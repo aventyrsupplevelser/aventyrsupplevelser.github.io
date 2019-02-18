@@ -12,7 +12,7 @@ title: butik
  <div id="butikintrotext" markdown="1">
   
   
-Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush,</a> <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>.  
+Vi säljer bromssystem för linbanor, fritt fall-anordningar och klättringsmaterial från <a href="#headrush" class="textlink">Headrush</a>, <a href="#brakehawk" class="textlink">Brakehawk</a> och <a href="#monkey" class="textlink">Monkey Hardware</a>.  
  
 Vi kan även skicka efter säkerhetsutrustning såsom selar, slingor och hjälmar från exempelvis Petzl och Beal samt instegssäkringar från ISC.  
 
@@ -30,13 +30,12 @@ Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller r
 </div>
     <div id="butiksloggor">
   
-      <a href="#headrush" class="loggorlink"><img class="butiklogosclass"  src="/images/hrdistributor.jpg" ></a>
+<a href="#headrush" class="loggorlink"><img class="butiklogosclass"  src="/images/hrdistributor.jpg" ></a>
   
-      <a href="#headrush" class="loggorlink"><img class="butiklogosclass" src="/images/trubluelogo.png"></a>
-  
-    <a href="#headrush" class="loggorlink"><img class="butiklogosclass"  src="/images/zipstoplogo.png"></a>
+<a href="#headrush" class="loggorlink"><img class="butiklogosclass" src="/images/trubluelogo.png"></a>
+   <a href="#headrush" class="loggorlink"><img class="butiklogosclass"  src="/images/zipstoplogo.png"></a>
  
-      <br>
+<br>
     <a href="#headrush" class="loggorlink"><img class="butiklogosclass" src="/images/quickjumplogo.png"></a>
      <a href="#brakehawk" class="loggorlink"><img class="butiklogosclass2" src="/images/brakehawklogo.jpg"></a>
      <a href="#monkey" class="loggorlink"><img class="butiklogosclass2" src="/images/monkeyhardwarelogo.jpg"></a>
@@ -47,7 +46,7 @@ Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller r
   
 
  
- <div id="allaprodukter">
+<div id="allaprodukter">
      
      <div id="headrush" class="produktkategori">
          <div class="mobilpadding">

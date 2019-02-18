@@ -77,11 +77,13 @@
         }
 
         a {
-            text-decoration: underline;
+            border-bottom:solid 1px black;
+			text-decoration:none;
             color:black;
         }
         
         a:hover {
+            border-bottom:dotted 1px black;
             
         }
 		
@@ -114,10 +116,11 @@
             margin:0px 12px;
             text-decoration:none;
             padding-bottom:3px;
-            border-bottom:;
+            border-bottom:none;
         }
         
         .navitem:hover {
+            border-bottom:none;
 			position: relative; 
 			top: 5px;
 		} 
@@ -167,8 +170,7 @@
          }
   
         .button:hover {
-        background:black; 
-        color:white;
+        border: dotted 2px;
         text-decoration:none;
        }
         
@@ -184,6 +186,15 @@
             font-size:32px;
         }
         
+		.loggorlink {
+			border:none;
+		}
+		
+		.loggorlink:hover {
+			border:none;
+			
+		}
+		
         /* 
          * mobil service
          */
@@ -203,9 +214,8 @@
         
           
           .omosskontakt:hover {
-          background:black; 
-          color:white;
-          text-decoration:underline;
+			  border: dotted 2px black;
+          text-decoration:none;
       }
         
         /* 
@@ -217,13 +227,14 @@
          */
        
      .footeritem {
-         padding-left:20px;
+         margin-left:20px;
+		 border-bottom:none;
          text-decoration: none;
          color:grey;
      }
      
    .footeritem:hover {
-       text-decoration: underline;
+       text-decoration: none;
    }
         
         .timmar {
@@ -371,6 +382,7 @@
                         
                         .button {
                             font-size:40px;
+							padding:30px;
                         }
                         
                         /* 
@@ -386,6 +398,7 @@
                         }
                         
                         .omosskontakt {
+						  border-radius:3px;
                           box-sizing:border-box;
                           text-decoration:none;
                           color: black;
@@ -459,6 +472,7 @@
                        }
                        
                        .kontaktbutton {
+						 border-radius:3px;
                          box-sizing:border-box;
                          text-decoration: none;
                          background-color:;
@@ -472,9 +486,8 @@
                      }
                     
                          .kontaktbutton:hover {
-                         background:black; 
-                         color:white;
-                         text-decoration:underline;
+						 border:dotted 2px black;
+                         text-decoration:none;
                      }
                        
                      /* 
@@ -543,19 +556,19 @@
                     padding:5px 15px 5px 15px;
                     display: block;
                     text-decoration:none;
+					border: solid 2px;
+					border-radius:3px;
                    }
 
                    .place:hover 
                    {
-                     background:black; 
-                     color:white;
-                     text-decoration:underline;
+   					border: dotted 2px;
+                     text-decoration:none;
                    }
                    
                    .cvlista {
                      display: flex;
                      flex-wrap: wrap;
-                     background-color: ;
                      max-width:600px;
                      padding-bottom:30px;
                    }
@@ -566,8 +579,7 @@
                      margin:5px;
                      line-height: 50px;
                      font-size:20px;
-                     margin-bottom:;
-                     border: solid 2px;
+                     
                    }
                    
                    /* 
@@ -581,15 +593,16 @@
                        text-align:center;
                        padding: 12px 18px;
                        border: solid 2px black;
+					   border-radius:2px;
                        display: inline-block;
                        margin:10px;
                        font-size:25px;
                    }
         
                    .navbutton:hover {
-                   background:black; 
-                   color:white;
-                   text-decoration:;
+                   border: dotted 2px black;
+                   color:;
+                   text-decoration:none;
                }
                
                    #aktul {
@@ -674,7 +687,7 @@
                    }
                    
                    .pristabellbutton {
-					   border-radius:3px;
+					   border-radius:2px;
                        box-sizing:border-box;
                        text-decoration:none;
                        color: black;
@@ -687,9 +700,9 @@
                        }
                 
                    .pristabellbutton:hover {
-                   background:black; 
-                   color:white;
-                   text-decoration:underline;
+                   border: dotted 2px black;
+                   color:;
+                   text-decoration:none;
                    }
                         
                    #annatintro {
@@ -760,10 +773,10 @@
                      margin:25px 10px 0px 0px;
                  }
               
+			 
                      .priskontaktbuttons:hover {
-                     background:black; 
-                     color:white;
-                     text-decoration:underline;
+	                 border: dotted 2px black;
+                     text-decoration:none;
                  }
                  
                  .dagsitem {
@@ -1050,12 +1063,13 @@
                   }
                   
                   .kontaktbutton {
+					border-radius:3px;
                     box-sizing:border-box;
                     text-decoration: none;
                     background-color:;
                     color: black;
                     text-align:center;
-                    padding: 20px 30px;
+                    padding: 15px 25px;
                     border: solid 2px black;
                     display: inline-block;
                     font-size:25px;
@@ -1063,9 +1077,8 @@
                 }
                     
                     .kontaktbutton:hover {
-                    background:black; 
-                    color:white;
-                    text-decoration:underline;
+	                border: dotted 2px black;
+                    text-decoration:none;
                 }
                 
                 /* 
@@ -1101,8 +1114,7 @@
              
              .produkt {
                  max-width:273px;
-                 margin-right:20;
-                 margin-bottom:10px;
+                 margin-bottom:40px;
              }
              
              .produktkategoribox{
@@ -1176,7 +1188,7 @@
                line-height: 50px;
                font-size:20px;
                margin-bottom:;
-               border: solid 2px;
+
              }
 
              #forklaring {
@@ -1189,14 +1201,15 @@
               color:black;
               padding:5px 15px 5px 15px;
               display: block;
+              border: solid 2px;
+		   border-radius:3px;
               text-decoration:none;
              }
 
              .place:hover 
              {
-               background:black; 
-               color:white;
-               text-decoration:underline;
+                 border: dotted 2px;
+				 text-decoration:none;
              }
              
              /* 
@@ -1247,6 +1260,7 @@
                 
                 
                 .omosskontakt {
+				  border-radius:3px;
                   box-sizing:border-box;
                   text-decoration:none;
                   background-color:;
@@ -1406,9 +1420,9 @@
                     }
                 
                 .pristabellbutton:hover {
-                background:black; 
-                color:white;
-                text-decoration:underline;
+                border: dotted 2px black;
+                color:;
+                text-decoration:none;
             }
             
             .annatitem {
@@ -1508,7 +1522,7 @@
             }
             
             .priskontaktbuttons {
-				border-radius:3px;
+			  border-radius:3px;
               box-sizing:border-box;
               text-decoration: none;
               color: black;
@@ -1521,9 +1535,9 @@
           }
               
               .priskontaktbuttons:hover {
-              background:black; 
-              color:white;
-              text-decoration:underline;
+	           border: dotted 2px black;
+              color:;
+              text-decoration:none;
           }
 
             #dagsbox {
@@ -1575,10 +1589,22 @@
                }
 			   
 			   .gammaldagsweb {
-				   text-align:;
+	 			   border-radius:3px;
+	               box-sizing:border-box;
+	               text-decoration: none;
+	               color: black;
+	               text-align:center;
+	               border: solid 2px black;
+	               display: inline-block;
+				   font-size:18px;
+				   padding:10px;
 			   }
                
-          
+			   .gammaldagsweb:hover {
+	               text-decoration: none;
+	               border: dotted 2px black;
+			   	
+			   }
           
       }
         
