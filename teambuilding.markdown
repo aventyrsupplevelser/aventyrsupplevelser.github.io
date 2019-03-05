@@ -196,10 +196,9 @@ Ett samarbetspaket är lätt att packa ihop och ta med till er.
 
 Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål – att fokusera på det som ska genomföras utan att tillföra energi till tvivlen. Och att stanna i fokus, ända tills vi kan samla oss till att <strong>ta steget. </strong>
 
-Finns det annat i vardagen eller på arbetsplatsen som verkar omöjligt?
-
 Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
+Den 14 april och 1 sep 2019 arrangerar vi glödvandringar där du kan boka som individ (eller om du har fått ett presentkort).  
 
 
 <div class="paketinfo">
@@ -314,7 +313,8 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Lediga datum för 2019 presenteras under våren.
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Datum för 2019: 28 april, 26 maj, 16 juni, 7 juli, 25 aug. Priset är 1100 SEK per person för 6 timmar (10.00 – 16.00).
+
       </div> 
       <div class="annatmediabox">
       <img src="/images/klattringuppe.jpg" class="annatpic">

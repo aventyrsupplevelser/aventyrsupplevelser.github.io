@@ -274,8 +274,9 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 <div class="mobilarstidtext">
 <h3>Sommar</h3> 15 juni – 18 aug 
 <br>
-<b>Dropin-öppet alla dagar kl. 10–17</b> (men bäst att <a href="#bokasection">boka</a>).
+<b>Dropin-öppet alla dagar kl. 10–17</b><br>(men bäst att <a href="#bokasection">boka</a>).
 Sista start kl. 15.
+Kvällsöppet vissa dagar!
 <br>
 Stängt midsommarafton.
 </div>
@@ -300,7 +301,11 @@ Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 <div class="seasondesc">
 Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
+Kvällsöppet vissa dagar!
+ <br>
 <span class="footnote">Sista start kl. 15.
+ <br>
+
 Stängt midsommarafton.</span>
 </div>
 </div>
