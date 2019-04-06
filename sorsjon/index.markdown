@@ -141,7 +141,7 @@ title: home
 
 
 <div id="sorsjonallcontent">
-<div id="introseriesection" class="greyback">
+<div id="introseriesection" class="greyback" >
 
 <div id="introsection">
 <div id="introserie">
@@ -201,7 +201,59 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 </div>
 </div>
 
-<div id="harfinssocksosection" class="greyback">
+
+<div id="infographicssection" class="greyback">
+<img class="infographic" src="/sorsjon/images/infocolornewtrans.png">
+<img class="infographicmobil" src="/sorsjon/images/infomobil.png">
+
+<div id="levelsinfo" style="display:none;">
+	<div class="level">
+	<span class="gulbana">
+		Gul
+	</span>
+	<br>
+	(6 banor)
+	<br>
+	<span class="footnote">Barn under 9 måste klättra<br> med betalande vuxen.
+	</span>
+	</div>
+	<div class="level">
+	<span class="gronbana">
+		Grön
+	</span>
+		<br>
+		(5 banor)
+	</div>
+	<div class="level">
+	<span class="blabana">
+	<h3>
+		Blå
+	</h3>
+	</span>
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<br>
+	(4 banor)
+	</div>
+	<div class="level">
+	<span class="rödbana">Röd</span>
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<br>
+	(3 banor)
+	</div>
+	<div class="level">
+	<span class="svartbana">Svart</span>
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<img src="/sorsjon/images/chili.png" class="chili">
+	<br>
+	(3 banor)
+	</div>
+</div>
+</div>
+
+<div id="harfinssocksosection" class="whiteback">
 <div id="harfinnsocksa">
 <div class="harfinnselement">
 <img class="harfinnspic mobilkanot" src="/sorsjon/images/Canoe.png">
@@ -231,15 +283,17 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 </div>
 
 <a id="openinghours"></a>
-<div id="oppettidersection" class="whiteback">
+<div id="oppettidersection" class="greyback">
 <div class="currentarstid toparstid">	
 <div class="seasontitlecontainer">
-<img class="currentarstidpic" src="/sorsjon/images/SeasonWinter.png">
-<div class="currentseasontitletext"><h3>Vinter (aktuell årstid)</h3>1 nov – 5 april
+<img class="currentarstidpic" src="/sorsjon/images/SeasonSpring.png">
+<div class="currentseasontitletext"><h3>Vår (aktuell årstid)</h3>6 april – 14 juni  april
  </div>
 </div>
 <div class="currentseasondesc">
-Endast skräddarsydda bokningar för grupper med minst 10 personer.
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 
@@ -247,69 +301,51 @@ Endast skräddarsydda bokningar för grupper med minst 10 personer.
 
 
 <div class="arstid sidtid">
-<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
+<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext">
-	<h3>Vår</h3> 6 april – 14 juni </div>
+	<h3>Sommar</h3>15 juni – 18 aug </div>
 </div>
 <div class="seasondesc">
-<a href="#bokasection">Bokningsbara tider</a> på helgerna.
-<br>
-Skräddarsydda bokningar för grupper med minst 10 personer.
-</div>
-</div>
-
-<div class="mobilarstid">
-<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
-<div class="mobilarstidtext">
-<h3>Vår</h3> 6 april – 14 juni
-<br>
-<a href="#bokasection">Bokningsbara tider</a> på helgerna.
-Skräddarsydda bokningar för grupper med minst 10 personer.
+Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
+Nyhet: Öppet vissa kvällar!
+<span class="footnote"></span>
 </div>
 </div>
 
 <div class="mobilarstid">
 <img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
 <div class="mobilarstidtext">
-<h3>Sommar</h3> 15 juni – 18 aug 
+<h3>Sommar</h3> 15 juni – 18 aug
 <br>
-<b>Dropin-öppet alla dagar kl. 10–17</b><br>(men bäst att <a href="#bokasection">boka</a>).
-Sista start kl. 15.
-Kvällsöppet vissa dagar!
-<br>
-Stängt midsommarafton.
+Dropin-öppet alla dagar<br>
+kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
+Nyhet: Öppet vissa kvällar!
+<span class="footnote"></span>
 </div>
 </div>
 
 <div class="mobilarstid">
 <img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
 <div class="mobilarstidtext">
-<h3>Höst</h3> 19 aug – 31 okt 
+<h3>Höst</h3> 19 aug – 31 okt  
 <br>
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.
 Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
 
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonWinter.png">
+<div class="mobilarstidtext">
+<h3>Vinter</h3> 1 nov – 5 april
+<br>
+Endast skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
+
 
 <div class="arstid">	
-<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
-<div class="seasontitlecontainer">	
-<div class="seasontitletext"><h3>Sommar</h3> 
-15 juni – 18 aug </div>
-</div>
-<div class="seasondesc">
-Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
-Kvällsöppet vissa dagar!
- <br>
-<span class="footnote">Sista start kl. 15.
- <br>
-
-Stängt midsommarafton.</span>
-</div>
-</div>
-<div class="arstid sidtid">	
 <img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext"><h3>Höst</h3> 
@@ -321,12 +357,22 @@ Stängt midsommarafton.</span>
 Skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
+<div class="arstid sidtid">	
+<img class="seasonspic" src="/sorsjon/images/SeasonWinter.png">
+<div class="seasontitlecontainer">	
+<div class="seasontitletext"><h3>Vinter</h3> 
+1 nov – 5 april</div>
+</div>
+<div class="seasondesc">
+Endast skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
 </div>
 </div>
 
 <a id="prices"></a>
  
-<div id="prisersection" class="greyback">
+<div id="prisersection" class="whiteback">
 <div id="prisercontainer">
 <div class="pricescolumn" markdown="1">	
 <div class="prispicdiv"><img class="priserpic3" src="/sorsjon/images/AgeAdult.png"></div>
@@ -369,7 +415,7 @@ betalande vuxen
 </div>
 
 <a id="book"></a>
-<div id="bokasection" class="whiteback">
+<div id="bokasection" class="greyback">
 <div id="leftbok">
 <h2 class="bokningsrubrik mobilpadding">Direkt bokning</h2>
 <p id="bokningstext" class="mobilpadding">Hitta en tid som passar dig i kalendern nedan. Läs <a href="#faqsection">vanliga frågor</a> om du undrar något!</p>
@@ -392,14 +438,21 @@ betalande vuxen
 </div>
 
 
-<div id="tipssection" class="greyback">
+<div id="tipssection" class="whiteback">
 
 <div id="atttankapacontainer">
+	<div class="tankpasection">
+
+	<img class="tankpapic4 tankpapic" src="/sorsjon/images/watch.png">
+	<div class="tankpatext">
+	<p>Kom i tid – annars får ni vänta ...</p>
+	</div>
+	</div>
 <div class="tankpasection">
 
 <img class="tankpapic1 tankpapic" src="/sorsjon/images/SturdyShoes.png">
 <div class="tankpatext">
-<p>Vi rekommenderar att ha på oömma <br> kläder och bra skor när du kommer ...</p>
+<p>... vi rekommenderar att ha på oömma <br> kläder och bra skor när du kommer ...</p>
 </div>
 </div>
 <div class="tankpasection">
@@ -420,7 +473,7 @@ betalande vuxen
 </div>
 
 <a id="findus"></a>
-<div id="hittahitsection" class="whiteback">
+<div id="hittahitsection" class="greyback">
 <div id="vagbrightside">
 <div class="buttondiv">
 	<a href="https://www.google.com/maps?saddr=Current+Location&daddr=Sorsjons+Aventyrspark" class="button vagbeskbutton" target="_blank">
@@ -446,7 +499,7 @@ betalande vuxen
 </div>
 
 <a id="faq"></a>
-<div class="greyback" id="faqsection">
+<div class="whiteback" id="faqsection">
 <h2 class="sectiontitle2 mobilpadding">				
 	<img class="vanligatitle" src="/sorsjon/images/vanligacaps.png">
 </h2>
