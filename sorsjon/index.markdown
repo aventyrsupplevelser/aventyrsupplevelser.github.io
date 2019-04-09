@@ -287,7 +287,7 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div class="currentarstid toparstid">	
 <div class="seasontitlecontainer">
 <img class="currentarstidpic" src="/sorsjon/images/SeasonSpring.png">
-<div class="currentseasontitletext"><h3>Vår (aktuell årstid)</h3>6 april – 14 juni  april
+<div class="currentseasontitletext"><h3>Vår (aktuell årstid)</h3>6 april – 14 juni
  </div>
 </div>
 <div class="currentseasondesc">
