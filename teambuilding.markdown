@@ -260,7 +260,7 @@ Om du letar efter <strong>lugn och ro</strong>, vill upptäcka hemliga vikar och
 
 Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 
-Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
+Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide! Den 30 juni håller vi kajakdag mellan kl. 10-14 (pris 800 kr).
 <div class="paketinfo">
 <a href="#kanot" class="pristabellbutton">Pristabell</a>
 </div>
@@ -313,7 +313,7 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Datum för 2019: 28 april, 26 maj, 16 juni, 7 juli, 25 aug. Priset är 1100 SEK per person för 6 timmar (10.00 – 16.00).
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Datum för 2019: 26 maj, 16 juni, 7 juli, 25 aug. Priset är 1100 SEK per person för 6 timmar (10.00 – 16.00).
 
       </div> 
       <div class="annatmediabox">
