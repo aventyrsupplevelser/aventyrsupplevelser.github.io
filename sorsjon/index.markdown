@@ -286,87 +286,87 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 <div id="oppettidersection" class="greyback">
 <div class="currentarstid toparstid">	
 <div class="seasontitlecontainer">
-<img class="currentarstidpic" src="/sorsjon/images/SeasonSpring.png">
-<div class="currentseasontitletext"><h3>Vår (aktuell årstid)</h3>6 april – 14 juni
+<img class="currentarstidpic" src="/sorsjon/images/SeasonSummer.png">
+<div class="currentseasontitletext"><h3>Sommar (aktuell årstid)</h3> 15 juni – 18 aug
  </div>
 </div>
 <div class="currentseasondesc">
-<a href="#bokasection">Bokningsbara tider</a> på helgerna.
-<br>
-Skräddarsydda bokningar för grupper med minst 10 personer.
+Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
+Nyhet: Öppet vissa kvällar!
 </div>
 </div>
 
 <div id="oppettidercontainer">
 
-
 <div class="arstid sidtid">
-<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
+<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext">
-	<h3>Sommar</h3>15 juni – 18 aug </div>
+	<h3>Höst</h3>19 aug – 31 okt</div>
 </div>
 <div class="seasondesc">
-Dropin-öppet alla dagar <br>kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
-Nyhet: Öppet vissa kvällar!
-<span class="footnote"></span>
-</div>
-</div>
-
-<div class="mobilarstid">
-<img class="seasonspic" src="/sorsjon/images/SeasonSummer.png">
-<div class="mobilarstidtext">
-<h3>Sommar</h3> 15 juni – 18 aug
-<br>
-Dropin-öppet alla dagar<br>
-kl. 10 – 17 (men bäst att <a href="#bokasection">boka</a>).<br>
-Nyhet: Öppet vissa kvällar!
-<span class="footnote"></span>
-</div>
-</div>
-
-<div class="mobilarstid">
-<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
-<div class="mobilarstidtext">
-<h3>Höst</h3> 19 aug – 31 okt  
-<br>
 <a href="#bokasection">Bokningsbara tider</a> på helgerna.
-Skräddarsydda bokningar för grupper med minst 10 personer.
-</div>
-</div>
-
-<div class="mobilarstid">
-<img class="seasonspic" src="/sorsjon/images/SeasonWinter.png">
-<div class="mobilarstidtext">
-<h3>Vinter</h3> 1 nov – 5 april
 <br>
-Endast skräddarsydda bokningar för grupper med minst 10 personer.
+Skräddarsydda bokningar för grupper med minst 10 personer.
+<span class="footnote"></span>
 </div>
 </div>
-
 
 <div class="arstid">	
-<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
-<div class="seasontitlecontainer">	
-<div class="seasontitletext"><h3>Höst</h3> 
-19 aug – 31 okt </div>
-</div>
-<div class="seasondesc">
-<a href="#bokasection">Bokningsbara tider</a> på helgerna.
-<br>
-Skräddarsydda bokningar för grupper med minst 10 personer.
-</div>
-</div>
-<div class="arstid sidtid">	
 <img class="seasonspic" src="/sorsjon/images/SeasonWinter.png">
 <div class="seasontitlecontainer">	
 <div class="seasontitletext"><h3>Vinter</h3> 
 1 nov – 5 april</div>
 </div>
 <div class="seasondesc">
+Endast skräddarsydda bokningar&nbsp;för grupper med minst&nbsp;10&nbsp;personer.
+</div>
+</div>
+<div class="arstid sidtid">	
+<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
+<div class="seasontitlecontainer">	
+<div class="seasontitletext"><h3>Vår</h3> 
+6 april – 14 juni</div>
+</div>
+<div class="seasondesc">
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+<br>
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
+
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonFall.png">
+<div class="mobilarstidtext">
+<h3>Höst</h3> 19 aug – 31 okt 
+<br>
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
+
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonWinter.png">
+<div class="mobilarstidtext">
+<h3>Vinter</h3> 1 nov – 5 april  
+<br>
 Endast skräddarsydda bokningar för grupper med minst 10 personer.
 </div>
 </div>
+
+<div class="mobilarstid">
+<img class="seasonspic" src="/sorsjon/images/SeasonSpring.png">
+<div class="mobilarstidtext">
+<h3>Vår</h3> 6 april – 14 juni
+
+<br>
+<a href="#bokasection">Bokningsbara tider</a> på helgerna.
+Skräddarsydda bokningar för grupper med minst 10 personer.
+</div>
+</div>
+
+
+
 </div>
 </div>
 
