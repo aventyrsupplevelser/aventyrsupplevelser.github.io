@@ -63,32 +63,33 @@ title: home
 	<ul id="aktul">
 		<li>
 			<a class="navbutton" href="#openinghours">
-			<img class="navimgsmall" src="/sorsjon/images/oppettidercaps.png">
+			<img class="navimg" src="/sorsjon/images/oppettider.png">
 			<img class="navimglineoppet navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 		<li>
 			<a class="navbutton" href="#prices">
-				<img class="navimgcaps" src="/sorsjon/images/prisercaps.png">
+				<img class="navimg" src="/sorsjon/images/priser.png">
 				<img class="navimgline navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 		<li>
 			<a style="color:#014421;" class="navbutton bokanav" href="#book">
-				<img class="navimgcaps" src="/sorsjon/images/bokacaps.png">
+				<img class="navimg" src="/sorsjon/images/boka.png">
 				<img class="navimglineboka navimglinehover" src="/sorsjon/images/line.png">
 			</a>
 		</li>
 	    <li>
-			<a class="navbutton webfind" href="#findus"><img class="navimgcaps" src="/sorsjon/images/hittahitcaps.jpg">
-			<img class="navimglinehitta navimglinehover" src="/sorsjon/images/line.png">
+			<a class="navbutton webfind" href="#findus">
+				<img class="navimg" src="/sorsjon/images/hittahit.png">
+				<img class="navimglinehitta navimglinehover" src="/sorsjon/images/line.png">
 			
 			</a>
 		</li>
 	    
 	    <li>
 			<a class="navbutton webfragor" href="#faq">
-				<img class="navimgsmall2" src="/sorsjon/images/vanligacaps.png">
+				<img class="navimg" src="/sorsjon/images/vanligafragor.png">
 				<img class="navimglinefragor navimglinehover" src="/sorsjon/images/line.png">
 				
 			</a>
@@ -104,29 +105,29 @@ title: home
 	<ul id="aktulmobil">
 		<li>
 			<a class="navbutton" href="#openinghours">
-			<img class="navimgsmall" src="/sorsjon/images/oppettidercaps.png">
+			<img class="navimg" src="/sorsjon/images/oppettider.png">
 			</a>
 		</li>
 		<li>
 			<a class="navbutton" href="#prices">
-				<img class="navimg" src="/sorsjon/images/prisercaps.png">
+				<img class="navimg" src="/sorsjon/images/priser.png">
 			</a>
 		</li>
 		<li>
 			<a style="color:#014421;" class="navbutton bokanav" href="#book">
-				<img class="navimg" src="/sorsjon/images/bokacaps.png">
+				<img class="navimg" src="/sorsjon/images/boka.png">
 			</a>
 		</li>
 	    
 	    <li>
 			<a class="navbutton mobilfind" href="#findus">
-				<img class="navimgcaps" src="/sorsjon/images/hittahitcaps.jpg">
+				<img class="navimg" src="/sorsjon/images/hittahit.png">
 			</a>
 		</li>
 	    
 		<li>
 			<a class="navbutton mobilfragor" href="#faq">				
-				<img class="navimgsmall2" src="/sorsjon/images/fragorcaps.png">
+				<img class="navimg" src="/sorsjon/images/fragor.png">
 			</a>
 		</li>
 		
