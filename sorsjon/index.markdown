@@ -146,13 +146,13 @@ title: home
 <div id="introsection">
 <div id="introserie">
 <div class="introitem">
-<img class="introseriepic" src="/sorsjon/images/skybana.jpg">
+<img class="introseriepic" src="/sorsjon/images/banorna.jpg">
 <div class="introitemtext ">
 Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd ...
 </div>
 </div>
 <div class="introitem">
-<img class="introseriepic" src="/sorsjon/images/barn.jpg">
+<img class="introseriepic" src="/sorsjon/images/kidcarbina.jpg">
 <div class="introitemtext mobilpadding">
 ... för dig som är ungefär 3 till 99 år gammal ...
 </div>
@@ -160,7 +160,7 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd ...
 <div class="mobilintrotext mobilpadding">
 Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungefär 3 till 99 år gammal ...
 </div>
-<div class="introitem"><img class="introseriepic" src="/sorsjon/images/cykel.jpg" >
+<div class="introitem"><img class="introseriepic" src="/sorsjon/images/bicycle.jpg" >
 <div class="introitemtext mobilpadding">
 ... och vill uppleva att rida på flygande elefanter ...
 </div>
@@ -203,54 +203,8 @@ Hos oss finns 19 höghöjdsbanor från 2 till 20 m höjd, för dig som är ungef
 
 
 <div id="infographicssection" class="greyback">
-<img class="infographic" src="/sorsjon/images/infocolornewtrans.png">
-<img class="infographicmobil" src="/sorsjon/images/infomobil.png">
-
-<div id="levelsinfo" style="display:none;">
-	<div class="level">
-	<span class="gulbana">
-		Gul
-	</span>
-	<br>
-	(6 banor)
-	<br>
-	<span class="footnote">Barn under 9 måste klättra<br> med betalande vuxen.
-	</span>
-	</div>
-	<div class="level">
-	<span class="gronbana">
-		Grön
-	</span>
-		<br>
-		(5 banor)
-	</div>
-	<div class="level">
-	<span class="blabana">
-	<h3>
-		Blå
-	</h3>
-	</span>
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<br>
-	(4 banor)
-	</div>
-	<div class="level">
-	<span class="rödbana">Röd</span>
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<br>
-	(3 banor)
-	</div>
-	<div class="level">
-	<span class="svartbana">Svart</span>
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<img src="/sorsjon/images/chili.png" class="chili">
-	<br>
-	(3 banor)
-	</div>
-</div>
+<img class="infographic" src="/sorsjon/images/infographic.png">
+<img class="infographicmobil" src="/sorsjon/images/infographicmobil.png">
 </div>
 
 <div id="harfinssocksosection" class="whiteback">
