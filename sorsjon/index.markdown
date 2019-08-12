@@ -58,82 +58,77 @@ title: home
 
 </style>
 
-<div id="aktiviteternav" class="">
+<div id="nav">
     
-	<ul id="aktul">
-		<li>
+	<div id="webnav">
+		<div>
 			<a class="navbutton" href="#openinghours">
 			<img class="navimg" src="/sorsjon/images/oppettider.png">
 			<img class="navimglineoppet navimglinehover" src="/sorsjon/images/line.png">
 			</a>
-		</li>
-		<li>
+		</div>
+		<div>
 			<a class="navbutton" href="#prices">
 				<img class="navimg" src="/sorsjon/images/priser.png">
 				<img class="navimgline navimglinehover" src="/sorsjon/images/line.png">
 			</a>
-		</li>
-		<li>
-			<a style="color:#014421;" class="navbutton bokanav" href="#book">
+		</div>
+		<div>
+			<a class="navbutton" href="#book">
 				<img class="navimg" src="/sorsjon/images/boka.png">
 				<img class="navimglineboka navimglinehover" src="/sorsjon/images/line.png">
 			</a>
-		</li>
-	    <li>
-			<a class="navbutton webfind" href="#findus">
+		</div>
+		<div>
+			<a class="navbutton" href="#findus">
 				<img class="navimg" src="/sorsjon/images/hittahit.png">
 				<img class="navimglinehitta navimglinehover" src="/sorsjon/images/line.png">
 			
 			</a>
-		</li>
+		</div>
 	    
-	    <li>
-			<a class="navbutton webfragor" href="#faq">
+		<div>
+			<a class="navbutton" href="#faq">
 				<img class="navimg" src="/sorsjon/images/vanligafragor.png">
 				<img class="navimglinefragor navimglinehover" src="/sorsjon/images/line.png">
 				
 			</a>
-		</li>
-		
-		
-	</ul>
+		</div>
+	</div>
+
 	
-	<li style="display:none;">
-		<a class="navbutton webenglish" href="#english">English</a>
-	</li>
-	
-	<ul id="aktulmobil">
-		<li>
+	<div id="mobilnav">
+		<div>
 			<a class="navbutton" href="#openinghours">
 			<img class="navimg" src="/sorsjon/images/oppettider.png">
 			</a>
-		</li>
-		<li>
+		</div>
+		<div>
 			<a class="navbutton" href="#prices">
 				<img class="navimg" src="/sorsjon/images/priser.png">
 			</a>
-		</li>
-		<li>
-			<a style="color:#014421;" class="navbutton bokanav" href="#book">
+		</div>
+		<div>
+			<a class="navbutton" href="#book">
 				<img class="navimg" src="/sorsjon/images/boka.png">
 			</a>
-		</li>
+		</div>
 	    
-	    <li>
-			<a class="navbutton mobilfind" href="#findus">
+		<div>
+			<a class="navbutton" href="#findus">
 				<img class="navimg" src="/sorsjon/images/hittahit.png">
 			</a>
-		</li>
+		</div>
 	    
-		<li>
-			<a class="navbutton mobilfragor" href="#faq">				
+		<div>
+			<a class="navbutton" href="#faq">				
 				<img class="navimg" src="/sorsjon/images/fragor.png">
 			</a>
-		</li>
+		</div>
 		
 		
 		
-	</ul>
+	</div>
 	
 	
 	
@@ -456,7 +451,7 @@ betalande vuxen
 <a id="faq"></a>
 <div class="whiteback" id="faqsection">
 <h2 class="sectiontitle2 mobilpadding">				
-	<img class="vanligatitle" src="/sorsjon/images/vanligacaps.png">
+	<img class="vanligatitle" src="/sorsjon/images/vanligafragor.png">
 </h2>
 <div id="faqcontainer" class="mobilpadding">
 <div id="leftfaq" markdown="1">

@@ -54,7 +54,7 @@
 		
 		.center {
 		margin:0 auto;
-	}
+		}
 		
 
         div {
@@ -67,60 +67,57 @@
         }
 
         .footnote {
-			display:inline;
-        	font-size:18px;
+			display: inline;
+        	font-size: 18px;
         }
         
         h1 {
-            line-height:1.4em;
-            font-family:;
-            font-size:37px;
+            line-height: 1.4em;
+            font-size: 37px;
         }
         
         h2 {
-            font-weight:400;
+            font-weight: 400;
             margin: 0;
         }
         
         h3 {
-            font-family:;
-            font-size:px;
-            font-weight:500;
+            font-weight: 500;
             margin-bottom: 0;
         }
 
         a {
             border-bottom: 1px solid #000;
-            color:black;
-			text-decoration:none;
+            color: black;
+			text-decoration: none;
 			
         }
 		
 		a:hover {
-			text-decoration:none;
+			text-decoration: none;
 		    border-bottom: 1px dotted #000;
 			
 			
 		}
 		
 		b {
-			font-weight:500;
+			font-weight: 500;
 			}
 				
 		strong {
-			font-weight:500;
+			font-weight: 500;
 			}		
 		
 
         ul {
-            list-style-type:none;
-            display:flex;
-			padding:0px;
+            list-style-type: none;
+            display: flex;
+			padding: 0px;
             
         }
 		
 		#headerlogo {
-			margin-top:30px;
+			margin-top: 30px;
 		}
 		
         .navitem {
@@ -136,11 +133,11 @@
         }
         
         .timmar {
-            font-weight:700;
+            font-weight: 700;
         }
         
         .pengar {
-            font-weight:400;
+            font-weight: 400;
         }
 		
        
@@ -155,50 +152,38 @@
             }
 
             #centerdiv {
-                width:600px;
+                width: 600px;
             }
 			
             #logga {
-                width:100%;
-				margin-bottom:30px;
+                width: 100%;
             }
             
             .mobilpadding {
-                padding:0px 10px;
+                padding: 0px 10px;
             }
 			
 			.whiteback{
-				padding:60px 0px;
-				background-color:;
+				padding: 60px 0px;
 			}
 			
 			.greyback {
-				padding:60px 0px;
-				background-color:#F8F8F8;
-				
+				padding: 60px 0px;
+				background-color: #F8F8F8;
 			}
-            
-            #aktulmobil {
-				height:px;
-	            padding:0px;
-				margin:0px 0px -145px 0px;
+			
+            #mobilnav {
+	            padding:0px;				
+				margin:30px 0px 10px 0px;
 	            display:flex;
 	            flex-wrap:wrap;
 				justify-content:space-evenly;
             }
-			
-			#aktul {
+            
+			#webnav {
 			display:none;
-        }
+      	  	}		
 		
-		
-		
-		
-		#sorsjonallcontent {
-			padding-top:145px;
-		}
-		
-			
             .navbutton{
               box-sizing: border-box;
 			  border: none;
@@ -206,37 +191,13 @@
               display: inline-block;
     		}
 			
-           .navbutton:hover {
+        	.navbutton:hover {
       		 border: none;
-   			 padding-bottom:p x;
      	  }
-	   
-		   .navbutton:active {
-             border: none;
-	     	margin-top: 0px;
-		   	padding-bottom: 0px;	  
-		   }
-	   
+	   	   
 		   .navimg {
 		   height:51px;
-	   }
-	   
-			.webfragor {
-				display:none;
-			}
-			
-			.webenglish {
-				display:none;
-			}
-			.mobilenglish {
-				display:;
-			}
-			
-			.webfind {
-				display:none;
-			}
-			
-		
+	       }
 			
 			#introserie {
 				display:flex;
@@ -272,18 +233,12 @@
 				justify-content:center;
 				text-align:;
 			}
-			#howtocontainer > div {
-				width:px;
-			}
-			
-			
+		
 			.howtopic {
 				box-sizing:border-box;
 				width:250px;
 				padding:20px;
 			}
-			
-			
 			
 			.howtotext {
 				display:none;
@@ -296,12 +251,6 @@
 				text-align:center;
 			}
 			
-			.mobilhowtotext > div {
-				
-				
-				
-			}
-			
 			.infographic {
 				display:none;
 			}
@@ -310,8 +259,6 @@
 				max-width:580px;
 				margin:0px 10px;
 			}
-			
-			
 			
 			#harfinnsocksa {
 				display:flex;
@@ -655,51 +602,51 @@
                #headerlogo {
 				   margin-top:50px;
                }
+			   
+             
                
-               #mainnavdiv {
-                   margin-right:px;
-                   
+               #nav{
+                   margin-bottom:20px;
                }
+			   
+	 	   	  #webnav {
+	 	   		padding: 0 1000px;
+	 	     	margin-left: -1000px;
+	 	     	margin-right: -1000px;
+				margin-top: 35px;
+				display: flex;
+				justify-content: space-between;
+	 	   	  }
+			  
+			  #mobilnav {
+				  display:none;
+			  }
 			   
 			   .navimg {
 				   height:49px;
 				   margin-top:px;
 			   }
 			   
-			   .mobilfind {
-				   display:none;
-			   }
-			   
-			   .mobilenglish {
-				   display:none;
-			   }
+               .navitem{
+                   padding:6px;
+               }
                
                .navbutton{
                    box-sizing:border-box;
 				   border:none;
-                   color: black;
-                   text-align:center;
-                   padding: 35px 0px;
-                   display: flex;
-				   flex-direction:column;
-				   align-items:center;
+				   display: flex;
+				   flex-direction: column;
+				   align-items: center;
                }
 			   
 	           .navbutton:hover {
-				   padding-top:px;
-	   			   margin-top:px;
-	      		   border:none;
-	   			   padding-bottom:px;
-	       }
+	      		   border: none;
+	     	  }
 		   
-		   .navbutton:hover .navimglinehover {
+		 	  .navbutton:hover .navimglinehover {
 			   opacity: 1;
 			   transition: 0.3s;		   }
 		  
-			   
-			   #aktul2 {
-				   display:none;
-			   }
 			   
 			   .navimgline {
 				   padding-top:15px;
@@ -737,52 +684,6 @@
 				   height:5px;
 				   
 			   }
-			   
-			   
-			   
-	   		.mobilfragor {
-	   			display:none;
-	   		}
-			
-			.mobilenglish {
-	   			display:none;
-			}
-			
-			.mobilfind {
-	   			display:none;
-			}
-
-               
-               .navitem{
-                   padding:6px;
-               }
-               
-               
-               #aktiviteternav{
-				   padding-top:0px;
-                   margin-bottom:20px;
-               }
-			   
-	 	   	  #aktul {
-	 			  height:105px;
-	 	   		padding:0 1000px;
-	 	     	margin-left:-1000px;
-	 	     	margin-right:-1000px;
-	 	   		margin-top:0px;
-	 			margin-bottom:-105px;
-	 	   		width:100%;
-				display:flex;
-				justify-content:space-between;
-	 	   	  }
-			  
-			  #aktulmobil {
-				  display:none;
-			  }
-		  
-	 		  #sorsjonallcontent {
-	 			  padding-top:105px;
-	 		  }
-		  
 	  
 	 	   	  a.anchor {
 	 	   	      display: block;
@@ -1362,23 +1263,6 @@
         <div id="content">
             {{ content }}
         </div>
-		
-		
-		<script>
-		window.onscroll = function() {myFunction()};
-
-		var aktul = document.getElementById("aktul");
-		var sticky = aktul.offsetTop;
-
-		function myFunction() {
-		  if (window.pageYOffset >= sticky) {
-		    aktul.classList.add("sticky")
-		  } else {
-		    aktul.classList.remove("sticky");
-		  }
-		}
-		</script>
-		
 		
 		
         <script type="text/javascript">
