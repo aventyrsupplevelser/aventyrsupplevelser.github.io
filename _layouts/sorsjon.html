@@ -1,1271 +1,1165 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145278827-1"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
+<head>	
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145278827-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
 
-	  gtag('config', 'UA-145278827-1');
-	</script>
+		  gtag('config', 'UA-145278827-1');
+		</script>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">		
+		<meta name="viewport" content="width=device-width">
 
-	
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300" rel="stylesheet">
-
-
-	
-    <meta name="viewport" content="width=600,shrink-to-fit=no">
-
-    <title>
-      {% if page.title == nil %}
-       {{ page.title }}
-      {% else %}
-       {{ page.title }} –
-      {% endif %}
-      Sörsjöns Äventyrspark
-    </title>
+		<title>
+			{% if page.title == nil %}
+			{{ page.title }}
+			{% else %}
+			{{ page.title }} –
+			{% endif %}
+			Sörsjöns Äventyrspark
+		</title>
        
-    <style type="text/css" media="screen">
-		
-		
-		
-        body {
-			display:flex;
-			justify-content:center;
-			margin:0;
-			font-family: 'Avenir', sans-serif;
-            font-size:22px;
-			font-weight:300;
-            letter-spacing:0.02em;
-            line-height:1.6em;
-			overflow-x:hidden; 
-				}
-		
-        
-        /* utan denna blir länkade bilder fucked */
-        img {
-            display: block;
-        }
-		
-		.center {
-		margin:0 auto;
-		}
-		
-
-        div {
-            box-sizing: border-box;
-        }
-
-        p {
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
-        }
-
-        .footnote {
-			display: inline;
-        	font-size: 18px;
-        }
-        
-        h1 {
-            line-height: 1.4em;
-            font-size: 37px;
-        }
-        
-        h2 {
-            font-weight: 400;
-            margin: 0;
-        }
-        
-        h3 {
-            font-weight: 500;
-            margin-bottom: 0;
-        }
-
-        a {
-            border-bottom: 1px solid #000;
-            color: black;
-			text-decoration: none;
-        }
-		
-		a:hover {
-			text-decoration: none;
-		    border-bottom: 1px dotted #000;
-		}
-		
-		b {
-			font-weight: 500;
+		<style type="text/css" media="screen">
+			
+			html {
+				overflow-x: hidden; 
 			}
-				
-		strong {
-			font-weight: 500;
-			}		
 		
-        ul {
-            list-style-type: none;
-            display: flex;
-			padding: 0px;
-        }
-		
-		#headerlogo {
-			margin-top: 30px;
-		}
-		
-        .navitem {
-            font-size: 22px;
-            margin: 0px 8px;
-            text-decoration: none;
-        }
+			body {
+				margin: 0 auto;
+				font-family: "Avenir", sans-serif;
+				font-size: 20px;
+			    font-weight: 300;
+			    letter-spacing: 0.02em;
+			    line-height: 1.6em;
+				overflow-x: hidden; 
+		  
+			}	
+			
+			#pagecontent {
+				max-width: 100%;
+				margin: 0 auto;
+			}	
         
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 12px;
-        }
-        
-        .timmar {
-            font-weight: 700;
-        }
-        
-        .pengar {
-            font-weight: 400;
-        }
+			/* utan denna blir länkade bilder fucked */
+			img {
+				display: block;
+			}
 		
-       
-       
-	   
-	   
-	   
-        @media (max-width: 1200px) {
-            /* Single column stuff here */
-			
-			
-            body {
-				-webkit-text-size-adjust: none;
-            }
-
-            #centerdiv {
-                width: 600px;
-            }
-			
-            #logga {
-                width: 100%;
-            }
-            
-            .mobilpadding {
-                padding: 0px 10px;
-            }
-			
-			.whiteback{
-				padding: 60px 0px;
+			div {
+				box-sizing: border-box;
+			}
+        
+			a {
+				border-bottom: 1px solid #000;
+				color: black;
+				text-decoration: none;
+			}
+		
+			a:hover {
+				text-decoration: none;
+				color: black;
+				border-bottom: 0.5px dashed black;
 			}
 			
-			.greyback {
-				padding: 60px 0px;
-				background-color: #F8F8F8;
+			h2 {
+				margin: 0px;
+				font-size: 25px;
+				font-weight: 500;
 			}
 			
-            #mobilnav {
-	            padding:0px;				
-				margin:30px 0px 10px 0px;
-	            display:flex;
-	            flex-wrap:wrap;
-				justify-content:space-evenly;
-            }
-            
-			#webnav {
-			display:none;
-      	  	}		
-		
-            .navbutton{
-              box-sizing: border-box;
-			  border: none;
-              padding: 10px 12px;
-              display: inline-block;
-    		}
-			
-        	.navbutton:hover {
-      		 border: none;
-     	  }
-	   	   
-		   .navimg {
-		   height:51px;
-	       }
-			
-			#introserie {
-				display:flex;
-				flex-wrap:wrap;
-				justify-content:space-between;
-				
+			strong {
+				font-weight: 500;
 			}
-            
-            .introseriepic { 
-                width:298px;
-				
-            }
 			
-			.introitemtext {
-				display:none;
+			#logga {
+				padding-top: 1.5vw;
 			}
-            
-            .mobilintrotext {
+			
+			.navbutton{
 				box-sizing:border-box;
-				width:600px;
-				font-size:;
-				padding:10px 10px 60px 10px;
-			 }
-            
-            .load-turitop {
-                max-width:600px;
-            }
-			
-			#howtocontainer {
-				display:flex;
-				flex-wrap:wrap;
-				align-items:center;
-				justify-content:center;
-				text-align:;
-			}
-		
-			.howtopic {
-				box-sizing:border-box;
-				width:250px;
-				padding:20px;
+				border:none;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 			}
 			
-			.howtotext {
-				display:none;
+			.navbutton:hover {
+				border: none;
+			}
+	   
+			.navbutton:hover .navimglinehover {
+				opacity: 1;
+				transition: 0.3s;		   
+			}
+	  
+			.navimglinehover {
+				padding-top:15px;
+				opacity: 0;
+				height: 5px;
+			}
+		   
+			.navimglinepriser {
+				width: 100px;
+			}
+		   
+			.navimglineoppet{
+				width: 180px;
+			}
+		   
+			.navimglineboka {
+				width: 85px;				   
+			}
+		   
+			.navimglinehitta {
+				width: 180px;				   
+			}
+		   
+			.navimglinefragor {
+				width: 285px;
 			}
 			
-			.mobilhowtotext {
-				width:300px;
-				padding:30px 50px;
-				font-size:px;
-				text-align:center;
+			#introseriesection {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+ 			   	grid-gap: 50px;
+			}
+			
+			#introseriesection > div {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			
+			#introseriesection img {
+				border-radius: 3px;
+				width: 100%;
+				padding-bottom: 15px;
 			}
 			
 			.infographic {
-				display:none;
+				width: 95%;
+				margin: 0 auto;
 			}
 			
 			.infographicmobil {
-				max-width:580px;
-				margin:0px 10px;
+				display: none;
+			}	
+			
+			#harfinnsocksasection {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				grid-gap: 20px;
+				padding: 60px 10px;
+			}
+							
+			#harfinnsocksasection img {
+				width: 100%;
+				height: 200px;
+				object-fit: contain;
+			}  
+  
+			#harfinnsocksasection > div > div {
+				margin-top: 20px;
+				text-align: center;
 			}
 			
-			#harfinnsocksa {
-				display:flex;
-				flex-wrap:wrap;
-				justify-content:space-around;
+			#oppettidersection > div img {
+				height: 110px;
 			}
 			
-			.harfinnselement {
-				display:flex;
-				flex-direction:column;
-				align-items:center;
-				height:300px;
-				padding:0px 10px 0px 10px;
-				margin-bottom:20px;
-				text-align:center;
-			}
-			
-			.harfinnselement > div {
-				width:270px;
-			}
-			
-			.harfinnspic {
-				height:180px;
-				margin-bottom:15px;
-				
-			}
-			.mobilkanot {
-				height:140px;
-				padding:40px 0px 0px 0px;
-			}
-			
-			.currentarstid {
-				display:flex;
-				flex-direction:column;
-				align-items:center;
-				text-align:center;
-				margin-bottom:80px;
-			}
-			
-			.currentarstidpic {
-				width:180px;
-			}
-			
-			.currentseasondesc {
-				width:460px;
-				padding:0px 45px;
-				text-align:left;
-			}
-			
-			.seasontitlecontainer {
-				display:flex;
-				flex-direction:column;
-				align-items:center;
-				margin-bottom:20px;
-			}
-			
-			.arstid {
-				display:none;
-			}
-			
-			.mobilarstid {
-				display:flex;
-				align-items:center;
-				justify-content:;
-				margin-bottom:60px;
-				font-size:19px;
-			}
-			
-			.mobilarstidtext {
-				text-align:;
-				padding:0px 15px 0px 50px;
-			}
-			
-			.mobilarstidtext > h3 {
-				display:inline;
-				padding-right:15px;
-			}
-			
-			.seasonspic {
-				width:120px;
-				padding-left:20px;
-			}
-			
-			
-   	   	 #prisercontainer {
-   	       padding:0px 60px;
-   	   	 }
-		 
-		 .pricestext {
-			 font-size:19px;
-		 }
-		 
-		 .pricestext > h3 {
-			 margin:0;
-			 padding-top:7px;
-		 }
-	 
-   	   	 .seasontitlecontainer {
-   	   		 display:;
-   	   	 }
-	 
-   	        .priserpic1 {
-   	        	height:170px;
-				padding-left:17px;
-				
-   	        }
-	 
-   	        .priserpic2 {
-   	        	height:150px;
-   	        }
-	 
-   	        .priserpic3 {
-   	        	height:200px;
-				padding-left:17px;
-   	        }
-	 
-   	        .priserpic4 {
-   	        	height:120px;
-				margin-left:-12px;
-   	        }
-	 
-   	   	 .pricescolumn {
-   	   		 display:flex;
-   	   		 align-items:center;
-   	   		 margin-bottom:50px;
-   	   	 }
-		 
-		 .pricescolumn > h3 {
-		 }
-	 
-   	   	 .prispicdiv {
-   	   		 width:150px;
-   	   	 }
-	 
-   	   	 .pricestext {
-   	   		 padding-left:30px;
-   	   	 }
-			
-		 
-	   	 .bokningssystem {
-	   		 margin-left: 10px;
-	   	 }
-	 
-		 
-		 .bokningssystem {
-			 margin-bottom:40px;
-		 }
-		 
-	   	 h2.bokningsrubrik {
- 			font-family: 'Source Sans Pro', sans-serif;
-	   		 font-size:45px;
-			 margin-bottom:30px;
-			 line-height:1em;
-		 }
-		 
-		 h3.bokningsrubrik {
-			 margin:50px 0px 10px 0px;
-		 }
-		 
-		 #bokningstext {
-			 padding-bottom:20px;
-		 }
-		 
-		 .rightboktext {
-			 margin-bottom:15px;
-		 }
-		
-	   	 .mailbuttinlink {
-	   		 border-radius:3px;
-	   		 padding:10px 15px;
-	   		 border:solid 3px black;
-	   		 display:inline-block;
-	   		 text-decoration:none;
-	   	 }
-	 
-	   	 .mailbuttinlink:hover {
-	   		 border:dotted 3px black;
-	   	 }
-		 
-		 .tankpasection {
-			 display:flex;
-			 flex-direction:column;
-			 align-items:center;
-			 margin-bottom:45px;
-		 }
-		 
-		 .tankpatext {
-			 width:490px;
-			 text-align:center;
-		 }
-		 
-		
-		.tankpapic {
-			padding-bottom:10px;
-			width:240px;
-			
-		}
-		
-		.buttondiv {
-			padding:0px 15px;
-			margin-bottom:20px;
-		}
-		
-       .button {
-               text-decoration: none;
-               border-radius: 3px;
-               background-color:;
-               color: black;
-               text-align:;
-               padding: 10px 7px;
-               border: solid 3px;
-               cursor: pointer;
-               display: flex;
-   			justify-content:space-around;
-   			align-items:center;
-   			width:550px;
-       }
-
-       .button:hover 
-         {
-   		text-decoration:;
-           border: dotted 3px;
-        }
-		
-		.mapicon {
-			height:80px;
-		}
-		
-   	 #vagbrightside {
-   		 display:flex;
-		 flex-direction:column;
-   		 align-items:center;
-		 margin-bottom:15px;
-		 
-	 }
-			
-   	 .gammaldagslink {
-   		 border-radius:2px;
-   		 padding:7px 15px;
-   		 border:solid black 2px;
-         display:inline-block;
-   		 margin:10px 15px;
-   	 }
- 
-   	 .gammaldagslink:hover {
-   		 border-radius:2px;
-   		 padding:7px 15px;
-   		 border:dotted black 2px;
-   	 }
-	 
-	 .kartaclass {
-		 width:600px;
-	 }
-	 
-	 #sorsjonvagbeskrivning {
-		 display:none;
-	 }
-			
-	 #faqcontainer {
-		 margin-bottom:40px;
-	 }	
-			
-   	 .sectiontitle2 {
-   		 padding-bottom:30px;
-		font-family: 'Source Sans Pro', sans-serif;
-   		 font-size:45px;
-   	 }
-	 
-	 .vanligatitle {
-		 width:500px;	
-	  }
- 	
-			
-     #footer {
-         text-align:;
-         margin-top: 50px;
-         font-size:px;
-         margin-bottom:50px;         
-     }
-
-     .footeritem {
-         margin-left:20px;
- 		border-bottom:1px solid black;
-         text-decoration: none;
-         color:;
-     }
-
-   	.footeritem:hover {
-       text-decoration: none;
- 	  border-bottom:1px dotted black;
-
-  	 }	
-			
-	
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-        }
-        
-        @media (min-width: 1200px) {
-            /* Multicolumn stuff here */
-			
-			html {
-				overflow-x:hidden; 
-			}
-
-            #centerdiv {
-                width: 1200px;
-				
-            }
-			
-			.greyback {
-			padding:85px 1000px;
-			background-color:#F8F8F8;
-			margin-left:-1000px;
-			margin-right:-1000px;
-		}
-		
-		.whiteback {
-			padding:85px 0px;
-		}
-			
-			#logga {
-				width:1000px;
-			}
-
-               #headerall{
-                   box-sizing:border-box;
-                   display:flex;
-                   flex-wrap:wrap;
-                   flex-direction:row;
-                   justify-content:center;
-                   align-items:center;
-                   max-width:1200px;
-               }
-               
-               #headerlogo {
-				   margin-top:50px;
-               }
-			   
-             
-               
-               #nav{
-                   margin-bottom:20px;
-               }
-			   
-	 	   	  #webnav {
-	 	   		padding: 0 1000px;
-	 	     	margin-left: -1000px;
-	 	     	margin-right: -1000px;
-				margin-top: 35px;
+			.arstidtitle {
 				display: flex;
-				justify-content: space-between;
-	 	   	  }
-			  
-			  #mobilnav {
-				  display:none;
-			  }
-			   
-			   .navimg {
-				   height:49px;
-				   margin-top:px;
-			   }
-			   
-               .navitem{
-                   padding:6px;
-               }
-               
-               .navbutton{
-                   box-sizing:border-box;
-				   border:none;
-				   display: flex;
-				   flex-direction: column;
-				   align-items: center;
-               }
-			   
-	           .navbutton:hover {
-	      		   border: none;
-	     	  }
-		   
-		 	  .navbutton:hover .navimglinehover {
-			   opacity: 1;
-			   transition: 0.3s;		   }
-		  
-			   
-			   .navimgline {
-				   padding-top:15px;
-				   opacity: 0;
-				   width:100px;
-			   }
-			   
-			   .navimglineoppet{
-				   padding-top:15px;
-				   opacity: 0;
-				   width:180px;
-				   height:5px;
-			   }
-			   
-			   .navimglineboka {
-				   padding-top:15px;
-				   opacity: 0;
-				   width:85px;
-				   height:5px;
-				   
-			   }
-			   
-			   .navimglinehitta {
-				   padding-top:15px;
-				   opacity: 0;
-				   width:180px;
-				   height:5px;
-				   
-			   }
-			   
-			   .navimglinefragor {
-				   padding-top:15px;
-				   opacity: 0;
-				   width:285px;
-				   height:5px;
-				   
-			   }
-	  
-	 	   	  a.anchor {
-	 	   	      display: block;
-	 	   	      position: relative;
-	 	   	      top: -50px;
-	 	   	  }
-			   
-               
-			   .mobilintrotext {
-				   display:none;
-			   }
-			   
-               .introseriepic {
-                   width:575px;
-				   border-radius:3px;
-               }
-
-               .introitem {
-                   width:575px;
-                   margin-bottom:20px;
-               }
-
-               #introserie {
-                   display:flex;
-                   flex-wrap:wrap;
-				   justify-content:space-between;
-				   margin-bottom:-20px;
-               }
-
-               .introitemtext {
-				   text-align:center;
-                   width:565px;
-                   padding:15px 0px 15px 0px;
-               }
-			   
-			   
-   			.mobilhowtotext {
-   				display:none;
-   			}
+			}
 			
-			#infographicssection {}
+			.winter span, .spring span, .summer span {
+				display: none;
+			}
+			
+			.oppetmobilebr {
+				display: none;
+			}
+			
+			#prisersection > div p {
+				margin-top: 1em;
+				margin-bottom: 0px;
+			}
+			
+			#prisersection > div {
+				display: flex;
+				align-items: center;
+			}
+			
+			.bokningssystem {
+				margin-top: 30px;
+			}
+			
+			#bokasection > div h2 {
+				padding: 70px 0px 20px 0px;
+			}
+			
+			a.lightbox-button-turitop {
+				color: black !important;
+				border-bottom: black solid 1px !important;
+				background: #F8F8F8 !important;
+				vertical-align: inherit !important;
+				display: inline !important;
+			}
+ 
+			a.lightbox-button-turitop:hover {
+				border-bottom: black dotted 1px !important;
+				color: black !important;
+				background: #F8F8F8 !important;
+			}
+			
+			.presentkortclass {
+				display: inline;
+			}
+ 
+			.presentkortclass> a {
+				border-top: none !important;
+				border-left: none !important;
+				border-right: none !important;
+				border-radius: 0 !important;
+				font-family: 'Avenir', sans-serif !important;
+				font-size: 20px !important;
+				font-weight:  300 !important;
+				padding: 0 !important;
+			}
+			
+			.karta {
+				width: 100%;
+				padding-top: 30px;
+			}
+			
+			#hittasection {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+			
+			.gammaldags {
+			    display: inline-block !important;
+				width: auto !important;
+				margin-left: 82px;					
+			}
+			
+			#hittasection > div a {
+			    text-decoration: none;
+			    border-radius: 3px;
+			    padding: 13px 20px;
+			    border: solid 2px;
+			    display: flex;
+			    align-items: center;
+				cursor: pointer;
+			    width: auto;
+			}
+			
+			#hittasection > div a:hover {
+				border: dashed 2px;
+			}
+			
+			#hittasection > div h2 {
+				font-weight: 300;
+			}
+			
+			#hittasection > div img {
+			    height: 100px;
+				padding-right: 20px;
+			}
+			
+			#footer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				font-size: 15px;
+				padding-top: 60px;
+				padding-bottom: 60px;
+				line-height: 1.4em;
+			}
+			
+			#footer img {
+				width: 200px;
+				margin: 0 auto;
+				padding-bottom: 40px;
+				padding-left: 20px;
+			}
+			
+			.logo {
+				border: none !important;
+			}
+			
+			.logo:hover {
+				border: none !important;
+			}
+			
+			#footer a {
+				align-self: center;
+				border-bottom: 1px solid black;
+			}
+			
+			#footer a:hover {
+				border-bottom: 1px dashed black;
+			}
+			
+			#contact {
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 30px;
+			}
+			
+        
+			@media (max-width: 1200px) {
+				/* Single column stuff here */
+			
+			
+				body {
+					-webkit-text-size-adjust: none;
+				}
+
+				.mobilpadding {
+					padding: 0px 10px;
+				}
+			
+				.whiteback{
+					padding: 0px 0px;
+				}
+			
+				.greyback {
+					padding-left: 1000px;
+					padding-right: 1000px;
+					margin-left: -1000px;
+					margin-right: -1000px;
+					background-color: #F8F8F8;
+				}
+			
+				#logga {
+					width: 100vw;
+					margin: 0 auto;
+				}
+			
+				#nav {
+					padding: 0px;				
+					margin: 30px 0px 25px 0px;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-evenly;
+				}
 				
-			.infographicmobil
-			{
-				display:none;
-			}
-			
-			.infographic {
-				margin-left:-20px;
-				width:1200px;
-			}
-			
-			#levelsinfo {
-				margin:20px 0px;
-				display:flex;
-				justify-content:space-between;
-			}
-			
-			.level {
-				display:;
-			}
-			
-			.blabana {
-				color:#26aceb;
-			}
-			
-			.chili {
-				width:30px;
-				padding:5px;
-			}
+				.webnav {
+					display: none;
+				}
 		
-	   		#openinghours {
-	   		    display: block;
-	   		    position: relative;
-	   		    top: -100px;
-	   		    visibility: hidden;
-	   		}
+				.navbutton{
+					box-sizing: border-box;
+					border: none;
+					padding: 0px 27px 10px 27px;
+				}
 			
-			.mobilarstid {
-				display:none;
-			}
+
+				.navbutton:hover {
+					border: none;
+				}
+	   	   
+				.navimg {
+					height: 50px;
+				}	
 				
-	   		#prices {
-	   			display: block;
-	   			position: relative;
-	   		    top: -100px;
-	   		    visibility: hidden;
-	   		}	
-        
-	   		#book {
-	   			display: block;
-	   			position: relative;
-	   		    top: -100px;
-	   		    visibility: hidden;
-	   		}	
-		
-	   		#findus {
-	   			display: block;
-	   			position: relative;
-	   		    top: -100px;
-	   		    visibility: hidden;
-	   		}	  
-		
-	   		#faq {
-	   			display: block;
-	   			position: relative;
-	   	    	top: -100px;
-	   		    visibility: hidden;
-	   		}	    
-	    
-	           
-    
-   
-
-
-
-	       .button {
-	               text-decoration: none;
-	               border-radius: 3px;
-	               background-color:;
-	               color: black;
-	               text-align:;
-	               padding: 20px 10px;
-	               border: solid 2px;
-	               cursor: pointer;
-	               display: flex;
-	   			   justify-content:space-around;
-	   			   align-items:center;
-	               margin-bottom:px;
-	               font-size:24px;
-	   			   width:600px;
-	       }
-	
-	       .button:hover {
-	   		   text-decoration:;
-	           border: dotted 2px;
-	        }
-	 
-	   	 .sectiontitle {
-	   		 display:none;
-	   		 padding-bottom:110px;
-			 font-family: 'Josefin Sans', sans-serif;
-	   		 font-size:80px;
-	   	 }
-	 
-	   	 .sectiontitle2 {
-	   		 display:;
-			 margin-left:370px;
-	   		 padding-bottom:90px;
-			 font-family: 'Josefin Sans', sans-serif;
-	   		 font-size:45px;
-	   	 }
-		 
-		 .vanligatitle {
-			 height:60px;
-		 }
-	 
-	   	#howtocontainer {
-	   		display:flex;
-	   		justify-content:space-between;
-	   		text-align:center;
-		
-	   	}
-     
-	        .howtopic {
-	        	height:300px;
-	   		padding-bottom:35px;
-	        }
-	 
-	   	 #prisersection {
-  		
-	   	 }
-	 
-	   	 #prisercontainer {
-	    		display:flex;
-	   		flex-wrap:wrap;
-	    		justify-content:flex-end;
-	    		text-align:;
-	   		width:100%;
-	   		margin:0 auto;
-	   		margin-bottom:-45px;
-	   	 }
-	 
-	   	 #oppettidercontainer {
-	   		margin-bottom:-70px;
-	    		display:flex;
-	   		flex-wrap:wrap;
-	    		justify-content:space-between;
-	   	 }
-	 
-	   	 .seasontitlecontainer {
-	   		 display:;
-	   	 }
-	 
-	        .priserpic1 {
-	        	height:215px;
-	   		margin-left:25px;
-	        }
-	 
-	        .priserpic2 {
-	        	height:165px;
-	        }
-	 
-	        .priserpic3 {
-	        	height:250px;
-	        }
-	 
-	        .priserpic4 {
-	        	height:130px;
-	        }
-	 
-	   	 .pricescolumn {
-	   		 width:50%;
-	   		 display:flex;
-	   		 align-items:center;
-	   		 margin-bottom:80px;
-	   	 }
-	 
-	   	 .prispicdiv {
-	   		 width:150px;
-	   	 }
-	 
-	   	 .pricestext {
-	   		 padding-left:30px;
-	   	 }
-	 
-	   	 .forlangningtext {
-	   	 }
-	 
-	   	 .oppetcolumn {
-	   		 width:;
-	   	 }
-	 
-	   	 .seasonspic {
-	   		 height:125px;
-	   	 }
-	 
-	   	 .seasontitletext {
-	   		 margin-top:30px;
-	   		 text-align:center;
-	   		 width:px;
-	   		 padding-left:px;
-	   	 }
-	 
-	   	  .seasontitletext > h3 {
-	   		  margin:0px;
-	   		  padding-bottom:5px;
-	   	  }
-	  
-	   	  .currentseasontitletext > h3 {
-	   		  margin:0px 0px 0px 0px;
-	   	  }
-	  
-	   	  .currentseasondesc > h3 {
-	   		  margin:0px 0px 5px 0px;
-	   	  }
-	 
-	 
-	   	 .seasondesc {
-	   		 width:360px;
-	   		 padding:30px 0px 0px 0px;
-	   		 font-size:px;
-	   		 text-align:center;
-	   	 }
-	 
-	   	 .arstid {
-	   		 display:flex;
-	   		 flex-direction:column;
-	   		 align-items:center;
-	   		 justify-content:;
-	   		 width:360px;
-	   		 margin-bottom:80px;
-		 
-	   	 }
-		 
-		 .sidtid {
-			 margin-top:-190px;
-		 }
-	 
-	   	 .currentarstid {
-	   		 display:flex;
-			 flex-direction:column;
-	   		 justify-content:;
-	   		 align-items:center;
-	   		 padding:0px 0px;
-	   		 margin-bottom:100px;
-	   		 margin-left:0px;
-	   	 }
-	 
-	   	 .currentarstidpic {
-	   		 height:150px;
-	   	 }
-	 
-	   	 .currentseasondesc {
-			 padding-top:30px;
-			 text-align:center;
-	   		 width:450px;
-	   	 }
-	 
-	   	 .currentseasontitletext {
-			 margin-top:30px;
-			 text-align:center;
-	   	 }
-	 
-	 
-	   	 .seasontitlecontainer {
-	   		 display:flex;
-			 flex-direction:column;
-	   		 align-items:center;
-	   	 }
-	 
-	   	 #bokasection {
-	   		 display:flex;
-	   	 }
-	 
-	   	 #bokningstext {
-	   		 width:500px;
-	   		 margin-bottom:40px;
-	   	 }
-	
-	 
-	   	 #bokcontainer {
-	   		 display:flex;
-	   		 justify-content:;
-	   		 margin-top:50px;
-	   	 }
-	 
-	   	 #leftbok{
-	   		 width:600px;
-	   	 }
-	 
-	   	 #leftbok > h1{
-	   		 margin:0px 0px 20px 0px;
-	   	 }
-	 	 
-	   	 .bokningsrubrik {
-	   		 margin-bottom:20px;
-	   	 }
-	 
-	   	 h2.bokningsrubrik {
-			 font-family: 'Josefin Sans', sans-serif;
-	   		 font-size:45px;
-	   		 margin-bottom:60px;
-	   	 }
-	 
-	   	 #rightbok {
-	   		 margin-left:50px;
-	   		 width:px;
-		 
-	   	 }
-	 
-	   	 #bokmail {
-	   		 margin-bottom:90px;
-	   	 }
-	 
-	   	 .rightboktext {
-	   		 width:500px;
-	   		 margin-bottom:20px;
-	   	 }
-	 
-	   	 .mailbuttinlink {
-	   		 border-radius:3px;
-	   		 padding:10px 15px;
-	   		 border:solid 3px black;
-	   		 display:inline-block;
-	   		 text-decoration:none;
-	   		 font-size:px;
-	   	 }
-	 
-	   	 .mailbuttinlink:hover {
-	   		 border:dotted 3px black;
-	   	 }
-	 
-	   	 #presentkort {
-	   		 width:px;
-	   	 }
-	 
-	 
-	   	 #atttankapacontainer {
-	   		 display:flex;
-	   		 justify-content:space-evenly;
-			 flex-wrap:wrap;
-			 width:1050px;
-			 margin-bottom:-55px;
-	   	 }
-	 
-	   	 .tankpasection {
-			 padding:0px 15px;
-			 margin-bottom:35px
-	   	 }
-	 
-	   	 .tankpapic1 {
-	   		 width:295px;
-	   	 }
-	 
-	   	 .tankpapic2 {
-	   		 width:287px;
-	   	 }
-	 
-	   	 .tankpapic3 {
-	   		 width:387px;
-	   	 }
-		 
-	   	 .tankpapic4 {
-	   		 width:202px;
-	   	 }
-		 
-		 .haretpic {
-			 margin:15px 0px;
-		 }
-	 
-	   	 .tankpasection {
-	   		 display:flex;
-	   		 flex-direction:column;
-	   		 align-items:center;
-	   		 width:px;
-	   		 font-size:21px;
-	   	 }
-	 
-	   	 .tankpatext {
-			 padding-top:20px;
-	   		 text-align:center;
-	   		 height:120px;
-	   		 width:400px;
-	   	 }
-	 
-	   	 .harfinnselement {
-	   		 display:flex;
-	   		 flex-direction:column;
-	   		 align-items:center;
-	   		 width:33%;
-	   		 margin-bottom:60px;
-	   	 }
-	 
-	   	 .harfinnspic {
-	   		 height:230px;
-	   		 padding:0px 20px 35px 20px;
-	   	 }
-	 
-	   	 #harfinnsocksa {
-	   		 display:flex;
-	   		 flex-wrap:wrap;
-	   		 justify-content:space-between;
-	   		 margin-bottom:-60px;
-	   	 }
-	 
-	   	 #hittahitcontainer {
-	   		 display:flex;
-	   		 align-items:center;
-	   		 justify-content:space-between;
-		 
-	   	 }
-		 
-		 .kartaclass {
-			 width:1200px;
-		 }
-		 
-		 .mapicon {
-			 height:100px;
-		 }
-		 
-       #vagbcontainer {
-       }
-
-       #sorsjonvagbeskrivning {
-           padding:0px 110px;
-       }
-	 
-	   	 #vagbrightside {
-	   		 display:flex;
-	   		 align-items:center;
-	   		 margin-bottom:30px;
-	   	 }
-	 
-	   	 .gammaldagslink {
-	   		 border-radius:2px;
-	   		 padding:14px;
-	   		 border:solid black 2px;
-	         display:inline-block;		 
-	   	 }
-	 
-	   	 .gammaldagslink:hover {
-	   		 border-radius:2px;
-	   		 padding:10 15px;
-	   		 border:dotted black 2px;
-	   	 }
-		 
-		 .gammaldagsmobil {
-			 display:none;
-		 }
-	 
-	        #faqcontainer {
-	        	display:flex;
-	   		justify-content:space-between;
-	   		margin:0px 0px 50px 0px;
-	        }
-	
-	   	#leftfaq {
-	   		width:550px;
-	   	}
-	
-	   	#rightfaq {
-	   		width:550px;
-	   	}
-	
-	   	#vanligasluttext {
-	   		width:1100px;
-	   	}
-	
-	       #footer {
-	           text-align: center;
-	           margin-top: 50px;
-	           font-size: 15px;
-	           margin-bottom:50px;         
-	       }
-	
-	       .footeritem {
-	           margin-left:20px;
-	   		border-bottom:1px solid black;
-	           text-decoration: none;
-	           color:;
-	       }
-    
-	     	.footeritem:hover {
-	         text-decoration: none;
-	   	  border-bottom:1px dotted black;
-	  
-	    	 }
-			 
+				#introseriesection > div > div {
+					display: none;
+				}
+				
+				#introseriesection {
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+	 			   	grid-column-gap: 0.5vw;
+					grid-row-gap: 15px;
+					padding-bottom: 35px;
+					padding-top: 60px;
+				}
+				
+				.introserienarrow {
+					grid-column-start: 1;
+					grid-column-end: span 2;
+					padding: 0px 15px 25px 15px;
+				}
+				
+				#introseriesection > div {
+					display:block;
+				}
+				
+				#introseriesection img {
+					padding: 0px;
+				}
+				
+				#howtosection {
+					text-align:center;
+					padding-top: 40px;
+					padding-bottom: 40px;
+				}
 			
+				#howtosection > div {
+					display: flex;
+					justify-content:center;
+					align-items:center;
+				}
+			
+				#howtosection img {
+					height: 250px;
+					padding: 20px;
+				}
+				
+				.howtotext {
+					padding: 20px;
+				}
+				
+				.howtoreverse {
+					padding-left: 40px;
+					flex-direction: row-reverse;
+				}
+				
+				.narrowbr {
+					display:none;
+				}
+				
+				.widebr {
+					display: none;
+				}
+				
+				#infographicssection {
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#harfinnsocksasection {
+					max-width: 900px;
+					margin: 0 auto;
+				}
+				
+				#oppettidersection {
+					display: flex;
+					flex-direction: column;
+					align-items: center; 
+					padding-top: 60px;
+					padding-bottom: 10px;
+				} 
+				
+				#oppettidersection > div {
+					padding-bottom: 50px;
+				}
+				
+				#oppettidersection h2 {
+					padding-right: 20px;
+				}
+				
+				.fall > .arstidtitle { 
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+				
+				.fall img {
+					margin: 0 auto;
+					height: 160px !important;
+					padding-bottom: 20px;
+				}
+				
+				.winter, .spring, .summer {
+					display: grid;
+					grid-template-columns: 180px 450px;
+					grid-template-rows: auto;
+					grid-column-gap: 0vw;
+					grid-template-areas: 
+					"img title"
+					"img text";
+				}
+				
+				.seasonpic {
+					grid-area: img;
+					align-self: center;
+				}
+				
+				.arstidtitle {
+					grid-area: title; 
+					padding-bottom: 15px;
+				}
+				
+				.arstidtext {
+					grid-area: text;
+				}
+				
+				#prisersection {
+					display: grid;
+					grid-row-gap: 80px;
+					margin: 0 auto;
+					width: 470px;
+					justify-items: start;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#prisersection > div {
+					display: flex;
+					align-items: center;
+				}
+				
+				#prisersection > div img {
+					width: 130px; 
+					padding-right: 40px;
+				}
+				
+				#bokasection  {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#bokasection > div {
+					width: 555px;
+				}
+				
+				.direktbokningimg, .skraddarbokningimg {
+					height: 55px;
+					padding-bottom: 30px;
+				}
+				
+				.direktbokninghz, .skraddarbokninghz {
+					display: none;
+				}
+				
+				#tipssection {
+					display: grid;
+					grid-template-columns: calc(160px + 15vw) calc(160px + 15vw);
+					grid-gap: 20px calc(10px + 7vw);
+					text-align: center;
+					width: calc(340px + 36vw);
+					margin: 0 auto;
+					padding-top: 60px;
+					padding-bottom: 22px;
+				}
+				
+				#tipssection > div {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					padding-bottom: 30px;
+				}
+				
+				#tipssection > div > img {
+					height: calc(85px + 10vw);
+					padding-bottom: 20px;
+				}
+				
+				#hittasection {
+					justify-content: space-evenly;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#hittasection > div {
+					padding: 0px 20px 20px 20px;
+					text-align: center;
+				}
+				
+				.gammaldags {
+					margin: 0px;
+				}
+				
+				.karta {
+					padding: 0px;
+				}
+				
+				.mobilebr {
+					display: none;
+				}
+				
+				#faqsection > img {
+					width: calc(200px + 20vw);
+					padding-bottom: calc(20px + 3vw);
+					margin: 0 auto;
+				}
+				
+				#faqsection {
+					width: 60vw;
+					margin: 0 auto;
+					padding-top: 30px;
+					padding-bottom: 60px;
+				}
+				
+				.questions {
+					margin-top: 40px;
+				}
+				
+				#faqsection span {
+					-ms-word-break: break-all;
+					word-break: break-all;
+
+					/* Non standard for WebKit */
+					word-break: break-word;
+
+					-webkit-hyphens: auto;
+					-moz-hyphens: auto;
+					hyphens: auto;
+				}
+
+			}
+		
+		
         
+			@media (min-width: 1200px) {
+				/* Multicolumn stuff here */
+			
+				html {
+					overflow-x: hidden; 
+				}
+			
+				body {
+					overflow-x:hidden; 
+					max-width: none;
+				}
+				
+				#pagecontent {
+					width: 1200px;
+					max-width: none;
+				}	
+					  			
+				.greyback {
+					padding-right: 1000px;
+					padding-left: 1000px;
+					margin-left: -1000px;
+					margin-right: -1000px;
+					background-color: #F8F8F8;
+				}
+			
+				#logga {
+					width: 1000px;
+					margin: 0 auto ;
+				}
+			   
+				#nav {
+					width: 1200px;
+					margin: 0 auto;
+					padding: 40px 0px 30px 0px;
+					display: flex;
+					justify-content: space-between;
+				}
 			  
-       }        
+				.mobilnav {
+					display:none;
+				}
+			   
+				.navimg {
+					height:49px;
+				}
+			            
+				a.anchor {
+					display: block;
+					position: relative;
+					top: -50px;
+				}
+				
+				#introseriesection {
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				.introserienarrow {
+					display:none !important;
+				}
+				
+				#howtosection {
+					display:flex;
+					justify-content:space-between;
+					text-align:center;
+					margin-left: -50px;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+			
+				#howtosection > div {
+					display: flex;
+					flex-direction:column;
+					align-items:center;
+				}
+				
+				#howtosection > div:first-child {
+					margin-right: -40px;
+				}
+			
+				#howtosection img {
+					height: 280px;
+					padding-bottom:20px;
+				}
+				
+				.narrowbr {
+					display:none;
+				}
+				
+				#infographicssection {
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#harfinnsocksasection {
+					grid-template-columns: 1fr 1fr 1fr;
+					max-width: none;
+					margin: 0 auto;
+				}
+				
+				#oppettidersection > div {
+					display:flex;
+				}
+				
+				#oppettidersection {
+					display: grid;
+					grid-template-columns: 1fr 1fr 1fr;
+					grid-template-rows: auto;
+					grid-template-areas: 
+					"last now soon"
+					"last later soon";
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				.fall {
+					grid-area: now;
+					padding-bottom: 100px;
+				}
+				
+				.winter {
+					grid-area: soon;
+					align-self: center;
+					margin-top: 80px;
+				}
+				
+				.spring {
+					grid-area: later;
+				}
+				
+				.summer {
+					grid-area: last;
+					align-self: center;
+					margin-top: 80px;
+				}
+								
+				.arstidtitle {
+					flex-direction: column;
+					align-items: center;
+					padding: 20px 0px;
+				}
+				
+				#oppettidersection > div {
+					flex-direction: column;
+					align-items: center;
+					text-align: center;
+				}
+				
+				.oppetmobilebr {
+					display: none;
+				}
+				
+				.midbr {
+					display: none;
+			 	}	
+				
+				#prisersection {
+					display: grid;
+					grid-template-columns: 470px 470px;
+					grid-row-gap: 80px;
+					grid-column-gap: 75px;
+					width: 1015px;
+					margin: 0 auto;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+								
+				#prisersection > div img {
+					width: 130px; 
+					padding-right: 40px;
+				}
+				
+				#bokasection {
+					display: flex;
+					justify-content: space-around;
+					padding-top: 60px;
+					padding-bottom: 35px;
+				}
+				
+				#bokasection > div {
+					width: 540px;
+				}
+				
+				.direktbokningimg, .skraddarbokningimg {
+					height: 50px;
+					padding-bottom: 30px;
+				}
+				
+				.direktbokninghz, .skraddarbokninghz {
+					display: none;
+				}
+				
+				#tipssection {
+					display: grid;
+					grid-template-columns: 450px 450px;
+					grid-gap: 50px 0px;
+					margin: 0 auto;
+					width: 950px;
+					text-align: center;
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#tipssection > div {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+				
+				#tipssection > div > img {
+					height: 200px;
+					padding-bottom: 20px;
+				}
+				
+				.mobilebr {
+					display: none;
+				}
+				
+				#hittasection {
+					padding-top: 60px;
+					padding-bottom: 60px;
+				}
+				
+				#faqsection {
+					display: grid;
+					grid-template-columns: 550px 550px;
+					grid-gap: 20px 100px;
+					grid-template-areas: 
+					"title title"
+					"left right"
+					"questions questions";
+					padding-top: 50px;
+					padding-bottom: 60px;
+				}
+				
+				#faqsection img {
+					width: 400px;
+					padding-bottom: 40px;
+					grid-area: title;
+					justify-self: center;
+				}
+				
+				.questions {
+					grid-area: questions;					
+				}
+																	
+			}       
+	   
+	 	    @media (max-width: 690px) {
+				
+				
+				#oppettidersection h2 {
+					padding: 0px;
+				}
+	 	    	
+				.oppetmobilebr {
+					display: block;
+				}
+				
+				.midbr {
+					display: none;
+				} 
+				
+				.winter, .spring, .summer {
+					display: grid;
+					grid-template-columns: 70px 198px;
+					grid-template-rows: auto;
+					grid-gap: 3vw 30px;
+					align-items: center;
+					grid-template-areas: 
+					"img title"
+					"text text";
+				}
+				
+				.winter .arstidtitle, .spring .arstidtitle, .summer .arstidtitle {
+					display: flex;
+					flex-direction: column;
+					padding: 0px;
+				}
+				
+				.winter img, .spring img, .summer img {
+					height: 70px !important;
+				}
+				
+				.fall img {
+					height: 130px !important;
+				}
+				
+				.mobilebr {
+					display: block;
+				}
+				
+	 	    }
+	   
+			@media (max-width: 600px) {
+				
+				body {
+					font-size: 18px;
+				}
+				
+				h2 {
+					font-size: 23px;
+				}
+				
+				p {
+					margin-top: 0.5em !important;
+				}
+				
+				#logga {
+					width:100%;
+				}
+				
+				.navimg {
+					height: 8.5vw;
+					padding-bottom: 10px;
+				}	
+				
+				.navbutton {
+					padding: 0px 16px;
+				}
+				
+				.navimglinehover {
+					display: none;
+				}
+				
+				#howtosection > div {
+					justify-content:space-evenly;
+				}
+				
+				#howtosection img {
+					height: 35vw;
+					padding: 20px 10px;
+				}
+				
+				.howtotext {
+					padding: 10px;
+				}
+				
+				.howtoreverse {
+					padding-left: 0px;
+				}
+				
+				.narrowbr {
+					display: block;
+				}
+				
+				.widebr {
+					display: none;
+				}
+								
+				.infographicmobil {
+					display: block;
+					width: 95%;
+					margin: 0 auto;
+				}
+				
+				.infographic {
+					display: none;
+				}
+				
+				#harfinnsocksasection img {
+					height: 25vw;
+				}
+				
+				.winter, .spring, .summer {
+					grid-template-columns: 70px 170px;
+					
+				}
+				
+				#prisersection {
+					display: grid;
+					grid-row-gap: 60px;
+					margin: 0 auto;
+					width: 278px;
+				}
+				
+				#prisersection > div img {
+					width: 110px; 
+					padding-right: 25px;
+					margin: 0 auto;
+				}
+				
+				#bokasection > div {
+					width: 100vw;
+				}
+				
+				#prisersection > div > div > p {
+					line-height: 1.4em;
+				}
+				
+				.skraddarbokninghz {
+					display: block;
+					height: auto;
+					width: calc(220px + 22vw);
+					padding-bottom: 30px;
+					margin: 0 auto;
+				}
+				
+				.direktbokningimg {
+					margin: 0 auto;
+					height: 60px;
+				}
+				
+				.skraddarbokningimg {
+					display: none;
+				}
+				
+				.bokningssystem {
+					width: 100vw;
+					padding-bottom: 15px;
+				}
+				
+				.bokatext {
+					padding: 0px 4vw;
+				}
+				
+				.presentkortclass> a {
+					font-size: 18px !important;
+				}
+				
+				#tipssection {
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+					width: 95vw;
+					justify-content: space-evenly;
+					padding-bottom: 12px;
+				}
+				
+				#tipssection > div {
+					width: calc(200px + 10vw);
+					padding-bottom: 40px;
+				}
+				
+				#tipssection > div > img {
+					height: calc(80px + 12vw);
+				}
+				
+				
+				.gammaldags {
+				    padding: calc(5px + 2vw) !important;
+					margin: 0px;
+					font-size: 15px;
+					line-height: 1.3em;
+				}
+				
+				#hittasection > div a {
+				    padding: calc(5px + 2vw);
+				    display: flex;
+				    align-items: center;
+					cursor: pointer;
+					text-align: center;
+				    width: auto;
+				}
+				
+				#hittasection h2 {
+					font-size: 20px;
+				}
+								
+				#hittasection > div img {
+				    height: calc(40px + 7vw);
+					padding-right: calc(5px + 3vw);
+				}
+				
+				#hittasection > div {
+					padding: 0px 0px 20px 0px;
+				}
+				
+				.karta {
+					padding: 0px;
+				}
+				
+				#faqsection {
+					width: 90vw;
+				}
+				
+				#footer {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					text-align: center;
+				}
+				
+				#footer > img {
+					width: calc(100px + 25vw);
+					margin: 0 auto;
+					padding-bottom: 20px;
+					padding-left: calc(5px + 2vw);
+				}
+				
+				#footer a {
+					align-self: center;
+				}
+				
+				#contact {
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 30px;
+				}
+								
+			} 
+
+			@media (max-width: 466px)		{
+				
+				.direktbokningimg {
+					display: none;
+				}
+				
+				.direktbokninghz {
+					display: block;
+					height: auto;
+					width: calc(220px + 22vw);
+					padding-bottom: 30px;
+					margin: 0 auto;
+				}
+			}	 
         
-    </style>
-    
-    
-    
-    <!-- Favicon craziness -->
-    <link rel="shortcut icon" href="/assets/favicon.ico">
-    <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicons/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/assets/favicons/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicons/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/assets/favicons/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicons/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/assets/favicons/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/assets/favicons/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/favicons/apple-touch-icon-152x152.png">
-    <link rel="icon" type="image/png" href="/assets/favicons/favicon-196x196.png" sizes="196x196">
-    <link rel="icon" type="image/png" href="/assets/favicons/favicon-160x160.png" sizes="160x160">
-    <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/assets/favicons/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/assets/favicons/favicon-32x32.png" sizes="32x32">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-TileImage" content="/assets/favicons/mstile-144x144.png">
-    <meta name="msapplication-config" content="/assets/favicons/browserconfig.xml">  
-</head>
-<body>
-    <div id="centerdiv">
-        <header>
-            <div id="headerall">
-				<div id="headerlogo">
-                    <a href="/sorsjon"> 
-						<img id="logga" src="/sorsjon/images/sorsjonheader.png">
+			</style>
+			<link rel="shortcut icon" href="/sorsjon/favicon.png" type="image/x-icon">
+		</head>
+		<body>
+				<header>
+					<div id="headerall">
+						<div id="headerlogo">
+							<a href="/sorsjon"> 
+								<img id="logga" src="/sorsjon/images/sorsjonheader.png">
+							</a>
+						</div>
+					</div>
+				</header>
+				<div id="content">
+					{{ content }}
+				</div>
+				<div id="footer" class="greyback">
+					<a class="logo" href="/sorsjon/">
+					<img src="/sorsjon/images/logo.png">
 					</a>
-                </div>
-            </div>
-        </header>
-        <div id="content">
-            {{ content }}
-        </div>
-		
-		
-        <script type="text/javascript">
-            if (!("ontouchstart" in document.documentElement)) {
-                document.documentElement.className += " no-touch";
-            }
-        </script>
-	        <div id="footer">
-	            <a class="footeritem" href="tel:+461161175">+46 (0) 11 611 75</a> <a class="footeritem" href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
-				
+					<div id="contact">
+						<a href="tel:00461161175">+ 46 (0) 11 611 75</a>
+						<a href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+					</div>
+					<div id="credits">
+						Illustrations by <a href="http://www.hanahiratsuka.com/">Hana Hiratsuka</a>.
+						<br class="midbr"><br class="mobilebr">
+						 Design by <a href="http://pontus.granstrom.me">Pontus</a> and <a href="http://petterrylen.com">Petter</a>.
+					</div>	
 				<script id="js-turitop" src="https://app.turitop.com/js/load-turitop.min.js" data-company="V196" data-ga="no" data-buttoncolor="green" data-afftag="ttafid"></script>
-	        </div>
-    </div>
-</body>
-</html>
+				</div>
+		</body>
+		</html>
