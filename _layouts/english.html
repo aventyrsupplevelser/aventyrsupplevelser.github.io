@@ -330,7 +330,7 @@
 			
 				#nav {
 					padding: 0px;				
-					margin: calc(10px + 2.5vw) 0px 25px 0px;
+					margin: calc(10px + 2.5vw) 0px calc(20px - 0.7vw) 0px;
 					display: flex;
 					flex-wrap: wrap;
 					justify-content: space-evenly;
@@ -339,7 +339,7 @@
 				.navbutton{
 					box-sizing: border-box;
 					border: none;
-					padding: 0px calc(5px + 5vw) 10px calc(5px + 5vw);
+					padding: 0px calc(5px + 4.6vw) calc(5px + 2vw) calc(5px + 4.6vw);
 				}
 			
 
@@ -348,7 +348,7 @@
 				}
 	   	   
 				.navimg {
-					height: calc(23px + 3vw);
+					height: calc(20px + 2.5vw);
 				}	
 				
 				#introseriesection > div > div {
@@ -515,7 +515,7 @@
 					padding-bottom: 30px;
 				}
 				
-				.direktbokninghz, .skraddarbokninghz {
+				.bookingvertical {
 					display: none;
 				}
 				
@@ -566,7 +566,7 @@
 				}
 				
 				#faqsection > img {
-					width: calc(200px + 20vw);
+					width: calc(50px + 5vw);
 					padding-bottom: calc(20px + 3vw);
 					margin: 0 auto;
 				}
@@ -574,7 +574,7 @@
 				#faqsection {
 					width: 60vw;
 					margin: 0 auto;
-					padding-top: 30px;
+					padding-top: 55px;
 					padding-bottom: 60px;
 				}
 				
@@ -627,7 +627,7 @@
 			
 				#logga {
 					width: 1000px;
-					margin: 0 auto ;
+					margin: 0 auto;
 				}
 			   
 				#nav {
@@ -639,7 +639,7 @@
 				}
 			   
 				.navimg {
-					height:49px;
+					height: 42px;
 				}
 			            
 				a.anchor {
@@ -784,7 +784,7 @@
 					padding-bottom: 30px;
 				}
 				
-				.direktbokninghz, .skraddarbokninghz {
+				.bookingvertical {
 					display: none;
 				}
 				
@@ -832,7 +832,7 @@
 				}
 				
 				#faqsection img {
-					width: 400px;
+					width: 100px;
 					padding-bottom: 40px;
 					grid-area: title;
 					justify-self: center;
@@ -909,16 +909,16 @@
 				}
 				
 				#nav {
-					margin:calc(10px + 2.5vw) 0px 4vw 0px;
+					margin:calc(10px + 2.5vw) 0px 2.8vw 0px;
 				}
 				
 				.navimg {
-					height: 7.5vw;
-					padding-bottom: 15px;
+				    height: calc(4px + 5.5vw);
+				    padding-bottom: calc(5px + 4vw);
 				}	
 				
 				.navbutton {
-					padding: 0px 3vw;
+					padding: 0px 3.5vw;
 				}
 				
 				.navimgline {
@@ -1038,21 +1038,8 @@
 					line-height: 1.4em;
 				}
 				
-				.skraddarbokninghz {
-					display: block;
-					height: auto;
-					width: calc(220px + 22vw);
-					padding-bottom: 20px;
+				.direktbokningimg, .skraddarbokningimg {
 					margin: 0 auto;
-				}
-				
-				.direktbokningimg {
-					margin: 0 auto;
-					height: 60px;
-				}
-				
-				.skraddarbokningimg {
-					display: none;
 				}
 				
 				.bokningssystem {
@@ -1158,19 +1145,25 @@
 								
 			} 
 
-			@media (max-width: 466px)		{
+			@media (max-width: 430px)		{
 				
 				.direktbokningimg {
 					display: none;
 				}
 				
-				.direktbokninghz {
+				.skraddarbokningimg {
+					display: none;
+				}
+				
+				.bookingvertical {
 					display: block;
 					height: auto;
-					width: calc(220px + 22vw);
+					width: calc(140px + 17vw);
 					padding-bottom: 20px;
 					margin: 0 auto;
 				}
+				
+				
 			}	 
         
 			</style>
@@ -1180,7 +1173,7 @@
 				<header>
 					<div id="headerall">
 						<div id="headerlogo">
-							<a href="/sorsjon"> 
+							<a href="/sorsjonen"> 
 								<img id="logga" src="/sorsjon/images/sorsjonheader.png">
 							</a>
 						</div>
@@ -1190,7 +1183,7 @@
 					{{ content }}
 				</div>
 				<div id="footer" class="greyback">
-					<a class="logo" href="/sorsjon/">
+					<a class="logo" href="/sorsjonen/">
 					<img src="/sorsjon/images/logo.png">
 					</a>
 					<div id="contact">

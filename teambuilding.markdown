@@ -198,7 +198,7 @@ Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål
 
 Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
-Den 14 april och 1 sep 2019 arrangerar vi glödvandringar där du kan boka som individ (eller om du har fått ett presentkort).  
+Den 19 oktober 2019 arrangerar vi nästa glödvandring där du kan boka som individ (eller om du har fått ett presentkort).  
 
 
 <div class="paketinfo">
@@ -313,7 +313,7 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide! D
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Datum för 2019: 26 maj, 16 juni, 7 juli, 25 aug. Priset är 1100 SEK per person för 6 timmar (10.00 – 16.00).
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa datum är 15:e september 2019. Priset är 1100&nbsp;SEK per person för 6&nbsp;timmar (10.00&nbsp;–&nbsp;16.00).
 
       </div> 
       <div class="annatmediabox">

@@ -13,3 +13,8 @@ defaults:
             path: "sorsjon"
         values:
             layout: "sorsjon"
+    -
+        scope:
+            path: "sorsjonen"
+        values:
+            layout: "english"
