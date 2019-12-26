@@ -19,7 +19,7 @@ title: aventyrsbygge
 </h1>
 <img class="pagetitleimg" src="/images/aventyrsbygge.png">
 <p>
-Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</strong>! Därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines. 
+Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</strong>! Därför hjälper vi andra företag att bygga höghöjdsbanor och ziplines, samt att genomföra årliga besiktningar. 
 </p>
 </div>
 
@@ -79,7 +79,7 @@ Vi tror på att människor i Sverige behöver uppleva <strong>mer äventyr</str
   <div>
   <img src= "/images/foundation.png" class="infolisticon"></div>
   
- <div class="byggeinfotex">Vi är drivande i branchorganisation <a href="http://höghöjdsbanor.se"><b>Sveriges Höghöjdsbanor</b></a>, som nu har 44 medlemmar. Skriv till oss om du också vill vara med, så gör vi äventyrsbyggande lättare tillsammans. <div>
+ <div class="byggeinfotex">Genom <a href="http://höghöjdsbanor.se"><b>Sveriges Höghöjdsbanor</b></a> är vi examinerade för att utföra årlig inspektion. Skriv till oss om du vill vara med i föreningen, så gör vi äventyrsbyggande lättare tillsammans! <div>
   
     </div>
     

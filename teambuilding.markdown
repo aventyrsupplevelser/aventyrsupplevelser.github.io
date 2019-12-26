@@ -198,9 +198,6 @@ Vi gör fokuseringsövningar som tränar vår förmåga att visualisera ett mål
 
 Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till er!
 
-Den 19 oktober 2019 arrangerar vi nästa glödvandring där du kan boka som individ (eller om du har fått ett presentkort).  
-
-
 <div class="paketinfo">
 <div class="tid">
 <img src="/images/time2.png" class="tidsikon">
@@ -260,7 +257,7 @@ Om du letar efter <strong>lugn och ro</strong>, vill upptäcka hemliga vikar och
 
 Det ligger alltid kanoter vid Sörsjön och Glottern, men vi kan också hjälpa er transportera dem ut dit ni vill paddla. Vi har både kanadensare (öppna kanoter) och kajaker (stängda) till uthyrning.
 
-Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide! Den 30 juni håller vi kajakdag mellan kl. 10-14 (pris 800 kr).
+Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide!
 <div class="paketinfo">
 <a href="#kanot" class="pristabellbutton">Pristabell</a>
 </div>
@@ -313,7 +310,7 @@ Vi anordnar även <strong>paddlingskurser</strong> eller paddlingar med guide! D
       
      <div class="annatitem divreverse">
       
-      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa datum är 15:e september 2019. Priset är 1100&nbsp;SEK per person för 6&nbsp;timmar (10.00&nbsp;–&nbsp;16.00).
+      <div class="annattext"> <h3>Klippklättring</h3>Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa tillfälle är i Maj 2020. Priset är 1100&nbsp;SEK per person för 6&nbsp;timmar (10.00&nbsp;–&nbsp;16.00).
 
       </div> 
       <div class="annatmediabox">

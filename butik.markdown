@@ -250,7 +250,7 @@ Utbytesslinga till ZipstopIR.
   		<img src="/images/brakehawk405.jpg"  class="produktimg">
         <h3 class="desc">Brakehawk 405
 <br>
-          <b>1 000 SEK</b>
+          <b>1 050 SEK</b>
         </h3>
         <p class="mobilpadding">
 Brakehawk är en praktisk ziplinebroms. 405 fungerar tillsammans med Petzl tandem speed.</p>
@@ -259,7 +259,7 @@ Brakehawk är en praktisk ziplinebroms. 405 fungerar tillsammans med Petzl tande
      		<img src="/images/brakehawk406.jpg"  class="produktimg">
            <h3 class="desc"  >Brakehawk 406
 <br>
-             <b>1 000 SEK</b>
+             <b>1 050 SEK</b>
            </h3>
            <p class="mobilpadding">
 Brakehawk är en praktisk ziplinebroms. 406 fungerar tillsammans med Petzl Trac/Tracplus.</p>
