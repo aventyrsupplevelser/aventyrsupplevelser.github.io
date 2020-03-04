@@ -116,7 +116,7 @@ QuickflightXL ersätter QuickjumpXL bland Headrush's maskiner för fritt fall- u
 Förmodligen den bästa bromsen för din linbana.</p>
  	</div>
  	<div class="produkt">
- 		<img src="/images/zipstopIR.jpg"  class="produktimg">
+ 		<img src="/images/irstop.jpg"  class="produktimg">
        <h3 class="desc"  >ZipstopIR Ziplinebrake
 <br>
          <b>46 950 SEK</b>
