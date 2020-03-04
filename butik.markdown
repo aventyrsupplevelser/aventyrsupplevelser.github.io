@@ -253,7 +253,7 @@ Utbytesslinga QJXL standard.       </p>
          <b>5 900 SEK</b>
        </h3>
        <p class="mobilpadding">
-Utbytesslinga QJXL 1.5 eller 3 m ripcord.       </p>
+Utbytesslinga QJXL 1 eller 2 m ripcord.       </p>
  	</div>
  	
  	<div class="produkt">
