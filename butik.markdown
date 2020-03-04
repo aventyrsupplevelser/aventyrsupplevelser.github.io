@@ -54,45 +54,45 @@ Vissa produkter har vi på lager och andra måste beställas. Skriv mail eller r
          </div>
              <div class="produktkategoribox">
  	<div class="produkt">
- 		<img src="/images/trubueautobelay.jpg"  class="produktimg">
+ 		<img src="/images/trublue.jpg"  class="produktimg">
        <h3 class="desc">Trublue Autobelay 12.5 m
 <br>
-         <b>22 950 SEK</b>
+         <b>22 400 SEK</b>
        </h3>
        <p class="mobilpadding">
 Trublue Autobelay är speciellt anpassad till klätterväggar men fungerar även bra i en äventyrspark. </p>   
  	</div>
  	<div class="produkt">
- 		<img src="/images/trubueautobelay.jpg"  class="produktimg">
+ 		<img src="/images/trubluexl.jpg"  class="produktimg">
        <h3 class="desc"  >Trublue XL 20 m
 <br>
-         <b>25 950 SEK</b>
+         <b>23 900 SEK</b>
        </h3>
        <p class="mobilpadding">
-The TRUBLUE™ Auto Belay is the only auto belay specifically designed for the climbing industry. </p>
+Trublue Autobelay är speciellt anpassad till klätterväggar men fungerar även bra i en äventyrspark. </p>
  	</div>
  	<div class="produkt">
- 		<img src="/images/trubueautobelay.jpg"  class="produktimg">
-       <h3 class="desc"  >Trublue Speed 12.5 m<br>
-         <b>23 950 SEK</b>
+ 		<img src="/images/tbspeed.jpg"  class="produktimg">
+       <h3 class="desc"  >Trublue Speed 11 m<br>
+         <b>23 500 SEK</b>
        </h3>
        <p class="mobilpadding">
-Trublue speed är framtagen för speedklättring och matar hem slingan snabbare än den vanliga TB. 16 m kostar <strong>24 950 SEK.</strong></p>
+Trublue speed är framtagen för speedklättring och matar hem slingan snabbare än den vanliga TB. 16 m kostar <strong>24 500 SEK.</strong></p>
  	</div>
  	<div class="produkt">
- 		<img src="/images/qj12.5.jpg"  class="produktimg">
+ 		<img src="/images/qf.jpg"  class="produktimg">
        <h3 class="desc"  >Quickflight 12 m 2 m rip  
 <br>
-         <b>38 950 SEK</b>
+         <b>36 350 SEK</b>
        </h3>
        <p class="mobilpadding">
           Quickflight ersätter Quickjump bland Headrush's maskiner för fritt fall-upplevelse. QF finns med 1 eller 2 m ripcord eller utan och kan monteras på mellan 15.3 och 6 m höjd.
        </p>
  	</div>
  	<div class="produkt">
- 		<img src="/images/qjxl.jpg"  class="produktimg">
+ 		<img src="/images/qfxl.jpg"  class="produktimg">
        <h3 class="desc"  >Quickflight XL 20 m 2m rip <br>
-         <b>40 950 SEK</b>
+         <b>38 950 SEK</b>
        </h3>
        <p class="mobilpadding">
 QuickflightXL ersätter QuickjumpXL bland Headrush's maskiner för fritt fall- upplevelse. QFXL finns med 1 eller 2 m ripcord eller utan och kan monteras på mellan 23 m och 12 m höjd.</p>
@@ -101,7 +101,7 @@ QuickflightXL ersätter QuickjumpXL bland Headrush's maskiner för fritt fall- u
      		<img src="/images/flightline.jpg"  class="produktimg">
            <h3 class="desc"  >Flightline 6 m rip 
     <br>
-             <b>187 500 SEK</b>
+             <b>171 500 SEK</b>
            </h3>
            <p class="mobilpadding">
     Flightline är en dubbel QF vilket möjliggör högre montering och snabbare nedfirning. Den finns med 4.5 m och 6 m ripcord och kan monteras på mellan 24.5 m och 18.5 m höjd.</p>
@@ -116,7 +116,7 @@ QuickflightXL ersätter QuickjumpXL bland Headrush's maskiner för fritt fall- u
 Förmodligen den bästa bromsen för din linbana.</p>
  	</div>
  	<div class="produkt">
- 		<img src="/images/zipstopIR.jpg"  class="produktimg">
+ 		<img src="/images/zipstopir.jpg"  class="produktimg">
        <h3 class="desc"  >ZipstopIR Ziplinebrake
 <br>
          <b>46 950 SEK</b>
@@ -125,10 +125,10 @@ Förmodligen den bästa bromsen för din linbana.</p>
 Zipstop IR har inbyggd 2:1 funktion vilket gör den perfekt om du har hög landningshastighet (upp till 60 km/h).</p>
  	</div>
      	<div class="produkt">
-     		<img src="/images/zipstopIR.jpg"  class="produktimg">
+     		<img src="/images/zipstopspeed.jpg"  class="produktimg">
            <h3 class="desc"  >Zipstop Speed
     <br>
-             <b>51 950 SEK</b>
+             <b>50 950 SEK</b>
            </h3>
            <p class="mobilpadding">
     Zipstop speed har inbyggd 3:1 funktion och klarar därför något högre hastigheter än IR (upp till 72 km/h).
@@ -149,7 +149,7 @@ Praktiskt väggfäste för Trublue.
  		<img src="/images/belaygate.jpg"  class="produktimg">
        <h3 class="desc"  >Belaygate
 <br>
-         <b>500 SEK</b>
+         <b>700 SEK</b>
        </h3>
        <p class="mobilpadding">
 En Belaygate vid insteget säkerställer att en kopplar in sig och varnar för ovanvarande klättrare.</p>
@@ -158,39 +158,74 @@ En Belaygate vid insteget säkerställer att en kopplar in sig och varnar för o
  		<img src="/images/webbingtb12.5.jpg"  class="produktimg">
        <h3 class="desc"  >Webbing TB 12.5 m
 <br>
-         <b>1 850 SEK</b>
+         <b>1 950 SEK</b>
        </h3>
        <p class="mobilpadding">
 Utbytesslinga till Trublue 12.5 m. 
        </p>
  	</div>
-     	<div class="produkt">
+	
+     <div class="produkt">
      		<img src="/images/webbingtbxl.jpg"  class="produktimg">
            <h3 class="desc"  >Webbing TBXL 20 m
     <br>
-             <b>2 800 SEK</b>
+             <b>2 700 SEK</b>
            </h3>
            <p class="mobilpadding">
 Utbytesslinga till Trublue XL 20 m.           </p>
      	</div>
+	
+     	<div class="produkt">
+     		<img src="/images/adventure12.jpg"  class="produktimg">
+           <h3 class="desc"  >Webbing TB Adv. 12.5 m
+    <br>
+             <b>2 100 SEK</b>
+           </h3>
+           <p class="mobilpadding">
+ Samma webbing som originalet men med en swivel istället för karbin.</p>
+     	</div>
+		
+	        	<div class="produkt">
+	        		<img src="/images/tbxladventure.jpg"  class="produktimg">
+	              <h3 class="desc"  >Webbing TB Adv. 20 m
+	       <br>
+	                <b>2 900 SEK</b>
+	              </h3>
+	              <p class="mobilpadding">
+	    Samma webbing som originalet men med en swivel istället för karbin.</p>
+	        	</div>
+		
              	<div class="produkt">
-             		<img src="/images/webbingtbxl.jpg"  class="produktimg">
-                   <h3 class="desc"  >Webbing TB Speed 12.5 m
+             		<img src="/images/tbspeed12.jpg"  class="produktimg">
+                   <h3 class="desc"  >Webbing TB Speed 11 m
             <br>
-                     <b>2 250 SEK</b>
+                     <b>2 000 SEK</b>
                    </h3>
                    <p class="mobilpadding">
-        Utbytesslinga till Trublue Speed 12.5 m.</p>
+        Utbytesslinga till Trublue Speed 11 m.</p>
              	</div>
                      	<div class="produkt">
-                     		<img src="/images/webbingtbxl.jpg"  class="produktimg">
+                     		<img src="/images/tbspeed16.jpg"  class="produktimg">
                            <h3 class="desc"  >Webbing TB Speed 16 m
                     <br>
-                             <b>2 500 SEK</b>
+                             <b>2 400 SEK</b>
                            </h3>
                            <p class="mobilpadding">
                 Utbytesslinga till Trublue Speed 16 m.  </p>
                      	</div>
+						
+                     	<div class="produkt">
+                     		<img src="/images/qf12.jpg"  class="produktimg">
+                           <h3 class="desc">Webbing QF och QFXL
+                    <br>
+                             <b>2 000 SEK</b>
+                           </h3>
+                           <p class="mobilpadding">
+                Webbing till QF och QFXL från 2 000 SEK.   </p>
+                     	</div>						
+
+						
+						
  	<div class="produkt">
  		<img src="/images/webbingqj12.5.jpg"  class="produktimg">
        <h3 class="desc"  >Webbing QJ 12.5 m
@@ -218,14 +253,14 @@ Utbytesslinga QJXL standard.       </p>
          <b>5 900 SEK</b>
        </h3>
        <p class="mobilpadding">
-Utbytesslinga QJXL 1,5 eller 3m ripcord.       </p>
+Utbytesslinga QJXL 1.5 eller 3 m ripcord.       </p>
  	</div>
  	
  	<div class="produkt">
  		<img src="/images/webbingzs.jpg"  class="produktimg">
        <h3 class="desc"  >Webbing ZS
 <br>
-         <b>1 850 SK</b>
+         <b>1 950 SK</b>
        </h3>
        <p class="mobilpadding">
 Utbytesslinga till Zipstop.</p>
@@ -240,6 +275,19 @@ Utbytesslinga till Zipstop.</p>
 Utbytesslinga till ZipstopIR.
        </p>
  	</div>
+	
+	 	<div class="produkt" style="visibility: hidden;">
+	 		<img src="/images/zipstopIRwebbing.jpg"  class="produktimg">
+	       <h3 class="desc"  >Webbing ZSIR
+	<br>
+	         <b>2 800 SEK</b>
+	       </h3>
+	       <p class="mobilpadding">
+	Utbytesslinga till ZipstopIR.
+	       </p>
+	 	</div>
+	
+	
 </div>
      </div>
      
@@ -273,7 +321,7 @@ Brakehawk är en praktisk ziplinebroms. 406 fungerar tillsammans med Petzl Trac/
            <p class="mobilpadding">
 3-pack av slitstarkt gummi som ni lätt byter själva.</p>
      	</div>
-             	<div class="produkt hiddenprodukt" style="visibility:hidden">
+             	<div class="produkt hiddenprodukt" style="visibility: hidden">
              		<img src="/images/brakepads.jpg"  class="produktimg">
                    <h3 class="desc"  >Brakepads
         <br>
