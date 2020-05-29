@@ -54,7 +54,7 @@ layout: terms
 		<div id="theterms">
 			<ul>
 				<li>	
-					If <strong>you are under 18&nbsp;</strong> you need <strong>parental or guardian approval</strong> in order to climb in the&nbsp;park.
+					If <strong>you are under 18</strong> you need <strong>parental or guardian approval</strong> in order to climb in the&nbsp;park.
 				</li>	
 				<li>
 					In case of any <strong>problems with the card payment</strong> during booking, write an email to <a href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>.
@@ -63,7 +63,7 @@ layout: terms
 					<strong>Cancellations or changes</strong> to the number of people can be done <strong>until 7&nbsp;days</strong> before the booked activity. Cancellations at a later time will not be refunded. 
 				</li>	
 				<li>
-					You can<strong>change the booking date</strong> until <strong>24 hours</strong> before booked&nbsp;activity.
+					You can <strong>change the booking date</strong> until <strong>24 hours</strong> before booked&nbsp;activity.
 				</li>	
 				<li>
 					N.B. In the case of cancellation the the payment processing fee will <strong>not be refunded</strong>. This fee may vary depending on your card&nbsp;provider. 
