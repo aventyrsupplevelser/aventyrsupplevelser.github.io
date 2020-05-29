@@ -19,7 +19,7 @@ title: home
 		</a>
 	    </div>
 	    <div class="maintext">
-	    Sveriges största äventyrspark – här finns 19 höghöjdsbanor med ziplines som passar för alla åldrar!
+	    Sveriges största äventyrspark – här finns 21 höghöjdsbanor med ziplines som passar för alla åldrar!
 	    </div>
     
 	</div>
