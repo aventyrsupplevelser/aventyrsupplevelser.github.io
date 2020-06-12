@@ -173,7 +173,7 @@
 			/* change all spring for summer, and summer for spring (manually one by one, then change order of divs in HTML for mobile),  //  */
 			
 			
-			.winter span, .summer span, .fall span {
+			.winter span, .spring span, .fall span {
 				display: none;
 			}
 			
@@ -450,19 +450,19 @@
 					padding-right: 20px;
 				}
 				
-				.spring > .arstidtitle { 
+				.summer > .arstidtitle { 
 					display: flex;
 					flex-direction: column;
 					align-items: center;
 				}
 				
-				.spring img {
+				.summer img {
 					margin: 0 auto;
 					height: 140px !important;
 					padding-bottom: 20px;
 				}
 				
-				.winter, .summer, .fall {
+				.winter, .spring, .fall {
 					display: grid;
 					grid-template-columns: 180px 450px;
 					grid-template-rows: auto;
@@ -723,22 +723,22 @@
 					padding-bottom: 60px;
 				}
 				
-				.spring {
+				.summer {
 					grid-area: now;
 					padding-bottom: 100px;
 				}
 				
-				.summer {
+				.fall {
 					grid-area: soon;
 					align-self: center;
 					margin-top: 80px;
 				}
 				
-				.fall {
+				.winter {
 					grid-area: later;
 				}
 				
-				.winter {
+				.spring {
 					grid-area: last;
 					align-self: center;
 					margin-top: 80px;
@@ -871,7 +871,7 @@
 					display: none;
 				} 
 				
-				.winter, .summer, .fall {
+				.winter, .spring, .fall {
 					display: grid;
 					grid-template-columns: 70px 198px;
 					grid-template-rows: auto;
@@ -882,17 +882,17 @@
 					"text text";
 				}
 				
-				.winter .arstidtitle, .summer .arstidtitle, .fall .arstidtitle {
+				.winter .arstidtitle, .spring .arstidtitle, .fall .arstidtitle {
 					display: flex;
 					flex-direction: column;
 					padding: 0px;
 				}
 				
-				.winter img, .summer img, .fall img {
+				.winter img, .spring img, .fall img {
 					height: 70px !important;
 				}
 				
-				.spring img {
+				.summer img {
 					height: 110px !important;
 				}
 				
@@ -1017,9 +1017,8 @@
 					padding-bottom: 40px;
 				}
 				
-				.winter, .summer, .fall {
+				.winter, .spring, .fall {
 					grid-template-columns: 70px 170px;
-					
 				}
 				
 				#prisersection {
