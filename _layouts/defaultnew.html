@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145278827-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-145278827-1');
+		</script>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">		
+		<meta name="viewport" content="width=device-width">
+		<title>
+			{% if page.title == nil %}
+			{{ page.title }}
+			{% else %}
+			{{ page.title }} –
+			{% endif %}
+			Äventyrsupplevelser
+		</title>
+   
+		<style type="text/css" media="screen">
+		
+			html {
+				overflow-x: hidden; 
+			}
+	
+			body {
+				margin: 0 auto;
+				font-family: "Avenir", sans-serif;
+				font-size: 20px;
+				font-weight: 300;
+				letter-spacing: 0.02em;
+				line-height: 1.6em;
+				overflow-x: hidden; 
+			}	
+        
+			/* utan denna blir länkade bilder fucked */
+			img {
+				display: block;
+			}
+			
+			div {
+				box-sizing: border-box;
+			}
+        
+			a {
+				border-bottom: 1px solid #000;
+				color: black;
+				text-decoration: none;
+			}
+		
+			a:hover {
+				text-decoration: none;
+				color: black;
+				border-bottom: 0.5px dashed black;
+			}
+        
+			/* 
+			*   header
+			*/
+			
+			header {
+				width: 1200px;
+				margin: 0 auto;
+				padding-top: 1.5vw;
+			}
+			
+			#logga {
+				width: 100%;
+			}
+			
+			#mobillogga {
+				display: none;
+			}
+			
+			#mainnav {
+				display: flex;
+				margin: 0 auto;
+				justify-content: flex-end;
+				padding-right: 30px;
+			}
+			
+			#mainnav a {
+				margin-top: -47px;
+				box-sizing: border-box;
+				border: none;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: min-content;
+			}
+			
+			#mainnav a:hover .line {
+				opacity: 1;
+				transition: 0.3s;	
+			} 
+						
+			#mainnav img {
+				padding-right: 24px;
+				height: 45px;
+			}
+			
+			.line {
+				padding-top: 6px !important;
+				opacity: 0;
+				height: 4px !important;
+				width: 70%;
+			}
+			
+			h1 {
+				visibility: hidden;
+				height: 0px;
+				margin: 0px;
+				padding: 0px;
+			}
+			
+			h2 {
+				margin: 0;
+				padding-bottom: 12px;
+			}
+			
+			h3 {
+				margin: 0;
+				padding-bottom: 7px;
+			}
+			
+			/* 
+			*  homepage desktop
+			*/
+			
+			#homepage {
+				margin: 0 auto;
+				width: 1200px;
+				display: grid;
+				grid-template-columns: 50% 50%;
+				gap: 20px;
+				padding-top: 50px;
+				
+			}
+			
+			#homepage img {
+				width: 100%;
+				border-radius: 2px;
+			}
+			
+			#mobilehomepage {
+				display: none;
+			}
+			
+			
+			/* 
+			*  Teambuilding desktop 
+			*/
+			
+			#everything {
+				width: 1200px;
+				margin: 0 auto;
+				line-height: 1.5em;
+			}
+			
+			#everything > img {
+				width: 400px;
+				margin: 40px auto 0px;
+			}
+			
+			#allapaket > div:nth-child(even) {
+				flex-direction: row-reverse
+			}
+			
+			.paket {
+				display: flex;
+				align-items: center;
+				padding-top: 20px;
+				padding-bottom: 40px;
+			}
+			
+			.paket br {
+				display: block; /* makes it have a width */
+				content: ""; /* clears default height */
+			    margin-top: 5px; 
+			}
+			
+			.pakettext{
+				width: 700px;
+				padding: 30px;
+			}
+			
+			.pakettext img {
+				height: 40px;
+			}
+			
+			.paketmedia {
+				display: grid;
+				width: 500px;
+				gap: 4px;
+				grid-template-columns: 1fr 1fr;
+				grid-template-rows: min-content;
+			}
+			
+			.paketmedia a {
+				text-decoration: none;
+				border: none;
+			}
+			
+			.paketmedia img {
+				width: 100%;
+			}
+			
+			.paketinfo {
+				padding-top: 20px;
+				display: flex;
+			}
+			
+			.paketinfo div {
+				display: flex;
+				align-items: center;
+				padding-right: 45px;
+			}
+			
+			.paketinfo img {
+				padding-right: 10px;
+			}
+			
+			.paketinfo a {
+				border: solid 2px black;
+				padding: 5px 10px;
+				border-radius: 2px;
+			}
+			
+			.paketinfo a:hover {
+				border: dashed 2px;
+			}
+			
+			#annat > div:nth-child(even) {
+				flex-direction: row-reverse
+			} 
+			
+			#annat > div {
+				display: flex;
+				align-items: center;
+				padding-bottom: 30px;
+			}
+			
+			.annattext{
+				width: 700px;
+				padding: 30px;
+			}
+			
+			.annatmedia {
+				width: 500px;
+				display: grid;
+				gap: 4px;
+				grid-template-columns: 1fr 1fr;
+			}
+			
+			.annatmedia img {
+				width: 100%;
+			}
+			
+			.annatmedia a {
+				border: none;
+			}
+			
+			#pristabell a {
+				border: none;
+			}
+			
+			.notbold {
+				font-weight: 300;
+			}
+			
+			td, th {
+				text-align: left;
+				padding: 8px 8px;
+			}
+			
+            tr:nth-child(even) {
+                background-color: #F5F5F5;
+            }
+			
+			table { 
+			border-collapse: collapse;
+			}
+			
+            .mobiltable {
+                display:none;
+            }
+			
+			#pristabell p {
+				margin: 10px 0px 20px 0px;
+			}
+			
+			#kanotkontakt {
+				display: flex;
+			}
+			
+			#priskontakt {
+				padding: 10px 0px 0px 230px;
+			}
+			
+			#priskontakt a {
+			    border: solid 2px black;
+			    padding: 12px 17px;
+			    border-radius: 2px;
+				font-size: 23px;
+				font-weight: 400;
+				margin-right: 5px;
+			}
+			
+			#priskontakt a:hover {
+				border: dashed 2px ;
+			}
+			
+			#priskontakt h2 {
+				font-weight: 500;
+				margin-bottom: 22px;
+			}
+			
+			#nardetardags img {
+				width: 120px;
+				padding-right: 30px;
+			}
+			
+			#nardetardags > div {
+				display: flex;
+				align-items: center;
+				width: 600px;
+			}
+			
+			#nardetardags > div > div {
+				width: 450px; 
+			}
+			
+			#nardetardags {
+				display: grid;
+				grid-template-columns: 640px 1fr;
+				grid-template-rows: 1fr 1fr;
+				gap: 20px;
+				margin-bottom: 40px;
+				margin-top: 50px;
+			}
+				        
+			/* 
+			*  Footer
+			*/
+		
+			#footer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				font-size: 15px;
+				padding-top: 70px;
+				padding-bottom: 60px;
+				line-height: 1.4em;
+			}
+		
+			#footer img {
+				width: 200px;
+				margin: 0 auto;
+				padding-bottom: 40px;
+				padding-left: 20px;
+			}
+		
+			.logo {
+				border: none !important;
+			}
+		
+			.logo:hover {
+				border: none !important;
+			}
+		
+			#footer a {
+				align-self: center;
+				border-bottom: 1px solid black;
+			}
+		
+			#footer a:hover {
+				border-bottom: 1px dashed black;
+			}
+		
+			#contact {
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 30px;
+			}
+			
+			#footer br {
+				display: none;
+			}
+       
+    
+			@media (max-width: 1200px) {
+				/* Single column stuff here */
+				
+				header {
+					width: 90vw;
+				}
+				
+				#mainnav {
+					padding-right: calc(7vw - 50px);
+				}
+				
+				#mainnav a {
+					margin-top: -3.5vw;
+				}
+				
+				#mainnav img {
+					height: calc(15px + 2vw);
+					padding-right: calc(5px + 1.5vw);
+				}
+				
+				.line {
+					height: 2px;
+				}
+				
+				#homepage {
+					width: 90vw;
+					gap: 2vw;
+					grid-template-columns: 44vw 44vw;
+				}
+				
+				
+				/* 
+				*  Teambuilding mid 
+				*/
+				
+				#everything {
+					width: 100vw;
+				}
+				
+				#everything > img {
+					width: calc(100px + 20vw);
+					margin: 40px auto 0px;
+				}
+				
+				.paket {
+					flex-wrap: wrap;
+					margin: 0 auto;	
+				}
+				
+				.pakettext { 
+					width: 75vw;
+					margin: 0 auto;
+					padding: 30px 0px;
+				}
+				
+				.paketmedia {
+					width: 75vw;
+					grid-template-columns: 1fr 1fr 1fr 1fr;
+					margin: 0 auto;
+				}
+				
+				
+				
+				#pristabell{
+					width: 100vw;
+				}
+            
+			}
+			
+			@media (max-width: 950px) {
+				
+				.paketmedia {
+					display: flex;
+					justify-content: space-between; 
+					width: 100vw;
+				}
+				
+				.paketmedia img {
+					width: 49.7vw;
+				}
+				
+				.paketmedia > a:nth-child(n+3) {
+					display: none;
+				}
+				
+			}
+				
+        	  
+			@media (max-width: 800px) {
+				
+				body {
+					font-size: 18px;
+					
+				}
+				
+				header {
+					width: 100vw;
+				}
+				
+				#logga {
+					display: none;
+				}
+				
+				#mobillogga {
+					display: block;
+					width: 100%;
+				}
+				
+				#mainnav {
+					justify-content: space-evenly;
+					width: calc(150px + 55vw);
+				}
+				
+				#mainnav a {
+					margin-top: calc(20px + 2vw);
+				}
+				
+				#mainnav img {
+					height: calc(22px + 4vw);
+					padding: 0;
+				}
+				
+				#homepage {
+					padding-top: calc(20px + 2vw);
+					width: 96vw;
+					gap: 2vw;
+					grid-template-columns: 47vw 47vw;
+				}	
+				
+				#everything > img {
+					width: calc(150px + 30vw);
+					margin: 40px auto 0px;
+				} 
+				
+				.pakettext { 
+					width: 85vw;
+					padding: 30px 0px;
+				}
+							
+				#footer {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					text-align: center;
+					padding-top: 70px;
+					padding-bottom: 50px;
+				}
+	
+				#footer > img {
+					width: calc(100px + 25vw);
+					margin: 0 auto;
+					padding-bottom: 20px;
+					padding-left: calc(5px + 2vw);
+				}
+	
+				#footer a {
+					align-self: center;
+				}
+	
+				#contact {
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 30px;
+				}
+				
+				#footer br {
+					display: block;
+				}
+	
+			}	
+			
+			@media (max-width: 600px) {
+				/* Multicolumn stuff here */
+			
+				#homepage {
+					display: none;
+				} 
+			
+				#mobilehomepage {
+					display: block;
+					padding-top: 2vw;
+				}
+			
+				#mobilehomepage img {
+					width: 100vw;
+					padding-bottom: 1.5vw;
+				}
+				
+				#everything > img {
+					width: calc(150px + 30vw);
+					margin: 25px 0vw 0px 5vw;
+				} 
+				
+				.paket {
+					padding-top: 0px;
+				}
+				
+				.pakettext {
+					width: 90vw;
+					font-size: 16px;
+					line-height: 1.47em;
+				}
+				
+				.paketinfo {
+					flex-wrap: wrap;
+				}
+				
+				.paketinfo img {
+					height: 30px;
+					padding-right: 8px;
+					margin-bottom: 12px;
+				}
+				
+				.paketinfo > div {
+					padding-right: 25px;
+				}
+				
+				.paketinfo a {
+					padding: 4px 8px;
+					line-height: 1.3em;
+					text-align: left;
+					height: min-content;
+				}
+				
+			
+			}
+			
+</style>
+</head>
+<body>
+			<header>
+				<a href="/"> 
+					<img id="logga" src="/images/aventyrsheadertest.jpg">
+				</a>
+				<a href="/">
+					<img id="mobillogga" src="/images/aventyrsheadermobil.jpg">
+				</a>
+				<div id="mainnav">
+					<a href="/hittahit">
+						<img src="/images/hittahit.png">
+						<img class="line" src="/images/line.png">
+					</a>
+					<a href="/omoss">
+						<img src="/images/omoss.png">
+						<img class="line" src="/images/line.png">
+					</a>
+					<a href="/english">
+						<img src="/images/english.png">
+						<img class="line" src="/images/line.png">
+					</a>
+				</div>
+			</header>
+			<div id="content">
+				{{ content }}
+			</div>
+			<div id="footer">
+				<a class="logo" href="/">
+					<img src="/sorsjon/images/logo.png">
+				</a>
+				<div id="contact">
+					<a href="tel:00461161175">+ 46 (0) 11 611 75</a>
+					<a href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+				</div>
+				<div id="credits">
+					Illustrations by <a href="http://www.hanahiratsuka.com/">Hana Hiratsuka</a>.
+					<br>
+					Design by <a href="http://pontus.granstrom.me">Pontus</a> and <a href="http://petterrylen.com">Petter</a>.
+				</div>	
+			</div>
+		</body>
+		</html>
