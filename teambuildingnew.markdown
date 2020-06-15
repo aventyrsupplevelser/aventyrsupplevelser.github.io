@@ -167,7 +167,7 @@ layout: defaultnew
 		</tr>
 		<tr>
 			<td><a href="#sorsjonsaventyrspark">Sörsjöns Äventyrspark</a></td>
-			<td>2.5 h</td>
+			<td>2.5&nbsp;h</td>
 			<td>4 000 kr</td>
 			<td>400 kr exkl. moms</td>
 			<td>400 kr</td>
@@ -175,7 +175,7 @@ layout: defaultnew
 		</tr>
 		<tr>
 			<td><a href="#aventyriglottern">Äventyr i Glottern</a></td>
-			<td>3 h</td>
+			<td>3&nbsp;h</td>
 			<td>5 500 kr</td>
 			<td>550 kr exkl. moms</td>
 			<td>550 kr</td>
@@ -183,7 +183,7 @@ layout: defaultnew
 		</tr>
 		<tr>
 			<td><a href="#teambuilding">Teambuilding</a></td>
-			<td>2 h</td>
+			<td>2&nbsp;h</td>
 			<td>4 000 kr</td>
 			<td>400 kr exkl. moms</td>
 			<td>400 kr</td>
@@ -191,7 +191,7 @@ layout: defaultnew
 		</tr>
 		<tr>
 			<td><a href="#glodvandring">Glödvandring</a></td>
-			<td>1.5 h</td>
+			<td>1.5&nbsp;h</td>
 			<td>5 000 kr</td>
 			<td>450 kr exkl. moms</td>
 			<td> 450 kr</td>
@@ -241,7 +241,7 @@ layout: defaultnew
 		</tr>
 	</table>
 	<p style="display:inline-block;">
-		Detta är baspaket, kan förlängas vid överenskommelse. 
+		Detta är baspaket, kan förlängas vid&nbsp;överenskommelse. 
 	</p>
 	<div id="kanotkontakt">
 		<div id="kanot">
@@ -251,26 +251,35 @@ layout: defaultnew
 			<table>
 				<tr> 
 					<th>Kanottyp</th>
-					<th>1 dag</th>
-					<th>4 dagar</th>
+					<th>1&nbsp;h&nbsp;<span class="notbold">(i&nbsp;Sörsjön)</span></th>
+					<th>1&nbsp;dag</th>
+					<th>4&nbsp;dagar</th>
 				</tr>
 				<tr>
 					<td>Kanadensare</td>
-					<td>300 kr</td>
-					<td>1000 kr</td>
+					<td>150&nbsp;kr</td>
+					<td>300&nbsp;kr</td>
+					<td>1000&nbsp;kr</td>
 				</tr>
 				<tr>
 					<td>Kajak</td>
-					<td>350 kr</td>
-					<td>1000 kr</td>
+					<td>–</td>
+					<td>350&nbsp;kr</td>
+					<td>1000&nbsp;kr</td>
+				</tr>
+				<tr>
+					<td>Paddleboard</td>
+					<td>150&nbsp;kr</td>
+					<td>–</td>
+					<td>–</td>
 				</tr>
 			</table>
 		</div>
 		<div id="priskontakt">
-			<h2>Boka på mail eller telefon!</h2>
+			<h2>Boka på mail eller&nbsp;telefon!</h2>
 				<div>
 					<a href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
-					<a href="tel:+461161175">+46 (0) 11 611 75</a>
+					<a href="tel:+461161175">+46&nbsp;(0)&nbsp;11&nbsp;611&nbsp;75</a>
 				</div>
 		</div>
 	</div>
