@@ -198,25 +198,25 @@ layout: defaultnew
 			<td>450 kr</td>
 		</tr>
 	</table>
-	<table class="mobiltable">
+	<table id="mobiltable">
 		<tr>
-			<th>Aktivitets-<br>paket</th>
+			<th>Aktivitetspaket</th>
 			<th>Tid</th>
-			<th>Lägsta pris <br>per grupp</th>
-			<th>Företag <span class='notbold'><br>(per person<br>exkl. moms)</span> </th>
-			<th>Privat-<br>personer <span class='notbold'><br>(per person)</span> </th>
-			<th>Skolor <span class='notbold'><br>(per person)</span></th>
+			<th>Lägsta&nbsp;pris <br>per&nbsp;grupp</th>
+			<th>Företag <span class='notbold'><br>(per&nbsp;person<br>exkl.&nbsp;moms)</span> </th>
+			<th>Privat-<br>personer <span class='notbold'><br>(per&nbsp;person)</span> </th>
+			<th>Skolor <span class='notbold'><br>(per&nbsp;person)</span></th>
 		</tr>
 		<tr>
-			<td><a href="#sorsjonsaventyrspark">Sörsjöns Äventyrspark</a></td>
-			<td>2.5 h</td>
-			<td>4 000 kr</td>
+			<td><a href="#sorsjonsaventyrspark">Sörsjöns&nbsp;Äventyrspark</a></td>
+			<td>2.5&nbsp;h</td>
+			<td>4&nbsp;000 kr</td>
 			<td>400 kr</td>
 			<td>400 kr</td>
 			<td>300 kr</td>
 		</tr>
 		<tr>
-			<td><a href="#aventyriglottern">Äventyr i Glottern</a></td>
+			<td><a href="#aventyriglottern">Vildmarksäventyr</a></td>
 			<td>3 h</td>
 			<td>5 500 kr</td>
 			<td>550 kr</td>

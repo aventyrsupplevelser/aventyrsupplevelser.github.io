@@ -283,6 +283,12 @@
 				border: none;
 			}
 			
+			#pristabell h2 {
+				text-align: center;
+				font-size: 2.7em;
+				padding: 40px 0px 50px;
+			}
+			
 			.notbold {
 				font-weight: 300;
 			}
@@ -290,6 +296,7 @@
 			td, th {
 				text-align: left;
 				padding: 8px 8px;
+				border: 2px #A4A4A4;
 			}
 			
             tr:nth-child(even) {
@@ -300,8 +307,8 @@
 			border-collapse: collapse;
 			}
 			
-            .mobiltable {
-                display:none;
+            #mobiltable {
+                display: none;
             }
 			
 			#pristabell p {
@@ -331,7 +338,10 @@
 			
 			#priskontakt h2 {
 				font-weight: 500;
-				margin-bottom: 22px;
+				margin-bottom: 5px;
+				font-size: 1.8em;
+				text-align: left;
+				padding: 30px 0px;
 			}
 			
 			#nardetardags img {
@@ -499,6 +509,29 @@
 					width: 90vw;
 					margin: 0 auto;
 				}
+								
+				#desktoptable {
+					display: none;
+				}
+				
+				#mobiltable {
+					display: block;
+					font-size: calc(6.5px + 1.1vw);
+					line-height: 1.5em;
+				}
+				
+				td, th {
+					padding: 8px calc(2.5vw - 5px);
+				}
+				
+				th {
+					vertical-align: bottom;
+				}
+				
+				tbody {
+				}
+				
+				
             
 			}
 			
@@ -579,6 +612,23 @@
 				
 				#annat > div > div {
 					width: 85vw;
+				}
+				
+				#pristabell {
+					width: 100vw;
+				}
+				
+				#mobiltable {
+					display: block;
+					font-size: calc(7px + 1.2vw);
+				}
+				
+				td, th {
+					padding: 8px calc(2.5vw - 7px);
+				}	
+				
+				#pristabell p {
+					padding: 0px 12px;
 				}
 							
 				#footer {
@@ -701,9 +751,17 @@
 				.annatmedia img:nth-child(even) {
 					display: none;
 				}
-			
 				
-			
+				#mobiltable {
+					display: block;
+					font-size: calc(3px + 1.8vw);				
+				}
+				
+				#pristabell h2 {
+					font-size: 9vw;
+					padding: 20px 0px 40px;
+				}
+				
 			}
 			
 			@media (max-width: 430px) {
@@ -730,7 +788,17 @@
 					display: none;
 				}
 				
-			
+				#mobiltable {
+					display: block;
+					font-size: calc(2.7px + 1.75vw);
+					padding: 0px 3px;						
+				}
+				
+				#pristabell h2 {
+					font-size: 9.5vw;
+					padding: 0px 0px 20px;
+				}
+
 			}
 </style>
 </head>
