@@ -540,7 +540,42 @@
 			#parkerknappar a:hover {
 				border: 2px dashed;
 			}
-				        
+			
+			/* 
+			*  Om oss 
+			*/
+			
+			#omossallt {
+				width: 1180px;
+				margin: 0 auto;
+			}
+			
+			#omossallt > img {
+				width: 160px;
+				margin: 0 auto;
+				padding: 40px 0px 30px;
+			}
+			
+			#omossallt > div > div {
+				display: flex;
+				align-items: center;
+				padding-bottom: 60px;
+			} 
+			
+			#omossallt > div > div img {
+				width: 400px;
+				border-radius: 2px;
+			}  
+			
+			#omossallt > div > div:nth-child(even) {
+				flex-direction: row-reverse;
+			}
+			
+			.omosstext {
+				padding: 45px;
+			}
+			
+			
 			/* 
 			*  Footer
 			*/
@@ -889,6 +924,53 @@
 					width: 520px;
 				}
 				
+				/* 
+				*  omoss mid 
+				*/
+				
+				
+				#omossallt {
+					width: 90vw;
+					margin: 0 auto;
+					font-size: 18px;
+					line-height: 1.65em;
+				}
+				
+				#omossallt span {
+			    -ms-word-break: break-all;
+			    word-break: break-all;
+			    word-break: break-word;
+			    -webkit-hyphens: auto;
+			    -moz-hyphens: auto;
+			    hyphens: auto;
+				}
+				
+				.omosstext {
+					padding: 0px;
+					width: 55vw;
+				}
+				
+				#omossallt > div > div {
+					justify-content: space-between;
+				}
+				
+				#omossallt > div > div img {
+					width: 30vw;
+					height: 30vw;
+					object-fit: cover;
+					border-radius: 2px;
+				}  
+				
+				#omossallt .kontaktknappar {
+					flex-direction: row;
+					flex-wrap: wrap;
+					margin-top: 0px;
+				}
+				
+				#omossallt .kontaktknappar a {
+					margin-top: 2vw;
+				}
+				
 				
 			}
 			
@@ -971,7 +1053,11 @@
 				
 				#byggelista img {
 					width: calc(35px + 4.5vw);
-				}				
+				}	
+				
+				#omossallt .kontaktknappar {
+					margin-top: 1.5vw;
+				}			
 				
 			
 			}
@@ -1192,6 +1278,40 @@
 					padding-top: 15px;
 					margin: auto;
 				}	
+				
+				#omossallt {
+					width: 100vw;
+					font-size: 16px;
+				}
+				
+				#omossallt img {
+					padding: 20px 0px 20px;
+				}
+				
+				#omossallt > div > div {
+					justify-content: flex-start;
+					padding-bottom: 20px;
+				}
+				
+				#omossallt > div > div:nth-child(even) {
+					justify-content: space-between;
+				}
+				
+				.omosstext {
+					padding: 25px;
+					width: max-content;
+				}
+				
+				
+				#omossallt > div > div img {
+					width: 30vw;
+					height: calc(110px + 20vw);
+				}  
+				
+				#omossallt .kontaktknappar a {
+					padding: 8px 13px;
+					margin-top: 10px;
+				}
 	
 			}	
 			
@@ -1448,6 +1568,47 @@
 				#parkerknappar a {
 					padding: 8px 12px;
 				}
+				
+				#omossallt {
+					width: 100vw;
+				}
+				
+				#omossallt img {
+					width: 140px;
+					padding-bottom: 0px;
+				}
+				
+				#omossallt > div > div {
+					flex-direction: column-reverse;
+					justify-content: flex-start;
+					padding-bottom: 0px;
+				}
+				
+				#omossallt > div > div:nth-child(even){
+					flex-direction: column-reverse;
+					justify-content: flex-start;
+				}
+				
+				#omossallt > div > div img {
+					width: 100vw;
+					height: 50vw;
+					object-fit: cover;
+					padding: 0px 0px 0px 0px;
+				}
+				
+				.omosstext {
+					width: 90vw;
+					padding: 5vw 0px
+				}
+				
+				#omossallt .kontaktknappar {
+					margin-top: 0px;
+				}
+				
+				#omossallt .kontaktknappar a {
+					padding: 8px 13px;
+					margin-top: 8px;
+				}
 								
 				#footer {
 					padding-top: 40px;
@@ -1562,6 +1723,7 @@
 				#parkerknappar a {
 					padding: 6px 10px;
 				}
+				
 			}
 </style>
 </head>
