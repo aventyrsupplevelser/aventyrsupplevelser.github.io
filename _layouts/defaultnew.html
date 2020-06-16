@@ -330,6 +330,7 @@
 				font-size: 23px;
 				font-weight: 400;
 				margin-right: 5px;
+				background-color: #EFEEE3;
 			}
 			
 			#priskontakt a:hover {
@@ -345,7 +346,7 @@
 			}
 			
 			#nardetardags img {
-				width: 140px;
+				width: 120px;
 				padding-right: 30px;
 			}
 			
@@ -359,9 +360,120 @@
 				grid-template-columns: 500px 1fr;
 				grid-template-rows: 1fr 1fr;
 				gap: 50px;
-				margin-bottom: 40px;
+				margin-bottom: 20px;
 				margin-top: 70px;
 				padding-left: 80px;
+			}
+			
+			/* 
+			*  butik
+			*/
+			
+			#butikall {
+				width: 1200px;
+				margin: 0 auto;
+			}
+			
+			#butikall img {
+				width: 150px;
+				margin: 50px 0;
+				
+			}
+			
+			#butikall br {
+				display: block; /* makes it have a width */
+				content: ""; /* clears default height */
+			    margin-top: 15px; 
+			}
+			
+			#butikintro {
+				width: 1200px;
+				display: flex;
+				justify-content: space-between;
+			}
+			
+			#butiktext{
+				width: 540px;
+				line-height: 1.5em;
+			}
+			
+			.kontaktknappar {
+				margin-top: 40px;
+			}
+			
+			.kontaktknappar a  {
+				border: 2px solid;
+				padding: 10px 15px;
+				border-radius: 2px;
+				margin-right: 10px;
+				font-weight: 400;
+				background-color: #EFEEE3;
+			}
+			
+			.kontaktknappar a:hover {
+				border: dashed 2px;
+			}
+			
+			#butiksloggor {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				grid-gap: 50px 40px;
+				grid-auto-rows: minmax(min-content, max-content);
+				padding-right: 20px;
+			}
+			
+			#butiksloggor a {
+				border: none;
+				align-self: center;
+			}
+			
+			#butiksloggor img {
+				width: 160px;
+				margin: 0px;
+			}
+			
+			#allaprodukter {
+				margin-top: 20px;
+			}
+			
+			#allaprodukter h2 {
+				text-align: left;
+				margin-top: 60px;
+				font-size: 2em;
+			}
+			
+			#allaprodukter h3 {
+				font-weight: 400;
+				text-align: center;
+				padding-bottom: 20px;
+			}
+			
+			#allaprodukter > div > div {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr 1fr;
+				grid-gap: 40px;
+				line-height: 1.4em;
+				font-size: 18px;
+			}
+			
+			#allaprodukter img {
+				width: 100%;
+				margin: 30px auto;
+			}
+			
+			#allaprodukter br {
+				display: block; /* makes it have a width */
+				content: ""; /* clears default height */
+			    margin-top: 5px; 
+			}
+			
+			#allaprodukter span {
+		    -ms-word-break: break-all;
+		    word-break: break-all;
+		    word-break: break-word;
+		    -webkit-hyphens: auto;
+		    -moz-hyphens: auto;
+		    hyphens: auto;
 			}
 				        
 			/* 
@@ -564,7 +676,7 @@
 					grid-template-columns: 1fr 1fr;
 					grid-template-rows: 1fr 1fr;
 					gap: 20px;
-					margin: 50px auto 40px;
+					margin: 50px auto 20px;
 				}
 				
 				#nardetardags > div {
@@ -582,8 +694,83 @@
 					width: 9vw;
 				}
 				
+				/* 
+				*  Butik mid 
+				*/
 				
-				            
+				#butikall {
+					width: 100vw;
+				}
+				
+				#butikall > img {
+					margin: 40px auto 50px;
+				}
+				
+				#butikintro {
+					width: 90vw;
+					margin: 0 auto;
+					justify-content: space-around;
+				}
+				
+				#butikintro span {
+			    -ms-word-break: break-all;
+			    word-break: break-all;
+			    word-break: break-word;
+			    -webkit-hyphens: auto;
+			    -moz-hyphens: auto;
+			    hyphens: auto;
+				}
+				
+				#butiktext{
+					width: 480px;
+				}
+								
+				#butiksloggor {
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+					padding-right: 0px;
+				}
+				
+				.kontaktknappar {
+					display: flex;
+					flex-direction: column;
+					margin-top: 15px;
+				}
+				
+				.kontaktknappar a {
+					width: min-content;
+					margin-top: 15px;
+				}
+				
+				#butiksloggor img {
+				    width: 140px;
+				}
+				
+				#allaprodukter {
+					margin-top: 60px;
+				}
+				
+				#allaprodukter > div {
+					padding: 60px 0px;
+				}
+				
+				#allaprodukter > div:nth-child(odd) {
+					background-color: #F8F8F8;
+				}
+				
+				#allaprodukter > div > div {
+					width: 85vw;
+					margin: 0 auto;
+				}
+				
+				#allaprodukter h2 {
+					text-align: center;
+					margin-top: 0px;
+					padding-bottom: 20px;
+				}
+				
+				
+								            
 			}
 			
 			@media (max-width: 1000px) {
@@ -613,7 +800,36 @@
 					padding-right: 20px;
 				}
 				
+				#butikintro {
+					width: 85vw;
+					margin: 0 auto;
+					flex-wrap: wrap;
+				}
 				
+				#butiktext {
+					width: 70vw;
+				}
+				
+				.kontaktknappar {
+					flex-direction: row;
+				}
+				
+				#butiksloggor {
+					width: 70vw;
+					display: grid;
+					grid-template-columns: 18vw 18vw 18vw;
+					grid-template-rows: 1fr 1fr;
+					margin: 50px auto 0px;
+					grid-gap: 30px 30px;
+				}
+				
+				#butiksloggor img {
+					width: 16vw;
+				}
+				
+				#allaprodukter > div > div {
+					grid-template-columns: 1fr 1fr 1fr;
+				}
 			
 			}
 			
@@ -765,6 +981,38 @@
 				#nardetardags img {
 					padding-right: 2.5vw;
 				}
+				
+				.kontaktknappar {
+					flex-wrap: wrap;
+					margin-top: 5px;
+				}
+				
+				#butiktext {
+					width: 90vw;
+				}
+				
+				#butiksloggor {
+					width: 90vw;					
+					margin: 50px auto 0px;
+					grid-template-columns: calc(90px + 8vw) calc(90px + 8vw) calc(90px + 8vw);
+					grid-gap: 20px 40px;
+				}
+				
+				#butiksloggor img {
+					width: calc(90px + 8vw);
+				}
+				
+				#allaprodukter > div > div {
+					grid-template-columns: 1fr 1fr;
+				}
+				
+				#allaprodukter img {
+					width: 95%;
+				}
+				
+				#allaprodukter h2 {
+					font-size: 2.5em;
+				}
 	
 			}	
 			
@@ -837,9 +1085,7 @@
 				    word-break: normal;
 				    word-break: normal;
 				}
-				
-			    
-				
+								
 				.paketmedia img {
 					object-fit: fill;
 				}
@@ -954,6 +1200,44 @@
 					padding-right: 25px;
 				}
 				
+				#butikall {
+					font-size: 16px;
+				}
+				
+				#butikall > img {
+					width: 120px;
+					margin: 25px auto 35px;
+				}
+								
+				#butiktext {
+					width: 95vw;
+				}
+				
+				#butiksloggor {
+					width: 85vw;					
+					margin: 40px auto 0px;
+					grid-template-columns: calc(8px + 22vw) calc(8px + 22vw) calc(8px + 22vw);
+					grid-gap: calc(4px + 2.7vw) calc(3.2vw + 15px);
+				}
+				
+				#butiksloggor img {
+					width: calc(8px + 22vw);
+				}
+				
+				#allaprodukter > div > div {
+					grid-gap: 30px 25px;
+					width: 90vw;
+					font-size: 16px;
+				}
+				
+				#allaprodukter img {
+					width: 90%;
+					height: 150px;
+					object-fit: contain;
+					margin-bottom: calc(8vw - 35px);
+					margin-top: 15px;
+				}
+				
 				#footer {
 					padding-top: 40px;
 				}
@@ -1017,6 +1301,31 @@
 				
 				#nardetardags img {
 					padding-right: 18px;
+				}
+				
+				#butiksloggor {
+					width: 85vw;					
+					margin: 30px auto 0px;
+				}
+				
+				#allaprodukter > div > div {
+					grid-template-columns: 1fr;
+					width: 80vw;
+					font-size: 16px;
+				}
+					
+				#allaprodukter img {
+					width: 70%;
+					margin-top: 20px;
+					margin-bottom: 1.5vw;
+				}
+				
+				#allaprodukter h3 {
+					padding-bottom: 10px;
+				}
+				
+				#allaprodukter h2 {
+					line-height: 1.1em;
 				}
 			}
 </style>
