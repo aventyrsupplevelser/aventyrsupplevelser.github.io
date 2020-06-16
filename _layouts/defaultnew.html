@@ -475,6 +475,71 @@
 		    -moz-hyphens: auto;
 		    hyphens: auto;
 			}
+			
+			/* 
+			*  bygge 
+			*/
+			
+			#byggeallt {
+				width: 1180px;
+				margin: 0 auto;
+				line-height: 1.5em;
+			}
+			
+			#byggeintro img {
+				width: 400px;
+				padding-bottom: 20px;
+			}
+			
+			#byggeintro {
+				width: 560px;
+				padding: 30px 0px;
+			}
+			
+			#byggelista {
+				display: grid;
+				grid-template-rows: 1fr 1fr 1fr;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px 50px;
+				margin-bottom: 40px;
+			}
+			
+			#byggelista img {
+				width: 90px;
+				object-fit: contain;
+				padding-right: 25px;
+			}
+			
+			#byggelista > div > div img {
+				display: none;
+			}
+			
+			#byggelista > div {
+				display: flex; 
+				align-items: center;
+			}
+			
+			#forklaring {
+				width: 520px;
+				padding-bottom: 30px;
+			}
+			
+			#parkerknappar {
+				display: flex;
+				flex-wrap: wrap;
+			}
+			
+			#parkerknappar a {
+				border: 2px solid;
+				border-radius: 3px;
+				padding: 12px 17px;
+				display: block;
+				margin: 5px;
+			}
+			
+			#parkerknappar a:hover {
+				border: 2px dashed;
+			}
 				        
 			/* 
 			*  Footer
@@ -769,8 +834,62 @@
 					padding-bottom: 20px;
 				}
 				
+				/* 
+				*  bygge mid 
+				*/
 				
-								            
+				#byggeallt {
+					width: 100vw;
+					font-size: 18px;
+				}
+				
+				#byggeintro {
+					width: 90vw;
+					margin: 0 auto;
+				}
+				
+				#byggeintro img {
+					width: 350px;
+				}
+				
+				#byggeintro > div {
+					width: 550px;
+				}
+				
+				#byggelista {
+					width: 90vw;
+					margin: 0 auto;
+					gap: 20px 30px;
+				}
+				
+				#byggelista img {
+					width: calc(35px + 5.5vw);
+				}
+				
+				#byggelista > div {
+					width: 450px;
+				}
+				
+				#byggeallt span {
+			    -ms-word-break: break-all;
+			    word-break: break-all;
+			    word-break: break-word;
+			    -webkit-hyphens: auto;
+			    -moz-hyphens: auto;
+			    hyphens: auto;
+				}
+				
+				#cvavsnitt {
+					width: 90vw;
+					padding-top: 30px;
+					margin: auto;
+				}
+				
+				#forklaring {
+					width: 520px;
+				}
+				
+				
 			}
 			
 			@media (max-width: 1000px) {
@@ -830,6 +949,30 @@
 				#allaprodukter > div > div {
 					grid-template-columns: 1fr 1fr 1fr;
 				}
+				
+				#byggeintro {
+					width: 80vw;
+				}
+				
+				#byggeintro img {
+					width: 320px;
+				}
+				
+				#byggelista {
+					display: flex;
+					flex-direction: column;
+					width: 80vw;
+				}
+				
+				#byggelista > div {
+					width: 70vw;
+					padding-bottom: 30px;
+				}
+				
+				#byggelista img {
+					width: calc(35px + 4.5vw);
+				}				
+				
 			
 			}
 			
@@ -1013,6 +1156,42 @@
 				#allaprodukter h2 {
 					font-size: 2.5em;
 				}
+				
+				#byggeintro {
+					width: 90vw;
+					padding-bottom: 40px;
+				}
+				
+				#byggeintro > div {
+					width: 90vw;
+				}
+				
+				#byggeintro img {
+					width: 330px;
+					margin: 0 auto;
+				}
+				
+				#byggelista {
+					display: flex;
+					flex-direction: column;
+					width: 90vw;
+				}
+				
+				#byggelista > div {
+					width: calc(130px + 68vw);
+					padding-bottom: 30px;
+				}
+				
+				#byggelista img {
+					width: calc(35px + 5.5vw);
+					padding-right: 35px;
+				}	
+				
+				#cvavsnitt {
+					width: 90vw;
+					padding-top: 15px;
+					margin: auto;
+				}	
 	
 			}	
 			
@@ -1238,11 +1417,41 @@
 					margin-top: 15px;
 				}
 				
-				#footer {
-					padding-top: 40px;
+				#byggeallt {
+					font-size: 16px;
 				}
 				
+				#byggeintro img {
+					width: 280px;
+				}
 				
+				#byggelista {
+					width: 90vw;
+				}
+				
+				#byggelista > div {
+					width: 90vw;
+				}
+				
+				#byggelista img {
+					padding-right: 20px;
+				}
+				
+				#forklaring {
+					width: 90vw;
+				}
+				
+				#parkerknappar {
+					width: 90vw;
+				}
+				
+				#parkerknappar a {
+					padding: 8px 12px;
+				}
+								
+				#footer {
+					padding-top: 40px;
+				}				
 				
 			}
 			
@@ -1326,6 +1535,32 @@
 				
 				#allaprodukter h2 {
 					line-height: 1.1em;
+				}
+				
+				#byggeintro img {
+					width: 270px;
+				}
+				
+				#byggelista > div img {
+					display: none;
+				}
+				
+				#byggelista > div {
+					flex-direction: column;
+					padding-bottom: 40px;
+					width: 90vw;
+					margin: 0 auto;
+				}
+				
+				#byggelista > div > div img {
+					display: inline;
+					float: left;
+					height: 43px;
+					padding: 0px 5px 5px 0px;
+				}
+				
+				#parkerknappar a {
+					padding: 6px 10px;
 				}
 			}
 </style>
