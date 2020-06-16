@@ -24,7 +24,7 @@ layout: defaultnew
 	<a href="#headrush"><img src="/images/trubluelogo.png"></a>
 	<a href="#headrush"><img src="/images/zipstoplogo.png"></a>
 	<a href="#headrush"><img src="/images/quickflight.png"></a>
-	<a href="#brakehawk"><img src="/images/brakehawklogo.jpg"></a>
+	<a href="#brakehawk"><img src="/images/brakehawklogo.png"></a>
 	<a href="#monkey" ><img src="/images/monkeyhardwarelogo.jpg"></a>
 	      </div>
 </div>
