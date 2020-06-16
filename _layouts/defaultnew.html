@@ -345,27 +345,23 @@
 			}
 			
 			#nardetardags img {
-				width: 120px;
+				width: 140px;
 				padding-right: 30px;
 			}
 			
 			#nardetardags > div {
 				display: flex;
 				align-items: center;
-				width: 600px;
-			}
-			
-			#nardetardags > div > div {
-				width: 450px; 
 			}
 			
 			#nardetardags {
 				display: grid;
-				grid-template-columns: 640px 1fr;
+				grid-template-columns: 500px 1fr;
 				grid-template-rows: 1fr 1fr;
-				gap: 20px;
+				gap: 50px;
 				margin-bottom: 40px;
-				margin-top: 50px;
+				margin-top: 70px;
+				padding-left: 80px;
 			}
 				        
 			/* 
@@ -553,6 +549,30 @@
 					padding: 0px 0px 10px;
 					line-height: 1.3em;
 				}
+				
+				#nardetardags {
+					grid-template-columns: 1fr 1fr;
+					grid-template-rows: 1fr 1fr;
+					gap: 20px;
+					margin: 50px auto 40px;
+				}
+				
+				#nardetardags > div {
+					width: inherit;
+				}
+				
+				#nardetardags > div:nth-child(even) {
+				}
+				
+				#nardetardags > div > div {
+					width: max-content;
+				}
+				
+				#nardetardags img {
+					width: 9vw;
+				}
+				
+				
 				            
 			}
 			
@@ -573,6 +593,14 @@
 				
 				#priskontakt a {
 					margin-right: 10px;
+				}
+				
+				#nardetardags {
+					padding-left: 35px;
+				}
+				
+				#nardetardags img {
+					padding-right: 20px;
 				}
 				
 				
@@ -716,6 +744,17 @@
 				#footer br {
 					display: block;
 				}
+				
+				#nardetardags {
+					padding: 0px 0px 0px calc(10px + 3vw);
+					font-size: 15px;
+					line-height: 1.4em;
+					grid-column-gap: 0px;
+				}
+				
+				#nardetardags img {
+					padding-right: 2.5vw;
+				}
 	
 			}	
 			
@@ -836,6 +875,23 @@
 					padding: 12px 17px;
 				}
 				
+				#nardetardags {
+					display: flex;
+					flex-direction: column;
+					padding-left: calc(25vw - 40px);
+					font-size: 16px;
+					margin-bottom: 0px;
+				}
+				
+				#nardetardags > div {
+					padding-bottom: 30px;
+				}
+				
+				#nardetardags img {
+					width: 17vw;
+					padding-right: 25px;
+				}
+				
 				
 				
 			}
@@ -884,7 +940,14 @@
 					font-size: 19px;
 					padding: 10px 15px;
 				}
-
+				
+				#nardetardags {
+					padding-left: calc(15vw - 25px);
+				}
+				
+				#nardetardags img {
+					padding-right: 18px;
+				}
 			}
 </style>
 </head>

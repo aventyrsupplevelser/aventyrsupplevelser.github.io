@@ -288,7 +288,7 @@ layout: defaultnew
 	<div>
 		<img src="/images/sturdyclothes.png">
 		<div>
-			Tänk på att ha på oömma kläder för dagens väder - vi ställer inte in om det&nbsp;regnar.
+			Tänk på att ha på oömma<br class="midbr"> kläder för dagens väder - vi <br class="midbr">ställer inte in om det&nbsp;regnar.
 		</div>
 	</div>
 	<div>
@@ -300,13 +300,13 @@ layout: defaultnew
 	<div>
 		<img src="/images/outhouse.png" class="dagsicon">
 		<div>
-			Dass finns både vid Sörsjön och&nbsp;Glottern.
+			Dass finns både vid<br class="midbr">Sörsjön och&nbsp;Glottern.
 		</div>
 	</div>
 	<div> 
 		<img src="/images/mapicon.png">
 		<div>
-			Se till att du åker till den rätta&nbsp;av&nbsp;<a href="#vagbeskrivningar">våra&nbsp;två&nbsp;platser!</a>
+			Se till att du åker till den<br class="midbr">rätta&nbsp;av&nbsp;<a href="#vagbeskrivningar">våra&nbsp;två&nbsp;platser!</a>
 		</div>
 	</div>
 </div>
