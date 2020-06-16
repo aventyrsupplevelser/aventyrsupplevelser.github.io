@@ -524,8 +524,18 @@
 					padding: 8px calc(2.5vw - 5px);
 				}
 				
+				td {
+					text-align: center;
+					
+				}
+				
 				th {
 					vertical-align: bottom;
+					text-align: left;
+				}
+				
+				th, td:nth-child(1) {
+					text-align: left;
 				}
 				
 				#priskontakt {
@@ -781,12 +791,17 @@
 				
 				#everything > img {
 					width: calc(150px + 30vw);
-					margin: 25px 0vw 0px 5vw;
+					margin: 25px auto 5vw;
 				} 
 				
 				.paket {
 					padding-top: 0px;
 					padding-bottom: calc(20px);
+					flex-direction: column-reverse;
+				}
+				
+				#allapaket > div:nth-child(even) {
+					flex-direction: column-reverse;
 				}
 				
 				.paket h2 {
@@ -796,8 +811,34 @@
 				.pakettext {
 					width: 90vw;
 					line-height: 1.47em;
-					padding-bottom: 50px;
+					padding: 50px 0px 35px;
 				}
+				
+				.pakettext > span {
+				    -ms-word-break: break-all;
+				    word-break: break-all;
+				    word-break: break-word;
+				    -webkit-hyphens: auto;
+				    -moz-hyphens: auto;
+				    hyphens: auto;
+				}
+				
+				.annattext > span {
+				    -ms-word-break: break-all;
+				    word-break: break-all;
+				    word-break: break-word;
+				    -webkit-hyphens: auto;
+				    -moz-hyphens: auto;
+				    hyphens: auto;
+				}
+				
+				.paketinfo {
+				    -ms-word-break: normal;
+				    word-break: normal;
+				    word-break: normal;
+				}
+				
+			    
 				
 				.paketmedia img {
 					object-fit: fill;
@@ -831,8 +872,20 @@
 					border: dashed 2px;
 				}
 				
+				#annat {
+					padding-top: 40px;
+					padding-bottom: -45px;
+					background-color: #F8F8F8;
+				}
+				
 				#annat > div > div {
 					width: 100vw;
+					padding-bottom: 0px;
+					padding-top: 15px;
+				}
+				
+				#annat div:nth-child(4){
+					padding-bottom: 0px;
 				}
 				
 				.annattext {
@@ -840,6 +893,7 @@
 				}
 				
 				.annatmedia img {
+					padding-top: 0px;
 					width: 100vw;
 				}
 				
@@ -854,7 +908,15 @@
 				
 				#pristabell h2 {
 					font-size: 9vw;
-					padding: 20px 0px 40px;
+					padding: 50px 0px 40px;
+				}
+				
+				td, th {
+				    padding: 6px calc(2.4vw - 7.3px);
+				}
+				
+				#kanot th {
+					text-align: center;
 				}
 				
 				#priskontakt {
@@ -930,9 +992,13 @@
 					padding: 0px 3px;						
 				}
 				
+				td, th {
+				    padding: 4px calc(2.5vw - 7px);
+				}
+				
 				#pristabell h2 {
 					font-size: 9.5vw;
-					padding: 0px 0px 20px;
+					padding: 40px 0px 20px;
 				}
 				
 				#priskontakt h2 {

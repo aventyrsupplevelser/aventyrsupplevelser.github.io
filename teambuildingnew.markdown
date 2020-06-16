@@ -11,7 +11,7 @@ layout: defaultnew
 	<div class="pakettext">
 		<h2>Vildmarksäventyr i&nbsp;Glottern</h2>
 		
-		En avskild och naturnära äventyrsupplevelse vid vår vildmarkspark i Glotternskogen. <strong>Ensamna mitt ute i skogen</strong> och med en egen instruktör tävlar vi i femkamp, hämtar vatten från sjön och kokar kaffe över öppen&nbsp;eld. 
+		En avskild och naturnära <span>äventyrsupplevelse</span> vid vår vildmarkspark i <span>Glotternskogen.</span> <strong>Ensamna mitt ute i skogen</strong> och med en egen instruktör tävlar vi i femkamp, hämtar vatten från sjön och kokar kaffe över öppen&nbsp;eld. 
 		<br>
  Utöver den vackra naturen, finns här aktiviteter som höghöjdsbana, stolphopp, linbana, pilbågskytte, yxkastning och samarbetsbana. Vi skräddarsyr ett program med fokus på att svetsa just er grupp ännu <i>starkare&nbsp;samman</i>.
 		<div class="paketinfo">
@@ -35,7 +35,7 @@ layout: defaultnew
 </div>
 <div class="paket">
 	<div class="pakettext">
-		<h2>Utmaning: Samarbete</h2>
+		<h2>Samarbetsäventyr i&nbsp;Sörsjön</h2>
 		Vi designar samarbetsövningar som handlar om att <strong>lyssna på varandra</strong> och komma med finurliga lösningar till kluriga&nbsp;problem.
 		<br>
 		Genom att som grupp möta situationer ni inte befinner er i till vardags, får ni möjlighet att upptäcka nya egenskaper hos varandra och lära er mer om de roller och mönster ni har på jobbet eller i&nbsp;skolan.
@@ -112,7 +112,7 @@ layout: defaultnew
 		<div>
 			<div class="annattext">
 				<h3>Konferens och övernattning</h3> 
-				Vi samarbetar med flera konferensanläggningar i Östergötland, bland annat Sandvik Gård, Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller&nbsp;Sörsjön. 
+				Vi samarbetar med flera <span>konferensanläggningar</span> i Östergötland, bland annat Sandvik Gård, Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller&nbsp;Sörsjön. 
 			</div>
 			<div class="annatmedia">
 				<img src="/images/mat.jpg">
@@ -123,7 +123,7 @@ layout: defaultnew
 		<div>
 			<div class="annattext"> 
 				<h3>Klippklättring</h3>
-				Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa tillfälle är 28 juni 2020. Priset är 1100&nbsp;kr per person för 6&nbsp;timmar (10.00&nbsp;–&nbsp;16.00).
+				Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa tillfälle är 28 juni 2020. Priset är 1100&nbsp;kr per person för 6 timmar (10.00&nbsp;till&nbsp;16.00).
 			</div> 
 			<div class="annatmedia">
 				<img style="object-position: 50% 00%;" src="/images/klippklattring.jpg">
@@ -174,7 +174,7 @@ layout: defaultnew
 			<td>300 kr</td>
 		</tr>
 		<tr>
-			<td><a href="#aventyriglottern">Äventyr i Glottern</a></td>
+			<td><a href="#aventyriglottern">Vildmarksäventyr</a></td>
 			<td>3&nbsp;h</td>
 			<td>5 500 kr</td>
 			<td>550 kr exkl. moms</td>
@@ -182,7 +182,7 @@ layout: defaultnew
 			<td>400 kr</td>
 		</tr>
 		<tr>
-			<td><a href="#teambuilding">Teambuilding</a></td>
+			<td><a href="#teambuilding">Samarbetsäventyr</a></td>
 			<td>2&nbsp;h</td>
 			<td>4 000 kr</td>
 			<td>400 kr exkl. moms</td>
@@ -224,7 +224,7 @@ layout: defaultnew
 			<td>400 kr</td>
 		</tr>
 		<tr>
-			<td><a href="#teambuilding">Teambuilding</a></td>
+			<td><a href="#teambuilding">Samarbetsäventyr</a></td>
 			<td>2 h</td>
 			<td>4 000 kr</td>
 			<td>400 kr</td>
