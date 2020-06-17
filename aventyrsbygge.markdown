@@ -1,6 +1,5 @@
 ---
 title: aventyrsbygge
-layout: defaultnew
 ---
 
 <div id="byggeallt">

@@ -1,6 +1,5 @@
 ---
 title: Teambuilding
-layout: defaultnew
 ---
 
 <div id="everything">

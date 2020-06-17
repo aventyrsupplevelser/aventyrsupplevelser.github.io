@@ -1,6 +1,5 @@
 ---
 title: Om oss
-layout: defaultnew
 ---
 
 <div id="omossallt">

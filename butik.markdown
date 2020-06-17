@@ -1,6 +1,5 @@
 ---
 title: butik
-layout: defaultnew
 ---
 <div id="butikall">
 	<h1>

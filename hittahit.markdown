@@ -1,6 +1,5 @@
 ---
 title: Hitta hit
-layout: defaultnew
 ---
 <div id="hittahitallt">
 	<img src="/images/hittahit.png">

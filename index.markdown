@@ -1,6 +1,5 @@
 ---
 title: home
-layout: defaultnew
 ---
 <html lang="en">
 
