@@ -53,10 +53,10 @@ title: Teambuilding
 			</div>
 	</div>
 	<div class="paketmedia">
-			<a href="/images/pojkar.jpg"><img src="/images/pojkar.jpg"></a>
+			<a href="/images/pojkar.jpg"><img src="/images/pojkarclean.jpg"></a>
 			<a href="/images/stock.jpg"><img src="/images/stock.jpg"></a>
 			<a href="/images/teamror.jpg"><img src="/images/teamror.jpg"></a>
-			<a href="/images/labyrintnyhej.jpg"><img src="/images/labyrintnyhej.jpg" ></a>
+			<a href="/images/labyrintnyhej.jpg"><img src="/images/labyrint.jpg" ></a>
 	</div>
 </div>
 <div class="paket">
@@ -114,7 +114,7 @@ title: Teambuilding
 				Vi samarbetar med flera <span>konferensanläggningar</span> i Östergötland, bland annat Sandvik Gård, Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller&nbsp;Sörsjön. 
 			</div>
 			<div class="annatmedia">
-				<img src="/images/mat.jpg">
+				<img src="/images/mat2.jpg">
 				<img src="/images/sorsjonscamping.jpg">
 			</div>
 		</div>

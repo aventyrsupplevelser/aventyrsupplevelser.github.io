@@ -20,7 +20,7 @@ title: home
 		<h1>Teambuilding</h1>
 	    <div>
 	    	<a href="/teambuilding">
-				<img src="/images/pojkar2.jpg">
+				<img src="/images/pojkar.jpg">
 			</a>
 	    </div>
 	    <div style="visibility: hidden; height: 0px;">

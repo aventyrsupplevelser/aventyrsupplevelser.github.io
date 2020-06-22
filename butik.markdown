@@ -19,7 +19,7 @@ title: butik
 		</div>
 	</div>
 	    <div id="butiksloggor">
-	<a href="#headrush"><img src="/images/hrdistributor.jpg" ></a>
+	<a href="#headrush"><img src="/images/hrdistributor.png" ></a>
 	<a href="#headrush"><img src="/images/trubluelogo.png"></a>
 	<a href="#headrush"><img src="/images/zipstoplogo.png"></a>
 	<a href="#headrush"><img src="/images/quickflight.png"></a>
