@@ -8,7 +8,7 @@ title: home
 		<h1>Sörsjöns Äventyrspark</h1>
 	    <div>
 	    	<a href="/sorsjon">
-				<img src="/images/kidcarbinacroptest4.jpg"> 
+				<img src="/images/kidkarbin.jpg"> 
 			</a>
 	    </div>
 	    <div style="visibility: hidden; height: 0px;">

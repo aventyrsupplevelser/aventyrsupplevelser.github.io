@@ -32,7 +32,7 @@ Sväng av 55:an vid **skyltning mot "Sörsjön"** och följ skyltar i cirka 6&nb
  
 Sväng av 55:an mot **"Äventyrsbana"**, "Glotternskogen". Följ grusvägen i 3.4&nbsp;km till en liten **parkeringsficka** med träskylten "Äventyr" på vänster sida. Parkera där och **följ skyltarna** i 5&nbsp;minuter.
 </div> 
-<img src="/images/mapicon.png">
+<img src="/images/mapiconwhite.png">
 </div>
 </div>		
   

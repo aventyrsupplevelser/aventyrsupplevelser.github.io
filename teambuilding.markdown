@@ -303,7 +303,7 @@ title: Teambuilding
 		</div>
 	</div>
 	<div> 
-		<img src="/images/mapicon.png">
+		<img src="/images/mapiconwhite.png">
 		<div>
 			Se till att du åker till den<br class="midbr">rätta&nbsp;av&nbsp;<a href="#vagbeskrivningar">våra&nbsp;två&nbsp;platser!</a>
 		</div>
