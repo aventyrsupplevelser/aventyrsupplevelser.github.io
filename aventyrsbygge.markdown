@@ -28,9 +28,9 @@ title: aventyrsbygge
 			</div>
 		</div>
 		<div>
-			<img src= "/images/safety2.png">
+			<img src= "/images/safety.png">
 			<div>
-				<img src= "/images/safety2.png">
+				<img src= "/images/safety.png">
 				Säkerhet är viktigast. Vi bygger enligt den <strong>europeiska <span>säkerhetsnormen</span></strong> EN15&nbsp;567&nbsp;-&nbsp;1, samt erbjuder rådgivning om vilka säkerhetssystem som gör äventyret smidigare för dina&nbsp;besökare.
 			</div> 
 		</div>

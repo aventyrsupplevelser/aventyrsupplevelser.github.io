@@ -24,7 +24,7 @@ title: butik
 	<a href="#headrush"><img src="/images/zipstoplogo.png"></a>
 	<a href="#headrush"><img src="/images/quickflight.png"></a>
 	<a href="#brakehawk"><img src="/images/brakehawklogo.png"></a>
-	<a href="#monkey" ><img src="/images/monkeyhardwarelogo.jpg"></a>
+	<a href="#monkey" ><img src="/images/monkeyhardwarelogo.png"></a>
 	      </div>
 </div>
 <div id="allaprodukter">

@@ -15,11 +15,11 @@ title: Teambuilding
  Utöver den vackra naturen, finns här aktiviteter som höghöjdsbana, stolphopp, linbana, pilbågskytte, yxkastning och samarbetsbana. Vi skräddarsyr ett program med fokus på att svetsa just er grupp ännu <i>starkare&nbsp;samman</i>.
 		<div class="paketinfo">
 			<div>
-				<img src="/images/time2.png">
+				<img src="/images/time.png">
 				3&nbsp;h
 			</div>
 			<div>
-				<img src="/images/money2.png"> 
+				<img src="/images/money.png"> 
 				Från&nbsp;5&nbsp;500&nbsp;kr
 			</div>
 			<a href="#pristabell" >Priser&nbsp;&&nbsp;bokning</a>
@@ -114,7 +114,7 @@ title: Teambuilding
 				Vi samarbetar med flera <span>konferensanläggningar</span> i Östergötland, bland annat Sandvik Gård, Villa Fridhem och Sörsjöns Camping. Vi har även militärtält och kåtor för övernattning i naturen vid Glottern eller&nbsp;Sörsjön. 
 			</div>
 			<div class="annatmedia">
-				<img src="/images/mat2.jpg">
+				<img src="/images/mat.jpg">
 				<img src="/images/sorsjonscamping.jpg">
 			</div>
 		</div>
@@ -291,7 +291,7 @@ title: Teambuilding
 		</div>
 	</div>
 	<div>
-		<img src="/images/bathingclothes2.png">
+		<img src="/images/bathingclothes.png">
 		<div>
 			Ta gärna med&nbsp;badkläder!
 		</div>
