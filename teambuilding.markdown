@@ -42,11 +42,11 @@ title: Teambuilding
 		Dessutom, finns det något som stärker gemenskapen mer än <i>en dag full av goda&nbsp;skratt</i>?
 			<div class="paketinfo">
 				<div>
-					<img src="/images/time2.png">
+					<img src="/images/time.png">
 					2&nbsp;h
 				</div>
 				<div>
-					<img src="/images/money2.png">
+					<img src="/images/money.png">
 					Från&nbsp;4&nbsp;000&nbsp;kr
 				</div>
 				<a href="#pristabell">Priser&nbsp;&&nbsp;bokning</a>
@@ -69,11 +69,11 @@ title: Teambuilding
 			Glödvandringar fungerar året runt, och vi tar gärna med oss glöden till&nbsp;er!
 			<div class="paketinfo">
 				<div>
-					<img src="/images/time2.png" >
+					<img src="/images/time.png" >
 					1.5&nbsp;h
 				</div>
 				<div >
-					<img src="/images/money2.png">
+					<img src="/images/money.png">
 					Från&nbsp;5&nbsp;000&nbsp;kr
 				</div>
 				<a href="#pristabell">Priser&nbsp;&&nbsp;bokning</a>
