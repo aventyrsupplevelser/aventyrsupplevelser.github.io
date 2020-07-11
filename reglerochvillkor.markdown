@@ -37,7 +37,7 @@ layout: terms
 					Platser som avbokas senare återbetalas&nbsp;ej.
 				</li>	
 				<li>
-					<strong>Ombokning</strong> till nytt datum kan göras fram till <strong>24&nbsp;timmar</strong> före bokad aktivitet.
+					<strong>Ombokning</strong> till nytt datum kan göras fram till <strong>3&nbsp;dagar</strong> före bokad aktivitet.
 				</li>	
 				<li>	
 					OBS. Vid eventuell avbokning kan <strong>ej serviceavgiften</strong> för kortköpet återbetalas. Denna avgift kan variera för olika kortföretag.
@@ -63,7 +63,7 @@ layout: terms
 					<strong>Cancellations or changes</strong> to the number of people can be done <strong>until 7&nbsp;days</strong> before the booked activity. Cancellations at a later time will not be refunded. 
 				</li>	
 				<li>
-					You can <strong>change the booking date</strong> until <strong>24 hours</strong> before booked&nbsp;activity.
+					You can <strong>change the booking date</strong> until <strong>3&nbsp;days</strong> before booked&nbsp;activity.
 				</li>	
 				<li>
 					N.B. In the case of cancellation the the payment processing fee will <strong>not be refunded</strong>. This fee may vary depending on your card&nbsp;provider. 
