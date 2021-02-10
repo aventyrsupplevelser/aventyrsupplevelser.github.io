@@ -122,7 +122,7 @@ title: Teambuilding
 		<div>
 			<div class="annattext"> 
 				<h3>Klippklättring</h3>
-				Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. Nästa tillfälle är 28 juni 2020. Priset är 1100&nbsp;kr per person för 6 timmar (10.00&nbsp;till&nbsp;16.00).
+				Vi arrangerar klätterdagar och prova på-arrangemang vid klätterparadiset Ågelsjön. <a href="mailto:info@aventyrsupplevelser.com">Skicka ett mail</a> om ni vill veta när nästa tillfälle är. Priset är 1100&nbsp;kr per person för 6 timmar (10.00&nbsp;till&nbsp;16.00).
 			</div> 
 			<div class="annatmedia">
 				<img style="object-position: 50% 00%;" src="/images/klippklattring.jpg">
