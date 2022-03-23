@@ -143,7 +143,16 @@ title: butik
 					<br>
 					<strong>1&nbsp;050&nbsp;SEK</strong>
 				</h3>
-				Brakehawk är en praktisk ziplinebroms. 406 fungerar tillsammans med Petzl Trac/Tracplus.
+				406 fungerar tillsammans med Petzl Trac/Tracplus.
+			</div>
+			<div>
+				<img src="/images/brakehawk406.png">
+				<h3>
+					Brakehawk 417
+					<br>
+					<strong>1&nbsp;050&nbsp;SEK</strong>
+					</h3>
+					417 fungerar tillsammans med Petzl Guide.
 			</div>
 			<div>
 				<img src="/images/brakepads.png">
