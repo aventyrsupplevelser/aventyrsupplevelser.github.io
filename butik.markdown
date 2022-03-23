@@ -8,7 +8,7 @@ title: butik
 	<img src="/images/butik.png">
 <div id="butikintro">
 	<div id="butiktext">
-		Vi säljer bromssystem för linbanor, fritt fall-anordningar och <span>klättringsmaterial</span> från <a href="#headrush">Headrush</a>, <a href="#brakehawk">Brakehawk</a> och <a href="#monkey">Monkey&nbsp;Hardware</a>.
+		Vi säljer bromssystem för linbanor, fritt fall-anordningar och <span>klättringsmaterial</span> från <a href="#brakehawk">Brakehawk</a> och <a href="#monkey">Monkey&nbsp;Hardware</a>.
 		<br> 
 		Vi kan även skicka efter <span>säkerhetsutrustning</span> såsom selar, slingor och hjälmar från exempelvis Petzl och Beal samt <span>instegssäkringar</span> från&nbsp;ISC. 
 		<br>
@@ -19,16 +19,12 @@ title: butik
 		</div>
 	</div>
 	    <div id="butiksloggor">
-	<a href="#headrush"><img src="/images/hrdistributor.png" ></a>
-	<a href="#headrush"><img src="/images/trubluelogo.png"></a>
-	<a href="#headrush"><img src="/images/zipstoplogo.png"></a>
-	<a href="#headrush"><img src="/images/quickflight.png"></a>
 	<a href="#brakehawk"><img src="/images/brakehawklogo.png"></a>
 	<a href="#monkey" ><img src="/images/monkeyhardwarelogo.png"></a>
 	      </div>
 </div>
 <div id="allaprodukter">
-	<div id="headrush">
+	<div id="headrush" style="display: none;">
 		<h2>Headrush</h2>
 		<div>
 			<div>

@@ -52,7 +52,7 @@ title: aventyrsbygge
 			<img src= "/images/foundation.png">
 			<div>
 				<img src= "/images/foundation.png">
-				Genom <a href="http://höghöjdsbanor.se"><strong>Sveriges <span>Höghöjdsbanor</span></strong></a> är vi examinerade för att utföra årlig inspektion. Skriv till oss om du vill vara med i föreningen, så gör vi <span>äventyrsbyggande</span> lättare&nbsp;tillsammans!
+				Genom <a href="http://www.sverigeshb.se"><strong>Sveriges <span>Höghöjdsbanor</span></strong></a> är vi examinerade för att utföra årlig inspektion. Skriv till oss om du vill vara med i föreningen, så gör vi <span>äventyrsbyggande</span> lättare&nbsp;tillsammans!
 			</div>
 		</div>
 	</div>

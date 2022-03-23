@@ -141,7 +141,7 @@ title: Teambuilding
 			</div>
 		</div>
 
-		<div> 
+		<div style="display: none;"> 
 			<div class="annattext">
 				<h3>Lådbilsrace</h3> 
 				En lådbil ska formas med hjälp av hjul, axlar, muttrar och plywood. Vi ger tips till en person i varje grupp som får ansvaret att vidareförmedla till&nbsp;gruppmedlemmarna. 
@@ -186,7 +186,7 @@ title: Teambuilding
 			<td>4 000 kr</td>
 			<td>400 kr exkl. moms</td>
 			<td>400 kr</td>
-			<td>250 kr</td>
+			<td>300 kr</td>
 		</tr>
 		<tr>
 			<td><a href="#glodvandring">Glödvandring</a></td>
@@ -228,7 +228,7 @@ title: Teambuilding
 			<td>4 000 kr</td>
 			<td>400 kr</td>
 			<td>400 kr</td>
-			<td>250 kr</td>
+			<td>300 kr</td>
 		</tr>
 		<tr>
 			<td><a href="#glodvandring">Glödvandring</a></td>
