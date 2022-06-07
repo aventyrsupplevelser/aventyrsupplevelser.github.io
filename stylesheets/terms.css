@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>	
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145278827-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'UA-145278827-1');
+		</script>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">		
+		<meta name="viewport" content="width=device-width">
+
+		<title>
+			{% if page.title == nil %}
+			{{ page.title }}
+			{% else %}
+			{{ page.title }} –
+			{% endif %}
+			Sörsjöns Äventyrspark
+		</title>
+       
+		<style type="text/css" media="screen">
+			
+			html {
+				overflow-x: hidden; 
+			}
+		
+			body {
+				margin: 0 auto;
+				font-family: "Avenir", sans-serif;
+				font-size: 20px;
+			    font-weight: 300;
+			    letter-spacing: 0.02em;
+			    line-height: 1.6em;
+				overflow-x: hidden; 
+		  
+			}	
+			
+			#pagecontent {
+				max-width: 100%;
+				margin: 0 auto;
+			}	
+        
+			/* utan denna blir länkade bilder fucked */
+			img {
+				display: block;
+			}
+		
+			div {
+				box-sizing: border-box;
+			}
+        
+			a {
+				border-bottom: 1px solid #000;
+				color: black;
+				text-decoration: none;
+			}
+		
+			a:hover {
+				text-decoration: none;
+				color: black;
+				border-bottom: 0.5px dashed black;
+			}
+			
+			h2 {
+				margin: 0px;
+				padding-bottom: 10px;
+				padding-top: 40px;
+				font-size: 35px;
+				font-weight: 500;
+				text-align: center;
+			}
+			
+			ul {
+				list-style-type: none;
+				padding: 0px;
+			}
+			
+			li {
+				margin-bottom: 20px;
+			}
+			
+			strong {
+				font-weight: 500;
+			}
+			
+			#logga {
+				width: 90vw;
+				margin: 0 auto;
+				padding-top: 1.5vw;
+				padding-bottom: 35px;
+			}
+			
+			#footer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				font-size: 15px;
+				padding-top: 60px;
+				padding-bottom: 60px;
+				line-height: 1.4em;
+			}
+			
+			#footer img {
+				width: 200px;
+				margin: 0 auto;
+				padding-bottom: 40px;
+				padding-left: 20px;
+			}
+			
+			.logo {
+				border: none !important;
+			}
+			
+			.logo:hover {
+				border: none !important;
+			}
+			
+			#theterms {
+				width: 710px;
+			}
+			
+			#container {
+				display: flex;
+				justify-content: center;
+				padding-bottom: 20px;
+			}
+			
+			#footer a {
+				align-self: center;
+				border-bottom: 1px solid black;
+			}
+			
+			#footer a:hover {
+				border-bottom: 1px dashed black;
+			}
+			
+			#contact {
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 30px;
+			}
+			
+			        
+			@media (max-width: 1199px) {
+				/* Single column stuff here */
+			
+			
+				body {
+					-webkit-text-size-adjust: none;
+				}
+
+				
+			
+				.whiteback{
+					padding: 0px 0px;
+				}
+			
+				.greyback {
+					padding-left: 1000px;
+					padding-right: 1000px;
+					margin-left: -1000px;
+					margin-right: -1000px;
+					background-color: #F8F8F8;
+				}
+			
+				#logga {
+					width: 80vw;
+					margin: 0 auto;
+				}
+				
+				#theterms {
+					width: 500px;
+				}
+			
+				
+				#faqsection span, #bokasection span {
+					-ms-word-break: break-all;
+					word-break: break-all;
+
+					/* Non standard for WebKit */
+					word-break: break-word;
+
+					-webkit-hyphens: auto;
+					-moz-hyphens: auto;
+					hyphens: auto;
+				}
+				
+				.midbr, .mobilebr {
+					display: none;
+				}
+
+			}
+		
+		
+        
+			@media (min-width: 1200px) {
+				/* Multicolumn stuff here */
+				
+			
+				html {
+					overflow-x: hidden; 
+				}
+			
+				body {
+					overflow-x:hidden; 
+					max-width: none;
+				}
+				
+				#pagecontent {
+					width: 1200px;
+					max-width: none;
+				}	
+					  			
+				.greyback {
+					padding-right: 1000px;
+					padding-left: 1000px;
+					margin-left: -1000px;
+					margin-right: -1000px;
+					background-color: #F8F8F8;
+				}
+			
+				#logga {
+					width: 1000px;
+					margin: 0 auto ;
+				}
+				
+				.midbr, .mobilebr {
+					display: none;
+				}
+				
+				
+			     
+	   
+				
+	 	    }
+	   
+			@media (max-width: 600px) {
+				
+				body {
+					font-size: 18px;
+				}
+				
+				#logga {
+					width: 100vw;
+					margin: 0 auto;
+					padding-bottom: 3vw;
+				}
+				
+				h2 {
+					padding-top: calc(15px +  4vw);
+					font-size: 27px;
+				}
+				
+				#theterms {
+					width: 90vw;
+				}
+				
+				#footer {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					text-align: center;
+					padding-top: 50px;
+					padding-bottom: 50px;
+				}
+				
+				#footer > img {
+					width: calc(100px + 25vw);
+					margin: 0 auto;
+					padding-bottom: 20px;
+					padding-left: calc(5px + 2vw);
+				}
+				
+				#footer a {
+					align-self: center;
+				}
+				
+				#contact {
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 30px;
+				}
+				
+				.midbr, .mobilebr {
+					display: block;
+				}
+								
+			} 
+
+			
+			}	 
+        
+			</style>
+			<link rel="shortcut icon" href="/sorsjon/favicon.png" type="image/x-icon">
+		</head>
+		<body>
+				<header>
+					<div id="headerall">
+						<div id="headerlogo">
+							<a href="/sorsjon"> 
+								<img id="logga" src="/sorsjon/images/sorsjonheader.png">
+							</a>
+						</div>
+					</div>
+				</header>
+				<div id="content">
+					{{ content }}
+				</div>
+				<div id="footer" class="greyback">
+					<a class="logo" href="/sorsjon/">
+					<img src="/sorsjon/images/logo.png">
+					</a>
+					<div id="contact">
+						<a href="tel:00461161175">+ 46 (0) 11 611 75</a>
+						<a href="mailto:info@aventyrsupplevelser.com">info@aventyrsupplevelser.com</a>
+					</div>
+					<div id="credits">
+						Illustrations by <a href="http://www.hanahiratsuka.com/">Hana Hiratsuka</a>.
+						<br class="midbr"><br class="mobilebr">
+						 Design by <a href="http://pontus.granstrom.me">Pontus</a> and <a href="http://petterrylen.com">Petter</a>.
+					</div>	
+				<script id="js-turitop" src="https://app.turitop.com/js/load-turitop.min.js" data-company="V196" data-ga="no" data-buttoncolor="green" data-afftag="ttafid"></script>
+				</div>
+		</body>
+		</html>
