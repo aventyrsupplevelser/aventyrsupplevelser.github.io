@@ -1,0 +1,1306 @@
+	html {
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+	}
+
+	@media screen and (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+
+	body {
+		margin: 0 auto;
+		font-family: "Josefin Sans", sans-serif;
+		font-size: 23px;
+		font-weight: 300;
+		letter-spacing: 0.02em;
+		line-height: 1.6em;
+		overflow-x: hidden;
+	}
+
+
+	#pagecontent {
+		max-width: 100%;
+		margin: 0 auto;
+	}
+
+	/* utan denna blir länkade bilder fucked */
+	img {
+		display: block;
+	}
+
+	div {
+		box-sizing: border-box;
+	}
+
+	a {
+		border-bottom: 1px solid #000;
+		color: black;
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: none;
+		color: black;
+		border-bottom: 0.5px dashed black;
+	}
+
+	h2 {
+		margin: 0px;
+		font-size: 25px;
+		font-weight: 500;
+	}
+
+	strong {
+		font-weight: 500;
+		font-size: 30px;
+	}
+
+	#logga {
+		padding-top: 1.5vw;
+	}
+
+	.navbutton {
+		box-sizing: border-box;
+		border: none;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	#nav>div {
+		width: min-content;
+	}
+
+	.navbutton:hover {
+		border: none;
+	}
+
+	.navbutton:hover .navimgline {
+		opacity: 1;
+		transition: 0.3s;
+	}
+
+	.navimgline {
+		padding-top: 10px;
+		opacity: 0;
+		height: 4px;
+		width: 90%;
+	}
+
+	.bokaknapp {
+		display: flex;
+		justify-content: center;
+		margin-bottom: -6px;
+	}
+
+	.bokaknapp button {
+		font-size: 31px;
+		border: 3px solid #373737;
+		border-radius: 3px;
+		padding: 16px 22px 12px;
+		font-weight: 500;
+		color: black;
+		box-shadow: 5px 10px #373737;
+		font-family: "josefin sans";
+	}
+
+	.bokaknapp button:hover {
+		margin: 0px 0px 0px 3px;
+		box-shadow: 4px 8px #373737;
+		transition: 0.08s;
+	}
+
+	#newintro2 {
+		width: 1200px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 25px;
+		margin: 20px auto;
+	}
+
+	#newintro2>div {
+		position: relative;
+	}
+
+	#newintro2>div>div {
+		position: absolute;
+		bottom: 20px;
+		font-size: 30px;
+		font-weight: 500;
+		padding: 14px 14px 10px;
+		border-radius: 2px;
+		background-color: white;
+	}
+
+	.leftintro {
+		left: 20px;
+	}
+
+	.rightintro {
+		right: 20px;
+	}
+
+
+	#newintro2 img {
+		width: 100%;
+	}
+
+	#newintro {
+		font-size: 25px;
+		font-weight: 500;
+		font-family: 'Josefin Sans';
+		line-height: 1.4em;
+	}
+
+	#newintro>div {
+		padding: 70px 0px;
+	}
+
+	.newintrotext {
+		display: grid;
+		width: 900px;
+		margin: 0 auto;
+		grid-template-columns: 1fr 1fr;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	#newintro img {
+		width: 400px;
+	}
+
+	#introseriesection {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 50px;
+	}
+
+	#introseriesection>div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	#introseriesection img {
+		border-radius: 3px;
+		width: 100%;
+		padding-bottom: 15px;
+	}
+
+	.infographic {
+		width: 95%;
+		margin: 0 auto;
+	}
+
+	.infographicmobil {
+		display: none;
+	}
+
+	#harfinnsocksasection {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 20px;
+		padding: 50px 10px 110px;
+	}
+
+	#harfinnsocksasection img {
+		width: 100%;
+		height: 200px;
+		object-fit: contain;
+	}
+
+	#harfinnsocksasection>div>div {
+		margin-top: 20px;
+		text-align: center;
+	}
+
+	#oppettidersection>div img {
+		height: 110px;
+	}
+
+	.arstidtitle {
+		display: flex;
+	}
+
+	.summer span,
+	.winter span,
+	.spring span,
+	.fall span {
+		display: none;
+	}
+
+
+
+	.oppetmobilebr {
+		display: none;
+	}
+
+	#prisersection>div p {
+		margin-top: 1em;
+		margin-bottom: 0px;
+	}
+
+	#prisersection>div {
+		display: flex;
+		align-items: center;
+	}
+
+	#skraddarpresentbox {
+		text-align: center;
+		padding: 30px 100px 60px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		justify-content: center;
+		gap: 0px;
+	}
+
+	#skraddarpresentbox a {
+		padding-top: 35px;
+	}
+
+	#skraddarpresentbox img {
+		height: 125px;
+		margin: 0 auto 20px;
+
+	}
+
+	.mobilemap {
+		display: none;
+	}
+
+
+	#drawnmap img {
+		width: 50%;
+		margin: 0 auto;
+		padding: 0px 0px 70px;
+	}
+
+	.googlemaps {
+		width: 650px;
+	}
+
+	.karta {
+		width: 100%;
+		padding-top: 30px;
+	}
+
+	#hittasection {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.gammaldags {
+		display: inline-block !important;
+		width: auto !important;
+	}
+
+	#hittasection>div a {
+		text-decoration: none;
+		border-radius: 3px;
+		padding: 13px 20px;
+		border: solid 3px #373737;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		background-color: #f8f8f8;
+		box-shadow: 4px 8px #373737;
+	}
+
+	#hittasection>div a:hover {
+		box-shadow: 3px 7px;
+	}
+
+	#hittasection>div h2 {
+		font-weight: 300;
+	}
+
+	#hittasection>div img {
+		height: 100px;
+		padding-right: 20px;
+	}
+
+	#faq {
+		line-height: 1.3em;
+	}
+
+	.q {
+		font-size: 25px;
+	}
+
+	#footer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		font-size: 15px;
+		padding-top: 140px;
+		padding-bottom: 90px;
+		line-height: 1.4em;
+	}
+
+	#footer img {
+		width: 200px;
+		margin: 0 auto;
+		padding-bottom: 40px;
+		padding-left: 20px;
+	}
+
+	.logo {
+		border: none !important;
+	}
+
+	.logo:hover {
+		border: none !important;
+	}
+
+	#footer a {
+		align-self: center;
+		border-bottom: 1px solid black;
+	}
+
+	#footer a:hover {
+		border-bottom: 1px dashed black;
+	}
+
+	#contact {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 30px;
+	}
+
+
+	@media (max-width: 1199px) {
+		/* Single column stuff here */
+
+
+		body {
+			-webkit-text-size-adjust: none;
+		}
+
+		.mobilpadding {
+			padding: 0px 10px;
+		}
+
+		.whiteback {
+			padding: 0px 0px;
+		}
+
+		.greyback {
+			padding-left: 1000px;
+			padding-right: 1000px;
+			margin-left: -1000px;
+			margin-right: -1000px;
+		}
+
+		#logga {
+			width: 100vw;
+			margin: 0 auto;
+		}
+
+		#nav {
+			padding: 0px;
+			margin: calc(10px + 2.5vw) 0px 25px 0px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-evenly;
+		}
+
+		.navbutton {
+			box-sizing: border-box;
+			border: none;
+			padding: 0px calc(5px + 5vw) 10px calc(5px + 5vw);
+		}
+
+		.navbutton:hover {
+			border: none;
+		}
+
+		.navimg {
+			height: calc(23px + 3vw);
+		}
+
+		#newintro2 {
+			width: 100vw;
+			padding: 0px 25px;
+		}
+
+		#newintro2>div>div {
+			font-size: 23px;
+			padding: 8px 10px 6px;
+		}
+
+		#introseriesection>div>div {
+			display: none;
+		}
+
+		#introseriesection {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-column-gap: 0.5vw;
+			grid-row-gap: 15px;
+			padding-bottom: 65px;
+			padding-top: 60px;
+		}
+
+		.introserienarrow {
+			grid-column-start: 1;
+			grid-column-end: span 2;
+			padding: 0px 15px 25px 15px;
+		}
+
+		#introseriesection>div {
+			display: block;
+		}
+
+		#introseriesection img {
+			padding: 0px;
+		}
+
+		#howtosection {
+			text-align: center;
+			padding-top: 70px;
+			padding-bottom: 90px;
+		}
+
+		#howtosection>div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#howtosection img {
+			height: 250px;
+			padding: 20px;
+		}
+
+		.howtotext {
+			padding: 20px;
+			max-width: 350px;
+		}
+
+		.howtoreverse {
+			padding-left: 40px;
+			flex-direction: row-reverse;
+		}
+
+		.narrowbr {
+			display: none;
+		}
+
+		.widebr {
+			display: none;
+		}
+
+		#infographicssection {
+			padding-top: 140px;
+			padding-bottom: 90px;
+		}
+
+		#harfinnsocksasection {
+			max-width: 900px;
+			margin: 0 auto;
+			padding: 50px 10px 130px;
+		}
+
+		#oppettidersection {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-top: 150px;
+			padding-bottom: 0px;
+		}
+
+		#oppettidersection>div {
+			padding-bottom: 50px;
+		}
+
+		#oppettidersection h2 {
+			padding-right: 20px;
+		}
+
+		.summer>.arstidtitle {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.summer img {
+			margin: 0 auto;
+			height: 140px !important;
+			padding-bottom: 20px;
+		}
+
+		.winter,
+		.spring,
+		.fall {
+			display: grid;
+			grid-template-columns: 180px 450px;
+			grid-template-rows: auto;
+			grid-column-gap: 0vw;
+			grid-template-areas:
+				"img title"
+				"img text";
+		}
+
+		.seasonpic {
+			grid-area: img;
+			align-self: center;
+		}
+
+		.arstidtitle {
+			grid-area: title;
+			padding-bottom: 15px;
+		}
+
+		.arstidtext {
+			grid-area: text;
+		}
+
+		#prisersection {
+			display: grid;
+			grid-row-gap: 80px;
+			margin: 0 auto;
+			width: 470px;
+			justify-items: start;
+			padding-top: 110px;
+			padding-bottom: 60px;
+		}
+
+		#prisersection>div {
+			display: flex;
+			align-items: center;
+		}
+
+		#prisersection>div img {
+			width: 130px;
+			padding-right: 40px;
+		}
+
+		#tipssection>div {
+			display: grid;
+			grid-template-columns: calc(160px + 15vw) calc(160px + 15vw);
+			grid-gap: 20px calc(10px + 7vw);
+			text-align: center;
+			width: calc(340px + 36vw);
+			margin: 0 auto;
+			padding-top: 150px;
+			padding-bottom: 0px;
+		}
+
+		#tipssection>div>div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-bottom: 30px;
+		}
+
+		#tipssection>div>div>img {
+			height: calc(85px + 10vw);
+			padding-bottom: 20px;
+		}
+
+		#hittasection {
+			justify-content: space-evenly;
+			padding-top: 120px;
+			padding-bottom: 0px;
+		}
+
+		#hittasection>div {
+			padding: 0px 20px 20px 20px;
+			text-align: center;
+		}
+
+		.gammaldags {
+			margin: 0px;
+		}
+
+		.karta {
+			padding: 20px 0px 0px 0px;
+		}
+
+		.mobilebr {
+			display: none;
+		}
+
+		#faqsection>img {
+			width: calc(200px + 20vw);
+			padding-bottom: calc(20px + 3vw);
+			margin: 0 auto;
+		}
+
+		#faqsection {
+			width: 60vw;
+			margin: 0 auto;
+			padding-top: 90px;
+			padding-bottom: 160px;
+		}
+
+		.questions {
+			margin-top: 40px;
+		}
+
+		#faqsection span,
+		#bokasection span {
+			-ms-word-break: break-all;
+			word-break: break-all;
+
+			/* Non standard for WebKit */
+			word-break: break-word;
+
+			-webkit-hyphens: auto;
+			-moz-hyphens: auto;
+			hyphens: auto;
+		}
+
+		#footer {
+			padding-top: 150px;
+		}
+
+	}
+
+
+
+	@media (min-width: 1200px) {
+		/* Multicolumn stuff here */
+
+		html {
+			overflow-x: hidden;
+		}
+
+		body {
+			overflow-x: hidden;
+			max-width: none;
+		}
+
+		#pagecontent {
+			width: 1200px;
+			max-width: none;
+		}
+
+		.greyback {
+			padding-right: 1000px;
+			padding-left: 1000px;
+			margin-left: -1000px;
+			margin-right: -1000px;
+		}
+
+		#logga {
+			width: 1000px;
+			margin: 0 auto;
+		}
+
+		#nav {
+			width: 1200px;
+			margin: 0 auto;
+			padding: 40px 0px 40px 0px;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.navimg {
+			height: 49px;
+		}
+
+		a.anchor {
+			display: block;
+			position: relative;
+			top: -50px;
+		}
+
+		#introseriesection {
+			padding-top: 120px;
+			padding-bottom: 120px;
+		}
+
+		.introserienarrow {
+			display: none !important;
+		}
+
+		#howtosection {
+			display: flex;
+			justify-content: space-between;
+			text-align: center;
+			margin-left: -50px;
+			padding-top: 120px;
+			padding-bottom: 110px;
+		}
+
+		#howtosection>div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#howtosection>div:first-child {
+			margin-right: -40px;
+		}
+
+		#howtosection img {
+			height: 280px;
+			padding-bottom: 20px;
+		}
+
+		.narrowbr {
+			display: none;
+		}
+
+		#infographicssection {
+			padding-top: 150px;
+			padding-bottom: 90px;
+		}
+
+		#harfinnsocksasection {
+			grid-template-columns: 1fr 1fr 1fr;
+			max-width: none;
+			margin: 0 auto;
+		}
+
+		#oppettidersection>div {
+			display: flex;
+		}
+
+		#oppettidersection {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-rows: auto;
+			grid-template-areas:
+				"last now soon"
+				"last later soon";
+			padding-top: 140px;
+			padding-bottom: 50px;
+		}
+
+		.summer {
+			grid-area: now;
+			padding-bottom: 100px;
+		}
+
+		.fall {
+			grid-area: soon;
+			align-self: center;
+			margin-top: 80px;
+		}
+
+		.winter {
+			grid-area: later;
+		}
+
+		.spring {
+			grid-area: last;
+			align-self: center;
+			margin-top: 80px;
+		}
+
+		.arstidtitle {
+			flex-direction: column;
+			align-items: center;
+			padding: 20px 0px;
+		}
+
+		#oppettidersection>div {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
+
+		.oppetmobilebr {
+			display: none;
+		}
+
+		.midbr {
+			display: none;
+		}
+
+		#prisersection {
+			display: grid;
+			grid-template-columns: 470px 470px;
+			grid-row-gap: 80px;
+			grid-column-gap: 75px;
+			width: 1015px;
+			margin: 0 auto;
+			padding-top: 90px;
+			padding-bottom: 90px;
+		}
+
+		#prisersection>div img {
+			width: 130px;
+			padding-right: 40px;
+		}
+
+
+		#tipssection>div {
+			display: grid;
+			grid-template-columns: 450px 450px;
+			grid-gap: 50px 0px;
+			text-align: center;
+			padding-top: 140px;
+			padding-bottom: 20px;
+			margin: 0 auto;
+			width: 950px;
+		}
+
+		#tipssection>div>div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#tipssection>div>div>img {
+			height: 200px;
+			padding-bottom: 20px;
+		}
+
+		.mobilebr {
+			display: none;
+		}
+
+		#hittasection {
+			padding-top: 60px;
+			padding-bottom: 50px;
+		}
+
+		#faqsection {
+			display: grid;
+			grid-template-columns: 550px 550px;
+			grid-gap: 20px 100px;
+			grid-template-areas:
+				"title title"
+				"left right"
+				"questions questions";
+			padding-top: 110px;
+			padding-bottom: 150px;
+		}
+
+		#faqsection img {
+			width: 400px;
+			padding-bottom: 40px;
+			grid-area: title;
+			justify-self: center;
+		}
+
+		.questions {
+			grid-area: questions;
+		}
+
+	}
+
+	@media (max-width: 1000px) {
+
+		#newintro2>div>div {
+			font-size: 20px;
+			padding: 5px 10px 2px;
+		}
+
+		#skraddarpresentbox {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			padding: 0px;
+		}
+
+		#skraddarpresentbox img {
+			height: calc(8vw + 50px);
+		}
+
+	}
+
+	@media (max-width: 800px) {
+
+		#newintro2 {
+			grid-template-columns: 1fr;
+		}
+
+		#newintro2>div>div {
+			font-size: 25px;
+			padding: 8px 12px 5px;
+		}
+
+		.gammaldags {
+			padding: calc(5px + 2vw) !important;
+			margin: 0px 0px 10px;
+		}
+
+		#hittasection>div a {
+			padding: calc(5px + 2vw);
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			line-height: 1.3em;
+			cursor: pointer;
+			text-align: center;
+			width: auto;
+			box-shadow: 3px 7px;
+		}
+
+
+		#hittasection>div img {
+			height: calc(40px + 7vw);
+			padding-right: calc(5px + 3vw);
+		}
+
+	}
+
+
+	@media (max-width: 690px) {
+
+
+		#oppettidersection h2 {
+			padding: 0px;
+		}
+
+		.oppetmobilebr {
+			display: block;
+		}
+
+		.midbr {
+			display: none;
+		}
+
+		/* change all summer for fall, and fall for summer (manually one by one, then change order of divs in HTML for mobile),  //  */
+
+		.winter,
+		.spring,
+		.fall {
+			display: grid;
+			grid-template-columns: 70px 198px;
+			grid-template-rows: auto;
+			grid-gap: 3vw 30px;
+			align-items: center;
+			grid-template-areas:
+				"img title"
+				"text text";
+		}
+
+		.winter .arstidtitle,
+		.spring .arstidtitle,
+		.fall .arstidtitle {
+			display: flex;
+			flex-direction: column;
+			padding: 0px;
+		}
+
+		.winter img,
+		.spring img,
+		.fall img {
+			height: 70px !important;
+		}
+
+		.summer img {
+			height: 110px !important;
+		}
+
+		.mobilebr {
+			display: block;
+		}
+
+	}
+
+	@media (max-width: 600px) {
+
+		body {
+			font-size: 18px;
+		}
+
+		h2 {
+			font-size: 23px;
+			font-weight: 400;
+		}
+
+		p {
+			margin-top: 0.5em !important;
+		}
+
+		#logga {
+			width: 100%;
+		}
+
+		#nav {
+			margin: calc(10px + 2.5vw) 0px 4vw 0px;
+		}
+
+		.navimg {
+			height: 7.5vw;
+			padding-bottom: 15px;
+		}
+
+		.navbutton {
+			padding: 0px 3vw;
+		}
+
+		.navimgline {
+			display: none;
+		}
+
+		#introseriesection {
+			grid-column-gap: 0.6vw;
+			padding-top: 0px;
+			padding-bottom: 55px;
+		}
+
+		#introseriesection img {
+			border-radius: 1px;
+			width: 49.70vw;
+			height: 49.70vw;
+			object-fit: cover;
+		}
+
+		.introserienarrow {
+			padding: 0px 15px 15px 15px;
+		}
+
+		#howtosection {
+			padding-top: 50px;
+			padding-bottom: 50px;
+		}
+
+		#howtosection>div {
+			justify-content: space-evenly;
+		}
+
+		#howtosection img {
+			height: 35vw;
+			padding: 20px 10px;
+		}
+
+		.howtotext {
+			padding: 10px;
+		}
+
+		.howtoreverse {
+			padding-left: 0px;
+		}
+
+		.narrowbr {
+			display: block;
+		}
+
+		.widebr {
+			display: none;
+		}
+
+		#infographicssection {
+			padding-top: 100px;
+			padding-bottom: 70px;
+		}
+
+		.infographicmobil {
+			display: block;
+			width: 95%;
+			margin: 0 auto;
+		}
+
+		.infographic {
+			display: none;
+		}
+
+		#harfinnsocksasection {
+			padding: 20px 30px 100px;
+		}
+
+		#harfinnsocksasection img {
+			height: 25vw;
+		}
+
+		#drawnmap img {
+			width: 100vw;
+		}
+
+		.webmap {
+			display: none;
+		}
+
+		.mobilemap {
+			display: block;
+		}
+
+		#oppettidersection {
+			padding-top: 120px;
+			padding-bottom: 0px;
+		}
+
+		#oppettidersection>div {
+			padding-bottom: 40px;
+		}
+
+		.winter,
+		.spring,
+		.fall {
+			grid-template-columns: 70px 170px;
+		}
+
+		#prisersection {
+			display: grid;
+			grid-row-gap: 60px;
+			margin: 0 auto;
+			width: 278px;
+			padding-top: 70px;
+			padding-bottom: 70px;
+		}
+
+		#prisersection>div img {
+			width: 110px;
+			padding-right: 25px;
+			margin: 0 auto;
+		}
+
+
+		#prisersection>div>div>p {
+			line-height: 1.4em;
+		}
+
+
+		#tipssection>div {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			width: 95vw;
+			justify-content: space-evenly;
+			padding-bottom: 0px;
+			padding-top: 120px;
+		}
+
+		#tipssection>div>div {
+			width: calc(200px + 10vw);
+			padding-bottom: 40px;
+		}
+
+		#tipssection>div>div>img {
+			height: calc(80px + 12vw);
+		}
+
+		#hittasection {
+			padding-top: 90px;
+			padding-bottom: 20px;
+		}
+
+		.gammaldags {
+			padding: calc(5px + 2vw) !important;
+			margin: 0px 0px 10px;
+			font-size: 15px;
+			line-height: 1.3em;
+		}
+
+		#hittasection>div a {
+			padding: calc(5px + 2vw);
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			cursor: pointer;
+			text-align: center;
+			width: auto;
+			box-shadow: 3px 7px;
+		}
+
+		#hittasection h2 {
+			font-size: 20px;
+		}
+
+		#hittasection>div img {
+			height: calc(40px + 7vw);
+			padding-right: calc(5px + 3vw);
+		}
+
+		#hittasection>div {
+			padding: 0px 0px 20px 0px;
+		}
+
+		.karta {
+			padding: 0px;
+		}
+
+		#faqsection {
+			width: 90vw;
+			padding-top: 50px;
+			padding-bottom: 130px;
+		}
+
+		#faqsection strong {
+			font-size: 20px;
+		}
+
+		#footer {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			padding-top: 110px;
+			padding-bottom: 50px;
+		}
+
+		#footer>img {
+			width: calc(100px + 25vw);
+			margin: 0 auto;
+			padding-bottom: 20px;
+			padding-left: calc(5px + 2vw);
+		}
+
+		#footer a {
+			align-self: center;
+		}
+
+		#contact {
+			display: flex;
+			flex-direction: column;
+			margin-bottom: 30px;
+		}
+
+	}
+
+	@media (max-width: 500px) {
+
+
+
+		#newintro2>div>div {
+			font-size: 20px;
+			padding: 8px 12px 5px;
+		}
+
+	}
+
+	@media (max-width: 466px) {
+
+		#newintro2 {
+			grid-gap: 10px;
+			padding: 0px 10px;
+		}
+
+		#newintro2>div>div {
+			padding: 5px 10px 2px;
+			bottom: 10px;
+		}
+
+		.rightintro {
+			right: 10px;
+		}
+
+		.leftintro {
+			left: 10px;
+		}
+
+		.svavande {
+			display: none;
+		}
+
+		.direktbokningimg {
+			display: none;
+		}
+
+		.direktbokninghz {
+			display: block;
+			height: auto;
+			width: calc(220px + 22vw);
+			padding-bottom: 20px;
+			margin: 0 auto;
+		}
+
+		.bokaknapp button {
+			font-size: calc(3px + 6vw);
+			box-shadow: 4px 8px #373737;
+		}
+
+	}
