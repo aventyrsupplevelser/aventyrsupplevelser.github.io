@@ -187,7 +187,8 @@
 			</div>
 		</div>
 		<div class="bokaknapp">
-			<button id="iframebutton" style="background-color: #F5CA5B" href="http://boka.sorsjonsaventyrspark.se">Boka
+			<button class="iframebutton" style="background-color: #F5CA5B"
+				href="http://boka.sorsjonsaventyrspark.se">Boka
 				ditt äventyr nu</button>
 		</div>
 		<div id="infographicssection" class="greyback">
@@ -222,7 +223,8 @@
 			</div>
 		</div>
 		<div class="bokaknapp">
-			<button id="iframebutton" style="background-color: #BED654;" href="http://boka.sorsjonsaventyrspark.se">Boka
+			<button class="iframebutton" style="background-color: #BED654;"
+				href="http://boka.sorsjonsaventyrspark.se">Boka
 				ditt äventyr nu</button>
 		</div>
 		<a id="openinghours"></a>
@@ -330,7 +332,7 @@
 		</div>
 		<a id="book"></a>
 		<div class="bokaknapp">
-			<button id="iframebutton" style="background-color: #87c6f0; margin: 30px 0px 90px;">Boka
+			<button class="iframebutton" style="background-color: #87c6f0; margin: 30px 0px 90px;">Boka
 				online här och
 				nu</button>
 		</div>
@@ -350,7 +352,7 @@
 					Vi säljer presentkort, där den
 					<br>som får gåvan kan boka&nbsp;tiden!
 					<br>
-					<a href="länksaaaaaaaaaaaknas">Köp ett
+					<a href="https://webbshop.contrl.se/1006/product/giftcard">Köp ett
 						presentkort!</a>
 				</div>
 			</div>
@@ -582,7 +584,7 @@
 
 
 	<div class="bokaknapp">
-		<button id="iframebutton" style="background-color: #DB625A; margin-top: -35px;">Boka ditt
+		<button class="iframebutton" style="background-color: #DB625A; margin-top: -35px;">Boka ditt
 			äventyr nu</button>
 	</div>
 
@@ -609,24 +611,31 @@
 	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
 		src=https://webbshop.contrl.se/1006/product/10></iframe>
 
+	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
+		src="https://webbshop.contrl.se/1006/product/giftcard"></iframe>
+
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			var showIframeButton = document.getElementById('iframebutton');
+			var showIframeButtons = document.getElementsByClassName('iframebutton');
 			var webbshopIframe = document.getElementById('iframe');
-			showIframeButton.addEventListener('click', function (event) {
-				var iframeOrigin = new URL(webbshopIframe.src).origin;
-				console.log(webbshopIframe)
-				webbshopIframe.contentWindow.postMessage("open", iframeOrigin);
-				webbshopIframe.style.display = "block";
 
+			// Iterera över varje knapp och lägg till händelselyssnare
+			Array.from(showIframeButtons).forEach(function (button) {
+				button.addEventListener('click', function (event) {
+					var iframeOrigin = new URL(webbshopIframe.src).origin;
+					webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
+					webbshopIframe.style.display = 'block';
+				});
 			});
+
 			window.addEventListener('message', function (event) {
 				if (event.data === 'close-iframe') {
-					webbshopIframe.style.display = "none";
+					webbshopIframe.style.display = 'none';
 					webbshopIframe.src = webbshopIframe.src;
 				}
 			});
 		});
+
 
 	</script>
 </body>
