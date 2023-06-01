@@ -323,7 +323,7 @@
 					... men&nbsp;vi&nbsp;rekommenderar <br class="mobilebr"> Google&nbsp;Maps!
 				</a>
 			</div>
-			<iframe class="karta"
+			<iframe loading="lazy" class="karta"
 				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d132919.29280539582!2d16.12785865380364!3d58.63145344062151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46593619bd2f00e1%3A0xa5938d0ebbbc1da7!2zU8O2cnNqw7ZucyDDhHZlbnR5cnNwYXJr!5e0!3m2!1sen!2suk!4v1539984864433"
 				height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
 		</div>
@@ -553,10 +553,10 @@
 
 	</div>
 
-	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
-		src=https://webbshop.contrl.se/1006/product/10></iframe>
+	<iframe loading="lazy" style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;"
+		id="iframe" src=https://webbshop.contrl.se/1006/product/10></iframe>
 
-	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;"
+	<iframe loading="lazy" style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;"
 		id="presentkort-iframe" src="https://webbshop.contrl.se/1006/product/giftcard"></iframe>
 
 	<script>
@@ -565,7 +565,7 @@
 			var showIframeButtons = document.getElementsByClassName('iframebutton');
 			var webbshopIframe = document.getElementById('iframe');
 			var presentkortIframe = document.getElementById('presentkort-iframe');
-
+			console.log(document.getElementById('presentkort-iframe'))
 			// Iterera över varje knapp och lägg till händelselyssnare
 			Array.from(showIframeButtons).forEach(function (button) {
 				button.addEventListener('click', function (event) {
