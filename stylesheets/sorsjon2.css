@@ -110,6 +110,7 @@
 		margin: 0px 0px 0px 3px;
 		box-shadow: 4px 8px #373737;
 		transition: 0.08s;
+		cursor: pointer;
 	}
 
 	#newintro2 {
@@ -264,8 +265,28 @@
 	#skraddarpresentbox img {
 		height: 125px;
 		margin: 0 auto 20px;
+	}
+
+	#presentkort-button {
+		font-family: "josefin sans";
+		font-size: 23px;
+		font-weight: 500;
+		border: 3px #373737 solid;
+		border-radius: 3px;
+		box-shadow: 3px 6px #373737;
+		padding: 17px 17px 12px;
+		margin-top: 15px;
+		background: #F5CA5B;
+	}
+
+	#presentkort-button:hover {
+		margin: 15px 0px 0px 3px;
+		box-shadow: 2px 4px #373737;
+		transition: 0.08s;
+		cursor: pointer;
 
 	}
+
 
 	.mobilemap {
 		display: none;
