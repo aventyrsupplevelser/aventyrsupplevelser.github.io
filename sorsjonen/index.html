@@ -133,7 +133,8 @@
 		</div>
 
 		<div class="bokaknapp">
-			<button id="iframebutton" style="background-color: #F5CA5B" href="http://boka.sorsjonsaventyrspark.se">Book
+			<button class="iframebutton" style="background-color: #F5CA5B"
+				href="http://boka.sorsjonsaventyrspark.se">Book
 				your
 				adventure now</button>
 		</div>
@@ -169,7 +170,8 @@
 			</div>
 		</div>
 		<div class="bokaknapp">
-			<button id="iframebutton" style="background-color: #BED654;" href="http://boka.sorsjonsaventyrspark.se">Book
+			<button class="iframebutton" style="background-color: #BED654;"
+				href="http://boka.sorsjonsaventyrspark.se">Book
 				your adventure now</button>
 		</div>
 
@@ -564,11 +566,11 @@
 					var iframeOrigin;
 					if (button.id === 'presentkort-button') {
 						iframeOrigin = new URL(presentkortIframe.src).origin;
-						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
+						presentkortIframe.contentWindow.postMessage('open-en', iframeOrigin);
 						presentkortIframe.style.display = 'block';
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
-						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
+						webbshopIframe.contentWindow.postMessage('open-en', iframeOrigin);
 						webbshopIframe.style.display = 'block';
 					}
 				});
