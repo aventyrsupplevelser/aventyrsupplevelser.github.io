@@ -352,7 +352,7 @@
 					Vi säljer presentkort, där den
 					<br>som får gåvan kan boka&nbsp;tiden!
 					<br>
-					<button class="iframebutton">Köp ett
+					<button id="presentkort-button">Köp ett
 						presentkort!</button>
 				</div>
 			</div>
@@ -611,20 +611,29 @@
 	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
 		src=https://webbshop.contrl.se/1006/product/10></iframe>
 
-	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
-		src="https://webbshop.contrl.se/1006/product/giftcard"></iframe>
+	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;"
+		id="presentkort-iframe" src="https://webbshop.contrl.se/1006/product/giftcard"></iframe>
 
 	<script>
+
 		document.addEventListener('DOMContentLoaded', function () {
 			var showIframeButtons = document.getElementsByClassName('iframebutton');
 			var webbshopIframe = document.getElementById('iframe');
+			var presentkortIframe = document.getElementById('presentkort-iframe');
 
 			// Iterera över varje knapp och lägg till händelselyssnare
 			Array.from(showIframeButtons).forEach(function (button) {
 				button.addEventListener('click', function (event) {
-					var iframeOrigin = new URL(webbshopIframe.src).origin;
-					webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
-					webbshopIframe.style.display = 'block';
+					var iframeOrigin;
+					if (button.id === 'presentkort-button') {
+						iframeOrigin = new URL(presentkortIframe.src).origin;
+						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
+						presentkortIframe.style.display = 'block';
+					} else {
+						iframeOrigin = new URL(webbshopIframe.src).origin;
+						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
+						webbshopIframe.style.display = 'block';
+					}
 				});
 			});
 
@@ -632,11 +641,11 @@
 				if (event.data === 'close-iframe') {
 					webbshopIframe.style.display = 'none';
 					webbshopIframe.src = webbshopIframe.src;
+					presentkortIframe.style.display = 'none';
+					presentkortIframe.src = presentkortIframe.src;
 				}
 			});
 		});
-
-
 	</script>
 </body>
 
