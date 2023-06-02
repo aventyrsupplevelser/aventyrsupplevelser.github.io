@@ -297,7 +297,7 @@
 					Vi säljer presentkort, där den
 					<br>som får gåvan kan boka&nbsp;tiden!
 					<br>
-					<button id="presentkort-button">Köp ett
+					<button class="iframebutton" id="presentkort-button">Köp ett
 						presentkort!</button>
 				</div>
 			</div>
@@ -553,11 +553,12 @@
 
 	</div>
 
-	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;" id="iframe"
-		src=https://webbshop.contrl.se/1006/product/10></iframe>
+	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: 0; border: 0;" id="iframe"
+		src="https://webbshop.contrl.se/1006/product/10"></iframe>
 
-	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: O; border: 0;"
+	<iframe style="height:100%; width: 100%; position: fixed; display:none; top:0; left: 0; border: 0;"
 		id="presentkort-iframe" src="https://webbshop.contrl.se/1006/product/giftcard"></iframe>
+
 
 	<script>
 
@@ -565,7 +566,6 @@
 			var showIframeButtons = document.getElementsByClassName('iframebutton');
 			var webbshopIframe = document.getElementById('iframe');
 			var presentkortIframe = document.getElementById('presentkort-iframe');
-			console.log(document.getElementById('presentkort-iframe'))
 			// Iterera över varje knapp och lägg till händelselyssnare
 			Array.from(showIframeButtons).forEach(function (button) {
 				button.addEventListener('click', function (event) {
