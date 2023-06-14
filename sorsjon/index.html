@@ -30,7 +30,7 @@
 		rel="stylesheet">
 </head>
 
-<body id="body">
+<body>
 
 	<header>
 
@@ -575,12 +575,10 @@
 						iframeOrigin = new URL(presentkortIframe.src).origin;
 						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
 						presentkortIframe.style.display = 'block';
-						document.getElementsById('body').style.overflow = 'hidden'
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
 						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
 						webbshopIframe.style.display = 'block';
-						document.getElementsById('body').style.overflow = 'hidden'
 					}
 				});
 			});
@@ -591,7 +589,6 @@
 					webbshopIframe.src = webbshopIframe.src;
 					presentkortIframe.style.display = 'none';
 					presentkortIframe.src = presentkortIframe.src;
-					document.getElementsById('body').style.overflow = 'scroll'
 
 				}
 			});
