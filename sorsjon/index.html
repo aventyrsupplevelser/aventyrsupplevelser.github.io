@@ -578,7 +578,6 @@
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
 						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
-						body.style.overflow = "hidden";
 						webbshopIframe.style.display = 'block';
 					}
 				});
