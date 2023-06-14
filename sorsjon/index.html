@@ -574,7 +574,6 @@
 					if (button.id === 'presentkort-button') {
 						iframeOrigin = new URL(presentkortIframe.src).origin;
 						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
-						body.style.overflow = "hidden";
 						presentkortIframe.style.display = 'block';
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
@@ -591,7 +590,6 @@
 					webbshopIframe.src = webbshopIframe.src;
 					presentkortIframe.style.display = 'none';
 					presentkortIframe.src = presentkortIframe.src;
-					body.style.overflow = "scroll";
 				}
 			});
 		});
