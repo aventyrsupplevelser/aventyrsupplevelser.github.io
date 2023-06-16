@@ -609,6 +609,8 @@
 						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
 						presentkortIframe.style.display = 'block';
 						document.body.style.overflow = 'hidden';
+						document.body.style.height = '100vh';
+						document.body.style.width = '100vw';
 
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
@@ -626,7 +628,9 @@
 					webbshopIframe.style.display = 'none';
 					webbshopIframe.src = webbshopIframe.src;
 					presentkortIframe.style.display = 'none';
-					document.body.style.overflow = 'auto';
+					document.body.style.overflowY = 'auto';
+					document.body.style.height = '100vh';
+					document.body.style.width = '100vw';
 					presentkortIframe.src = presentkortIframe.src;
 
 				}
