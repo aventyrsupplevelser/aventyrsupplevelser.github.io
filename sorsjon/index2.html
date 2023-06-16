@@ -609,13 +609,11 @@
 						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
 						presentkortIframe.style.display = 'block';
 						document.body.style.overflow = 'hidden';
-						document.html.style.overflow = 'hidden';
 
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
 						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
 						webbshopIframe.style.display = 'block';
-						document.html.style.overflow = 'hidden';
 						document.body.style.overflow = 'hidden';
 					}
 				});
@@ -626,7 +624,6 @@
 					webbshopIframe.style.display = 'none';
 					webbshopIframe.src = webbshopIframe.src;
 					presentkortIframe.style.display = 'none';
-					document.html.style.overflow = 'auto';
 					document.body.style.overflow = 'auto';
 					presentkortIframe.src = presentkortIframe.src;
 
