@@ -104,6 +104,7 @@ strong {
 	color: black;
 	box-shadow: 5px 10px #373737;
 	font-family: "josefin sans";
+	cursor: pointer;
 }
 
 .bokaknapp button:hover {
