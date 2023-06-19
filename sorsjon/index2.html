@@ -608,12 +608,12 @@
 						iframeOrigin = new URL(presentkortIframe.src).origin;
 						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
 						presentkortIframe.style.display = 'block';
-						document.documentElement.html.style.overflow = 'hidden';
+						document.documentElement.style.overflow = 'hidden';
 					} else {
 						iframeOrigin = new URL(webbshopIframe.src).origin;
 						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
 						webbshopIframe.style.display = 'block';
-						document.documentElement.html.style.overflow = 'hidden';
+						document.documentElement.style.overflow = 'hidden';
 					}
 				});
 			});
