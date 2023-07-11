@@ -618,7 +618,16 @@
 					presentkortIframe.style.display = 'none';
 					document.documentElement.style.overflow = 'auto';
 					presentkortIframe.src = presentkortIframe.src;
-
+				}
+			});
+			window.addEventListener('message', function (event) {
+				if (event.data === 'checked-out') {
+					webbshopIframe.style.display = 'none';
+					webbshopIframe.src = webbshopIframe.src;
+					presentkortIframe.style.display = 'none';
+					document.documentElement.style.overflow = 'auto';
+					presentkortIframe.src = presentkortIframe.src;
+					window.location.href = "/tackfordinbokning"
 				}
 			});
 		});
