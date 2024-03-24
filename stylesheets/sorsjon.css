@@ -57,6 +57,31 @@ strong {
 	font-size: 30px;
 }
 
+.ad {
+	width: 100vw;
+	background: rgb(255, 255, 90);
+	opacity: 0.98;
+	text-align: center;
+	padding: 7px 10px 3px;
+	font-size: 0.8em;
+	margin-bottom: 10px;
+	position: fixed;
+	z-index: 9999;
+	top: 0px;
+}
+
+.ad span {
+	font-weight: 500;
+}
+
+.admobil {
+	display: none;
+}
+
+#headerall {
+	margin-top: 50px;
+}
+
 #logga {
 	padding-top: 1.5vw;
 }
@@ -1035,6 +1060,15 @@ strong {
 
 	p {
 		margin-top: 0.5em !important;
+	}
+
+	.adweb {
+		display: none;
+	}
+
+	.admobil {
+		padding: 10px 10px 5px;
+		display: block;
 	}
 
 	#logga {
