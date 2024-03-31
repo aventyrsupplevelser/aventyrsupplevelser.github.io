@@ -1085,6 +1085,10 @@ strong {
 		margin-top: 80px;
 	}
 
+	.bokaoverlay {
+		padding-top: 30px;
+	}
+
 	.adweb {
 		display: none;
 	}
