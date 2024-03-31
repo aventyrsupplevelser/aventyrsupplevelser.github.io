@@ -244,6 +244,20 @@ strong {
 	text-align: center;
 }
 
+#reviews {
+	display: grid;
+	grid-template-columns: 590px 590px;
+	grid-gap: 5px;
+	background-color: white;
+}
+
+#reviews img {
+	padding: 20px;
+	background-color: ;
+	width: 550px;
+	border-radius: 5px;
+}
+
 #oppettidersection>div img {
 	height: 110px;
 }
@@ -273,6 +287,11 @@ strong {
 #prisersection>div {
 	display: flex;
 	align-items: center;
+}
+
+#frisk {
+	text-align: center;
+	padding-bottom: 60px;
 }
 
 #skraddarpresentbox {
@@ -1060,6 +1079,10 @@ strong {
 
 	p {
 		margin-top: 0.5em !important;
+	}
+
+	#headerall {
+		margin-top: 80px;
 	}
 
 	.adweb {
