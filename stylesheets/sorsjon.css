@@ -66,7 +66,7 @@ strong {
 	font-size: 0.8em;
 	margin-bottom: 10px;
 	position: fixed;
-	z-index: 9999;
+	z-index: 9998;
 	top: 0px;
 }
 
@@ -1087,7 +1087,8 @@ strong {
 
 	.bokaoverlay {
 		padding-top: 0px;
-		top: 20px !important;
+		top: 0px !important;
+		z-index: 9999;
 	}
 
 	.adweb {
