@@ -1082,11 +1082,11 @@ strong {
 	}
 
 	#headerall {
-		margin-top: 80px;
+		margin-top: 40px;
 	}
 
 	.bokaoverlay {
-		padding-top: 30px;
+		padding-top: 10px;
 	}
 
 	.adweb {
@@ -1094,7 +1094,7 @@ strong {
 	}
 
 	.admobil {
-		padding: 10px 10px 5px;
+		padding: 5px 10px 1px;
 		display: block;
 	}
 
