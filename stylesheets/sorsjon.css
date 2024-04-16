@@ -1087,6 +1087,7 @@ strong {
 
 	.bokaoverlay {
 		padding-top: 0px;
+		top: 20px !important;
 	}
 
 	.adweb {
