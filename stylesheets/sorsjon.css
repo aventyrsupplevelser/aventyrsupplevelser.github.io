@@ -58,6 +58,7 @@ strong {
 }
 
 .ad {
+	display: none;
 	width: 100vw;
 	background: rgb(255, 255, 90);
 	opacity: 0.98;
@@ -80,6 +81,7 @@ strong {
 
 #headerall {
 	margin-top: 50px;
+
 }
 
 #logga {
@@ -244,18 +246,63 @@ strong {
 	text-align: center;
 }
 
+#newnav div {
+	color: black;
+	background: white;
+	box-shadow: 5px 3px black;
+	padding: 5px 5px 0px;
+}
+
+#sellingpoints {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	margin: 0 auto;
+	max-width: 1200px;
+	line-height: 3em;
+	text-align: center;
+	font-size: 18px;
+	margin-top: 190px;
+
+}
+
+#sellingpoints h1 {
+	background: rgb(248, 248, 248);
+	color: rgb(74, 32, 0);
+	width: fit-content;
+	padding: 12px 15px 5px;
+	box-shadow: 5px 4px rgba(0, 0, 0, 0.817);
+	border: 1px solid rgba(229, 229, 229, 0.718);
+	border-radius: 2px;
+}
+
+#background-video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	object-fit: cover;
+}
+
 #reviews {
-	display: grid;
-	grid-template-columns: 590px 590px;
-	grid-gap: 5px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 30px;
+	justify-content: start;
 	background-color: white;
+	margin: 70px auto 0px;
+	max-width: 1200px;
 }
 
 #reviews img {
-	padding: 20px;
+	padding: 10px;
 	background-color: ;
-	width: 550px;
-	border-radius: 5px;
+	width: ;
+	height: 100px;
+	border: 2px solid black;
+	box-shadow: 3px 3px black;
 }
 
 #oppettidersection>div img {
@@ -1082,7 +1129,7 @@ strong {
 	}
 
 	#headerall {
-		margin-top: 40px;
+		margin-top: 15px;
 	}
 
 	.bokaoverlay {
@@ -1097,7 +1144,7 @@ strong {
 
 	.admobil {
 		padding: 5px 10px 1px;
-		display: block;
+		display: none;
 	}
 
 	#logga {
