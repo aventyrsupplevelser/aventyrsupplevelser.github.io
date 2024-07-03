@@ -71,6 +71,10 @@ strong {
 	top: 0px;
 }
 
+.formkit-form {
+	padding-top: 5px;
+}
+
 .ad span {
 	font-weight: 500;
 }
@@ -81,11 +85,41 @@ strong {
 
 #headerall {
 	margin-top: 50px;
+}
 
+.formkit-form[data-uid="4d4b9820ee"] .formkit-field .formkit-input {
+	font-family: "Josefin Sans";
+	padding: 9px 12px 4px !important;
+}
+
+.formkit-form[data-uid="4d4b9820ee"] .formkit-submit>span {
+	font-family: "Josefin Sans";
+	padding: 11px 12px 7px !important;
 }
 
 #logga {
 	padding-top: 1.5vw;
+}
+
+#newnav {
+	max-width: 1200px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 20px;
+	font-weight: 500;
+	margin: 20px 0px 0px;
+	padding-right: 20px;
+}
+
+#newnav a {
+	text-decoration: none;
+	border: none;
+	transition: 0.1s;
+}
+
+#newnav a:hover {
+	background: rgb(233, 233, 233);
+	transition: 0.1s;
 }
 
 .navbutton {
@@ -1061,6 +1095,10 @@ strong {
 
 @media (max-width: 690px) {
 
+	#newnav {
+		font-size: 18px;
+	}
+
 
 	#oppettidersection h2 {
 		padding: 0px;
@@ -1131,6 +1169,28 @@ strong {
 	#headerall {
 		margin-top: 15px;
 	}
+
+	#newnav {
+		gap: 10px 10px;
+	}
+
+	#newnav div {
+		box-shadow: 3px 2px;
+	}
+
+	#sellingpoints {
+		align-items: center;
+		margin-top: 70px;
+	}
+
+	#sellingpoints h1 {
+		width: 60vw;
+		padding: 12px 3vw 5px;
+		font-size: 18px;
+		line-height: 1.3em;
+		font-weight: 500;
+	}
+
 
 	.bokaoverlay {
 		padding-top: 0px;
@@ -1391,6 +1451,18 @@ strong {
 		font-size: 20px;
 		padding: 8px 12px 5px;
 	}
+
+	#newnav {
+		display: flex;
+		flex-wrap: wrap;
+		text-align: center;
+		gap: 10px;
+		justify-items: center;
+		grid-auto-flow: row dense;
+
+	}
+
+	#newnav div {}
 
 }
 
