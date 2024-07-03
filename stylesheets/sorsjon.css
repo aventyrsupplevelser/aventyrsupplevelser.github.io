@@ -97,10 +97,6 @@ strong {
 	padding: 11px 12px 7px !important;
 }
 
-.formkit-form[data-uid="4d4b9820ee"] .formkit-container {
-	margin-bottom: 50px !important;
-}
-
 #logga {
 	padding-top: 1.5vw;
 }
@@ -1443,6 +1439,10 @@ strong {
 		display: flex;
 		flex-direction: column;
 		margin-bottom: 30px;
+	}
+
+	.formkit-form[data-uid="4d4b9820ee"] .formkit-container {
+		margin-bottom: 50px !important;
 	}
 
 }
