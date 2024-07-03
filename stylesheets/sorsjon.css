@@ -97,6 +97,10 @@ strong {
 	padding: 11px 12px 7px !important;
 }
 
+.formkit-form[data-uid="4d4b9820ee"] .formkit-container {
+	margin-bottom: 30px !important;
+}
+
 #logga {
 	padding-top: 1.5vw;
 }
