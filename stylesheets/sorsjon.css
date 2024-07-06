@@ -365,7 +365,7 @@ strong {
 }
 
 #fourthreviews {
-	margin: 140px auto -20px;
+	margin: -30px auto 140px;
 
 }
 
@@ -1046,6 +1046,10 @@ strong {
 		height: calc(8vw + 50px);
 	}
 
+	#fourthreviews {
+		margin-top: -50px;
+	}
+
 }
 
 @media (max-width: 800px) {
@@ -1226,7 +1230,7 @@ strong {
 	}
 
 	.reviews img {
-		width: 90vw;
+		width: 93vw;
 		padding: 5px;
 		box-shadow: 2px 2px;
 	}
@@ -1235,7 +1239,6 @@ strong {
 		margin-bottom: 80px;
 	}
 
-	#fourthreviews,
 	#twopointfivereviews {
 		margin-top: 100px;
 	}
