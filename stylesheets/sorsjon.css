@@ -17,6 +17,7 @@ body {
 	letter-spacing: 0.02em;
 	line-height: 1.6em;
 	overflow-x: hidden;
+	background: rgb(239, 238, 227);
 }
 
 
@@ -87,6 +88,17 @@ strong {
 	margin-top: 50px;
 }
 
+#logga {
+	transform: rotate(-25deg);
+	width: clamp(220px, 35vw, 393px);
+	margin-top: 20px;
+	margin-left: 50px;
+	animation-name: recolor;
+	animation-duration: 20s;
+	animation-iteration-count: infinite;
+	padding-top: 1.5vw;
+}
+
 .formkit-form[data-uid="4d4b9820ee"] .formkit-field .formkit-input {
 	font-family: "Josefin Sans";
 	padding: 9px 12px 4px !important;
@@ -97,57 +109,100 @@ strong {
 	padding: 11px 12px 7px !important;
 }
 
-#logga {
-	padding-top: 1.5vw;
-}
-
 #newnav {
 	max-width: 1200px;
 	display: flex;
 	justify-content: flex-end;
-	gap: 20px;
+	gap: clamp(10px, 1.3vw, 20px);
 	font-weight: 500;
-	margin: 20px 0px 0px;
+	margin: 20px auto 0px;
 	padding-right: 20px;
+	font-size: clamp(16px, 2vw, 23px);
 }
 
 #newnav a {
 	text-decoration: none;
 	border: none;
 	transition: 0.1s;
+	box-shadow: 5px 3px black;
+	padding: 5px 5px 2px;
+	color: black;
+	background: white;
+	line-height: 1.5em;
 }
 
 #newnav a:hover {
-	background: rgb(233, 233, 233);
+	transition: 0.1s;
+	transform: rotate(3deg) !important;
+}
+
+#newnav a:active {
+	transform: rotate(180deg) !important;
 	transition: 0.1s;
 }
 
-.navbutton {
-	box-sizing: border-box;
-	border: none;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+#navboka {
+	display: none;
 }
 
-#nav>div {
-	width: min-content;
+@-moz-keyframes tilt {
+	50% {
+		-moz-transform: rotate(-2deg);
+	}
 }
 
-.navbutton:hover {
-	border: none;
+@-webkit-keyframes tilt {
+	50% {
+		-webkit-transform: rotate(-2deg);
+	}
 }
 
-.navbutton:hover .navimgline {
-	opacity: 1;
-	transition: 0.3s;
+@keyframes tilt {
+	50% {
+		-webkit-transform: rotate(-2deg);
+		transform: rotate(-2deg);
+
+	}
 }
 
-.navimgline {
-	padding-top: 10px;
-	opacity: 0;
-	height: 4px;
-	width: 90%;
+@-moz-keyframes tilttitle {
+	50% {
+		-moz-transform: rotate(-30deg);
+	}
+}
+
+@-webkit-keyframes tilttitle {
+	50% {
+		-webkit-transform: rotate(-30deg);
+	}
+}
+
+@keyframes tilttitle {
+	50% {
+		-webkit-transform: rotate(-30deg);
+		transform: rotate(-30deg);
+
+	}
+}
+
+@-moz-keyframes recolor {
+	50% {
+		-moz-filter: hue-rotate(30deg)
+	}
+}
+
+@-webkit-keyframes recolor {
+	50% {
+		-webkit-filter: hue-rotate(30deg);
+	}
+}
+
+@keyframes recolor {
+	50% {
+		-webkit-filter: hue-rotate(30deg);
+		filter: hue-rotate(30deg);
+
+	}
 }
 
 .bokaknapp {
@@ -173,6 +228,10 @@ strong {
 	box-shadow: 4px 8px #373737;
 	transition: 0.08s;
 	cursor: pointer;
+}
+
+#forwho {
+	margin-top: 50px;
 }
 
 #newintro2 {
@@ -210,48 +269,6 @@ strong {
 	width: 100%;
 }
 
-#newintro {
-	font-size: 25px;
-	font-weight: 500;
-	font-family: 'Josefin Sans';
-	line-height: 1.4em;
-}
-
-#newintro>div {
-	padding: 70px 0px;
-}
-
-.newintrotext {
-	display: grid;
-	width: 900px;
-	margin: 0 auto;
-	grid-template-columns: 1fr 1fr;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-}
-
-#newintro img {
-	width: 400px;
-}
-
-#introseriesection {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-gap: 50px;
-}
-
-#introseriesection>div {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-#introseriesection img {
-	border-radius: 3px;
-	width: 100%;
-	padding-bottom: 15px;
-}
 
 .infographic {
 	width: 95%;
@@ -280,13 +297,6 @@ strong {
 	text-align: center;
 }
 
-#newnav div {
-	color: black;
-	background: white;
-	box-shadow: 5px 3px black;
-	padding: 5px 5px 0px;
-}
-
 #sellingpoints {
 	display: flex;
 	flex-direction: column;
@@ -297,7 +307,6 @@ strong {
 	text-align: center;
 	font-size: 18px;
 	margin-top: 190px;
-
 }
 
 #sellingpoints h1 {
@@ -307,7 +316,6 @@ strong {
 	padding: 12px 15px 5px;
 	box-shadow: 5px 4px rgba(0, 0, 0, 0.817);
 	border: 1px solid rgba(229, 229, 229, 0.718);
-	border-radius: 2px;
 }
 
 #background-video {
@@ -320,23 +328,45 @@ strong {
 	object-fit: cover;
 }
 
-#reviews {
+.reviews {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 30px;
-	justify-content: start;
-	background-color: white;
-	margin: 70px auto 0px;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	padding: 0px 20px;
+	gap: 20px;
 	max-width: 1200px;
 }
 
-#reviews img {
+.reviews img {
 	padding: 10px;
-	background-color: ;
-	width: ;
+	width: auto;
 	height: 100px;
-	border: 2px solid black;
 	box-shadow: 3px 3px black;
+	background: white;
+	border: 2px solid rgba(0, 0, 0, 0.572);
+}
+
+#firstreviews {
+	margin: 120px auto 0px;
+}
+
+#secondreviews {
+	margin: 40px auto 120px;
+}
+
+#twopointfivereviews {
+	margin: 140px auto -10px;
+}
+
+#thirdreviews {
+	margin: 40px auto 30px;
+}
+
+#fourthreviews {
+	margin: 140px auto -20px;
+
 }
 
 #oppettidersection>div img {
@@ -354,8 +384,6 @@ strong {
 	display: none;
 }
 
-
-
 .oppetmobilebr {
 	display: none;
 }
@@ -372,7 +400,7 @@ strong {
 
 #frisk {
 	text-align: center;
-	padding-bottom: 60px;
+	padding: 0px 20px 60px;
 }
 
 #skraddarpresentbox {
@@ -413,11 +441,9 @@ strong {
 
 }
 
-
 .mobilemap {
 	display: none;
 }
-
 
 #drawnmap img {
 	width: 50%;
@@ -529,46 +555,19 @@ strong {
 		-webkit-text-size-adjust: none;
 	}
 
-	.mobilpadding {
-		padding: 0px 10px;
+	#sellingpoints h1 {
+		line-height: 1.2em;
+		font-size: clamp(20px, 3vw, 34px);
+		padding: calc(2vw - 5px) 15px calc(1.4vw - 5px);
 	}
 
-	.whiteback {
-		padding: 0px 0px;
+	.reviews {
+		margin-bottom: 60px;
 	}
 
-	.greyback {
-		padding-left: 1000px;
-		padding-right: 1000px;
-		margin-left: -1000px;
-		margin-right: -1000px;
-	}
-
-	#logga {
-		width: 100vw;
-		margin: 0 auto;
-	}
-
-	#nav {
-		padding: 0px;
-		margin: calc(10px + 2.5vw) 0px 25px 0px;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-evenly;
-	}
-
-	.navbutton {
-		box-sizing: border-box;
-		border: none;
-		padding: 0px calc(5px + 5vw) 10px calc(5px + 5vw);
-	}
-
-	.navbutton:hover {
-		border: none;
-	}
-
-	.navimg {
-		height: calc(23px + 3vw);
+	.reviews img {
+		width: 43vw;
+		height: auto;
 	}
 
 	#newintro2 {
@@ -581,32 +580,6 @@ strong {
 		padding: 8px 10px 6px;
 	}
 
-	#introseriesection>div>div {
-		display: none;
-	}
-
-	#introseriesection {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-column-gap: 0.5vw;
-		grid-row-gap: 15px;
-		padding-bottom: 65px;
-		padding-top: 60px;
-	}
-
-	.introserienarrow {
-		grid-column-start: 1;
-		grid-column-end: span 2;
-		padding: 0px 15px 25px 15px;
-	}
-
-	#introseriesection>div {
-		display: block;
-	}
-
-	#introseriesection img {
-		padding: 0px;
-	}
 
 	#howtosection {
 		text-align: center;
@@ -635,6 +608,10 @@ strong {
 		flex-direction: row-reverse;
 	}
 
+	#psbilligt {
+		display: none;
+	}
+
 	.narrowbr {
 		display: none;
 	}
@@ -643,8 +620,13 @@ strong {
 		display: none;
 	}
 
+	#skratt {
+		padding-left: 10px;
+		margin: 70px 0px 0px;
+	}
+
 	#infographicssection {
-		padding-top: 140px;
+		padding-top: 0px;
 		padding-bottom: 90px;
 	}
 
@@ -728,32 +710,9 @@ strong {
 		padding-right: 40px;
 	}
 
-	#tipssection>div {
-		display: grid;
-		grid-template-columns: calc(160px + 15vw) calc(160px + 15vw);
-		grid-gap: 20px calc(10px + 7vw);
-		text-align: center;
-		width: calc(340px + 36vw);
-		margin: 0 auto;
-		padding-top: 150px;
-		padding-bottom: 0px;
-	}
-
-	#tipssection>div>div {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding-bottom: 30px;
-	}
-
-	#tipssection>div>div>img {
-		height: calc(85px + 10vw);
-		padding-bottom: 20px;
-	}
-
 	#hittasection {
 		justify-content: space-evenly;
-		padding-top: 120px;
+		padding-top: 0px;
 		padding-bottom: 0px;
 	}
 
@@ -829,28 +788,13 @@ strong {
 		max-width: none;
 	}
 
-	.greyback {
-		padding-right: 1000px;
-		padding-left: 1000px;
-		margin-left: -1000px;
-		margin-right: -1000px;
+	#forwho text {
+		font-size: 64px;
 	}
 
-	#logga {
-		width: 1000px;
-		margin: 0 auto;
-	}
-
-	#nav {
-		width: 1200px;
-		margin: 0 auto;
-		padding: 40px 0px 40px 0px;
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.navimg {
-		height: 49px;
+	#skratt {
+		margin-top: 80px;
+		margin-bottom: -20px;
 	}
 
 	a.anchor {
@@ -859,21 +803,13 @@ strong {
 		top: -50px;
 	}
 
-	#introseriesection {
-		padding-top: 120px;
-		padding-bottom: 120px;
-	}
-
-	.introserienarrow {
-		display: none !important;
-	}
 
 	#howtosection {
 		display: flex;
 		justify-content: space-between;
 		text-align: center;
 		margin-left: -50px;
-		padding-top: 120px;
+		padding-top: 140px;
 		padding-bottom: 110px;
 	}
 
@@ -892,19 +828,30 @@ strong {
 		padding-bottom: 20px;
 	}
 
+	#psbilligt {
+		display: flex;
+		justify-content: right;
+		padding-right: 30px;
+		margin-bottom: 50px;
+		margin-top: -100px;
+		transform: rotate(7.5deg);
+		font-size: 18px;
+		line-height: 1.5em;
+	}
+
 	.narrowbr {
 		display: none;
 	}
 
 	#infographicssection {
-		padding-top: 150px;
-		padding-bottom: 90px;
+		padding-top: 50px;
+		padding-bottom: 0px;
 	}
 
 	#harfinnsocksasection {
 		grid-template-columns: 1fr 1fr 1fr;
 		max-width: none;
-		margin: 0 auto;
+		margin: 80px auto 0px;
 	}
 
 	#oppettidersection>div {
@@ -979,36 +926,13 @@ strong {
 		padding-right: 40px;
 	}
 
-
-	#tipssection>div {
-		display: grid;
-		grid-template-columns: 450px 450px;
-		grid-gap: 50px 0px;
-		text-align: center;
-		padding-top: 140px;
-		padding-bottom: 20px;
-		margin: 0 auto;
-		width: 950px;
-	}
-
-	#tipssection>div>div {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	#tipssection>div>div>img {
-		height: 200px;
-		padding-bottom: 20px;
-	}
-
 	.mobilebr {
 		display: none;
 	}
 
 	#hittasection {
-		padding-top: 60px;
-		padding-bottom: 50px;
+		padding-top: 0px;
+		padding-bottom: 20px;
 	}
 
 	#faqsection {
@@ -1038,6 +962,74 @@ strong {
 
 @media (max-width: 1000px) {
 
+	#logga {
+		margin: 0 auto;
+		transform: rotate(-10deg);
+		animation: none !important;
+		width: clamp(260px, 70vw, 430px);
+	}
+
+	#navboka a,
+	#newnav {
+		font-size: clamp(14px, 3.5vw, 20px);
+		line-height: 1.5em;
+	}
+
+	#newnav {
+		margin: 20px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: start;
+		max-width: clamp(200px, 45vw, 230px);
+	}
+
+	#newnav a {
+		box-shadow: 0px 0px 0px;
+	}
+
+	#bokaimenyn {
+		display: none;
+	}
+
+	#navboka {
+		display: block;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		margin: 20px;
+		color: black;
+		background: #f6ffa9;
+		filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.184));
+		border-radius: 0;
+		padding: 5px 5px 2px;
+		width: fit-content;
+		font-weight: 500;
+		font-size: 14.5px;
+		line-height: 1.5em;
+		box-shadow: 3px 3px black;
+	}
+
+	#newnav a {
+		box-shadow: 3px 3px black;
+	}
+
+	#navboka a {
+		border: 0px;
+	}
+
+	#secondreviews {
+		margin-bottom: 120px;
+	}
+
+	#matsäck text {
+		font-size: clamp(110px, 2vw, 80px);
+	}
+
+	#matsäck {
+		margin: 30px 0px;
+	}
+
 	#newintro2>div>div {
 		font-size: 20px;
 		padding: 5px 10px 2px;
@@ -1047,7 +1039,7 @@ strong {
 		display: flex;
 		flex-direction: column;
 		gap: 40px;
-		padding: 0px;
+		padding: 30px 0px 60px;
 	}
 
 	#skraddarpresentbox img {
@@ -1057,6 +1049,28 @@ strong {
 }
 
 @media (max-width: 800px) {
+
+	#navboka,
+	#newnav a,
+	#sellingpoints h1 {
+		box-shadow: none;
+	}
+
+	#sellingpoints {
+		margin-top: 130px;
+	}
+
+	#sellingpoints h1 {
+		margin: 10px 0px;
+	}
+
+	.reviews {
+		gap: 25px;
+	}
+
+	.reviews img {
+		width: 70vw;
+	}
 
 	#newintro2 {
 		grid-template-columns: 1fr;
@@ -1095,10 +1109,21 @@ strong {
 
 @media (max-width: 690px) {
 
-	#newnav {
-		font-size: 18px;
+	.reviews {
+		margin-bottom: 30px;
 	}
 
+	.reviews img {
+		width: 80vw;
+	}
+
+	#forwho {
+		margin: 40px 0px 10px -0px;
+	}
+
+	#skratt {
+		margin: 60px 0px 10px -9px;
+	}
 
 	#oppettidersection h2 {
 		padding: 0px;
@@ -1111,8 +1136,6 @@ strong {
 	.midbr {
 		display: none;
 	}
-
-	/* change all summer for fall, and fall for summer (manually one by one, then change order of divs in HTML for mobile),  //  */
 
 	.winter,
 	.spring,
@@ -1166,31 +1189,56 @@ strong {
 		margin-top: 0.5em !important;
 	}
 
+	#newnav,
+	#navboka {
+		margin: 7px;
+	}
+
+	#logga {
+		transform: rotate(-15deg);
+	}
+
 	#headerall {
 		margin-top: 15px;
 	}
 
-	#newnav {
-		gap: 10px 10px;
-	}
-
-	#newnav div {
-		box-shadow: 3px 2px;
-	}
-
 	#sellingpoints {
 		align-items: center;
-		margin-top: 70px;
+		margin-top: 100px;
+	}
+
+	#sellingpoints span {
+		background: rgb(255, 255, 255);
 	}
 
 	#sellingpoints h1 {
-		width: 60vw;
-		padding: 12px 3vw 5px;
-		font-size: 18px;
+		width: fit-content;
+		padding: 5px 5px 2px;
+		font-size: clamp(14px, 3.9vw, 20px);
 		line-height: 1.3em;
 		font-weight: 500;
+		box-shadow: 0px 0px rgba(0, 0, 0, 0.817);
+		margin: 7px 0px;
 	}
 
+	.reviews {
+		padding: 0px;
+	}
+
+	.reviews img {
+		width: 90vw;
+		padding: 5px;
+		box-shadow: 2px 2px;
+	}
+
+	#secondreviews {
+		margin-bottom: 80px;
+	}
+
+	#fourthreviews,
+	#twopointfivereviews {
+		margin-top: 100px;
+	}
 
 	.bokaoverlay {
 		padding-top: 0px;
@@ -1207,46 +1255,8 @@ strong {
 		display: none;
 	}
 
-	#logga {
-		width: 100%;
-	}
-
-	#nav {
-		margin: calc(10px + 2.5vw) 0px 4vw 0px;
-	}
-
-	.navimg {
-		height: 7.5vw;
-		padding-bottom: 15px;
-	}
-
-	.navbutton {
-		padding: 0px 3vw;
-	}
-
-	.navimgline {
-		display: none;
-	}
-
-	#introseriesection {
-		grid-column-gap: 0.6vw;
-		padding-top: 0px;
-		padding-bottom: 55px;
-	}
-
-	#introseriesection img {
-		border-radius: 1px;
-		width: 49.70vw;
-		height: 49.70vw;
-		object-fit: cover;
-	}
-
-	.introserienarrow {
-		padding: 0px 15px 15px 15px;
-	}
-
 	#howtosection {
-		padding-top: 50px;
+		padding-top: 80px;
 		padding-bottom: 50px;
 	}
 
@@ -1276,7 +1286,7 @@ strong {
 	}
 
 	#infographicssection {
-		padding-top: 100px;
+		padding-top: 20px;
 		padding-bottom: 70px;
 	}
 
@@ -1345,28 +1355,8 @@ strong {
 		line-height: 1.4em;
 	}
 
-
-	#tipssection>div {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		width: 95vw;
-		justify-content: space-evenly;
-		padding-bottom: 0px;
-		padding-top: 120px;
-	}
-
-	#tipssection>div>div {
-		width: calc(200px + 10vw);
-		padding-bottom: 40px;
-	}
-
-	#tipssection>div>div>img {
-		height: calc(80px + 12vw);
-	}
-
 	#hittasection {
-		padding-top: 90px;
+		padding-top: 0px;
 		padding-bottom: 20px;
 	}
 
@@ -1449,28 +1439,23 @@ strong {
 
 @media (max-width: 500px) {
 
+	#newnav {
+		gap: 7px;
+	}
 
 
 	#newintro2>div>div {
 		font-size: 20px;
 		padding: 8px 12px 5px;
 	}
-
-	#newnav {
-		display: flex;
-		flex-wrap: wrap;
-		text-align: center;
-		gap: 10px;
-		justify-items: center;
-		grid-auto-flow: row dense;
-
-	}
-
-	#newnav div {}
-
 }
 
 @media (max-width: 466px) {
+
+	.reviews {
+		gap: 15px;
+		margin-bottom: 10px;
+	}
 
 	#newintro2 {
 		grid-gap: 10px;
