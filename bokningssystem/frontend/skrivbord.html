@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sörsjöns Äventyrspark – Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Josefin Sans", sans-serif;
+            background: rgb(243, 231, 213);
+        }
+
+        .header {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header h1 {
+            margin: 40px 0px;
+            font-size: 50px;
+            text-align: center;
+            font-weight: 500;
+            font-weight: 700;
+            line-height: 1.4em;
+        }
+
+        .nav {
+            background-color: white;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .nav-item a:hover {
+            border-bottom-color: #333;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Sörsjöns Äventyrspark – Bokningssystemet</h1>
+    </div>
+
+    <nav class="nav">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="/bokningssystem/frontend/admin.html">Tider</a></li>
+            <li class="nav-item"><a href="/bokningssystem/frontend/skapabokning.html">Skapa bokning</a></li>
+            <li class="nav-item"><a href="/bokningar">Bokningar</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <!-- Content will be loaded here -->
+    </div>
+</body>
+
+</html>

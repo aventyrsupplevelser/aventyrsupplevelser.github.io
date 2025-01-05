@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skapa Bokning - Sörsjön</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body {
+            font-family: "Josefin Sans", sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .calendar-container {
+            font-family: "Josefin Sans", sans-serif;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+            padding: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: auto;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            background: #f0f0f0;
+            /* All dates start as grey */
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .calendar-day:disabled {
+            background-color: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.available {
+            background-color: white;
+            border-color: #1e8e3e;
+            color: #1e8e3e;
+        }
+
+        .calendar-day.selected {
+            background-color: #1e8e3e;
+            color: white;
+            border-color: #1e8e3e;
+        }
+
+        .calendar-legend {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .booking-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .time-slot.selected {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .ticket-selector {
+            display: grid;
+            grid-template-columns: auto 120px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ticket-selector select {
+            width: 80px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Skapa Bokning</h1>
+
+    <form id="bookingForm">
+        <div class="booking-section">
+            <h2>1. Välj datum</h2>
+            <div class="form-group">
+            </div>
+        </div>
+
+        <div class="booking-section">
+            <h2>2. Välj tid</h2>
+            <div class="time-slots" id="timeSlots">
+                <!-- Time slots will be populated here -->
+            </div>
+        </div>
+        <div class="booking-section">
+            <h2>3. Biljetter</h2>
+            <div class="ticket-selector">
+                <label>Vuxen (15+ år)</label>
+                <select name="adultTickets">
+                    <option value="0">0</option>
+                </select>
+            </div>
+            <div class="ticket-selector">
+                <label>Ungdom (7-14 år)</label>
+                <select name="youthTickets">
+                    <option value="0">0</option>
+                </select>
+            </div>
+            <div class="ticket-selector">
+                <label>Barn (0-6 år)</label>
+                <select name="childTickets">
+                    <option value="0">0</option>
+                </select>
+            </div>
+        </div>
+        <div class="booking-section">
+            <h2>4. Heldag</h2>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="fullDay">
+                    Lägg till heldag (endast tillgängligt för vissa tider)
+                </label>
+            </div>
+        </div>
+        <div class="booking-section">
+            <h2>5. Kundinformation</h2>
+            <div class="form-group">
+                <label>Namn</label>
+                <input type="text" name="customerName" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="customerEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Telefon</label>
+                <input type="tel" name="customerPhone" required>
+            </div>
+        </div>
+
+
+
+
+
+        <div id="message"></div>
+
+        <button type="submit">Skapa bokning</button>
+    </form>
+
+    <script>
+        // Initialize Supabase client
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
+        let currentAvailableSpots = 0;
+
+        async function checkAuth() {
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        class BookingCalendar {
+            constructor(container) {
+                this.container = container;
+                this.selectedDate = null;
+                this.availableDates = new Set();
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.init();
+            }
+
+            async init() {
+                this.render();
+                await this.fetchAvailableDates();
+            }
+
+            async fetchAvailableDates() {
+                try {
+                    const year = this.currentMonth.getFullYear();
+                    const month = this.currentMonth.getMonth() + 1;
+
+                    // Create start and end of month dates
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
+                    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+
+                    const { data: slots, error } = await supabaseClient
+                        .from('time_slots')
+                        .select('start_time')
+                        .gte('start_time', startOfMonth.toISOString())
+                        .lte('start_time', endOfMonth.toISOString())
+                        .gt('available_spots', 0);
+
+                    if (error) throw error;
+
+                    this.availableDates.clear();
+                    slots?.forEach(slot => {
+                        const date = new Date(slot.start_time);
+                        const dateStr = date.toISOString().split('T')[0];
+                        this.availableDates.add(dateStr);
+                    });
+
+                    this.updateAvailableDays();
+                } catch (error) {
+                    console.error('Error fetching available dates:', error);
+                }
+            }
+
+            render() {
+                this.container.innerHTML = `
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth">&larr;</button>
+                    <h3>${this.getMonthDisplay()}</h3>
+                    <button id="nextMonth">&rarr;</button>
+                </div>
+                <div class="calendar-grid">
+                    ${this.renderWeekdays()}
+                    ${this.renderDays()}
+                </div>
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: #e6f4ea;"></div>
+                        <span>Tillgänglig</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: #f0f0f0;"></div>
+                        <span>Ej tillgänglig</span>
+                    </div>
+                </div>
+            </div>
+        `;
+                this.attachEventListeners();
+            }
+
+            renderWeekdays() {
+                const weekdays = ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör'];
+                return weekdays.map(day =>
+                    `<div class="calendar-weekday">${day}</div>`
+                ).join('');
+            }
+
+            renderDays() {
+                const days = [];
+                const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
+
+                // Empty cells for days before the first day of month
+                for (let i = 0; i < firstDay; i++) {
+                    days.push('<div></div>');
+                }
+
+                // Add all days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    const isPast = new Date(dateStr) < new Date(new Date().toDateString());
+
+                    days.push(`
+                <button 
+                    class="calendar-day" 
+                    data-date="${dateStr}"
+                    ${isPast ? 'disabled' : ''}
+                >${day}</button>
+            `);
+                }
+
+                return days.join('');
+            }
+
+            attachEventListeners() {
+                this.container.querySelector('#prevMonth').addEventListener('click', () => {
+                    this.currentMonth.setMonth(this.currentMonth.getMonth() - 1);
+                    this.init();
+                });
+
+                this.container.querySelector('#nextMonth').addEventListener('click', () => {
+                    this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
+                    this.init();
+                });
+
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    day.addEventListener('click', (e) => {
+                        if (!e.target.disabled) {
+                            const dateStr = e.target.dataset.date;
+                            this.selectDate(dateStr);
+                        }
+                    });
+                });
+            }
+
+            updateAvailableDays() {
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    const dateStr = day.dataset.date;
+                    if (this.availableDates.has(dateStr)) {
+                        day.classList.add('available');
+                    } else {
+                        day.classList.remove('available');
+                    }
+                });
+            }
+
+            selectDate(dateStr) {
+                if (this.availableDates.has(dateStr)) {
+                    this.container.querySelectorAll('.calendar-day').forEach(day => {
+                        day.classList.remove('selected');
+                    });
+
+                    const selectedButton = this.container.querySelector(`[data-date="${dateStr}"]`);
+                    if (selectedButton) {
+                        selectedButton.classList.add('selected');
+                    }
+
+                    this.selectedDate = dateStr;
+                    loadTimeSlots(dateStr);
+                }
+            }
+
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+        }
+
+        async function loadTimeSlots(dateStr) {
+            try {
+                // Create the time range in local timezone
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select('*')
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
+                    .gt('available_spots', 0)
+                    .order('start_time');
+
+                if (error) throw error;
+
+                document.getElementById('timeSlots').innerHTML = slots
+                    .map(slot => {
+                        // Adjust the displayed time for timezone
+                        const localTime = new Date(slot.start_time);
+                        return `
+                    <div class="time-slot"
+                         data-slot-id="${slot.id}"
+                         data-allows-fullday="${slot.allow_full_day}"
+                         data-available-spots="${slot.available_spots}"
+                         onclick="selectTimeSlot(this)">
+                        ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <br>
+                        ${slot.available_spots} platser
+                    </div>
+                `;
+                    }).join('') || '<p>Inga lediga tider detta datum</p>';
+
+            } catch (error) {
+                console.error('Error loading time slots:', error);
+                document.getElementById('timeSlots').innerHTML =
+                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
+            }
+        }
+
+        function selectTimeSlot(element) {
+            document.querySelectorAll('.time-slot').forEach(slot =>
+                slot.classList.remove('selected'));
+            element.classList.add('selected');
+
+            currentAvailableSpots = parseInt(element.dataset.availableSpots);
+            updateTicketDropdowns();
+
+            const allowsFullDay = element.dataset.allowsFullday === 'true';
+            const fullDayCheckbox = document.querySelector('input[name="fullDay"]');
+            fullDayCheckbox.disabled = !allowsFullDay;
+            if (!allowsFullDay) fullDayCheckbox.checked = false;
+        }
+
+        function updateTicketDropdowns() {
+            const adultSelect = document.querySelector('select[name="adultTickets"]');
+            const youthSelect = document.querySelector('select[name="youthTickets"]');
+            const childSelect = document.querySelector('select[name="childTickets"]');
+
+            const adultValue = parseInt(adultSelect.value) || 0;
+            const youthValue = parseInt(youthSelect.value) || 0;
+            const childValue = parseInt(childSelect.value) || 0;
+
+            const remainingSpots = currentAvailableSpots - (adultValue + youthValue + childValue);
+
+            updateDropdownOptions(adultSelect, adultValue, remainingSpots);
+            updateDropdownOptions(youthSelect, youthValue, remainingSpots);
+            updateDropdownOptions(childSelect, childValue, remainingSpots);
+        }
+
+        function updateDropdownOptions(select, currentValue, remainingSpots) {
+            const totalAvailable = remainingSpots + currentValue;
+            select.innerHTML = '';
+
+            const zeroOption = document.createElement('option');
+            zeroOption.value = 0;
+            zeroOption.textContent = 0;
+            select.appendChild(zeroOption);
+
+            for (let i = 1; i <= totalAvailable; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentValue) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const selects = ['adultTickets', 'youthTickets', 'childTickets'].map(name =>
+                document.querySelector(`select[name="${name}"]`)
+            );
+
+            selects.forEach(select => {
+                select.addEventListener('change', updateTicketDropdowns);
+            });
+
+            const calendarContainer = document.createElement('div');
+            calendarContainer.id = 'calendar-container';
+            const formGroup = document.querySelector('.booking-section .form-group');
+            formGroup.appendChild(calendarContainer);
+
+            // Initialize the calendar
+            const calendar = new BookingCalendar(calendarContainer);
+        });
+
+        // Handle form submission
+        document.getElementById('bookingForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!await checkAuth()) return;
+
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            if (!selectedSlot) {
+                showMessage('Välj en tid först', 'error');
+                return;
+            }
+
+            const formData = new FormData(this);
+            const totalTickets =
+                parseInt(formData.get('adultTickets')) +
+                parseInt(formData.get('youthTickets')) +
+                parseInt(formData.get('childTickets'));
+
+            if (totalTickets === 0) {
+                showMessage('Välj minst en biljett', 'error');
+                return;
+            }
+
+            try {
+                const { data: slot, error: slotError } = await supabaseClient
+                    .from('time_slots')
+                    .select('available_spots')
+                    .eq('id', selectedSlot.dataset.slotId)
+                    .single();
+
+                if (slotError) throw slotError;
+
+                if (slot.available_spots < totalTickets) {
+                    throw new Error('Inte tillräckligt med lediga platser');
+                }
+
+                const { data: booking, error: bookingError } = await supabaseClient
+                    .from('bookings')
+                    .insert({
+                        time_slot_id: selectedSlot.dataset.slotId,
+                        customer_name: formData.get('customerName'),
+                        customer_email: formData.get('customerEmail'),
+                        customer_phone: formData.get('customerPhone'),
+                        adult_quantity: parseInt(formData.get('adultTickets')),
+                        youth_quantity: parseInt(formData.get('youthTickets')),
+                        kid_quantity: parseInt(formData.get('childTickets')),
+                        full_day: formData.get('fullDay') === 'on'
+                    })
+                    .select()
+                    .single();
+
+                if (bookingError) throw bookingError;
+
+                const { error: updateError } = await supabaseClient
+                    .from('time_slots')
+                    .update({ available_spots: slot.available_spots - totalTickets })
+                    .eq('id', selectedSlot.dataset.slotId);
+
+                if (updateError) throw updateError;
+
+                showMessage('Bokning skapad!', 'success');
+                this.reset();
+                loadTimeSlots(this.selectedDate);
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        });
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type;
+        }
+
+        // Initial auth check
+        window.addEventListener('load', async function () {
+            if (!await checkAuth()) return;
+        });
+    </script>
+</body>
+
+</html>
