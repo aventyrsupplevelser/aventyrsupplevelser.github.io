@@ -16,6 +16,109 @@
             padding: 20px;
         }
 
+        .booking-section:not(:first-child) {
+            display: none;
+        }
+
+        .time-slots {
+            display: none;
+            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .time-slots.visible {
+            display: grid;
+        }
+
+        .ticket-section {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .ticket-section.visible {
+            display: block;
+        }
+
+        .nav-buttons {
+            display: none;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-buttons.visible {
+            display: flex;
+        }
+
+        /* Optional: Add smooth transitions */
+        .time-slots,
+        .ticket-section {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .time-slots.visible,
+        .ticket-section.visible {
+            opacity: 1;
+        }
+
+
+        .booking-section.active {
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 20px 0;
+        }
+
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-indicator.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step-indicator.completed {
+            background: #45a049;
+            color: white;
+        }
+
+        .step-line {
+            flex-grow: 1;
+            height: 2px;
+            background: #f0f0f0;
+            margin: 0 10px;
+            margin-top: 15px;
+        }
+
+        .step-line.completed {
+            background: #45a049;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         .calendar-container {
             font-family: "Josefin Sans", sans-serif;
             background: white;
@@ -190,7 +293,7 @@
     <h1>Skapa Bokning</h1>
 
     <form id="bookingForm">
-        <div class="booking-section">
+        <div class="booking-section active">
             <h2>1. Välj datum</h2>
             <div class="form-group">
             </div>
@@ -204,23 +307,25 @@
         </div>
         <div class="booking-section">
             <h2>3. Biljetter</h2>
-            <div class="ticket-selector">
-                <label>Vuxen (15+ år)</label>
-                <select name="adultTickets">
-                    <option value="0">0</option>
-                </select>
-            </div>
-            <div class="ticket-selector">
-                <label>Ungdom (7-14 år)</label>
-                <select name="youthTickets">
-                    <option value="0">0</option>
-                </select>
-            </div>
-            <div class="ticket-selector">
-                <label>Barn (0-6 år)</label>
-                <select name="childTickets">
-                    <option value="0">0</option>
-                </select>
+            <div class="ticket-section"> <!-- Add this wrapper div -->
+                <div class="ticket-selector">
+                    <label>Vuxen (15+ år)</label>
+                    <select name="adultTickets">
+                        <option value="0">0</option>
+                    </select>
+                </div>
+                <div class="ticket-selector">
+                    <label>Ungdom (7-14 år)</label>
+                    <select name="youthTickets">
+                        <option value="0">0</option>
+                    </select>
+                </div>
+                <div class="ticket-selector">
+                    <label>Barn (0-6 år)</label>
+                    <select name="childTickets">
+                        <option value="0">0</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="booking-section">
@@ -236,15 +341,15 @@
             <h2>5. Kundinformation</h2>
             <div class="form-group">
                 <label>Namn</label>
-                <input type="text" name="customerName" required>
+                <input type="text" name="customerName" required data-required>
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="customerEmail" required>
+                <input type="email" name="customerEmail" required data-required>
             </div>
             <div class="form-group">
                 <label>Telefon</label>
-                <input type="tel" name="customerPhone" required>
+                <input type="tel" name="customerPhone" required data-required>
             </div>
         </div>
 
@@ -274,6 +379,86 @@
                 return false;
             }
             return true;
+        }
+
+        class BookingFlow {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 3;
+
+                // Initialize everything after we define the methods
+                this.init();
+            }
+
+            init() {
+                // Initialize calendar first
+                const calendarContainer = document.createElement('div');
+                calendarContainer.id = 'calendar-container';
+                const formGroup = document.querySelector('.booking-section .form-group');
+                formGroup.appendChild(calendarContainer);
+
+                // Create calendar instance
+                this.calendar = new BookingCalendar(calendarContainer, loadTimeSlots);
+
+                // Now initialize event listeners after calendar exists
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Listen for date selection via event delegation from the calendar container
+                document.querySelector('#calendar-container').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('calendar-day') && !e.target.disabled) {
+                        this.handleDateSelection(e.target.dataset.date);
+                    }
+                });
+
+                // Rest of the event listeners...
+                const timeSlots = document.querySelector('#timeSlots');
+                timeSlots.addEventListener('click', (e) => {
+                    if (e.target.closest('.time-slot')) {
+                        this.handleTimeSelection(e.target.closest('.time-slot'));
+                    }
+                });
+
+                // Listen for ticket changes to enable/disable continue button
+                const ticketSection = document.querySelector('.ticket-section');
+                ticketSection.addEventListener('change', () => {
+                    this.validateTicketSelection();
+                });
+            }
+
+            handleDateSelection(date) {
+                // Show time slots section
+                const timeSlots = document.querySelector('.time-slots');
+                timeSlots.classList.add('visible');
+
+                // Scroll to time slots
+                timeSlots.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Load time slots
+                loadTimeSlots(date);
+            }
+
+            handleTimeSelection(timeSlotElement) {
+                // Show ticket section
+                const ticketSection = document.querySelector('.ticket-section');
+                ticketSection.classList.add('visible');
+
+                // Scroll to ticket section
+                ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Update available spots
+                currentAvailableSpots = parseInt(timeSlotElement.dataset.availableSpots);
+                updateTicketDropdowns();
+            }
+
+            validateTicketSelection() {
+                const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
+                const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
+                const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
+
+                return (adultTickets + youthTickets + childTickets) > 0;
+            }
         }
 
         class BookingCalendar {
@@ -350,7 +535,7 @@
             }
 
             renderWeekdays() {
-                const weekdays = ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör'];
+                const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
                 return weekdays.map(day =>
                     `<div class="calendar-weekday">${day}</div>`
                 ).join('');
@@ -373,6 +558,7 @@
 
                     days.push(`
                 <button 
+                    type="button"
                     class="calendar-day" 
                     data-date="${dateStr}"
                     ${isPast ? 'disabled' : ''}
@@ -529,6 +715,7 @@
             }
         }
 
+        // Modify your DOMContentLoaded handler to only initialize BookingFlow
         document.addEventListener('DOMContentLoaded', () => {
             const selects = ['adultTickets', 'youthTickets', 'childTickets'].map(name =>
                 document.querySelector(`select[name="${name}"]`)
@@ -538,13 +725,8 @@
                 select.addEventListener('change', updateTicketDropdowns);
             });
 
-            const calendarContainer = document.createElement('div');
-            calendarContainer.id = 'calendar-container';
-            const formGroup = document.querySelector('.booking-section .form-group');
-            formGroup.appendChild(calendarContainer);
-
-            // Initialize the calendar
-            const calendar = new BookingCalendar(calendarContainer);
+            // Initialize only the BookingFlow (it will handle calendar creation)
+            new BookingFlow();
         });
 
         // Handle form submission
@@ -614,6 +796,7 @@
                 showMessage('Error: ' + error.message, 'error');
             }
         });
+
 
         function showMessage(message, type) {
             const messageDiv = document.getElementById('message');
