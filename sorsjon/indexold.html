@@ -559,7 +559,21 @@
 	</div>
 
 
-
+	<script>
+		var APP_ID = "50d93a13e936ce5d013cd18b728068e0cd71af9794f9ad5f489a5eb56a12897b";
+		var WIDGET_ID = "BrEI4cjmDLevep3";
+		if (typeof window.outventuresSettings == "undefined") { window.outventuresSettings = []; }
+		window.outventuresSettings.push({
+			base_url: "https://app.outventures.se/widget/",
+			app_id: APP_ID,
+			widget_id: WIDGET_ID,
+			floating: true,
+			btn_text: { "sv": "Boka nu", "en": "Boka nu" },
+			btn_style: { "size": "large", "bg": "#0B0911", "color": "#ffffff" },
+			list_view: "products",
+			product_types: ["products", "vouchers"],
+		});
+	</script>
 	<div class="bokaknapp">
 		<button class="" style="background-color: #DB625A; margin-top: -35px;">
 			Boka ditt
@@ -608,21 +622,7 @@
 	</div>
 
 
-	<script>
-		var APP_ID = "50d93a13e936ce5d013cd18b728068e0cd71af9794f9ad5f489a5eb56a12897b";
-		var WIDGET_ID = "BrEI4cjmDLevep3";
-		if (typeof window.outventuresSettings == "undefined") { window.outventuresSettings = []; }
-		window.outventuresSettings.push({
-			base_url: "https://app.outventures.se/widget/",
-			app_id: APP_ID,
-			widget_id: WIDGET_ID,
-			floating: true,
-			btn_text: { "sv": "Boka nu", "en": "Boka nu" },
-			btn_style: { "size": "large", "bg": "#0B0911", "color": "#ffffff" },
-			list_view: "products",
-			product_types: ["products", "vouchers"],
-		});
-	</script>
+
 
 
 
