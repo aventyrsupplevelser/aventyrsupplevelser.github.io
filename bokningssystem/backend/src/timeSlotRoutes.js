@@ -1,6 +1,14 @@
 import express from 'express';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
+import rateLimit from 'express-rate-limit';
+
+// Add rate limiter config
+const updateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100 
+});
 
 // First, load environment variables
 dotenv.config();
@@ -294,6 +302,100 @@ router.delete('/time-slots/:id', async (req, res) => {
 router.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
     next();
+});
+
+router.post('/bookings/pending', async (req, res) => {
+    try {
+        const { time_slot_id, adult_quantity, youth_quantity, kid_quantity } = req.body;
+        const totalTickets = (adult_quantity || 0) + (youth_quantity || 0) + (kid_quantity || 0);
+
+        // First check if spots are available
+        const { data: timeSlot, error: timeSlotError } = await supabase
+            .from('time_slots')
+            .select('available_spots')
+            .eq('id', time_slot_id)
+            .single();
+
+        if (timeSlotError) throw timeSlotError;
+
+        if (timeSlot.available_spots < totalTickets) {
+            return res.status(400).json({ error: 'Not enough spots available' });
+        }
+
+        // Generate booking token
+        const bookingToken = crypto.randomBytes(32).toString('hex');
+
+        // Create pending booking and update spots in a transaction
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .insert({
+                time_slot_id,
+                adult_quantity,
+                youth_quantity,
+                kid_quantity,
+                status: 'pending',
+                access_token: bookingToken  // Add this
+            })
+            .select()
+            .single();
+
+        if (bookingError) throw bookingError;
+
+        // Update available spots
+        const { error: updateError } = await supabase
+            .from('time_slots')
+            .update({ available_spots: timeSlot.available_spots - totalTickets })
+            .eq('id', time_slot_id);
+
+        if (updateError) throw updateError;
+
+        // Return booking data WITH the token
+        res.json({
+            ...booking,
+            access_token: bookingToken  // Make sure to include this in response
+        });
+
+    } catch (error) {
+        console.error('Error creating pending booking:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.put('/bookings/:id', updateLimiter, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { full_day, access_token } = req.body;  // Changed bookingToken to access_token to match DB
+
+        if (!access_token) {
+            return res.status(401).json({ error: 'No access token provided' });
+        }
+
+        console.log('Attempting to update booking:', { id, full_day });
+
+        const { data: booking, error } = await supabase
+            .from('bookings')
+            .update({ full_day })
+            .eq('id', id)
+            .eq('access_token', access_token)  // Verify token matches
+            .eq('status', 'pending')
+            .select('*');
+
+        if (error) {
+            console.log('Update error:', error);
+            throw error;
+        }
+
+        if (!booking || booking.length === 0) {
+            return res.status(404).json({ error: 'Booking not found, not pending, or invalid token' });
+        }
+
+        console.log('Successfully updated booking:', booking[0]);
+        res.json(booking[0]);
+
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 export default router;

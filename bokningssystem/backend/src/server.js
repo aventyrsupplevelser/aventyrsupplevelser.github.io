@@ -9,7 +9,6 @@ import { dirname } from 'path';
 import fs from 'fs';
 
 dotenv.config();
-
 console.log('Starting server setup...');
 
 const app = express();
@@ -33,18 +32,26 @@ console.log('Setting up middleware...');
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the frontend directory
-console.log('Setting up static file serving from:', frontendPath);
-app.use(express.static(frontendPath));
-
 // Main test route
 app.get('/', (req, res) => {
     res.json({ message: 'Server is working!' });
 });
 
-// Mount the time slot routes
-console.log('Attempting to connect time slot routes...');
+// Before mounting
+console.log('Available routes:');
+timeSlotRoutes.stack.forEach((r) => {
+    if (r.route && r.route.path) {
+        console.log(`${Object.keys(r.route.methods)} ${r.route.path}`);
+    }
+});
+
+// Mount API routes FIRST
 app.use('/api', timeSlotRoutes);
+console.log('Routes mounted');
+
+// THEN serve static files
+console.log('Setting up static file serving from:', frontendPath);
+app.use(express.static(frontendPath));
 
 // Add the catch-all route logger
 app.use((req, res, next) => {

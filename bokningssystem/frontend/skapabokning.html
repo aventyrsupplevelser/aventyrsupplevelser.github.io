@@ -16,15 +16,23 @@
             padding: 20px;
         }
 
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 50px;
+        }
+
         .booking-section:not(:first-child) {
             display: none;
         }
 
         .time-slots {
             display: none;
-            margin-top: 20px;
+            max-width: 600px;
+            margin: 20px auto 0px;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
+            font-size: 1.5em;
         }
 
         .time-slots.visible {
@@ -33,9 +41,9 @@
 
         .ticket-section {
             display: none;
-            margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
+            max-width: 600px;
+            margin: 20px auto 0px;
         }
 
         .ticket-section.visible {
@@ -124,7 +132,6 @@
             background: white;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
             max-width: 600px;
         }
@@ -155,7 +162,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #ddd;
             background: #f0f0f0;
             /* All dates start as grey */
             font-size: 1.1em;
@@ -171,9 +177,8 @@
         }
 
         .calendar-day.available {
-            background-color: white;
-            border-color: #1e8e3e;
-            color: #1e8e3e;
+            background-color: rgb(173, 240, 159);
+            color: #1a1a1a;
         }
 
         .calendar-day.selected {
@@ -237,7 +242,7 @@
         }
 
         .time-slot {
-            padding: 10px;
+            padding: 15px 15px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             text-align: center;
@@ -252,10 +257,15 @@
 
         .ticket-selector {
             display: grid;
-            grid-template-columns: auto 120px;
-            align-items: center;
+            grid-template-columns: 250px auto auto;
             gap: 10px;
-            margin-bottom: 10px;
+            align-items: stretch;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .ticket-selector div {
+            font-weight: 700;
         }
 
         .ticket-selector select {
@@ -263,14 +273,14 @@
         }
 
         button {
-            background-color: #4CAF50;
-            color: white;
+            color: rgb(50, 50, 50);
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
+            background: rgb(246, 244, 221);
         }
 
         button:hover {
@@ -286,57 +296,80 @@
             color: green;
             margin-top: 5px;
         }
+
+        .extension-section {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        #backButton,
+        #proceedButton {
+            font-size: 1.5em;
+        }
+
+        #backButton {
+            display: none;
+            /* Hidden by default */
+        }
+
+        #proceedButton {
+            display: none;
+            /* Hidden initially */
+            margin-left: auto;
+            /* Push to right */
+        }
     </style>
 </head>
 
 <body>
-    <h1>Skapa Bokning</h1>
-
     <form id="bookingForm">
         <div class="booking-section active">
-            <h2>1. Välj datum</h2>
+            <h2>Välj ett klätterdatum:</h2>
             <div class="form-group">
             </div>
         </div>
 
         <div class="booking-section">
-            <h2>2. Välj tid</h2>
+            <h2>Välj en klättertid:</h2>
             <div class="time-slots" id="timeSlots">
                 <!-- Time slots will be populated here -->
             </div>
         </div>
-        <div class="booking-section">
-            <h2>3. Biljetter</h2>
+        <div style="margin-top: 80px;" class="booking-section">
+            <h2>Välj antal äventyrare:</h2>
             <div class="ticket-section"> <!-- Add this wrapper div -->
                 <div class="ticket-selector">
-                    <label>Vuxen (15+ år)</label>
+                    <label>Vuxen 17+ år</label>
+                    <div>400 kr</div>
                     <select name="adultTickets">
                         <option value="0">0</option>
                     </select>
                 </div>
                 <div class="ticket-selector">
-                    <label>Ungdom (7-14 år)</label>
+                    <label>Ungdom 10-16 år</label>
+                    <div>300 kr</div>
                     <select name="youthTickets">
                         <option value="0">0</option>
                     </select>
                 </div>
                 <div class="ticket-selector">
-                    <label>Barn (0-6 år)</label>
+                    <label>Barn 3-9 år</label>
+                    <div>200 kr</div>
                     <select name="childTickets">
                         <option value="0">0</option>
                     </select>
                 </div>
             </div>
         </div>
-        <div class="booking-section">
-            <h2>4. Heldag</h2>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="fullDay">
-                    Lägg till heldag (endast tillgängligt för vissa tider)
-                </label>
-            </div>
+        <div class="extension-section" style="display: none; text-align: center;">
+            <h2>Förlängning till heldag?</h2>
+            <p>Välj antal som vill förlänga till heldag (till kl 17.00)</p>
+            <div id="fulldaySelectors"></div>
+
         </div>
+
+        <!--
         <div class="booking-section">
             <h2>5. Kundinformation</h2>
             <div class="form-group">
@@ -351,15 +384,22 @@
                 <label>Telefon</label>
                 <input type="tel" name="customerPhone" required data-required>
             </div>
+
+            <button type="submit">Skapa bokning</button>
+        -->
         </div>
 
 
 
 
 
+        <div class="button-container"
+            style="display: flex; justify-content: space-between; max-width: 600px; margin: 50px auto;">
+            <button type="button" class="back-button" id="backButton">Tillbaka</button>
+            <button type="button" id="proceedButton">Gå vidare</button>
+        </div>
         <div id="message"></div>
 
-        <button type="submit">Skapa bokning</button>
     </form>
 
     <script>
@@ -428,6 +468,13 @@
             }
 
             handleDateSelection(date) {
+                // Remove active from first section
+                document.querySelector('.booking-section.active').classList.remove('active');
+
+                // Add active to time slots section
+                const timeSlotsSection = document.querySelector('.booking-section:nth-child(2)');
+                timeSlotsSection.classList.add('active');
+
                 // Show time slots section
                 const timeSlots = document.querySelector('.time-slots');
                 timeSlots.classList.add('visible');
@@ -440,6 +487,11 @@
             }
 
             handleTimeSelection(timeSlotElement) {
+
+                // Add active to tickets section
+                const ticketsSection = document.querySelector('.booking-section:nth-child(3)');
+                ticketsSection.classList.add('active');
+
                 // Show ticket section
                 const ticketSection = document.querySelector('.ticket-section');
                 ticketSection.classList.add('visible');
@@ -450,6 +502,8 @@
                 // Update available spots
                 currentAvailableSpots = parseInt(timeSlotElement.dataset.availableSpots);
                 updateTicketDropdowns();
+
+                document.getElementById('proceedButton').style.display = 'block';
             }
 
             validateTicketSelection() {
@@ -521,7 +575,7 @@
                 </div>
                 <div class="calendar-legend">
                     <div class="legend-item">
-                        <div class="legend-dot" style="background-color: #e6f4ea;"></div>
+                        <div class="legend-dot" style="background-color: rgb(173, 240, 159)"></div>
                         <span>Tillgänglig</span>
                     </div>
                     <div class="legend-item">
@@ -652,8 +706,6 @@
                          data-available-spots="${slot.available_spots}"
                          onclick="selectTimeSlot(this)">
                         ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        <br>
-                        ${slot.available_spots} platser
                     </div>
                 `;
                     }).join('') || '<p>Inga lediga tider detta datum</p>';
@@ -808,6 +860,137 @@
         window.addEventListener('load', async function () {
             if (!await checkAuth()) return;
         });
+
+        document.getElementById('proceedButton').addEventListener('click', async function () {
+            showMessage('', '');
+
+            // Validate selections
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            const totalTickets = getTotalTickets();
+
+            if (!selectedSlot) {
+                showMessage('Vänligen välj en tid först', 'error');
+                return;
+            }
+
+            if (totalTickets === 0) {
+                showMessage('Vänligen välj minst en biljett', 'error');
+                return;
+            }
+
+            try {
+                // Create pending booking through server endpoint
+                const response = await fetch('http://localhost:3000/api/bookings/pending', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        time_slot_id: selectedSlot.dataset.slotId,
+                        adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
+                        youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
+                        kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to create booking');
+                }
+
+                const booking = await response.json();
+
+                // Store both ID and token
+                localStorage.setItem('currentBookingId', booking.id);
+                localStorage.setItem('bookingAccessToken', booking.access_token);
+
+                // Proceed to extension section
+                document.querySelectorAll('.booking-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.querySelector('.extension-section').style.display = 'block';
+                updateFullDaySelector();
+                document.getElementById('backButton').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error creating booking:', error);
+                showMessage('Ett fel uppstod: ' + error.message, 'error');
+            }
+        });
+
+        // Handle going back to initial section
+        document.getElementById('backButton').addEventListener('click', function () {
+
+            showMessage('', '');
+
+            document.querySelectorAll('.booking-section').forEach(section => {
+                section.style.display = 'block';
+            });
+            document.querySelector('.extension-section').style.display = 'none';
+
+            // Hide back button when returning to initial view
+            document.getElementById('backButton').style.display = 'none';
+        });
+
+        function updateFullDaySelector() {
+            const totalTickets = getTotalTickets();
+            const container = document.getElementById('fulldaySelectors');
+
+            container.innerHTML = `
+        <div class="ticket-selector">
+            <div>100 kr per person</div>
+            <select name="fullDayExtensions">
+                ${Array.from({ length: totalTickets + 1 }, (_, i) =>
+                `<option value="${i}">${i} st</option>`
+            ).join('')}
+            </select>
+        </div>
+    `;
+
+            // Add the change event listener
+            const select = container.querySelector('select[name="fullDayExtensions"]');
+            select.addEventListener('change', async function () {
+                const bookingId = localStorage.getItem('currentBookingId');
+                const accessToken = localStorage.getItem('bookingAccessToken');
+
+                if (!bookingId || !accessToken) {
+                    showMessage('No active booking found', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            full_day: parseInt(this.value),
+                            access_token: accessToken
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update booking');
+                    }
+
+                    showMessage('Förlängning uppdaterad', 'success');
+                } catch (error) {
+                    console.error('Error updating booking:', error);
+                    showMessage('Kunde inte uppdatera förlängningen', 'error');
+                }
+            });
+        }
+
+
+
+        // Helper function to calculate total tickets
+        function getTotalTickets() {
+            const adult = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
+            const youth = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
+            const child = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
+            return adult + youth + child;
+        }
     </script>
 </body>
 
