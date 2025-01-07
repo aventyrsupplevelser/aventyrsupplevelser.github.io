@@ -325,7 +325,7 @@
 <body>
     <form id="bookingForm">
         <div class="booking-section active">
-            <h2>Välj ett klätterdatum:</h2>
+            <h2>Välj klätterdatum:</h2>
             <div class="form-group">
             </div>
         </div>
@@ -724,11 +724,6 @@
 
             currentAvailableSpots = parseInt(element.dataset.availableSpots);
             updateTicketDropdowns();
-
-            const allowsFullDay = element.dataset.allowsFullday === 'true';
-            const fullDayCheckbox = document.querySelector('input[name="fullDay"]');
-            fullDayCheckbox.disabled = !allowsFullDay;
-            if (!allowsFullDay) fullDayCheckbox.checked = false;
         }
 
         function updateTicketDropdowns() {
@@ -777,7 +772,6 @@
                 select.addEventListener('change', updateTicketDropdowns);
             });
 
-            // Initialize only the BookingFlow (it will handle calendar creation)
             new BookingFlow();
         });
 
@@ -864,6 +858,40 @@
         document.getElementById('proceedButton').addEventListener('click', async function () {
             showMessage('', '');
 
+            // Get the full day extension value if we're on that section
+            const extensionSection = document.querySelector('.extension-section');
+            if (extensionSection.style.display === 'block') {
+                try {
+                    const fullDaySelect = document.querySelector('select[name="fullDayExtensions"]');
+                    const selectedValue = parseInt(fullDaySelect.value);
+                    const bookingId = localStorage.getItem('currentBookingId');
+                    const accessToken = localStorage.getItem('bookingAccessToken');
+
+                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            full_day: selectedValue,
+                            access_token: accessToken
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update booking');
+                    }
+
+                    // Handle success - perhaps redirect to next step or confirmation page
+                    showMessage('Full day extension updated successfully', 'success');
+                    return;  // Exit the function since we're done with this step
+                } catch (error) {
+                    console.error('Error:', error);
+                    showMessage('Ett fel uppstod: ' + error.message, 'error');
+                    return;
+                }
+            }
+
             // Validate selections
             const selectedSlot = document.querySelector('.time-slot.selected');
             const totalTickets = getTotalTickets();
@@ -918,7 +946,7 @@
                             adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
                             youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
                             kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0,
-                            full_day: selectedFullDayValue,
+                            // full_day: selectedFullDayValue,
                             access_token: accessToken
                         })
                     });
