@@ -364,19 +364,42 @@ router.post('/bookings/pending', async (req, res) => {
 router.put('/bookings/:id', updateLimiter, async (req, res) => {
     try {
         const { id } = req.params;
-        const { full_day, access_token } = req.body;  // Changed bookingToken to access_token to match DB
+        const { full_day, access_token } = req.body;
 
         if (!access_token) {
             return res.status(401).json({ error: 'No access token provided' });
         }
 
-        console.log('Attempting to update booking:', { id, full_day });
+        // First get the current booking
+        const { data: currentBooking, error: fetchError } = await supabase
+            .from('bookings')
+            .select('full_day')
+            .eq('id', id)
+            .eq('access_token', access_token)
+            .eq('status', 'pending')
+            .single();
+
+        if (fetchError) throw fetchError;
+        
+        // Explicitly handle the full_day value
+        let updatedFullDay;
+        if (full_day !== undefined) {
+            // If full_day is provided in the request, use it
+            updatedFullDay = parseInt(full_day, 10);
+        } else {
+            // If not provided, keep the existing value
+            updatedFullDay = currentBooking.full_day || 0;
+        }
+
+        console.log('Attempting to update booking:', { id, full_day: updatedFullDay });
 
         const { data: booking, error } = await supabase
             .from('bookings')
-            .update({ full_day })
+            .update({ 
+                full_day: updatedFullDay
+            })
             .eq('id', id)
-            .eq('access_token', access_token)  // Verify token matches
+            .eq('access_token', access_token)
             .eq('status', 'pending')
             .select('*');
 
@@ -394,6 +417,32 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
 
     } catch (error) {
         console.error('Error updating booking:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/bookings/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Get the current booking with access token validation
+        const { data: booking, error } = await supabase
+            .from('bookings')
+            .select('*')
+            .eq('id', id)
+            .eq('status', 'pending')
+            .single();
+
+        if (error) throw error;
+        
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found or not pending' });
+        }
+
+        res.json(booking);
+
+    } catch (error) {
+        console.error('Error fetching booking:', error);
         res.status(500).json({ error: error.message });
     }
 });

@@ -616,61 +616,24 @@
 		id="presentkort-iframe" src="https://webbshopp.contrl.se/1006/giftcard/"></iframe>
 
 
+
+
 	<script>
-
-		document.addEventListener('DOMContentLoaded', function () {
-			var showIframeButtons = document.getElementsByClassName('iframebutton');
-			var webbshopIframe = document.getElementById('iframe');
-			var presentkortIframe = document.getElementById('presentkort-iframe');
-			// Iterera över varje knapp och lägg till händelselyssnare
-			Array.from(showIframeButtons).forEach(function (button) {
-				button.addEventListener('click', function (event) {
-					var iframeOrigin;
-					if (button.id === 'presentkort-button') {
-						iframeOrigin = new URL(presentkortIframe.src).origin;
-						presentkortIframe.contentWindow.postMessage('open', iframeOrigin);
-						presentkortIframe.style.display = 'block';
-						document.documentElement.style.overflow = 'hidden';
-					} else {
-						iframeOrigin = new URL(webbshopIframe.src).origin;
-						webbshopIframe.contentWindow.postMessage('open', iframeOrigin);
-						webbshopIframe.style.display = 'block';
-						document.documentElement.style.overflow = 'hidden';
-					}
-				});
-			});
-
-			window.addEventListener('message', function (event) {
-				if (event.data === 'close-iframe') {
-					webbshopIframe.style.display = 'none';
-					webbshopIframe.src = webbshopIframe.src;
-					presentkortIframe.style.display = 'none';
-					document.documentElement.style.overflow = 'auto';
-					presentkortIframe.src = presentkortIframe.src;
-				}
-			});
-			window.addEventListener('message', function (event) {
-				if (event.data === 'checked-out') {
-					webbshopIframe.style.display = 'none';
-					webbshopIframe.src = webbshopIframe.src;
-					presentkortIframe.style.display = 'none';
-					document.documentElement.style.overflow = 'auto';
-					presentkortIframe.src = presentkortIframe.src;
-					window.location.href = "/tackfordinbokning"
-				}
-			});
-			window.addEventListener('message', function (event) {
-				if (event.data === 'giftcard-checked-out') {
-					webbshopIframe.style.display = 'none';
-					webbshopIframe.src = webbshopIframe.src;
-					presentkortIframe.style.display = 'none';
-					document.documentElement.style.overflow = 'auto';
-					presentkortIframe.src = presentkortIframe.src;
-					window.location.href = "/tackfordittkop"
-				}
-			});
+		var APP_ID = "50d93a13e936ce5d013cd18b728068e0cd71af9794f9ad5f489a5eb56a12897b";
+		var WIDGET_ID = "BrEI4cjmDLevep3";
+		if (typeof window.outventuresSettings == "undefined") { window.outventuresSettings = []; }
+		window.outventuresSettings.push({
+			base_url: "https://app.outventures.se/widget/",
+			app_id: APP_ID,
+			widget_id: WIDGET_ID,
+			floating: true,
+			btn_text: { "sv": "Boka nu", "en": "Boka nu" },
+			btn_style: { "size": "large", "bg": "#0B0911", "color": "#ffffff" },
+			list_view: "products",
+			product_types: ["products", "vouchers"],
 		});
 	</script>
+
 
 
 

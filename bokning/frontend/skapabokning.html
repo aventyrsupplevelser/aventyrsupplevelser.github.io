@@ -879,32 +879,56 @@
             }
 
             try {
-                // Create pending booking through server endpoint
-                const response = await fetch('http://localhost:3000/api/bookings/pending', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        time_slot_id: selectedSlot.dataset.slotId,
-                        adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
-                        youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
-                        kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0
-                    })
-                });
+                const bookingId = localStorage.getItem('currentBookingId');
+                const accessToken = localStorage.getItem('bookingAccessToken');
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Failed to create booking');
+                if (!bookingId || !accessToken) {
+                    // Create new booking
+                    const response = await fetch('http://localhost:3000/api/bookings/pending', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            time_slot_id: selectedSlot.dataset.slotId,
+                            adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
+                            youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
+                            kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Failed to create booking');
+                    }
+
+                    const booking = await response.json();
+                    localStorage.setItem('currentBookingId', booking.id);
+                    localStorage.setItem('bookingAccessToken', booking.access_token);
+
+                } else {
+                    // Update existing booking
+                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            time_slot_id: selectedSlot.dataset.slotId,
+                            adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
+                            youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
+                            kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0,
+                            full_day: selectedFullDayValue,
+                            access_token: accessToken
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to update booking');
+                    }
                 }
 
-                const booking = await response.json();
-
-                // Store both ID and token
-                localStorage.setItem('currentBookingId', booking.id);
-                localStorage.setItem('bookingAccessToken', booking.access_token);
-
-                // Proceed to extension section
+                // Regardless of create/update, proceed to extension section
                 document.querySelectorAll('.booking-section').forEach(section => {
                     section.style.display = 'none';
                 });
@@ -913,7 +937,7 @@
                 document.getElementById('backButton').style.display = 'block';
 
             } catch (error) {
-                console.error('Error creating booking:', error);
+                console.error('Error:', error);
                 showMessage('Ett fel uppstod: ' + error.message, 'error');
             }
         });
@@ -932,54 +956,36 @@
             document.getElementById('backButton').style.display = 'none';
         });
 
-        function updateFullDaySelector() {
+        async function updateFullDaySelector() {
             const totalTickets = getTotalTickets();
             const container = document.getElementById('fulldaySelectors');
+            let currentFullDayValue = 0;
+
+            // Try to get current booking's full_day value
+            const bookingId = localStorage.getItem('currentBookingId');
+            if (bookingId) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`);
+                    if (response.ok) {
+                        const booking = await response.json();
+                        currentFullDayValue = booking.full_day || 0;
+                    }
+                } catch (error) {
+                    console.error('Error fetching current booking:', error);
+                    // Continue with default value of 0
+                }
+            }
 
             container.innerHTML = `
         <div class="ticket-selector">
             <div>100 kr per person</div>
             <select name="fullDayExtensions">
                 ${Array.from({ length: totalTickets + 1 }, (_, i) =>
-                `<option value="${i}">${i} st</option>`
+                `<option value="${i}" ${i === currentFullDayValue ? 'selected' : ''}>${i} st</option>`
             ).join('')}
             </select>
         </div>
     `;
-
-            // Add the change event listener
-            const select = container.querySelector('select[name="fullDayExtensions"]');
-            select.addEventListener('change', async function () {
-                const bookingId = localStorage.getItem('currentBookingId');
-                const accessToken = localStorage.getItem('bookingAccessToken');
-
-                if (!bookingId || !accessToken) {
-                    showMessage('No active booking found', 'error');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            full_day: parseInt(this.value),
-                            access_token: accessToken
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to update booking');
-                    }
-
-                    showMessage('Förlängning uppdaterad', 'success');
-                } catch (error) {
-                    console.error('Error updating booking:', error);
-                    showMessage('Kunde inte uppdatera förlängningen', 'error');
-                }
-            });
         }
 
 
