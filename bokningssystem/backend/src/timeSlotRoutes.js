@@ -364,47 +364,73 @@ router.post('/bookings/pending', async (req, res) => {
 router.put('/bookings/:id', updateLimiter, async (req, res) => {
     try {
         const { id } = req.params;
-        const { full_day, access_token } = req.body;
+        const { full_day, access_token, time_slot_id, adult_quantity, youth_quantity, kid_quantity, customer_email, customer_name, comments, customer_phone  } = req.body;
 
         if (!access_token) {
             return res.status(401).json({ error: 'No access token provided' });
         }
 
-        // First get the current booking
+        // Fetch the current booking to ensure it exists
         const { data: currentBooking, error: fetchError } = await supabase
             .from('bookings')
-            .select('full_day')
+            .select('*')
             .eq('id', id)
             .eq('access_token', access_token)
             .eq('status', 'pending')
             .single();
 
         if (fetchError) throw fetchError;
-        
-        // Explicitly handle the full_day value
-        let updatedFullDay;
-        if (full_day !== undefined) {
-            // If full_day is provided in the request, use it
-            updatedFullDay = parseInt(full_day, 10);
-        } else {
-            // If not provided, keep the existing value
-            updatedFullDay = currentBooking.full_day || 0;
+
+        if (!currentBooking) {
+            return res.status(404).json({ error: 'Booking not found or not pending' });
         }
 
-        console.log('Attempting to update booking:', { id, full_day: updatedFullDay });
+        // Prepare the update object dynamically based on provided fields
+        const updatedFields = {};
+        if (full_day !== undefined) {
+            updatedFields.full_day = parseInt(full_day, 10);
+        }
+        if (time_slot_id !== undefined) {
+            updatedFields.time_slot_id = time_slot_id;
+        }
+        if (adult_quantity !== undefined) {
+            updatedFields.adult_quantity = parseInt(adult_quantity, 10);
+        }
+        if (youth_quantity !== undefined) {
+            updatedFields.youth_quantity = parseInt(youth_quantity, 10);
+        }
+        if (kid_quantity !== undefined) {
+            updatedFields.kid_quantity = parseInt(kid_quantity, 10);
+        }
+        if (customer_email !== undefined) {
+            updatedFields.customer_email = customer_email;
+        }
 
+        if (customer_name!== undefined) {
+            updatedFields.customer_name = customer_name;
+        }
+
+        if (customer_phone!== undefined) {
+            updatedFields.customer_phone = customer_phone;
+        }
+
+        if (comments!== undefined) {
+            updatedFields.comments = comments;
+        }
+
+        console.log('Updating booking with fields:', updatedFields);
+
+        // Perform the update
         const { data: booking, error } = await supabase
             .from('bookings')
-            .update({ 
-                full_day: updatedFullDay
-            })
+            .update(updatedFields)
             .eq('id', id)
             .eq('access_token', access_token)
             .eq('status', 'pending')
             .select('*');
 
         if (error) {
-            console.log('Update error:', error);
+            console.error('Update error:', error);
             throw error;
         }
 
@@ -414,12 +440,12 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
 
         console.log('Successfully updated booking:', booking[0]);
         res.json(booking[0]);
-
     } catch (error) {
         console.error('Error updating booking:', error);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 router.get('/bookings/:id', async (req, res) => {
     try {

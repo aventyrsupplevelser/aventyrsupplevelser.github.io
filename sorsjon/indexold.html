@@ -559,21 +559,31 @@
 	</div>
 
 
-	<script>
-		var APP_ID = "50d93a13e936ce5d013cd18b728068e0cd71af9794f9ad5f489a5eb56a12897b";
-		var WIDGET_ID = "BrEI4cjmDLevep3";
-		if (typeof window.outventuresSettings == "undefined") { window.outventuresSettings = []; }
-		window.outventuresSettings.push({
-			base_url: "https://app.outventures.se/widget/",
-			app_id: APP_ID,
-			widget_id: WIDGET_ID,
-			floating: true,
-			btn_text: { "sv": "Boka nu", "en": "Boka nu" },
-			btn_style: { "size": "large", "bg": "#0B0911", "color": "#ffffff" },
-			list_view: "products",
-			product_types: ["products", "vouchers"],
-		});
-	</script>
+	<div class="bokaContainer">
+		<script>
+			var APP_ID = "50d93a13e936ce5d013cd18b728068e0cd71af9794f9ad5f489a5eb56a12897b";
+			var WIDGET_ID = "nBCzMb4E13A1dqc";
+			if (typeof window.outventuresSettings == "undefined") { window.outventuresSettings = []; }
+			window.outventuresSettings.push({
+				base_url: "https://app.outventures.se/widget/",
+				app_id: APP_ID,
+				widget_id: WIDGET_ID,
+				floating: false,
+				btn_text: { "sv": "boka ditt äventyr nu", "en": "book adventure now" },
+				list_view: "calendar",
+				product_types: ["products", "vouchers"],
+				products: [11644],
+				categories: [],
+				locale: 'sv',
+				affiliateTag: 'main',
+			});
+		</script>
+	</div>
+
+
+	<script
+		id="ovbs-scriptnBCzMb4E13A1dqc">var w = window; var l = function () { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = "https://app.outventures.se/widget/widget.js"; if (document.querySelectorAll('[src="' + s.src + '"]').length == 0) { var x = document.getElementsByTagName("script")[0]; x.parentNode.insertBefore(s, x); } }; if (w.attachEvent) { w.attachEvent("onload", l); } else { w.addEventListener("load", l, false); }</script>
+
 	<div class="bokaknapp">
 		<button class="" style="background-color: #DB625A; margin-top: -35px;">
 			Boka ditt
