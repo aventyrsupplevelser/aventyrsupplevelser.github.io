@@ -925,13 +925,23 @@
                         body: JSON.stringify(bookingData),
                     });
 
-                    console.log('Response:', response); // Debug response
-                    if (!response.ok) throw new Error('Failed to create booking');
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to create booking');
+                    }
+
                     const booking = await response.json();
+                    console.log('Frontend Received Response:', booking);
+
+                    // Make sure we have the required properties
+                    if (!booking.booking_id || !booking.access_token) {
+                        throw new Error('Invalid response from server');
+                    }
+
 
                     // Store token and booking ID in localStorage
                     localStorage.setItem('bookingToken', booking.access_token);
-                    localStorage.setItem('bookingId', booking.id);
+                    localStorage.setItem('bookingId', booking.booking_id);
 
                 }
             } catch (error) {
@@ -939,6 +949,7 @@
                 alert('Error: ' + error.message);
             }
         }
+
 
         async function handleSecondProceed() {
             console.log('Handling second proceed');

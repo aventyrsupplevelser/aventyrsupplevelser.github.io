@@ -931,7 +931,7 @@
                     }
 
                     const booking = await response.json();
-                    localStorage.setItem('currentBookingId', booking.id);
+                    localStorage.setItem('currentBookingId', booking_id);
                     localStorage.setItem('bookingAccessToken', booking.access_token);
 
                 } else {

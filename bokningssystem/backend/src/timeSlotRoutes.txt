@@ -305,32 +305,58 @@ router.use((req, res, next) => {
 });
 
 router.post('/bookings/pending', async (req, res) => {
-    const { time_slot_id, adult_quantity, youth_quantity, kid_quantity } = req.body;
-
     try {
-        // Generate token in the backend
-        const accessToken = crypto.randomBytes(32).toString('hex');
+        const { time_slot_id, adult_quantity, youth_quantity, kid_quantity } = req.body;
+        const totalTickets = (adult_quantity || 0) + (youth_quantity || 0) + (kid_quantity || 0);
 
-        // Call the stored procedure and pass the token
-        const { data, error } = await supabase.rpc('create_booking', {
-            p_time_slot_id: time_slot_id,
-            p_adult_quantity: adult_quantity,
-            p_youth_quantity: youth_quantity,
-            p_kid_quantity: kid_quantity,
-            p_access_token: accessToken, // Pass token to the procedure
-        });
+        // First check if spots are available
+        const { data: timeSlot, error: timeSlotError } = await supabase
+            .from('time_slots')
+            .select('available_spots')
+            .eq('id', time_slot_id)
+            .single();
 
-        if (error) {
-            console.error('Error creating booking:', error);
-            return res.status(400).json({ error: error.message });
+        if (timeSlotError) throw timeSlotError;
+
+        if (timeSlot.available_spots < totalTickets) {
+            return res.status(400).json({ error: 'Not enough spots available' });
         }
 
-        console.log('Stored Procedure Response:', data);
+        // Generate booking token
+        const bookingToken = crypto.randomBytes(32).toString('hex');
 
-        console.log('Response Sent to Frontend:', data);
-        res.status(201).json(data);
+        // Create pending booking and update spots in a transaction
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .insert({
+                time_slot_id,
+                adult_quantity,
+                youth_quantity,
+                kid_quantity,
+                status: 'pending',
+                access_token: bookingToken  // Add this
+            })
+            .select()
+            .single();
+
+        if (bookingError) throw bookingError;
+
+        // Update available spots
+        const { error: updateError } = await supabase
+            .from('time_slots')
+            .update({ available_spots: timeSlot.available_spots - totalTickets })
+            .eq('id', time_slot_id);
+
+        if (updateError) throw updateError;
+
+        // Return booking data WITH the token
+        res.json({
+            ...booking,
+            access_token: bookingToken  // Make sure to include this in response
+        });
+
     } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error('Error creating pending booking:', error);
         res.status(500).json({ error: error.message });
     }
 });
