@@ -338,87 +338,49 @@ router.post('/bookings/pending', async (req, res) => {
 router.put('/bookings/:id', updateLimiter, async (req, res) => {
     try {
         const { id } = req.params;
-        const { full_day, access_token, time_slot_id, adult_quantity, youth_quantity, kid_quantity, customer_email, customer_name, comments, customer_phone  } = req.body;
+        const {
+            full_day,
+            access_token,
+            time_slot_id,
+            adult_quantity,
+            youth_quantity,
+            kid_quantity,
+            customer_email,
+            customer_name,
+            comments,
+            customer_phone
+        } = req.body;
 
         if (!access_token) {
             return res.status(401).json({ error: 'No access token provided' });
         }
 
-        // Fetch the current booking to ensure it exists
-        const { data: currentBooking, error: fetchError } = await supabase
-            .from('bookings')
-            .select('*')
-            .eq('id', id)
-            .eq('access_token', access_token)
-            .eq('status', 'pending')
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        if (!currentBooking) {
-            return res.status(404).json({ error: 'Booking not found or not pending' });
-        }
-
-        // Prepare the update object dynamically based on provided fields
-        const updatedFields = {};
-        if (full_day !== undefined) {
-            updatedFields.full_day = parseInt(full_day, 10);
-        }
-        if (time_slot_id !== undefined) {
-            updatedFields.time_slot_id = time_slot_id;
-        }
-        if (adult_quantity !== undefined) {
-            updatedFields.adult_quantity = parseInt(adult_quantity, 10);
-        }
-        if (youth_quantity !== undefined) {
-            updatedFields.youth_quantity = parseInt(youth_quantity, 10);
-        }
-        if (kid_quantity !== undefined) {
-            updatedFields.kid_quantity = parseInt(kid_quantity, 10);
-        }
-        if (customer_email !== undefined) {
-            updatedFields.customer_email = customer_email;
-        }
-
-        if (customer_name!== undefined) {
-            updatedFields.customer_name = customer_name;
-        }
-
-        if (customer_phone!== undefined) {
-            updatedFields.customer_phone = customer_phone;
-        }
-
-        if (comments!== undefined) {
-            updatedFields.comments = comments;
-        }
-
-        console.log('Updating booking with fields:', updatedFields);
-
-        // Perform the update
-        const { data: booking, error } = await supabase
-            .from('bookings')
-            .update(updatedFields)
-            .eq('id', id)
-            .eq('access_token', access_token)
-            .eq('status', 'pending')
-            .select('*');
+        // Call the stored procedure
+        const { error } = await supabase.rpc('manage_booking', {
+            p_booking_id: id,
+            p_new_time_slot_id: time_slot_id,
+            p_new_adult_quantity: adult_quantity,
+            p_new_youth_quantity: youth_quantity,
+            p_new_kid_quantity: kid_quantity,
+            p_full_day: full_day,
+            p_customer_email: customer_email,
+            p_customer_name: customer_name,
+            p_customer_phone: customer_phone,
+            p_comments: comments,
+        });
 
         if (error) {
-            console.error('Update error:', error);
-            throw error;
+            console.error('Error updating booking:', error);
+            return res.status(400).json({ error: error.message });
         }
 
-        if (!booking || booking.length === 0) {
-            return res.status(404).json({ error: 'Booking not found, not pending, or invalid token' });
-        }
-
-        console.log('Successfully updated booking:', booking[0]);
-        res.json(booking[0]);
+        res.json({ message: 'Booking updated successfully' });
     } catch (error) {
-        console.error('Error updating booking:', error);
+        console.error('Unexpected error:', error);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 
 router.get('/bookings/:id', async (req, res) => {
@@ -443,6 +405,27 @@ router.get('/bookings/:id', async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching booking:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.delete('/bookings/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const { error } = await supabase.rpc('manage_booking', {
+            p_booking_id: id,
+            p_delete: true,
+        });
+
+        if (error) {
+            console.error('Error deleting booking:', error);
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.json({ message: 'Booking deleted successfully' });
+    } catch (error) {
+        console.error('Unexpected error:', error);
         res.status(500).json({ error: error.message });
     }
 });
