@@ -240,13 +240,14 @@ strong {
 	box-shadow: 5px 10px #373737 !important;
 	font-family: "josefin sans" !important;
 	cursor: pointer !important;
-	background-color: rgb(255, 180, 105) !important;
 	text-transform: none !important;
-	height: auto !important;
+	height: 65px !important;
 	width: auto !important;
 	margin: 0 auto;
 	line-height: 1.1em !important;
 	display: flex;
+	letter-spacing: normal !important;
+	transition: 0s !important;
 }
 
 .md-btn-op:after {
@@ -254,6 +255,54 @@ strong {
 	top: unset !important;
 	left: unset !important;
 	right: unset !important;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.md-btn-op:hover {
+	margin: 0px 0px 0px 3px !important;
+	box-shadow: 4px 8px #373737 !important;
+	cursor: pointer;
+	transition: 0s !important;
+}
+
+.presentContainer .md-btn-op  {
+	font-size: 23px !important;
+	box-shadow: 3px 6px #373737 !important;
+	margin-top: 15px !important;
+	padding: 17px 17px 12px;
+	height: 58px !important; 
+}
+
+.presentContainer .md-btn-op:hover {
+	margin: 15px 0px 0px 3px !important;
+	box-shadow: 2px 4px #373737 !important;
+	transition: 0s !important;
+	cursor: pointer;
+}
+
+#presentkort-button {
+	font-family: "josefin sans";
+	font-size: 23px;
+	font-weight: 500;
+	border: 3px #373737 solid;
+	border-radius: 3px;
+	box-shadow: 3px 6px #373737;
+	padding: 17px 17px 12px;
+	margin-top: 15px;
+	background: #F5CA5B;
+}
+
+#presentkort-button:hover {
+	margin: 15px 0px 0px 3px;
+	box-shadow: 2px 4px #373737;
+	transition: 0.08s;
+	cursor: pointer;
+
+}
+
+.product-calendar-toggle[data-v-6f4d7f40] {
+	display: none !important;
 }
 
 .bokaContainer {
@@ -454,25 +503,7 @@ strong {
 	margin: 0 auto 20px;
 }
 
-#presentkort-button {
-	font-family: "josefin sans";
-	font-size: 23px;
-	font-weight: 500;
-	border: 3px #373737 solid;
-	border-radius: 3px;
-	box-shadow: 3px 6px #373737;
-	padding: 17px 17px 12px;
-	margin-top: 15px;
-	background: #F5CA5B;
-}
 
-#presentkort-button:hover {
-	margin: 15px 0px 0px 3px;
-	box-shadow: 2px 4px #373737;
-	transition: 0.08s;
-	cursor: pointer;
-
-}
 
 .mobilemap {
 	display: none;
