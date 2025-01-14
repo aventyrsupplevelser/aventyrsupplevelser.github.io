@@ -848,15 +848,30 @@
                 proceedButton.style.display = currentStep < bookingSections.length - 1 ? 'block' : 'none';
             }
 
-            // Step-specific logic for Proceed button
+
             function handleProceed() {
+                // Skip booking data check for the first step
                 if (currentStep === 0) {
                     handleFirstProceed();
                     updateFullDaySelector();
-                } else if (currentStep === 1) {
+                    return;
+                }
+
+                // For steps after the first, enforce booking data validity
+                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+
+                if (!bookingData || Date.now() > bookingData.expiresAt) {
+                    alert('Your booking session has expired. Please restart the process.');
+                    localStorage.removeItem('bookingData');
+                    location.reload(); // Reload the page to restart the process
+                    return;
+                }
+
+                if (currentStep === 1) {
                     handleSecondProceed();
                 }
             }
+
 
             // Proceed button logic
             proceedButton.addEventListener('click', () => {
@@ -879,6 +894,29 @@
             showCurrentStep();
         });
 
+        setInterval(() => {
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+
+            if (bookingData && Date.now() > bookingData.expiresAt) {
+                console.log('Periodic cleanup: Removing expired booking data...');
+                localStorage.removeItem('bookingData');
+            }
+        }, 60 * 1000); // Every minute
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+
+            if (bookingData && Date.now() > bookingData.expiresAt) {
+                console.log('Cleaning up expired booking data...');
+                localStorage.removeItem('bookingData');
+                alert('Your booking session has expired. Please restart.');
+            }
+
+        });
+
+
         async function handleFirstProceed() {
             const selectedSlot = document.querySelector('.time-slot.selected');
             if (!selectedSlot) {
@@ -886,7 +924,7 @@
                 return;
             }
 
-            // Collect booking data
+            // Collect booking data from form inputs
             const bookingData = {
                 time_slot_id: selectedSlot.dataset.slotId,
                 adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
@@ -894,31 +932,31 @@
                 kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0,
             };
 
-            // Get token and booking ID from localStorage
-            const token = localStorage.getItem('bookingToken');
-            const bookingId = localStorage.getItem('bookingId');
-
-            // Log the data being sent for debugging
-            console.log('Booking Data:', bookingData);
-            console.log('Token:', token);
-            console.log('Booking ID:', bookingId);
-
             try {
-                if (token && bookingId) {
-                    // Update existing booking
-                    console.log('Attempting to update booking...');
+                // Check for existing booking data in Local Storage
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+
+                if (sessionData && Date.now() <= sessionData.expiresAt) {
+                    // If valid session data exists, update the booking
+                    console.log('Updating existing booking...');
+                    const { bookingId, token } = sessionData;
+
                     const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ ...bookingData, access_token: token }),
                     });
 
-                    console.log('Response:', response); // Debug response
-                    if (!response.ok) throw new Error('Failed to update booking');
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Failed to update booking:', errorData);
+                        throw new Error('Failed to update existing booking.');
+                    }
 
+                    console.log('Booking updated successfully.');
                 } else {
-                    // Create a new pending booking
-                    console.log('Creating a new booking...');
+                    // No valid session data found, create a new pending booking
+                    console.log('Creating a new pending booking...');
                     const response = await fetch('http://localhost:3000/api/bookings/pending', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -927,28 +965,34 @@
 
                     if (!response.ok) {
                         const errorData = await response.json();
-                        throw new Error(errorData.error || 'Failed to create booking');
+                        console.error('Failed to create booking:', errorData);
+                        throw new Error('Failed to create new booking.');
                     }
 
                     const booking = await response.json();
-                    console.log('Frontend Received Response:', booking);
+                    console.log('New booking created:', booking);
 
-                    // Make sure we have the required properties
                     if (!booking.booking_id || !booking.access_token) {
-                        throw new Error('Invalid response from server');
+                        throw new Error('Invalid response from server. Missing booking ID or token.');
                     }
 
+                    // Save new session data to Local Storage
+                    const expirationTime = Date.now() + 15 * 60 * 1000; // 15 minutes
+                    const newSessionData = {
+                        token: booking.access_token,
+                        bookingId: booking.booking_id,
+                        expiresAt: expirationTime,
+                    };
 
-                    // Store token and booking ID in localStorage
-                    localStorage.setItem('bookingToken', booking.access_token);
-                    localStorage.setItem('bookingId', booking.booking_id);
-
+                    localStorage.setItem('bookingData', JSON.stringify(newSessionData));
+                    console.log('Booking data saved to Local Storage:', newSessionData);
                 }
             } catch (error) {
-                console.error('Error:', error); // Log the error
+                console.error('Error in handleFirstProceed:', error);
                 alert('Error: ' + error.message);
             }
         }
+
 
 
         async function handleSecondProceed() {
@@ -963,14 +1007,17 @@
             const fullDayValue = parseInt(fullDayElement.value) || 0; // Default to 0 if no value selected
             console.log('Full-day value:', fullDayValue);
 
-            // Fetch booking ID and token from localStorage
-            const bookingId = localStorage.getItem('bookingId');
-            const token = localStorage.getItem('bookingToken');
+            // Fetch session data from Local Storage
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
 
-            if (!bookingId || !token) {
-                alert('Booking information is missing. Please start the process again.');
+            if (!sessionData || Date.now() > sessionData.expiresAt) {
+                alert('Your booking session has expired. Please start the process again.');
+                localStorage.removeItem('bookingData');
+                location.reload(); // Reload the page to restart the process
                 return;
             }
+
+            const { bookingId, token } = sessionData;
 
             // Update booking in the database
             try {
@@ -994,11 +1041,13 @@
                     throw new Error('Failed to update full-day selection');
                 }
 
+                console.log('Full-day selection updated successfully.');
             } catch (error) {
                 console.error('Error updating full-day selection:', error);
                 alert('Error: ' + error.message);
             }
         }
+
 
         document.getElementById('submit').addEventListener('click', async () => {
             console.log('Submitting booking...');
@@ -1009,20 +1058,23 @@
             const customerPhone = document.getElementById('customerPhone').value.trim();
             const customerComment = document.getElementById('customerComment').value.trim();
 
-
+            // Validate required fields
             if (!customerName || !customerEmail) {
                 alert('Please fill out at least name and email.');
                 return;
             }
 
-            // Get the existing booking ID from localStorage
-            const bookingId = localStorage.getItem('bookingId');
-            const token = localStorage.getItem('bookingToken');
+            // Fetch session data from Local Storage
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
 
-            if (!bookingId || !token) {
-                alert('Booking information is missing. Please start the process again.');
+            if (!sessionData || Date.now() > sessionData.expiresAt) {
+                alert('Your booking session has expired. Please start the process again.');
+                localStorage.removeItem('bookingData');
+                location.reload(); // Reload the page to restart the process
                 return;
             }
+
+            const { bookingId, token } = sessionData;
 
             // Prepare booking data
             const updateData = {
@@ -1030,6 +1082,7 @@
                 customer_email: customerEmail,
                 customer_phone: customerPhone,
                 comments: customerComment,
+                status: 'confirmed',
                 access_token: token,
             };
 
@@ -1038,7 +1091,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`, // Optional if your backend uses token-based validation
+                        Authorization: `Bearer ${token}`, // Include token for security
                     },
                     body: JSON.stringify(updateData),
                 });
@@ -1046,15 +1099,21 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Error updating booking:', errorData);
-                    throw new Error('Failed to update booking.');
+                    throw new Error('Failed to confirm booking.');
                 }
 
-                alert('Booking updated successfully!');
+                alert('Booking confirmed successfully!');
+                console.log('Booking confirmed successfully!');
+
+                // Optionally clear booking data from Local Storage after confirmation
+                localStorage.removeItem('bookingData');
             } catch (error) {
-                console.error('Error updating booking:', error);
+                console.error('Error confirming booking:', error);
                 alert('Error: ' + error.message);
             }
+            location.reload();
         });
+
 
 
 

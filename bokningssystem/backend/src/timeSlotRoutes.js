@@ -336,50 +336,60 @@ router.post('/bookings/pending', async (req, res) => {
 });
 
 router.put('/bookings/:id', updateLimiter, async (req, res) => {
+    const { id } = req.params;
+    const {
+        full_day,
+        access_token,
+        time_slot_id,
+        adult_quantity,
+        youth_quantity,
+        kid_quantity,
+        status,
+        customer_email,
+        customer_name,
+        comments,
+        customer_phone,
+    } = req.body;
+
+    if (!access_token) {
+        return res.status(401).json({ error: 'No access token provided' });
+    }
+
     try {
-        const { id } = req.params;
-        const {
-            full_day,
-            access_token,
-            time_slot_id,
-            adult_quantity,
-            youth_quantity,
-            kid_quantity,
-            customer_email,
-            customer_name,
-            comments,
-            customer_phone
-        } = req.body;
-
-        if (!access_token) {
-            return res.status(401).json({ error: 'No access token provided' });
-        }
-
         // Call the stored procedure
-        const { error } = await supabase.rpc('manage_booking', {
+        const { data, error } = await supabase.rpc('manage_booking', {
             p_booking_id: id,
             p_new_time_slot_id: time_slot_id,
             p_new_adult_quantity: adult_quantity,
             p_new_youth_quantity: youth_quantity,
             p_new_kid_quantity: kid_quantity,
             p_full_day: full_day,
+            p_status: status,
             p_customer_email: customer_email,
             p_customer_name: customer_name,
             p_customer_phone: customer_phone,
             p_comments: comments,
+
+            p_delete: false,
         });
 
         if (error) {
-            console.error('Error updating booking:', error);
+            console.error('Error updating booking:', error.message);
             return res.status(400).json({ error: error.message });
         }
 
-        res.json({ message: 'Booking updated successfully' });
+        // Log debug messages
+        console.log('Debug Messages:', data);
+
+        res.json({ message: 'Booking updated successfully', debugMessages: data });
     } catch (error) {
-        console.error('Unexpected error:', error);
-        res.status(500).json({ error: error.message });
+        console.error('Unexpected error during booking update:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+
 
 
 
