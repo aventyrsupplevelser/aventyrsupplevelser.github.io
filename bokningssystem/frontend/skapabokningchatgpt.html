@@ -326,11 +326,11 @@
     <form id="bookingForm">
         <div id="bookingSummary" class="summary-box"
             style="border: 4px solid grey; width: fit-content; background: rgb(255, 255, 229); padding: 20px;">
-            <h3>Bokningsdetaljer</h3>
+            <h3>Din bokning</h3>
             <p id="selectedDateTime">Datum & tid: Not selected</p>
             <p id="selectedTickets">Antal: 0 adults, 0 youth, 0 kids</p>
-            <p id="fullDayExtension">Förlängning av tid: None</p>
-            <p id="totalCost">Totalt: 0 kr</p>
+            <p id="fullDayExtension">Antal förlängning: None</p>
+            <p id="totalCost">Summa: 0 kr</p>
         </div>
 
         <div id="datetimeticketSection" class="booking-section">
@@ -399,6 +399,51 @@
                 <label>Kommentar</label>
                 <input type="comment" id="customerComment">
             </div>
+
+            <div id="payment-container"></div>
+            <script>
+                async function startPayment() {
+                    try {
+                        // Prepare booking details
+                        const bookingDetails = {
+                            amount: 10000, // Amount in smallest currency unit (e.g., cents)
+                            currency: 'SEK',
+                            merchant_reference: 'order123',
+                            return_url: 'https://aventyrsupplevelser.com/tackfordinbokning',
+                            callback_url: 'https://9906-85-229-138-126.ngrok-free.app',
+                        };
+
+                        // Create payment session
+                        const response = await fetch('http://localhost:3000/api/create-session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(bookingDetails),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to create payment session');
+                        }
+
+                        const { session_id } = await response.json();
+
+                        // Load Dintero iframe
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://checkout.dintero.com/v1/embedded/${session_id}`;
+                        iframe.style.width = '100%';
+                        iframe.style.height = '600px';
+                        iframe.style.border = 'none';
+                        document.getElementById('payment-container').appendChild(iframe);
+                    } catch (error) {
+                        console.error('Error starting payment:', error);
+                    }
+                }
+
+                // Trigger payment on page load
+                startPayment();
+            </script>
+
 
             <button id="submit" style="float: right;" type="button">Skapa bokning</button>
         </div>
@@ -789,7 +834,6 @@
             const container = document.getElementById('fulldaySelectors');
             let currentFullDayValue = 0;
 
-            // Try to get current booking's full_day value
             const bookingId = localStorage.getItem('currentBookingId');
             if (bookingId) {
                 try {
@@ -800,7 +844,6 @@
                     }
                 } catch (error) {
                     console.error('Error fetching current booking:', error);
-                    // Continue with default value of 0
                 }
             }
 
@@ -814,7 +857,14 @@
             </select>
         </div>
     `;
+
+            // Attach change event listener to the newly created dropdown
+            const fullDaySelect = container.querySelector('[name="fullDayExtensions"]');
+            if (fullDaySelect) {
+                fullDaySelect.addEventListener('change', updateBookingSummary);
+            }
         }
+
 
 
 
@@ -1144,7 +1194,7 @@
             document.getElementById('selectedDateTime').textContent = `Date & Time: ${date} ${time}`;
             document.getElementById('selectedTickets').textContent = `Tickets: ${adultTickets} adults, ${youthTickets} youth, ${childTickets} kids`;
             document.getElementById('fullDayExtension').textContent = `Full Day: ${fullDayExtension}`;
-            document.getElementById('totalCost').textContent = `Total: ${totalCost} kr`;
+            document.getElementById('totalCost').textContent = `Summa: ${totalCost} kr`;
         }
 
         // Event listeners

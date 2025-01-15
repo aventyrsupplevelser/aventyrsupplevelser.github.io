@@ -13,6 +13,11 @@ const updateLimiter = rateLimit({
 // First, load environment variables
 dotenv.config();
 
+console.log('DINTERO_API_BASE_URL:', process.env.DINTERO_API_BASE_URL);
+console.log('DINTERO_API_BASE_URL:', process.env.DINTERO_API_BASE_URL);
+console.log('DINTERO_CLIENT_ID:', process.env.DINTERO_CLIENT_ID);
+console.log('DINTERO_CLIENT_SECRET:', process.env.DINTERO_CLIENT_SECRET);
+
 // Validate required environment variables before proceeding
 const requiredEnvVars = [
     'SUPABASE_URL', 
@@ -369,7 +374,6 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
             p_customer_name: customer_name,
             p_customer_phone: customer_phone,
             p_comments: comments,
-
             p_delete: false,
         });
 
@@ -439,5 +443,116 @@ router.delete('/bookings/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
+async function getDinteroAccessToken(account_id, client_id, client_secret) {
+
+    const url = `https://api.dintero.com/v1/accounts/${account_id}/auth/token`;
+    
+    const basicAuthString = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+    console.log('Authorization Header:', `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString('base64')}`);
+    console.log('account_id:', account_id);
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Basic ${basicAuthString}`,
+            },
+            body: JSON.stringify({
+                grant_type: 'client_credentials',
+                audience: `https://api.dintero.com/v1/accounts/${account_id}`,
+            }),
+        });
+
+        if (response.status !== 200) {
+            const error = await response.text();
+            console.error('Error fetching access token:', error);
+            throw new Error(`Failed to fetch access token: ${error}`);
+        }
+
+        const json = await response.json();
+        console.log('Access token received:', json.access_token);
+        return json.access_token;
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+router.post('/create-session', async (req, res) => {
+    const account_id = 'T11114756'; 
+    const client_id = '2b0b8781-3388-493b-9241-805c8b42dddc';
+    const client_secret = 'f07f8182-d388-41e9-8d4f-c7276aed42d5';
+
+    try {
+        const { amount, currency, merchant_reference } = req.body;
+
+        // Validate required fields
+        if (!amount || !currency || !merchant_reference) {
+            return res.status(400).json({ 
+                error: 'Missing required fields: amount, currency, and merchant_reference are required' 
+            });
+        }
+
+        const accessToken = await getDinteroAccessToken(account_id, client_id, client_secret);
+
+        const paymentSession = {
+            url: {
+                return_url: 'https://aventyrsupplevelser.com/tackfordinbokning',
+                callback_url: 'https://abc123.ngrok.io/api/dintero-webhook'
+            },
+            order: {
+                amount: amount,
+                currency: currency,
+                merchant_reference: merchant_reference,
+                items: [{
+                    id: 'product-1',
+                    line_id: '1',
+                    description: 'Adventure Park Entry',
+                    quantity: 1,
+                    amount: amount,
+                    vat_amount: Math.round(amount * 0.2), // 25% VAT
+                    vat: 25
+                }],
+                shipping_option: {
+                    id: 'local-pick-up',
+                    line_id: 'shipping-1',
+                    amount: 0,
+                    operator: 'Local Pickup',
+                    title: 'Pick up at location',
+                    delivery_method: 'pick_up'
+                }
+            },
+            profile_id: 'default'
+        };
+
+        console.log('Payment Session Payload:', JSON.stringify(paymentSession, null, 2));
+
+        const sessionUrl = 'https://checkout.dintero.com/v1/sessions-profile';
+        
+        const response = await fetch(sessionUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentSession)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error creating session:', errorText);
+            throw new Error(`Failed to create session: ${errorText}`);
+        }
+
+        const sessionData = await response.json();
+        res.json(sessionData);
+    } catch (error) {
+        console.error('Error creating payment session:', error.message);
+        res.status(500).json({ error: 'Failed to create payment session' });
+    }
+});
+
 
 export default router;
