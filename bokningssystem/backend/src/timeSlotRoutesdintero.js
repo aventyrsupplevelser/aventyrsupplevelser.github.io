@@ -445,113 +445,104 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 
-router.post('/create-payment', async (req, res) => {
+async function getDinteroAccessToken(account_id, client_id, client_secret) {
+
+    const url = `https://api.dintero.com/v1/accounts/${account_id}/auth/token`;
+    
+    const basicAuthString = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+    console.log('Authorization Header:', `Basic ${Buffer.from(`${client_id}:${client_secret}`).toString('base64')}`);
+    console.log('account_id:', account_id);
     try {
-        const { amount, currency, orderId } = req.body;
-        
-        const response = await fetch('https://api.quickpay.net/payments', {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Accept-Version': 'v10',
-                'Authorization': `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_KEY).toString('base64')}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Basic ${basicAuthString}`,
             },
             body: JSON.stringify({
-                order_id: orderId,
+                grant_type: 'client_credentials',
+                audience: `https://api.dintero.com/v1/accounts/${account_id}`,
+            }),
+        });
+
+        if (response.status !== 200) {
+            const error = await response.text();
+            console.error('Error fetching access token:', error);
+            throw new Error(`Failed to fetch access token: ${error}`);
+        }
+
+        const json = await response.json();
+        console.log('Access token received:', json.access_token);
+        return json.access_token;
+    } catch (error) {
+        console.error('Error:', error.message);
+        throw error;
+    }
+}
+router.post('/create-session', async (req, res) => {
+    const account_id = 'T11114756'; 
+    const client_id = '2b0b8781-3388-493b-9241-805c8b42dddc';
+    const client_secret = 'f07f8182-d388-41e9-8d4f-c7276aed42d5';
+
+    try {
+        const { amount, currency, merchant_reference } = req.body;
+
+        // Validate required fields
+        if (!amount || !currency || !merchant_reference) {
+            return res.status(400).json({ 
+                error: 'Missing required fields: amount, currency, and merchant_reference are required' 
+            });
+        }
+
+        const accessToken = await getDinteroAccessToken(account_id, client_id, client_secret);
+
+        const paymentSession = {
+            url: {
+                return_url: 'https://aventyrsupplevelser.com/tackfordinbokning',
+                callback_url: 'https://a426-85-229-138-126.ngrok-free.app/api/dintero-webhook'  // Updated URL
+            },
+            order: {
+                amount: amount,
                 currency: currency,
-                variables: {
-                    booking_id: orderId
-                }
-            })
+                merchant_reference: merchant_reference,
+                items: [{
+                    id: 'product-1',
+                    line_id: '1',
+                    description: 'Adventure Park Entry',
+                    quantity: 1,
+                    amount: amount,
+                    vat_amount: Math.round(amount * 0.2), // 25% VAT
+                    vat: 25
+                }],
+            },
+            profile_id: 'T11114756.5z2AQTTWyDS3ygUkg3szq8'
+        };
+
+        console.log('Payment Session Payload:', JSON.stringify(paymentSession, null, 2));
+
+        const sessionUrl = 'https://checkout.dintero.com/v1/sessions-profile';
+        
+        const response = await fetch(sessionUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentSession)
         });
 
         if (!response.ok) {
-            const error = await response.text();
-            console.error('QuickPay payment creation error:', error);
-            throw new Error('Failed to create payment');
+            const errorText = await response.text();
+            console.error('Error creating session:', errorText);
+            throw new Error(`Failed to create session: ${errorText}`);
         }
 
-        const payment = await response.json();
-        
-        // Create payment link
-        const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
-            method: 'PUT',
-            headers: {
-                'Accept-Version': 'v10',
-                'Authorization': `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_KEY).toString('base64')}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                amount: amount,
-                continue_url: 'https://aventyrsupplevelser.com/tackfordinbokning',
-                callback_url: process.env.QUICKPAY_CALLBACK_URL,
-                cancel_url: 'https://aventyrsupplevelser.com/booking'
-            })
-        });
-
-        if (!linkResponse.ok) {
-            const error = await linkResponse.text();
-            console.error('QuickPay link creation error:', error);
-            throw new Error('Failed to create payment link');
-        }
-
-        const linkData = await linkResponse.json();
-        res.json({ 
-            payment_id: payment.id,
-            payment_url: linkData.url 
-        });
-
+        const sessionData = await response.json();
+        res.json(sessionData);
     } catch (error) {
-        console.error('Payment creation error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Add callback endpoint to handle QuickPay notifications
-router.post('/quickpay-callback', async (req, res) => {
-    try {
-        // Get the checksum from headers
-        const receivedChecksum = req.headers['quickpay-checksum-sha256'];
-        
-        // Get the raw body
-        const rawBody = JSON.stringify(req.body);
-        
-        // Calculate checksum
-        const calculatedChecksum = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(rawBody)
-            .digest('hex');
-
-        // Verify checksum
-        if (receivedChecksum !== calculatedChecksum) {
-            console.error('Invalid QuickPay callback checksum');
-            return res.status(400).json({ error: 'Invalid checksum' });
-        }
-
-        const { id: payment_id, accepted, operations } = req.body;
-        
-        if (accepted && operations && operations.length > 0) {
-            const latestOperation = operations[operations.length - 1];
-            
-            if (latestOperation.type === 'authorize' && latestOperation.qp_status_code === '20000') {
-                // Payment was successful
-                // Update your booking status here
-                
-                // Example: Update booking status in Supabase
-                const { error } = await supabase.rpc('manage_booking', {
-                    p_booking_id: req.body.variables.booking_id,
-                    p_status: 'confirmed',
-                    // Add other necessary parameters
-                });
-
-                if (error) throw error;
-            }
-        }
-
-        res.status(200).send('OK');
-    } catch (error) {
-        console.error('Callback processing error:', error);
-        res.status(500).json({ error: error.message });
+        console.error('Error creating payment session:', error.message);
+        res.status(500).json({ error: 'Failed to create payment session' });
     }
 });
 

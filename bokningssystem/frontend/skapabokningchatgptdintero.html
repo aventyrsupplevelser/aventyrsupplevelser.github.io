@@ -418,15 +418,15 @@
                         console.log('Starting payment for amount:', totalAmount);
 
                         // Create payment session
-                        const response = await fetch('http://localhost:3000/api/create-payment', {
+                        const response = await fetch('http://localhost:3000/api/create-session', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                amount: totalAmount * 100, // Amount in smallest currency unit (öre)
-                                currency: 'SEK',
-                                orderId: Date.now().toString() // You might want to use a more sophisticated order ID
+                                amount: Math.abs(totalAmount) * 100, // Amount in the smallest currency unit
+                                currency: 'SEK', // Currency code
+                                merchant_reference: Date.now().toString(), // Unique order reference
                             }),
                         });
 
@@ -436,13 +436,17 @@
                         }
 
                         const sessionData = await response.json();
-                        console.log('Payment session created:', sessionData);
+                        console.log('Session data:', sessionData); // Logs session details
 
-                        // Redirect to QuickPay payment window
-                        if (sessionData.payment_url) {
-                            window.location.href = sessionData.payment_url;
+                        if (sessionData.id) {
+                            // Embed the payment using Dintero Web SDK
+                            const container = document.getElementById('checkout-container');
+                            dintero.embed({
+                                container,
+                                sid: sessionData.id, // The session ID returned from the server
+                            });
                         } else {
-                            throw new Error('No payment URL received');
+                            throw new Error('No session ID received from the server');
                         }
                     } catch (error) {
                         console.error('Error:', error);
@@ -450,7 +454,6 @@
                     }
                 }
 
-                // Update your button event listener
                 document.getElementById('proceed-to-payment').addEventListener('click', startPayment);
             </script>
 
