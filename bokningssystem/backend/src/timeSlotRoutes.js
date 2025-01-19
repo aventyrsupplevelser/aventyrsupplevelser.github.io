@@ -13,11 +13,6 @@ const updateLimiter = rateLimit({
 // First, load environment variables
 dotenv.config();
 
-console.log('DINTERO_API_BASE_URL:', process.env.DINTERO_API_BASE_URL);
-console.log('DINTERO_API_BASE_URL:', process.env.DINTERO_API_BASE_URL);
-console.log('DINTERO_CLIENT_ID:', process.env.DINTERO_CLIENT_ID);
-console.log('DINTERO_CLIENT_SECRET:', process.env.DINTERO_CLIENT_SECRET);
-
 // Validate required environment variables before proceeding
 const requiredEnvVars = [
     'SUPABASE_URL', 
@@ -445,112 +440,188 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 
-router.post('/create-payment', async (req, res) => {
+router.post('/test-payment', async (req, res) => {
     try {
-        const { amount, currency, orderId } = req.body;
+        // Use API user key for both operations
+        const authHeader = `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_USER_KEY).toString('base64')}`;
         
+        // Create payment
         const response = await fetch('https://api.quickpay.net/payments', {
             method: 'POST',
             headers: {
                 'Accept-Version': 'v10',
-                'Authorization': `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_KEY).toString('base64')}`,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                order_id: orderId,
-                currency: currency,
-                variables: {
-                    booking_id: orderId
-                }
+                order_id: `test-${Date.now()}`,
+                currency: 'SEK'
             })
         });
 
         if (!response.ok) {
             const error = await response.text();
-            console.error('QuickPay payment creation error:', error);
+            console.error('Payment creation error response:', error);
             throw new Error('Failed to create payment');
         }
 
         const payment = await response.json();
+        console.log('Payment created:', payment);
         
         // Create payment link
         const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
             method: 'PUT',
             headers: {
                 'Accept-Version': 'v10',
-                'Authorization': `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_KEY).toString('base64')}`,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                amount: amount,
-                continue_url: 'https://aventyrsupplevelser.com/tackfordinbokning',
-                callback_url: process.env.QUICKPAY_CALLBACK_URL,
-                cancel_url: 'https://aventyrsupplevelser.com/booking'
+                amount: 1000, // 10 SEK
+                continue_url: 'http://localhost:3000/success',
+                callback_url: 'https://a426-85-229-138-126.ngrok-free.app/api/quickpay-callback',
+                cancel_url: 'http://localhost:3000/cancel',
+                payment_methods: 'creditcard'
             })
         });
 
         if (!linkResponse.ok) {
             const error = await linkResponse.text();
-            console.error('QuickPay link creation error:', error);
+            console.error('Link creation error response:', error);
             throw new Error('Failed to create payment link');
         }
 
         const linkData = await linkResponse.json();
+        console.log('Payment link created:', linkData);
+
         res.json({ 
             payment_id: payment.id,
             payment_url: linkData.url 
         });
 
     } catch (error) {
-        console.error('Payment creation error:', error);
+        console.error('Test payment error:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
-// Add callback endpoint to handle QuickPay notifications
-router.post('/quickpay-callback', async (req, res) => {
+router.post('/create-payment', async (req, res) => {
     try {
-        // Get the checksum from headers
-        const receivedChecksum = req.headers['quickpay-checksum-sha256'];
-        
-        // Get the raw body
-        const rawBody = JSON.stringify(req.body);
-        
-        // Calculate checksum
-        const calculatedChecksum = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(rawBody)
-            .digest('hex');
+        const authHeader = `Basic ${Buffer.from(':' + process.env.QUICKPAY_PAYMENT_WINDOW_KEY).toString('base64')}`;
+        const amount = parseInt(req.body.amount) || 1000;
 
-        // Verify checksum
-        if (receivedChecksum !== calculatedChecksum) {
-            console.error('Invalid QuickPay callback checksum');
-            return res.status(400).json({ error: 'Invalid checksum' });
+        if (!req.body.amount || isNaN(amount)) {
+            throw new Error('Invalid or missing "amount" in request body.');
         }
 
-        const { id: payment_id, accepted, operations } = req.body;
-        
-        if (accepted && operations && operations.length > 0) {
-            const latestOperation = operations[operations.length - 1];
-            
-            if (latestOperation.type === 'authorize' && latestOperation.qp_status_code === '20000') {
-                // Payment was successful
-                // Update your booking status here
-                
-                // Example: Update booking status in Supabase
-                const { error } = await supabase.rpc('manage_booking', {
-                    p_booking_id: req.body.variables.booking_id,
-                    p_status: 'confirmed',
-                    // Add other necessary parameters
-                });
+        // Step 1: Create the payment
+        const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
+            method: 'POST',
+            headers: {
+                'Accept-Version': 'v10',
+                'Authorization': authHeader,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                order_id: `order-${Date.now()}`,
+                currency: 'SEK',
+            }),
+        });
 
-                if (error) throw error;
-            }
+        if (!createPaymentResponse.ok) {
+            const errorText = await createPaymentResponse.text();
+            console.error('QuickPay payment creation error:', errorText);
+            throw new Error('Failed to create payment');
         }
 
-        res.status(200).send('OK');
+        const payment = await createPaymentResponse.json();
+        console.log('Payment created successfully:', payment);
+
+        // Step 2: Return the `payment_id` for the embed
+        res.json({ payment_id: payment.id });
     } catch (error) {
-        console.error('Callback processing error:', error);
+        console.error('Error in /create-payment:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+function calculateChecksum(params, apiKey) {
+    // Flatten and sort parameters
+    const flattenedParams = flattenParams(params);
+    const sortedValues = Object.keys(flattenedParams)
+        .sort() // Sort keys alphabetically
+        .map((key) => flattenedParams[key] || ''); // Include empty strings for undefined/null values
+
+    // Concatenate values with a single space
+    const concatenatedValues = sortedValues.join(' ');
+
+    // Generate HMAC-SHA256 checksum
+    return crypto.createHmac('sha256', apiKey).update(concatenatedValues).digest('hex');
+}
+
+function flattenParams(params, result = {}, path = []) {
+    if (params instanceof Object) {
+        for (const key in params) {
+            flattenParams(params[key], result, [...path, key]);
+        }
+    } else {
+        const flatKey = path.join('');
+        result[flatKey] = params;
+    }
+    return result;
+}
+
+router.post('/get-payment-form', (req, res) => {
+    try {
+        const { amount, order_id } = req.body;
+
+        if (!amount || !order_id) {
+            return res.status(400).json({ error: 'Amount and order_id are required.' });
+        }
+
+        const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
+        const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
+        const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
+
+        if (!merchant_id || !agreement_id || !apiKey) {
+            throw new Error('Missing required environment variables: QUICKPAY_MERCHANT_ID, QUICKPAY_AGREEMENT_ID, QUICKPAY_PAYMENT_WINDOW_KEY.');
+        }
+
+        const currency = 'DKK';
+        const continueurl = 'http://shop.domain.tld/continue';
+        const cancelurl = 'http://shop.domain.tld/cancel';
+        const callbackurl = 'http://shop.domain.tld/callback';
+
+        const params = {
+            version: 'v10',
+            merchant_id,
+            agreement_id,
+            amount,
+            currency,
+            order_id,
+            continueurl,
+            cancelurl,
+            callbackurl,
+        };
+
+        // Calculate the checksum
+        params.checksum = calculateChecksum(params, apiKey);
+
+        // Generate the form HTML
+        const formHtml = `
+            <form method="POST" action="https://payment.quickpay.net/framed">
+                ${Object.entries(params)
+                    .map(
+                        ([key, value]) =>
+                            `<input type="hidden" name="${key}" value="${value}">`
+                    )
+                    .join('\n')}
+                <input type="submit" value="Continue to payment...">
+            </form>
+        `;
+
+        res.send(formHtml);
+    } catch (error) {
+        console.error('Error generating payment form:', error);
         res.status(500).json({ error: error.message });
     }
 });

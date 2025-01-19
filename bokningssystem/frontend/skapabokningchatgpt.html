@@ -407,52 +407,51 @@
             <!-- In your customerSection div -->
             <!-- Payment container -->
             <div id="payment-container">
-                <div id="checkout-container"></div> <!-- Embed container -->
-                <button id="proceed-to-payment" style="float: right;" type="button">Start Payment</button>
+                <button id="go-to-payment" type="button" style="float: right;">Go to Payment</button>
+                <div id="checkout-container" style="display: none;">
+                    <iframe id="payment-frame" style="width: 100%; height: 1000px; border: none;"></iframe>
+                </div>
             </div>
 
             <script>
-                async function startPayment() {
+                document.getElementById('go-to-payment').addEventListener('click', async () => {
                     try {
-                        const totalAmount = calculateTotalAmount();
-                        console.log('Starting payment for amount:', totalAmount);
+                        const totalAmount = Math.abs(calculateTotalAmount());
+                        console.log('Initializing payment with amount:', totalAmount);
 
-                        // Create payment session
-                        const response = await fetch('http://localhost:3000/api/create-payment', {
+                        // Request form details (including checksum) from the backend
+                        const response = await fetch('http://localhost:3000/api/get-payment-form', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                amount: totalAmount * 100, // Amount in smallest currency unit (öre)
-                                currency: 'SEK',
-                                orderId: Date.now().toString() // You might want to use a more sophisticated order ID
+                                amount: totalAmount * 100, // Convert to øre
+                                order_id: `order-${Date.now()}`,
                             }),
                         });
 
                         if (!response.ok) {
                             const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to create payment session');
+                            throw new Error(errorData.error || 'Failed to fetch payment form');
                         }
 
-                        const sessionData = await response.json();
-                        console.log('Payment session created:', sessionData);
+                        const formHtml = await response.text();
+                        console.log('Form HTML received:', formHtml);
 
-                        // Redirect to QuickPay payment window
-                        if (sessionData.payment_url) {
-                            window.location.href = sessionData.payment_url;
-                        } else {
-                            throw new Error('No payment URL received');
-                        }
+                        // Display the payment form in an iframe
+                        document.getElementById('checkout-container').style.display = 'block';
+                        const iframe = document.getElementById('payment-frame');
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        iframeDoc.open();
+                        iframeDoc.write(formHtml);
+                        iframeDoc.close();
                     } catch (error) {
-                        console.error('Error:', error);
+                        console.error('Payment form error:', error);
                         alert('Payment error: ' + error.message);
                     }
-                }
-
-                // Update your button event listener
-                document.getElementById('proceed-to-payment').addEventListener('click', startPayment);
+                });
             </script>
+
+
 
         </div>
 
@@ -905,14 +904,14 @@
             // Show the current step
             function showCurrentStep() {
                 // Hide all sections
-                bookingSections.forEach(section => section.style.display = 'none');
+                bookingSections.forEach(section => section.style.display = 'block');
 
                 // Show the current section
                 bookingSections[currentStep].style.display = 'block';
 
                 // Handle button visibility
-                backButton.style.display = currentStep > 0 ? 'block' : 'none';
-                proceedButton.style.display = currentStep < bookingSections.length - 1 ? 'block' : 'none';
+                backButton.style.display = currentStep > 0 ? 'block' : 'block';
+                proceedButton.style.display = currentStep < bookingSections.length - 1 ? 'block' : 'block';
             }
 
 
