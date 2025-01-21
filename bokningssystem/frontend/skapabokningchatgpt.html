@@ -34,9 +34,9 @@
             display: none;
             max-width: 600px;
             margin: 20px auto 0px;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
-            font-size: 1.5em;
+            font-size: 1.3em;
         }
 
         .time-slots.visible {
@@ -44,7 +44,7 @@
         }
 
         .ticket-section {
-            padding-top: 20px;
+            padding-top: 0px;
             max-width: 600px;
             margin: 20px auto 0px;
         }
@@ -238,13 +238,6 @@
             font-size: 16px;
         }
 
-        .time-slots {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
         .time-slot {
             padding: 15px 15px 10px;
             border: 1px solid #ddd;
@@ -323,6 +316,11 @@
             margin-left: auto;
             /* Push to right */
         }
+
+        #bookingForm {
+            max-width: 500px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -339,20 +337,20 @@
 
         <div id="datetimeticketSection" class="booking-section">
             <div class="active">
-                <h2>Välj klätterdatum:</h2>
+                <div style="background: yellow; display: inline;"> Välj klätterdatum:</div>
                 <div class="form-group">
                 </div>
             </div>
 
             <div id="times">
-                <h2>Välj en klättertid:</h2>
+                <div style="background: yellow; display: inline;">Välj en klättertid:</div>
                 <div class="time-slots" id="timeSlots">
                     <!-- Time slots will be populated here -->
                 </div>
             </div>
             <div id="tickets" style="margin-top: 80px;">
-                <h2>Välj antal äventyrare:</h2>
-                <div class="ticket-section"> <!-- Add this wrapper div -->
+                <div style="background: yellow; display: inline;">Välj antal äventyrare:</div>
+                <div class="ticket-section">
                     <div class="ticket-selector">
                         <label>Vuxen 17+ år</label>
                         <div>400 kr</div>
@@ -374,12 +372,21 @@
                             <option value="0">0</option>
                         </select>
                     </div>
+                    <div style="float: right; margin-right: 40px; color: green;">X antal platser kvar.</div>
+                    <br><br><br>
+                    <div style="background: yellow; display: inline;"> Välj antal som vill förlänga tiden:</div>
+                    <br><br>
+                    <div class="ticket-selector">
+                        <label>Heldag (till 17.00)</label>
+                        <div>100 kr</div>
+                        <select name="extendtime">
+                            <option value="0">0</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="addonSection" class="booking-section" style="display: none; text-align: center;">
-            <h2>Förlängning till heldag?</h2>
-            <p>Välj antal som vill förlänga till heldag (till kl 17.00)</p>
+        <div id="addonSection" class="booking-section" style="display: none !important; text-align: center;">
             <div id="fulldaySelectors"></div>
 
         </div>
@@ -838,13 +845,15 @@
 
         async function updateFullDaySelector() {
             const totalTickets = getTotalTickets();
-            const container = document.getElementById('fulldaySelectors');
+            const extendTimeSelect = document.querySelector('select[name="extendtime"]');
             let currentFullDayValue = 0;
 
-            const bookingId = localStorage.getItem('currentBookingId');
-            if (bookingId) {
+            // Get booking data from localStorage
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+
+            if (sessionData && sessionData.bookingId) {
                 try {
-                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`);
+                    const response = await fetch(`http://localhost:3000/api/bookings/${sessionData.bookingId}`);
                     if (response.ok) {
                         const booking = await response.json();
                         currentFullDayValue = booking.full_day || 0;
@@ -854,19 +863,26 @@
                 }
             }
 
-            container.innerHTML = `
-        <div class="ticket-selector">
-            <div>100 kr per person</div>
-            <select name="fullDayExtensions">
-                ${Array.from({ length: totalTickets + 1 }, (_, i) =>
-                `<option value="${i}" ${i === currentFullDayValue ? 'selected' : ''}>${i} st</option>`
-            ).join('')}
-            </select>
-        </div>
-    `;
+            // Clear existing options
+            extendTimeSelect.innerHTML = '';
+
+            // Add new options based on total tickets
+            for (let i = 0; i <= totalTickets; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `${i} st`;
+                if (i === currentFullDayValue) {
+                    option.selected = true;
+                }
+                extendTimeSelect.appendChild(option);
+            }
+
+            // Attach change event listener
+            extendTimeSelect.addEventListener('change', updateBookingSummary);
+
 
             // Attach change event listener to the newly created dropdown
-            const fullDaySelect = container.querySelector('[name="fullDayExtensions"]');
+            const fullDaySelect = document.querySelector('[name="extendtime"]');
             if (fullDaySelect) {
                 fullDaySelect.addEventListener('change', updateBookingSummary);
             }
