@@ -1287,6 +1287,8 @@
             const startTime = Date.now();
             console.log('Starting payment process...');
 
+            const paymentContainer = document.getElementById('payment-container');
+
             try {
                 // Debug logs to see what's in localStorage
                 console.log('Booking data:', localStorage.getItem('bookingData'));
@@ -1306,7 +1308,6 @@
                 }
 
                 // Show loading state
-                const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
@@ -1368,6 +1369,31 @@
             }
 
             return { customerName, customerEmail, customerPhone, customerComment };
+        }
+
+        async function updateBookingDetails(bookingId, customerDetails) {
+            try {
+                console.log('Updating booking details:', { bookingId, customerDetails });
+                const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/details`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify(customerDetails)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Failed to update booking details:', errorText);
+                    throw new Error('Failed to update booking details');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error updating booking details:', error);
+                throw error;
+            }
         }
 
         // Enhanced create payment with timing
