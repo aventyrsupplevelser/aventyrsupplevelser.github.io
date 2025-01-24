@@ -104,21 +104,6 @@ const paymentTimingMiddleware = (req, res, next) => {
 
 router.use(timeLogger);
 
-// Authentication helper function
-async function checkAuth() {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    if (error) {
-        console.log('Auth error:', error);
-        return false;
-    }
-    if (session) {
-        console.log('Authenticated as:', session.user.email);
-        return true;
-    }
-    console.log('Not authenticated');
-    return false;
-}
-
 function calculateChecksum(params, apiKey) {
     // Flatten and sort parameters
     const flattenedParams = flattenParams(params);
@@ -188,7 +173,6 @@ function verifyQuickPayCallback(req, res, next) {
     }
 }
 
-// Group 1: Authentication Routes
 // Update your signin route to be more explicit
 router.post('/signin', async (req, res) => {
     console.log('Starting signin process...');
@@ -249,29 +233,25 @@ router.post('/signin', async (req, res) => {
     }
 });
 
-// Group 2: Diagnostic Routes
-router.get('/test', (req, res) => {
-    console.log('Test route accessed!');
-    res.json({ message: 'Time slot routes are connected!' });
-});
+let backendSession = null;
 
-router.get('/hello', (req, res) => {
-    console.log('Hello route accessed!');
-    res.json({ message: 'Hello from the time slots router!' });
-});
+async function ensureBackendAuth() {
+    if (!backendSession) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: process.env.ADMIN_EMAIL,
+            password: process.env.ADMIN_PASSWORD
+        });
+        
+        if (error) throw error;
+        backendSession = data.session;
+    }
+    return backendSession;
+}
 
-// Group 3: Time Slot Management Routes
 // Create single time slot
 router.post('/time-slots', async (req, res) => {
     try {
-        const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
-
         const { start_time, end_time, total_spots, allow_full_day } = req.body;
-        console.log('Creating time slot:', { start_time, end_time, total_spots, allow_full_day });
-
         const { data, error } = await supabase
             .from('time_slots')
             .insert({
@@ -287,7 +267,6 @@ router.post('/time-slots', async (req, res) => {
         if (error) throw error;
         res.json(data);
     } catch (error) {
-        console.error('Time slot creation error:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -295,10 +274,7 @@ router.post('/time-slots', async (req, res) => {
 // Create multiple time slots
 router.post('/time-slots/bulk', async (req, res) => {
     try {
-        const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
+        await ensureBackendAuth();
 
         const { 
             start_date, 
@@ -368,10 +344,7 @@ router.get('/time-slots', async (req, res) => {
 // Update time slot
 router.put('/time-slots/:id', async (req, res) => {
     try {
-        const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
+        await ensureBackendAuth();
 
         const { total_spots, allow_full_day } = req.body;
         const slotId = req.params.id;
@@ -398,10 +371,8 @@ router.put('/time-slots/:id', async (req, res) => {
 // Delete time slot
 router.delete('/time-slots/:id', async (req, res) => {
     try {
-        const isAuthenticated = await checkAuth();
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: 'Authentication required' });
-        }
+        await ensureBackendAuth();
+
 
         const slotId = req.params.id;
 
