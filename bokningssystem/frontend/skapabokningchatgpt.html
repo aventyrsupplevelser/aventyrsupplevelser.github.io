@@ -1135,12 +1135,12 @@
 
         setInterval(() => {
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
-
             if (bookingData && Date.now() > bookingData.expiresAt) {
-                console.log('Periodic cleanup: Removing expired booking data...');
+                console.log('Clearing expired booking data...');
                 localStorage.removeItem('bookingData');
             }
-        }, 60 * 1000); // Every minute
+        }, 60000); // Check every minute
+
 
 
 
@@ -1169,51 +1169,74 @@
             }
         }
 
-        // Modified handleContinueToPayment
         async function handleContinueToPayment() {
-            const startTime = Date.now();
             console.log('Starting continue to payment process...');
 
-            // Show UI elements immediately
-            document.getElementById('continueToPaymentBtn').style.display = 'none';
-            showSection('customerSection', true);
-            showSection('paymentButtons', true);
-
             try {
-                // Debug log to see what's in localStorage
-                console.log('Current booking data:', localStorage.getItem('bookingData'));
+                let bookingData = JSON.parse(localStorage.getItem('bookingData'));
+                const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
 
-                // First verify we have an active booking
-                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!sessionData?.bookingId) {
-                    throw new Error('No active booking found');
+                // Validate ticket selection
+                if (totalTickets === 0) {
+                    alert('Please select at least one ticket.');
+                    return;
                 }
 
-                // Start booking number generation in background
-                const bookingNumberPromise = generateBookingNumber();
+                // If there's no active booking or the booking is expired, create a new booking
+                if (!bookingData || Date.now() > bookingData.expiresAt) {
+                    console.log('Creating a new booking...');
+                    const createResponse = await fetch('https://your-backend-url/api/bookings/pending', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...ticketState,
+                            time_slot_id: currentTimeSlot,
+                        }),
+                    });
 
-                // Meanwhile, fetch booking summary
-                const summaryPromise = fetchBookingSummary();
+                    if (!createResponse.ok) throw new Error('Failed to create booking');
 
-                // Wait for both to complete
-                const [bookingNumber, summary] = await Promise.all([
-                    bookingNumberPromise,
-                    summaryPromise
-                ]);
+                    const newBooking = await createResponse.json();
 
-                // Store booking number for later use
-                localStorage.setItem('pendingBookingNumber', bookingNumber);
+                    // Save booking data in localStorage
+                    bookingData = {
+                        token: newBooking.access_token,
+                        bookingId: newBooking.booking_id,
+                        expiresAt: Date.now() + 15 * 60 * 1000, // 15 minutes
+                    };
+                    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                } else {
+                    console.log('Updating existing booking...');
+                    const updateResponse = await fetch(`https://your-backend-url/api/bookings/${bookingData.bookingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...ticketState,
+                            time_slot_id: currentTimeSlot,
+                            access_token: bookingData.token,
+                        }),
+                    });
 
-                console.log(`Continue to payment completed in ${Date.now() - startTime}ms`);
+                    if (!updateResponse.ok) throw new Error('Failed to update booking');
+                }
+
+                // Validate customer info
+                const customerInfo = validateCustomerInfo();
+                if (!customerInfo) return;
+
+                // Proceed to payment creation
+                const paymentResponse = await createPayment(bookingData.bookingId, 'swish', customerInfo);
+
+                // Generate payment form and display it
+                const formHtml = await getPaymentForm('swish', paymentResponse);
+                setupPaymentIframe(formHtml, paymentResponse);
+
             } catch (error) {
                 console.error('Error in payment flow:', error);
-                // Revert UI if there's an error
-                document.getElementById('continueToPaymentBtn').style.display = 'block';
-                showSection('customerSection', false);
-                showSection('paymentButtons', false);
-                alert('Ett fel uppstod. Försök igen.');
+                alert('An error occurred. Please try again.');
             }
         }
+
 
         async function fetchBookingSummary() {
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
