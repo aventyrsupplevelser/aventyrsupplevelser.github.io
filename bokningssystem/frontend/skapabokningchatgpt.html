@@ -1317,18 +1317,12 @@
         async function handlePayment(paymentMethod) {
             const startTime = Date.now();
             console.log('Starting payment process...');
-
             const paymentContainer = document.getElementById('payment-container');
 
             try {
-                // Debug logs to see what's in localStorage
-                console.log('Booking data:', localStorage.getItem('bookingData'));
-                console.log('Pending booking number:', localStorage.getItem('pendingBookingNumber'));
-
-                const bookingNumber = localStorage.getItem('pendingBookingNumber');
-                if (!bookingNumber) {
-                    throw new Error('No booking number found');
-                }
+                // Generate new booking number when payment method is selected
+                const bookingNumber = await generateBookingNumber();
+                localStorage.setItem('pendingBookingNumber', bookingNumber);
 
                 const customerInfo = validateCustomerInfo();
                 if (!customerInfo) return;
@@ -1338,17 +1332,14 @@
                     throw new Error('No active booking found');
                 }
 
-                // Show loading state
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                // Update booking with customer info and booking number
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
                     bookingNumber
                 });
 
-                // Get payment form
                 const formHtml = await getPaymentForm(paymentMethod, {
                     order_id: bookingNumber,
                     amount: calculateTotalAmount()
