@@ -1209,6 +1209,7 @@
         }
 
 
+        function to fetch the summary
         async function fetchBookingSummary() {
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             if (!sessionData || !sessionData.bookingId) {
@@ -1218,6 +1219,7 @@
             try {
                 console.log('Fetching summary for booking:', sessionData.bookingId);
                 const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}/summary`);
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Summary fetch failed:', errorText);
@@ -1225,6 +1227,7 @@
                 }
 
                 const summary = await response.json();
+                // Now passing the summary directly
                 displayBookingSummary(summary);
                 return summary;
             } catch (error) {
@@ -1260,13 +1263,8 @@
             continueBtn.textContent = `Gå till betalning: ${total} kr`;
         }
 
-        async function displayBookingSummary(bookingId) {
+        async function displayBookingSummary(summary) {
             try {
-                const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/summary`);
-                if (!response.ok) throw new Error('Failed to fetch booking summary');
-
-                const summary = await response.json();
-
                 document.getElementById('bookingSummaryFinal').innerHTML = `
             <p id="selectedDateTime">Datum & tid: ${summary.date} ${summary.time}</p>
             <p id="selectedTickets">Antal biljetter:</p>
