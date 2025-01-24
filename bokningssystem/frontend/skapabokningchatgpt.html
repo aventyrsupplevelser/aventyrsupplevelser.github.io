@@ -1266,15 +1266,15 @@
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                // Run both API calls in parallel using Promise.all
-                const [paymentResponse, formHtml] = await Promise.all([
-                    createPayment(sessionData.bookingId, paymentMethod, customerInfo),
-                    getPaymentForm(paymentMethod, {
-                        order_id: sessionData.bookingId,
-                        amount: calculateTotalAmount(), // Add this helper function
-                        paymentMethod: paymentMethod
-                    })
-                ]);
+                // First create the payment and get orderId
+                const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
+
+                // Then get the form using the orderId from paymentResponse
+                const formHtml = await getPaymentForm(paymentMethod, {
+                    order_id: paymentResponse.orderId,
+                    amount: paymentResponse.amount, // Use the amount from the response
+                    paymentMethod: paymentMethod
+                });
 
                 setupPaymentIframe(formHtml, paymentResponse);
 
@@ -1319,8 +1319,9 @@
             return response.json();
         }
 
-        // Helper function to get payment form
         async function getPaymentForm(paymentMethod, paymentResponse) {
+            console.log('Getting payment form with:', { paymentMethod, paymentResponse }); // Debug log
+
             const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                 method: 'POST',
                 headers: {
@@ -1328,16 +1329,24 @@
                     'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
-                    order_id: paymentResponse.orderId,
+                    order_id: paymentResponse.order_id,
                     amount: paymentResponse.amount,
                     paymentMethod: paymentMethod
                 })
             });
 
-            if (!response.ok) throw new Error('Failed to get payment form');
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Payment form error:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorText
+                });
+                throw new Error('Failed to get payment form');
+            }
+
             return response.text();
         }
-
         // Helper function to setup payment iframe
         function setupPaymentIframe(formHtml, paymentResponse) {
             const paymentContainer = document.getElementById('payment-container');
