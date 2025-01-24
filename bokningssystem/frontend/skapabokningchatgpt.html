@@ -1185,7 +1185,7 @@
                 // If there's no active booking or the booking is expired, create a new booking
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
                     console.log('Creating a new booking...');
-                    const createResponse = await fetch('https://your-backend-url/api/bookings/pending', {
+                    const createResponse = await fetch('https://https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
