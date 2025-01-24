@@ -507,7 +507,7 @@
                     </div>
                 </div>
                 <div id="bookingSummaryFinal" class="summary-box" style="width:fit-content; background: rgb(255, 255, 255); padding:
-            10px; font-size: 1em; margin-bottom: 30px;">
+            10px; font-size: 1.3em; margin-bottom: 30px;">
                     <p id="selectedDateTime">Datum & tid: Not selected</p>
                     <p id="selectedTickets">Antal: 0 adults, 0 youth, 0 kids</p>
                     <p id="fullDayExtension">Antal förlängning: None</p>
@@ -1305,12 +1305,12 @@
                 document.getElementById('bookingSummaryFinal').innerHTML = `
             <p id="selectedDateTime">Datum & tid: ${tickets.date || 'Not selected'} ${tickets.time || 'Not selected'}</p>
             <p id="selectedTickets">Antal biljetter:</p>
-            <ul style="list-style: none; margin-left: 20px;">
-                <li>Vuxen (400 kr): ${tickets.adult} st (${tickets.adult * 400} kr)</li>
-                <li>Ungdom (300 kr): ${tickets.youth} st (${tickets.youth * 300} kr)</li>
-                <li>Barn (200 kr): ${tickets.kid} st (${tickets.kid * 200} kr)</li>
+            <ul style="list-style: none; margin-left: 0px;">
+                <li>Vuxen: ${tickets.adult} st (${tickets.adult * 400} kr)</li>
+                <li>Ungdom: ${tickets.youth} st (${tickets.youth * 300} kr)</li>
+                <li>Barn: ${tickets.kid} st (${tickets.kid * 200} kr)</li>
             </ul>
-            ${tickets.fullday ? `<p>Heldag: ${tickets.fullday} st (${tickets.fullday * 100} kr)</p>` : ''}
+            ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st (${tickets.fullday * 100} kr)</p>` : ''}
             ${tickets.isRebookable ? `<p>Ombokningsgaranti: ${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</p>` : ''}
             <p id="totalvat">Moms (6%): ${totals.vat.toFixed(2)} kr</p>
             <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${totals.total} kr</p>
