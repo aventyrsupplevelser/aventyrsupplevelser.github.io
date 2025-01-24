@@ -708,69 +708,31 @@ router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
     }
 });
 
-// In timeSlotRoutes.js
-router.get('/bookings/:id/summary', async (req, res) => {
+router.post('/validate-total', async (req, res) => {
+    const { tickets, calculatedTotal } = req.body;
+  
     try {
-        const { id } = req.params;
-        
-        // Get the booking details
-        const { data: booking, error } = await supabase
-            .from('bookings')
-            .select(`
-                *,
-                time_slots (
-                    start_time,
-                    end_time
-                )
-            `)
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        if (!booking) {
-            return res.status(404).json({ error: 'Booking not found' });
-        }
-
-        // Calculate totals
-        const adultTotal = booking.adult_quantity * 400;
-        const youthTotal = booking.youth_quantity * 300;
-        const kidTotal = booking.kid_quantity * 200;
-        const fullDayTotal = booking.full_day * 100;
-        const totalTickets = booking.adult_quantity + booking.youth_quantity + booking.kid_quantity;
-        const rebookingTotal = booking.is_rebookable ? (totalTickets * 25) : 0;
-
-        const subtotal = adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal;
-        const vatRate = 0.06; // 6% VAT
-        const vatAmount = (subtotal * vatRate) / (1 + vatRate); // Calculate VAT from inclusive price
-
-        const summary = {
-            date: new Date(booking.time_slots.start_time).toLocaleDateString('sv-SE'),
-            time: new Date(booking.time_slots.start_time).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
-            tickets: {
-                adult: booking.adult_quantity,
-                youth: booking.youth_quantity,
-                kid: booking.kid_quantity,
-                fullDay: booking.full_day
-            },
-            is_rebookable: booking.is_rebookable,
-            pricing: {
-                adultTotal,
-                youthTotal,
-                kidTotal,
-                fullDayTotal,
-                rebookingTotal,
-                subtotal,
-                vatAmount,
-                total: subtotal
-            }
-        };
-
-        res.json(summary);
+      const adultTotal = tickets.adult * 400;
+      const youthTotal = tickets.youth * 300;
+      const kidTotal = tickets.kid * 200;
+      const fullDayTotal = tickets.fullday * 100;
+      const rebookingTotal = tickets.isRebookable
+        ? (tickets.adult + tickets.youth + tickets.kid) * 25
+        : 0;
+  
+      const backendSubtotal =
+        adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal;
+      const vatRate = 0.06;
+      const backendTotal = backendSubtotal;
+  
+      const isValid = backendTotal === calculatedTotal;
+  
+      res.json({ isValid, backendTotal });
     } catch (error) {
-        console.error('Error fetching booking summary:', error);
-        res.status(500).json({ error: error.message });
+      console.error('Error validating total:', error);
+      res.status(500).json({ error: 'Validation failed' });
     }
-});
+  });
 
 router.post('/generate-booking-number', async (req, res) => {
     try {

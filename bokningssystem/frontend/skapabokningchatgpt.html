@@ -1209,31 +1209,64 @@
         }
 
 
-        async function fetchBookingSummary() {
-            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            if (!sessionData || !sessionData.bookingId) {
-                throw new Error('No active booking found');
-            }
+        const PRICES = {
+            adult: 400,
+            youth: 300,
+            kid: 200,
+            fullday: 100,
+            rebooking: 25,
+        };
 
+        function calculateTotal(tickets) {
+            const baseTotal =
+                tickets.adult * PRICES.adult +
+                tickets.youth * PRICES.youth +
+                tickets.kid * PRICES.kid +
+                tickets.fullday * PRICES.fullday;
+            const rebookingTotal = tickets.isRebookable
+                ? (tickets.adult + tickets.youth + tickets.kid) * PRICES.rebooking
+                : 0;
+            const subtotal = baseTotal + rebookingTotal;
+            const vatRate = 0.06; // 6% VAT
+            const vat = subtotal * vatRate / (1 + vatRate);
+
+            return {
+                subtotal,
+                vat,
+                total: subtotal,
+            };
+        }
+
+        async function validateTotalWithBackend(tickets, calculatedTotal) {
             try {
-                console.log('Fetching summary for booking:', sessionData.bookingId);
-                const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}/summary`);
+                const response = await fetch('/api/validate-total', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tickets, calculatedTotal }),
+                });
+                const { isValid, backendTotal } = await response.json();
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Summary fetch failed:', errorText);
-                    throw new Error('Failed to fetch booking summary');
+                if (!isValid) {
+                    alert(
+                        `There is a mismatch in the total cost. Backend calculated: ${backendTotal} kr`
+                    );
                 }
-
-                const summary = await response.json();
-                // Now passing the summary directly
-                displayBookingSummary(summary);
-                return summary;
             } catch (error) {
-                console.error('Error fetching booking summary:', error);
-                throw error;
+                console.error('Error validating total:', error);
             }
         }
+
+        async function handleBooking(tickets) {
+            // Calculate total on frontend
+            const totals = calculateTotal(tickets);
+
+            // Update the UI immediately
+            displaySummaryToUser(totals);
+
+            // Validate with backend asynchronously
+            validateTotalWithBackend(tickets, totals.total);
+        }
+
 
         // Add this to handle going back in the flow
         function resetPaymentFlow() {
