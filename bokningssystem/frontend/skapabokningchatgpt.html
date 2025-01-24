@@ -1131,6 +1131,10 @@
                     is_rebookable: ticketState.is_rebookable,
                 };
 
+                // Get selected date and time for display
+                const selectedDate = document.querySelector('.calendar-day.selected')?.dataset.date;
+                const selectedTimeSlot = document.querySelector('.time-slot.selected')?.textContent.trim();
+
                 // Show UI elements immediately
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
@@ -1138,7 +1142,14 @@
 
                 // Fetch and display the summary right away
                 const totals = calculateTotal(ticketState);
-                displayBookingSummary({ tickets: ticketState, totals });
+                displayBookingSummary({
+                    tickets: {
+                        ...ticketState,
+                        date: selectedDate,
+                        time: selectedTimeSlot,
+                    },
+                    totals,
+                });
 
                 // Update booking or create a new one in the background
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
