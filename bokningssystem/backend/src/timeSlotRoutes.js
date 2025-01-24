@@ -714,7 +714,7 @@ router.post('/get-payment-form', (req, res) => {
                 total: `${basketInfo.pricing.total} kr`
             } : undefined,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
-            cancelurl: `${ngrokUrl}/payment-cancelled.html`,
+            cancelurl: `${ngrokUrl}/payment-cancelledd.html`,
             callbackurl: `${ngrokUrl}/api/payment-callback`,
             language: 'sv',
             autocapture: '1',
