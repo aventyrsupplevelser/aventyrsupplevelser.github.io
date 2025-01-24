@@ -1516,9 +1516,10 @@
                 iframe.style.width = '100%';
                 iframe.style.height = '330px';
                 iframe.style.border = 'none';
+                iframe.style.display = 'none'; // Hide iframe initially
                 iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
 
-                paymentContainer.innerHTML = '';
+                // Keep spinner and add iframe
                 paymentContainer.appendChild(iframe);
 
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -1526,21 +1527,20 @@
                 iframeDoc.write(formHtml);
                 iframeDoc.close();
 
-                // Add load event listener to iframe
                 iframe.onload = () => {
                     const loadDuration = endTiming('Iframe Load', startTime);
                     console.log(`Payment iframe loaded in ${loadDuration}ms`);
+                    // Only now remove spinner and show iframe
+                    paymentContainer.querySelector('.loading-spinner').remove();
+                    iframe.style.display = 'block';
                 };
 
-                // Submit form immediately
                 const form = iframeDoc.querySelector('form');
                 if (form) {
                     console.log('Submitting payment form...');
                     form.submit();
                 }
 
-                const duration = endTiming('Payment Iframe Setup', startTime);
-                console.log(`Payment iframe setup completed in ${duration}ms`);
             } catch (error) {
                 const duration = endTiming('Payment Iframe Setup', startTime);
                 console.error(`Payment iframe setup failed after ${duration}ms:`, error);
