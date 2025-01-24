@@ -47,7 +47,7 @@
 
 <body>
     <div class="status-container">
-        <h1>Verifierar betalning...</h1>
+        <h1>Loading secure connection...</h1>
         <div class="loading"></div>
         <div id="statusMessage"></div>
     </div>
@@ -66,7 +66,15 @@
             console.log('Starting status check for booking number:', bookingNumber);
 
             // Start payment status polling
-            startStatusCheck(bookingNumber);
+            const paymentVerified = await startStatusCheck(bookingNumber);
+
+            if (paymentVerified) {
+                // Clear booking-related data from localStorage
+                console.log('Clearing localStorage for new bookings...');
+                localStorage.removeItem('bookingData');
+                localStorage.removeItem('pendingBookingNumber');
+                console.log('localStorage after clearing:', localStorage);
+            }
         }
 
         async function checkPaymentStatus(bookingNumber) {
@@ -81,10 +89,16 @@
                     document.querySelector('.loading').style.display = 'none';
                     document.querySelector('h1').textContent = 'Betalning genomförd!';
                     document.getElementById('statusMessage').innerHTML = `
-                        <h2>Tack för din bokning!</h2>
-                        <p>Din bokningsreferens är: ${bookingNumber}</p>
-                        <p>En bekräftelse skickas till din e-post inom kort.</p>
-                    `;
+                <h2>Tack för din bokning!</h2>
+                <p>Din bokningsreferens är: ${bookingNumber}</p>
+                <p>En bekräftelse skickas till din e-post inom kort.</p>
+            `;
+
+                    // Clear booking-related data from localStorage
+                    console.log('Clearing localStorage for new bookings...');
+                    localStorage.removeItem('bookingData');
+                    localStorage.removeItem('pendingBookingNumber');
+                    console.log('localStorage after clearing:', localStorage);
                     return true;
                 }
                 return false;
