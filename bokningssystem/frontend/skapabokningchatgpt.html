@@ -1271,11 +1271,8 @@
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                // Create payment and get form in parallel
-                const [paymentResponse, formHtml] = await Promise.all([
-                    createPayment(sessionData.bookingId, paymentMethod, customerInfo),
-                    getPaymentForm(paymentMethod)
-                ]);
+                const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
+                const formHtml = await getPaymentForm(paymentMethod, paymentResponse);
 
                 // Set up iframe after both promises resolve
                 setupPaymentIframe(formHtml, paymentResponse);
@@ -1321,14 +1318,19 @@
             return response.json();
         }
 
-        async function getPaymentForm(paymentMethod) {
+        // Helper function to get payment form
+        async function getPaymentForm(paymentMethod, paymentResponse) {
             const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 },
-                body: JSON.stringify({ paymentMethod })
+                body: JSON.stringify({
+                    order_id: paymentResponse.orderId,
+                    amount: paymentResponse.amount,
+                    paymentMethod: paymentMethod
+                })
             });
 
             if (!response.ok) throw new Error('Failed to get payment form');
