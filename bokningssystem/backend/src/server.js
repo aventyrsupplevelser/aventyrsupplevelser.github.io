@@ -24,7 +24,7 @@ const frontendPath = path.join(__dirname, '../../frontend');
 
 // CORS configuration - must come before any routes
 const corsOptions = {
-    origin: ['https://90a0-85-229-138-126.ngrok-free.app'],
+    origin: ['https://aventyrsupplevelsergithubio-testing.up.railway.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'QuickPay-Checksum-Sha256'],
     credentials: true,

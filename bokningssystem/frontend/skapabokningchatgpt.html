@@ -998,7 +998,7 @@
             try {
                 if (sessionData && sessionData.bookingId && Date.now() <= sessionData.expiresAt) {
                     // Update existing booking
-                    const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${sessionData.bookingId}`, {
+                    const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1013,7 +1013,7 @@
 
                 } else if (totalTickets > 0) {
                     // Create new booking
-                    const response = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/bookings/pending', {
+                    const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1054,7 +1054,7 @@
             try {
                 if (sessionData && sessionData.bookingId && Date.now() <= sessionData.expiresAt) {
                     // Update existing booking
-                    const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${sessionData.bookingId}`, {
+                    const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1069,7 +1069,7 @@
 
                 } else if (totalTickets > 0) {
                     // Create new booking
-                    const response = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/bookings/pending', {
+                    const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1207,7 +1207,7 @@
 
         async function displayBookingSummary(bookingId) {
             try {
-                const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${bookingId}/summary`);
+                const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/summary`);
                 if (!response.ok) throw new Error('Failed to fetch booking summary');
 
                 const summary = await response.json();
@@ -1250,7 +1250,7 @@
                 }
 
                 // Create payment
-                const createResponse = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/create-payment', {
+                const createResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1273,7 +1273,7 @@
                 const { orderId, amount } = await createResponse.json();
 
                 // Get payment form
-                const formResponse = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/get-payment-form', {
+                const formResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

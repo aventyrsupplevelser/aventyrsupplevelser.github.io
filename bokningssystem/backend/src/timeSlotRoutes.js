@@ -559,7 +559,7 @@ router.post('/test-payment', async (req, res) => {
             body: JSON.stringify({
                 amount: 1000, // 10 SEK
                 continue_url: 'https://localhost:3000/success',
-                callback_url: 'https://90a0-85-229-138-126.ngrok-free.app/api/quickpay-callback',
+                callback_url: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/quickpay-callback',
                 cancel_url: 'https://localhost:3000/cancel',
                 payment_methods: 'creditcard'
             })
@@ -690,7 +690,7 @@ router.post('/get-payment-form', (req, res) => {
             throw new Error('Missing required environment variables');
         }
 
-        const ngrokUrl = 'https://90a0-85-229-138-126.ngrok-free.app';
+        const ngrokUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
 
         let payment_methods;
         if (paymentMethod === 'card') {
