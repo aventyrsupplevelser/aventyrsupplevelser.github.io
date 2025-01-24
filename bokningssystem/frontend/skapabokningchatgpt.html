@@ -1194,8 +1194,8 @@
                 localStorage.setItem('pendingBookingNumber', bookingNumber);
 
                 // Now that we have the booking data saved, fetch the summary
-                await fetchBookingSummary();
-
+                const totals = calculateTotal(ticketState);
+                displayBookingSummary({ tickets: ticketState, totals });
                 console.log('Booking process completed');
 
             } catch (error) {
