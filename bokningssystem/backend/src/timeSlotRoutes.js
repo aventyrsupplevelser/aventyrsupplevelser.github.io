@@ -707,7 +707,7 @@ router.post('/get-payment-form', (req, res) => {
             amount,
             currency: 'SEK',
             order_id,
-            continueurl: `${ngrokUrl}/tackfordinbokning.html?order_id=${order_id}`,
+            continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancelurl: `${ngrokUrl}/payment-cancelled.html`,
             callbackurl: `${ngrokUrl}/api/payment-callback`,
             language: 'sv',
