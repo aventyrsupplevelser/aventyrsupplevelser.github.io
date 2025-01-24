@@ -1278,7 +1278,11 @@
                 // Show loading state
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalningsformulär...</div>';
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading-spinner';
+                loadingDiv.textContent = 'Laddar betalningsformulär...';
+                paymentContainer.appendChild(loadingDiv);
+
                 document.getElementById('paymentButtons').style.display = 'none';
 
                 // Create payment
@@ -1315,9 +1319,16 @@
                 if (!formResponse.ok) throw new Error('Failed to get payment form');
                 const formHtml = await formResponse.text();
 
-                // Add the form to the page and submit it
-                paymentContainer.innerHTML = formHtml;
-                const form = paymentContainer.querySelector('form');
+                // Remove loading spinner
+                loadingDiv.remove();
+
+                // Add the form to the container (don't replace container contents)
+                const formDiv = document.createElement('div');
+                formDiv.innerHTML = formHtml;
+                paymentContainer.appendChild(formDiv);
+
+                // Submit the form
+                const form = formDiv.querySelector('form');
                 if (form) {
                     form.submit();
                 }
