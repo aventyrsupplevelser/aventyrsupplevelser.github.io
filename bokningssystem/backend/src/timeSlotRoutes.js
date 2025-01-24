@@ -519,7 +519,30 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
 });
 
 
+// Modified update route
+router.put('/bookings/:id/details', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { customerName, customerEmail, customerPhone, comments, bookingNumber } = req.body;
 
+        const { error } = await supabase
+            .from('bookings')
+            .update({
+                customer_name: customerName,
+                customer_email: customerEmail,
+                customer_phone: customerPhone,
+                comments,
+                booking_number: bookingNumber
+            })
+            .eq('id', id);
+
+        if (error) throw error;
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
 
@@ -576,52 +599,22 @@ router.post('/create-payment', paymentTimingMiddleware, async (req, res) => {
         req.logCheckpoint('Starting payment creation');
         
         const { 
-            bookingId, 
+            bookingId,
             paymentMethod,
-            customerName,
-            customerEmail,
-            customerPhone,
-            customerComment 
+            bookingNumber  // Now passed in from client
         } = req.body;
-
-        async function generateUniqueBookingNumber() {
-            let isUnique = false;
-            let bookingNumber;
-            
-            while (!isUnique) {
-                const randomDigits = Math.floor(10000000 + Math.random() * 90000000);
-                bookingNumber = `B${randomDigits}`;
-                
-                const { data, error } = await supabase
-                    .from('bookings')
-                    .select('booking_number')
-                    .eq('booking_number', bookingNumber)
-                    .single();
-                
-                if (error && error.code === 'PGRST116') {
-                    isUnique = true;
-                } else if (error) {
-                    throw error;
-                }
-            }
-            
-            return bookingNumber;
-        }
-
-        req.logCheckpoint('Starting unique booking number generation');
-        const bookingNumber = await generateUniqueBookingNumber();
-        req.logCheckpoint('Generated unique booking number');
-
+        
+        // Just get booking details for amount calculation
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
             .select('*')
             .eq('id', bookingId)
             .single();
 
+        if (bookingError) throw bookingError;
         req.logCheckpoint('Retrieved booking details');
 
-        if (bookingError) throw bookingError;
-
+        // Calculate totals
         const adultTotal = booking.adult_quantity * 400;
         const youthTotal = booking.youth_quantity * 300;
         const kidTotal = booking.kid_quantity * 200;
@@ -632,28 +625,9 @@ router.post('/create-payment', paymentTimingMiddleware, async (req, res) => {
 
         req.logCheckpoint('Calculated totals');
 
-        const { error: updateError } = await supabase
-            .from('bookings')
-            .update({
-                customer_name: customerName,
-                customer_email: customerEmail,
-                customer_phone: customerPhone,
-                comments: customerComment,
-                booking_number: bookingNumber
-            })
-            .eq('id', bookingId)
-            .select();
-
-        req.logCheckpoint('Updated booking with customer details');
-
-        if (updateError) {
-            console.error('Error updating booking:', updateError);
-            throw new Error('Failed to update booking with customer details');
-        }
-
         res.json({ 
             orderId: bookingNumber,
-            amount: totalAmount * 100 // Convert to öre
+            amount: totalAmount * 100  // Convert to öre
         });
 
     } catch (error) {
@@ -794,6 +768,21 @@ router.get('/bookings/:id/summary', async (req, res) => {
         res.json(summary);
     } catch (error) {
         console.error('Error fetching booking summary:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/generate-booking-number', async (req, res) => {
+    try {
+        // Using Postgres sequence (much faster than the while loop)
+        const { data, error } = await supabase
+            .rpc('generate_booking_number');
+        
+        if (error) throw error;
+        
+        res.json({ bookingNumber: data });
+    } catch (error) {
+        console.error('Error generating booking number:', error);
         res.status(500).json({ error: error.message });
     }
 });

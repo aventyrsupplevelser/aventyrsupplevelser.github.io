@@ -1169,25 +1169,40 @@
             }
         }
 
-        // Update handleContinueToPayment to include the summary display
-        function handleContinueToPayment() {
+        async function handleContinueToPayment() {
+            const startTime = Date.now();
+            console.log('Starting continue to payment process...');
+
             // Show UI elements immediately
             document.getElementById('continueToPaymentBtn').style.display = 'none';
             showSection('customerSection', true);
             showSection('paymentButtons', true);
 
-            // Start the booking update and summary fetch in parallel
-            Promise.all([
-                updateBooking(),
-                fetchBookingSummary()
-            ]).catch(error => {
+            try {
+                // Start booking number generation in background
+                const bookingNumberPromise = generateBookingNumber();
+
+                // Meanwhile, fetch booking summary
+                const summaryPromise = fetchBookingSummary();
+
+                // Wait for both to complete
+                const [bookingNumber, summary] = await Promise.all([
+                    bookingNumberPromise,
+                    summaryPromise
+                ]);
+
+                // Store booking number for later use
+                localStorage.setItem('pendingBookingNumber', bookingNumber);
+
+                console.log(`Continue to payment completed in ${Date.now() - startTime}ms`);
+            } catch (error) {
                 console.error('Error in payment flow:', error);
                 // Revert UI if there's an error
                 document.getElementById('continueToPaymentBtn').style.display = 'block';
                 showSection('customerSection', false);
                 showSection('paymentButtons', false);
                 alert('Ett fel uppstod. Försök igen.');
-            });
+            }
         }
 
         // Separated booking summary fetch
@@ -1252,61 +1267,44 @@
         }
 
         async function handlePayment(paymentMethod) {
-            const overallStart = startTiming('Total Payment Process');
-            const timings = {
-                validation: 0,
-                createPayment: 0,
-                getForm: 0,
-                setupIframe: 0
-            };
+            const startTime = Date.now();
 
             try {
-                console.log('Starting payment process...');
+                const bookingNumber = localStorage.getItem('pendingBookingNumber');
+                if (!bookingNumber) {
+                    throw new Error('No booking number found');
+                }
+
+                const customerInfo = validateCustomerInfo();
+                if (!customerInfo) return;
+
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!sessionData || !sessionData.bookingId) {
+                if (!sessionData?.bookingId) {
                     throw new Error('No active booking found');
                 }
 
-                const validationStart = startTiming('Customer Validation');
-                const customerInfo = validateCustomerInfo();
-                if (!customerInfo) return;
-                timings.validation = endTiming('Customer Validation', validationStart);
-
+                // Show loading state
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                const createStart = startTiming('Create Payment Request');
-                const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
-                timings.createPayment = endTiming('Create Payment Request', createStart);
+                // Update booking with customer info and booking number
+                await updateBookingDetails(sessionData.bookingId, {
+                    ...customerInfo,
+                    bookingNumber
+                });
 
-                const formStart = startTiming('Get Payment Form');
+                // Get payment form (now much faster since booking number exists)
                 const formHtml = await getPaymentForm(paymentMethod, {
-                    order_id: paymentResponse.orderId,
-                    amount: paymentResponse.amount,
-                    paymentMethod: paymentMethod
+                    order_id: bookingNumber,
+                    amount: calculateTotalAmount()
                 });
-                timings.getForm = endTiming('Get Payment Form', formStart);
 
-                const iframeStart = startTiming('Setup Payment Iframe');
-                setupPaymentIframe(formHtml, paymentResponse);
-                timings.setupIframe = endTiming('Setup Payment Iframe', iframeStart);
-
-                const totalTime = endTiming('Total Payment Process', overallStart);
-
-                console.log('\nPayment Process Timing Summary:');
-                console.table({
-                    validation: timings.validation + 'ms',
-                    createPayment: timings.createPayment + 'ms',
-                    getForm: timings.getForm + 'ms',
-                    setupIframe: timings.setupIframe + 'ms',
-                    totalTime: totalTime + 'ms'
-                });
+                setupPaymentIframe(formHtml);
+                console.log(`Payment setup completed in ${Date.now() - startTime}ms`);
 
             } catch (error) {
-                const errorTime = endTiming('Total Payment Process', overallStart);
-                console.error(`Payment process failed after ${errorTime}ms:`, error);
-                const paymentContainer = document.getElementById('payment-container');
+                console.error('Payment error:', error);
                 paymentContainer.style.display = 'none';
                 document.getElementById('paymentButtons').style.display = 'block';
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
