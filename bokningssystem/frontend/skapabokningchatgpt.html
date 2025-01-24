@@ -27,7 +27,7 @@
         }
 
         .booking-section:not(:first-child) {
-            display: none;
+            display: ;
         }
 
         .time-slots {
@@ -220,7 +220,6 @@
 
         label {
             display: block;
-            margin-bottom: 8px;
             font-weight: 500;
         }
 
@@ -232,10 +231,11 @@
         select {
             width: 100%;
             padding: 8px;
-            border: 1px solid #ddd;
+            border: 1.5px solid #515151;
             border-radius: 4px;
             font-family: inherit;
             font-size: 16px;
+            margin-top: 5px;
         }
 
         .time-slot {
@@ -253,12 +253,17 @@
         }
 
         .ticket-selector {
-            display: grid;
-            grid-template-columns: 250px auto auto;
+            display: flex;
+            justify-content: space-between;
             gap: 10px;
-            align-items: stretch;
+            align-items: center;
             margin-bottom: 15px;
             font-size: 1.5em;
+            padding: 14px 10px 9px;
+        }
+
+        .ticket-selector label {
+            width: 235px;
         }
 
         .ticket-selector div {
@@ -321,21 +326,68 @@
             max-width: 500px;
             margin: 0 auto;
         }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 20px;
+            width: 129px;
+            margin-top: -5px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .quantity-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .quantity-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .quantity {
+            min-width: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: 500;
+            padding: 8px 10px 3px;
+            border: 1.5px solid rgb(90, 90, 90);
+            border-radius: 3px;
+        }
+
+        #continueToPaymentBtn.disabled {
+            background: grey;
+            color: rgb(182, 182, 182);
+        }
+
+        .btn-cancel {
+            display: none !important;
+        }
+
+        #customerbox {
+            display: grid;
+            grid-template-columns: 250px 250px;
+            gap: 0px 40px;
+        }
     </style>
 </head>
 
 <body>
     <form id="bookingForm">
-        <div id="bookingSummary" class="summary-box"
-            style="border: 4px solid grey; width: fit-content; background: rgb(255, 255, 229); padding: 20px;">
-            <h3>Din bokning</h3>
-            <p id="selectedDateTime">Datum & tid: Not selected</p>
-            <p id="selectedTickets">Antal: 0 adults, 0 youth, 0 kids</p>
-            <p id="fullDayExtension">Antal förlängning: None</p>
-            <p id="totalCost">Summa: 0 kr</p>
-        </div>
-
-        <div id="datetimeticketSection" class="booking-section">
+        <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
                 <div style="background: yellow; display: inline;"> Välj klätterdatum:</div>
                 <div class="form-group">
@@ -351,127 +403,127 @@
             <div id="tickets" style="margin-top: 80px;">
                 <div style="background: yellow; display: inline;">Välj antal äventyrare:</div>
                 <div class="ticket-section">
+                    <!-- Available spots display -->
+
+                    <!-- Adult tickets -->
                     <div class="ticket-selector">
                         <label>Vuxen 17+ år</label>
                         <div>400 kr</div>
-                        <select name="adultTickets">
-                            <option value="0">0</option>
-                        </select>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" data-ticket-type="adult">-</button>
+                            <span class="quantity" id="adultQuantity">0</span>
+                            <button type="button" class="quantity-btn plus" data-ticket-type="adult">+</button>
+                        </div>
                     </div>
-                    <div class="ticket-selector">
+
+                    <!-- Youth tickets -->
+                    <div class="ticket-selector" style="background: rgb(239, 239, 239);">
                         <label>Ungdom 10-16 år</label>
                         <div>300 kr</div>
-                        <select name="youthTickets">
-                            <option value="0">0</option>
-                        </select>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" data-ticket-type="youth">-</button>
+                            <span class="quantity" id="youthQuantity">0</span>
+                            <button type="button" class="quantity-btn plus" data-ticket-type="youth">+</button>
+                        </div>
                     </div>
+
+                    <!-- Kid tickets -->
                     <div class="ticket-selector">
                         <label>Barn 3-9 år</label>
                         <div>200 kr</div>
-                        <select name="childTickets">
-                            <option value="0">0</option>
-                        </select>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" data-ticket-type="kid">-</button>
+                            <span class="quantity" id="kidQuantity">0</span>
+                            <button type="button" class="quantity-btn plus" data-ticket-type="kid">+</button>
+                        </div>
                     </div>
-                    <div style="float: right; margin-right: 40px; color: green;">X antal platser kvar.</div>
-                    <br><br><br>
-                    <div style="background: yellow; display: inline;"> Välj antal som vill förlänga tiden:</div>
+                    <div id="spotsLeft" style="float: right; margin-right: 20px; color: green;"></div>
+
+
                     <br><br>
+                    <div style="background: yellow; display: inline;">Välj antal som vill förlänga tiden:</div>
+                    <br><br>
+
+                    <!-- Full day extension -->
                     <div class="ticket-selector">
                         <label>Heldag (till 17.00)</label>
                         <div>100 kr</div>
-                        <select name="extendtime">
-                            <option value="0">0</option>
-                        </select>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" data-ticket-type="fullday">-</button>
+                            <span class="quantity" id="fulldayQuantity">0</span>
+                            <button type="button" class="quantity-btn plus" data-ticket-type="fullday">+</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div id="addonSection" class="booking-section" style="display: none !important; text-align: center;">
-            <div id="fulldaySelectors"></div>
+                <br><br>
+                <div id="rebooking">
+                    <div style="background: yellow; display: inline;">Vill ni ha ombokningsgaranti (boka om tiden fram
+                        tills 24h innan)?</div>
+                    <br><br>
+                    <label class="rebooking-option"
+                        style="cursor: pointer; display: flex; justify-content: space-between; margin-left: 10px;">
+                        <div style="font-size: 1.5em; font-weight: 500;">25 kr per person</div>
+                        <input type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
+                    </label>
+                </div>
+                <br><br>
+                <div class="button-container"
+                    style="text-align: center; margin-top: 20px; float: right; margin-bottom: 50px;">
+                    <button type="button" id="continueToPaymentBtn" style="display: none;" class="primary-button">
+                        Fortsätt till betalning
+                    </button>
+                </div>
 
-        </div>
-
-
-        <div id="customerSection" class="booking-section">
-            <h2>Kundinformation</h2>
-            <div class="form-group">
-                <label>Förnamn</label>
-                <input type="text" id="customerName" required data-required>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="customerEmail" required data-required>
-            </div>
-            <div class="form-group">
-                <label>Telefon</label>
-                <input type="tel" id="customerPhone">
-            </div>
-            <div class="form-group">
-                <label>Kommentar</label>
-                <input type="comment" id="customerComment">
             </div>
 
-            <!-- In your customerSection div -->
-            <!-- Payment container -->
-            <div id="payment-container">
-                <button id="go-to-payment" type="button" style="float: right;">Go to Payment</button>
-                <div id="checkout-container" style="display: none;">
-                    <iframe id="payment-frame" style="width: 100%; height: 1000px; border: none;"></iframe>
+
+
+            <div id="customerSection" class="booking-section" style="display: none;">
+                <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Fyll i information:</div>
+                <div id="customerbox">
+                    <div class="form-group">
+                        <label>Förnamn</label>
+                        <input type="text" id="customerName" required data-required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="customerEmail" required data-required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="customerPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>Kommentar</label>
+                        <input style="height: 100px" type="comment" id="customerComment">
+                    </div>
+                </div>
+                <div id="bookingSummaryFinal" class="summary-box" style="width:fit-content; background: rgb(255, 255, 255); padding:
+            10px; font-size: 1em; margin-bottom: 30px;">
+                    <p id="selectedDateTime">Datum & tid: Not selected</p>
+                    <p id="selectedTickets">Antal: 0 adults, 0 youth, 0 kids</p>
+                    <p id="fullDayExtension">Antal förlängning: None</p>
+                    <p id="ombokningsgaranti">Ombokningsgaranti: None</p>
+                    <p id="totalvat">Moms: 0 kr</p>
+                    <p id="totalCost">Summa: 0 kr</p>
+                </div>
+
+                <div id="paymentButtons" style="display: none;">
+                    <button type="button" class="payment-button" onclick="handlePayment('swish')">
+                        Betala med Swish
+                    </button>
+                    <button type="button" class="payment-button" onclick="handlePayment('card')">
+                        Betala med kort
+                    </button>
                 </div>
             </div>
-
-            <script>
-                document.getElementById('go-to-payment').addEventListener('click', async () => {
-                    try {
-                        const totalAmount = Math.abs(calculateTotalAmount());
-                        console.log('Initializing payment with amount:', totalAmount);
-
-                        // Request form details (including checksum) from the backend
-                        const response = await fetch('http://localhost:3000/api/get-payment-form', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                amount: totalAmount * 100, // Convert to øre
-                                order_id: `order-${Date.now()}`,
-                            }),
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Failed to fetch payment form');
-                        }
-
-                        const formHtml = await response.text();
-                        console.log('Form HTML received:', formHtml);
-
-                        // Display the payment form in an iframe
-                        document.getElementById('checkout-container').style.display = 'block';
-                        const iframe = document.getElementById('payment-frame');
-                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        iframeDoc.open();
-                        iframeDoc.write(formHtml);
-                        iframeDoc.close();
-                    } catch (error) {
-                        console.error('Payment form error:', error);
-                        alert('Payment error: ' + error.message);
-                    }
-                });
-            </script>
+            <div id="payment-container" class="payment-section" style="display: none;">
+                <!-- iframe will be created dynamically -->
+            </div>
 
 
 
         </div>
-
-
-
-
-
-        <div class="button-container"
-            style="display: flex; justify-content: space-between; max-width: 600px; margin: 50px auto;">
-            <button type="button" class="back-button" id="backButton">Tillbaka</button>
-            <button type="button" id="proceedButton">Gå vidare</button>
-        </div>
-        <div id="message"></div>
 
     </form>
 
@@ -558,8 +610,6 @@
             }
 
             handleTimeSelection(timeSlotElement) {
-
-
                 // Show ticket section
                 const ticketSection = document.querySelector('#tickets');
                 ticketSection.classList.add('visible');
@@ -569,9 +619,7 @@
 
                 // Update available spots
                 currentAvailableSpots = parseInt(timeSlotElement.dataset.availableSpots);
-                updateTicketDropdowns();
 
-                document.getElementById('proceedButton').style.display = 'block';
             }
 
             validateTicketSelection() {
@@ -735,7 +783,10 @@
                     }
 
                     this.selectedDate = dateStr;
+                    clearTicketSelections();
+
                     loadTimeSlots(dateStr);
+
                 }
             }
 
@@ -749,6 +800,9 @@
 
         async function loadTimeSlots(dateStr) {
             try {
+
+                clearTicketSelections();
+
                 // Create the time range in local timezone
                 const startOfDay = new Date(`${dateStr}T00:00:00`);
                 const endOfDay = new Date(`${dateStr}T23:59:59`);
@@ -785,196 +839,292 @@
             }
         }
 
+        let currentTimeSlot = null;
+        let maxAvailableSpots = 0;
+        let currentBookingId = null;
+
+        // Initialize ticket state
+        const ticketState = {
+            adult: 0,
+            youth: 0,
+            kid: 0,
+            fullday: 0,
+            is_rebookable: false  // Add this line
+        };
+
+        const PRICES = {
+            adult: 400,
+            youth: 300,
+            kid: 200,
+            fullday: 100,
+            rebooking: 25
+        };
+
+        // Helper function to update spots left display
+        function updateSpotsLeftDisplay() {
+            const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
+            const spotsLeft = maxAvailableSpots - totalSelected;
+            document.getElementById('spotsLeft').textContent = `${spotsLeft} platser kvar.`;
+        }
+
+        // Helper function to update fullday max quantity
+        function updateFulldayMaxQuantity() {
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            const fulldayPlus = document.querySelector('[data-ticket-type="fullday"].plus');
+            const fulldayMinus = document.querySelector('[data-ticket-type="fullday"].minus');
+
+            if (ticketState.fullday > totalTickets) {
+                ticketState.fullday = totalTickets;
+                document.getElementById('fulldayQuantity').textContent = totalTickets;
+            }
+
+            fulldayPlus.disabled = ticketState.fullday >= totalTickets;
+            fulldayMinus.disabled = ticketState.fullday <= 0;
+        }
+
+        // Add this debounce function at the top level
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Create a debounced version of updateBooking
+        const debouncedUpdateBooking = debounce(updateBooking, 1000); // Wait 1 second
+
+        // Update the handleQuantityChange function
+        // Modify handleQuantityChange to call validateTicketSelection
+        async function handleQuantityChange(type, change) {
+            const currentValue = ticketState[type];
+            const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            if (type === 'fullday') {
+                const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+                const newValue = currentValue + change;
+                if (newValue >= 0 && newValue <= totalTickets) {
+                    ticketState.fullday = newValue;
+                    document.getElementById('fulldayQuantity').textContent = newValue;
+                    updateTotalDisplay(); // Add this
+                }
+                return;
+            }
+
+            const newValue = currentValue + change;
+            if (newValue >= 0 && totalSelected + change <= maxAvailableSpots) {
+                ticketState[type] = newValue;
+                document.getElementById(`${type}Quantity`).textContent = newValue;
+                updateSpotsLeftDisplay();
+                updateFulldayMaxQuantity();
+                validateTicketSelection();
+                updateTotalDisplay(); // Add this
+            }
+        }
+
+
+        // Function to clear all ticket selections
+        // Modify clearTicketSelections to also reset rebooking
+        function clearTicketSelections() {
+            Object.keys(ticketState).forEach(type => {
+                if (type === 'is_rebookable') {
+                    ticketState[type] = false;
+                    document.getElementById('rebookingCheckbox').checked = false;
+                } else {
+                    ticketState[type] = 0;
+                    document.getElementById(`${type}Quantity`).textContent = '0';
+                }
+            });
+            updateSpotsLeftDisplay();
+            updateFulldayMaxQuantity();
+        }
+
         function selectTimeSlot(element) {
+
+            // Clear previous selections
             document.querySelectorAll('.time-slot').forEach(slot =>
                 slot.classList.remove('selected'));
             element.classList.add('selected');
 
-            currentAvailableSpots = parseInt(element.dataset.availableSpots);
-            updateTicketDropdowns();
+            // Set the current time slot and max spots
+            currentTimeSlot = element.dataset.slotId;
+            maxAvailableSpots = parseInt(element.dataset.availableSpots);
+
+            // Clear existing ticket selections
+            clearTicketSelections();
+
+            // Update spots display
+            updateSpotsLeftDisplay();
+
+            // Show ticket section
+            const ticketSection = document.querySelector('#tickets');
+            ticketSection.classList.add('visible');
+
+            // Show the continue to payment button
+            document.getElementById('continueToPaymentBtn').style.display = 'block';
+            // Initially disable it since no tickets are selected
+            document.getElementById('continueToPaymentBtn').disabled = true;
+
+            // Scroll to ticket section
+            ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        function updateTicketDropdowns() {
-            const adultSelect = document.querySelector('select[name="adultTickets"]');
-            const youthSelect = document.querySelector('select[name="youthTickets"]');
-            const childSelect = document.querySelector('select[name="childTickets"]');
-
-            const adultValue = parseInt(adultSelect.value) || 0;
-            const youthValue = parseInt(youthSelect.value) || 0;
-            const childValue = parseInt(childSelect.value) || 0;
-
-            const remainingSpots = currentAvailableSpots - (adultValue + youthValue + childValue);
-
-            updateDropdownOptions(adultSelect, adultValue, remainingSpots);
-            updateDropdownOptions(youthSelect, youthValue, remainingSpots);
-            updateDropdownOptions(childSelect, childValue, remainingSpots);
-        }
-
-        function updateDropdownOptions(select, currentValue, remainingSpots) {
-            const totalAvailable = remainingSpots + currentValue;
-            select.innerHTML = '';
-
-            const zeroOption = document.createElement('option');
-            zeroOption.value = 0;
-            zeroOption.textContent = 0;
-            select.appendChild(zeroOption);
-
-            for (let i = 1; i <= totalAvailable; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                if (i === currentValue) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
+        // Add this new function to check ticket quantities
+        function validateTicketSelection() {
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            const continueBtn = document.getElementById('continueToPaymentBtn');
+            if (continueBtn) {
+                continueBtn.disabled = totalTickets === 0;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const selects = ['adultTickets', 'youthTickets', 'childTickets'].map(name =>
-                document.querySelector(`select[name="${name}"]`)
-            );
-
-            selects.forEach(select => {
-                select.addEventListener('change', updateTicketDropdowns);
-            });
-
-            new BookingFlow();
-        });
-
-
-        async function updateFullDaySelector() {
-            const totalTickets = getTotalTickets();
-            const extendTimeSelect = document.querySelector('select[name="extendtime"]');
-            let currentFullDayValue = 0;
-
-            // Get booking data from localStorage
+        async function updateBooking() {
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            const bookingData = {
+                time_slot_id: currentTimeSlot,
+                adult_quantity: ticketState.adult,
+                youth_quantity: ticketState.youth,
+                kid_quantity: ticketState.kid,
+                full_day: ticketState.fullday,
+                is_rebookable: ticketState.is_rebookable  // Add this line
+            };
 
-            if (sessionData && sessionData.bookingId) {
-                try {
-                    const response = await fetch(`http://localhost:3000/api/bookings/${sessionData.bookingId}`);
-                    if (response.ok) {
-                        const booking = await response.json();
-                        currentFullDayValue = booking.full_day || 0;
-                    }
-                } catch (error) {
-                    console.error('Error fetching current booking:', error);
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            try {
+                if (sessionData && sessionData.bookingId && Date.now() <= sessionData.expiresAt) {
+                    // Update existing booking
+                    const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${sessionData.bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        }, body: JSON.stringify({
+                            ...bookingData,
+                            access_token: sessionData.token
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to update booking');
+
+                } else if (totalTickets > 0) {
+                    // Create new booking
+                    const response = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/bookings/pending', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    if (!response.ok) throw new Error('Failed to create booking');
+
+                    const booking = await response.json();
+
+                    // Save new session data
+                    localStorage.setItem('bookingData', JSON.stringify({
+                        token: booking.access_token,
+                        bookingId: booking.booking_id,
+                        expiresAt: Date.now() + 15 * 60 * 1000 // 15 minutes
+                    }));
                 }
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Ett fel uppstod vid bokningen. Försök igen.');
             }
+        } async function updateBooking() {
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            const bookingData = {
+                time_slot_id: currentTimeSlot,
+                adult_quantity: ticketState.adult,
+                youth_quantity: ticketState.youth,
+                kid_quantity: ticketState.kid,
+                full_day: ticketState.fullday,
+                is_rebookable: ticketState.is_rebookable  // Add this line
 
-            // Clear existing options
-            extendTimeSelect.innerHTML = '';
+            };
 
-            // Add new options based on total tickets
-            for (let i = 0; i <= totalTickets; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `${i} st`;
-                if (i === currentFullDayValue) {
-                    option.selected = true;
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            try {
+                if (sessionData && sessionData.bookingId && Date.now() <= sessionData.expiresAt) {
+                    // Update existing booking
+                    const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${sessionData.bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        }, body: JSON.stringify({
+                            ...bookingData,
+                            access_token: sessionData.token
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to update booking');
+
+                } else if (totalTickets > 0) {
+                    // Create new booking
+                    const response = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/bookings/pending', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        }, body: JSON.stringify(bookingData)
+                    });
+
+                    if (!response.ok) throw new Error('Failed to create booking');
+
+                    const booking = await response.json();
+
+                    // Save new session data
+                    localStorage.setItem('bookingData', JSON.stringify({
+                        token: booking.access_token,
+                        bookingId: booking.booking_id,
+                        expiresAt: Date.now() + 15 * 60 * 1000 // 15 minutes
+                    }));
                 }
-                extendTimeSelect.appendChild(option);
-            }
-
-            // Attach change event listener
-            extendTimeSelect.addEventListener('change', updateBookingSummary);
-
-
-            // Attach change event listener to the newly created dropdown
-            const fullDaySelect = document.querySelector('[name="extendtime"]');
-            if (fullDaySelect) {
-                fullDaySelect.addEventListener('change', updateBookingSummary);
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Ett fel uppstod vid bokningen. Försök igen.');
             }
         }
-
-
-
-
-        // Helper function to calculate total tickets
-        function getTotalTickets() {
-            const adult = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
-            const youth = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
-            const child = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
-            return adult + youth + child;
-        }
-
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.className = type;
-        }
-
-        // Initial auth check
-        window.addEventListener('load', async function () {
-            if (!await checkAuth()) return;
-        });
 
         document.addEventListener('DOMContentLoaded', () => {
-            const proceedButton = document.getElementById('proceedButton');
-            const backButton = document.getElementById('backButton');
-            const bookingSections = document.querySelectorAll('.booking-section');
+            // Initialize BookingFlow
+            new BookingFlow();
 
-            let currentStep = 0;
+            // Add listener for continue to payment button
+            document.getElementById('continueToPaymentBtn').addEventListener('click', handleContinueToPayment);
 
-            // Show the current step
-            function showCurrentStep() {
-                // Hide all sections
-                bookingSections.forEach(section => section.style.display = 'block');
-
-                // Show the current section
-                bookingSections[currentStep].style.display = 'block';
-
-                // Handle button visibility
-                backButton.style.display = currentStep > 0 ? 'block' : 'block';
-                proceedButton.style.display = currentStep < bookingSections.length - 1 ? 'block' : 'block';
-            }
-
-
-            function handleProceed() {
-                // Skip booking data check for the first step
-                if (currentStep === 0) {
-                    handleFirstProceed();
-                    updateFullDaySelector();
-                    return;
-                }
-
-                // For steps after the first, enforce booking data validity
-                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
-
-                if (!bookingData || Date.now() > bookingData.expiresAt) {
-                    alert('Your booking session has expired. Please restart the process.');
-                    localStorage.removeItem('bookingData');
-                    location.reload(); // Reload the page to restart the process
-                    return;
-                }
-
-                if (currentStep === 1) {
-                    handleSecondProceed();
-                }
-            }
-
-
-            // Proceed button logic
-            proceedButton.addEventListener('click', () => {
-                handleProceed(); // Trigger step-specific logic
-                if (currentStep < bookingSections.length - 1) {
-                    currentStep++;
-                    showCurrentStep();
+            // Add listeners for changes that should reset the payment flow
+            document.querySelector('#calendar-container').addEventListener('click', (e) => {
+                if (e.target.classList.contains('calendar-day')) {
+                    resetPaymentFlow();
                 }
             });
 
-            // Back button logic
-            backButton.addEventListener('click', () => {
-                if (currentStep > 0) {
-                    currentStep--;
-                    showCurrentStep();
+            document.querySelector('#timeSlots').addEventListener('click', (e) => {
+                if (e.target.closest('.time-slot')) {
+                    resetPaymentFlow();
                 }
             });
 
-            // Initialize the first step
-            showCurrentStep();
+            // Add listeners for quantity changes
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const type = btn.dataset.ticketType;
+                    const change = btn.classList.contains('plus') ? 1 : -1;
+                    handleQuantityChange(type, change);
+                    resetPaymentFlow(); // Reset payment flow when quantities change
+                });
+            });
         });
+
 
         setInterval(() => {
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
@@ -998,247 +1148,238 @@
 
         });
 
-
-        async function handleFirstProceed() {
-            const selectedSlot = document.querySelector('.time-slot.selected');
-            if (!selectedSlot) {
-                alert('Please select a time slot.');
-                return;
-            }
-
-            // Collect booking data from form inputs
-            const bookingData = {
-                time_slot_id: selectedSlot.dataset.slotId,
-                adult_quantity: parseInt(document.querySelector('[name="adultTickets"]').value) || 0,
-                youth_quantity: parseInt(document.querySelector('[name="youthTickets"]').value) || 0,
-                kid_quantity: parseInt(document.querySelector('[name="childTickets"]').value) || 0,
-            };
-
-            try {
-                // Check for existing booking data in Local Storage
-                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-
-                if (sessionData && Date.now() <= sessionData.expiresAt) {
-                    // If valid session data exists, update the booking
-                    console.log('Updating existing booking...');
-                    const { bookingId, token } = sessionData;
-
-                    const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ...bookingData, access_token: token }),
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('Failed to update booking:', errorData);
-                        throw new Error('Failed to update existing booking.');
-                    }
-
-                    console.log('Booking updated successfully.');
-                } else {
-                    // No valid session data found, create a new pending booking
-                    console.log('Creating a new pending booking...');
-                    const response = await fetch('http://localhost:3000/api/bookings/pending', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData),
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('Failed to create booking:', errorData);
-                        throw new Error('Failed to create new booking.');
-                    }
-
-                    const booking = await response.json();
-                    console.log('New booking created:', booking);
-
-                    if (!booking.booking_id || !booking.access_token) {
-                        throw new Error('Invalid response from server. Missing booking ID or token.');
-                    }
-
-                    // Save new session data to Local Storage
-                    const expirationTime = Date.now() + 15 * 60 * 1000; // 15 minutes
-                    const newSessionData = {
-                        token: booking.access_token,
-                        bookingId: booking.booking_id,
-                        expiresAt: expirationTime,
-                    };
-
-                    localStorage.setItem('bookingData', JSON.stringify(newSessionData));
-                    console.log('Booking data saved to Local Storage:', newSessionData);
-                }
-            } catch (error) {
-                console.error('Error in handleFirstProceed:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
-
-
-        async function handleSecondProceed() {
-            console.log('Handling second proceed');
-
-            // Get the full-day selection
-            const fullDayElement = document.querySelector('[name="fullDayExtensions"]');
-            if (!fullDayElement) {
-                return;
-            }
-
-            const fullDayValue = parseInt(fullDayElement.value) || 0; // Default to 0 if no value selected
-            console.log('Full-day value:', fullDayValue);
-
-            // Fetch session data from Local Storage
-            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-
-            if (!sessionData || Date.now() > sessionData.expiresAt) {
-                alert('Your booking session has expired. Please start the process again.');
-                localStorage.removeItem('bookingData');
-                location.reload(); // Reload the page to restart the process
-                return;
-            }
-
-            const { bookingId, token } = sessionData;
-
-            // Update booking in the database
-            try {
-                const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`, // Include token for security
-                    },
-                    body: JSON.stringify({
-                        full_day: fullDayValue, // Send the full-day value
-                        access_token: token,
-                    }),
-                });
-
-                console.log('Update response:', response);
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Failed to update booking:', errorData);
-                    throw new Error('Failed to update full-day selection');
-                }
-
-                console.log('Full-day selection updated successfully.');
-            } catch (error) {
-                console.error('Error updating full-day selection:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
-
-        /*  document.getElementById('submit').addEventListener('click', async () => {
-              console.log('Submitting booking...');
-  
-              // Collect customer information
-              const customerName = document.getElementById('customerName').value.trim();
-              const customerEmail = document.getElementById('customerEmail').value.trim();
-              const customerPhone = document.getElementById('customerPhone').value.trim();
-              const customerComment = document.getElementById('customerComment').value.trim();
-  
-              // Validate required fields
-              if (!customerName || !customerEmail) {
-                  alert('Please fill out at least name and email.');
-                  return;
-              }
-  
-              // Fetch session data from Local Storage
-              const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-  
-              if (!sessionData || Date.now() > sessionData.expiresAt) {
-                  alert('Your booking session has expired. Please start the process again.');
-                  localStorage.removeItem('bookingData');
-                  location.reload(); // Reload the page to restart the process
-                  return;
-              }
-  
-              const { bookingId, token } = sessionData;
-  
-              // Prepare booking data
-              const updateData = {
-                  customer_name: customerName,
-                  customer_email: customerEmail,
-                  customer_phone: customerPhone,
-                  comments: customerComment,
-                  status: 'confirmed',
-                  access_token: token,
-              };
-  
-              try {
-                  const response = await fetch(`http://localhost:3000/api/bookings/${bookingId}`, {
-                      method: 'PUT',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${token}`, // Include token for security
-                      },
-                      body: JSON.stringify(updateData),
-                  });
-  
-                  if (!response.ok) {
-                      const errorData = await response.json();
-                      console.error('Error updating booking:', errorData);
-                      throw new Error('Failed to confirm booking.');
-                  }
-  
-                  alert('Booking confirmed successfully!');
-                  console.log('Booking confirmed successfully!');
-  
-                  // Optionally clear booking data from Local Storage after confirmation
-                  localStorage.removeItem('bookingData');
-              } catch (error) {
-                  console.error('Error confirming booking:', error);
-                  alert('Error: ' + error.message);
-              }
-              location.reload();
-          });
-  
-  */
-
-        const ticketPrices = { adult: 400, youth: 300, child: 200, fullDay: 100 };
-
-        function updateBookingSummary() {
-            const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
-            const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
-            const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
-            const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
-
-            const date = document.querySelector('.calendar-day.selected')?.dataset.date || 'Not selected';
-            const time = document.querySelector('.time-slot.selected')?.textContent || 'Not selected';
-
-            const totalCost =
-                (adultTickets * ticketPrices.adult) +
-                (youthTickets * ticketPrices.youth) +
-                (childTickets * ticketPrices.child) +
-                (fullDayExtension * ticketPrices.fullDay);
-
-            document.getElementById('selectedDateTime').textContent = `Date & Time: ${date} ${time}`;
-            document.getElementById('selectedTickets').textContent = `Tickets: ${adultTickets} adults, ${youthTickets} youth, ${childTickets} kids`;
-            document.getElementById('fullDayExtension').textContent = `Full Day: ${fullDayExtension}`;
-            document.getElementById('totalCost').textContent = `Summa: ${totalCost} kr`;
-        }
-
-        // Event listeners
-        document.querySelectorAll('select[name]').forEach(select => {
-            select.addEventListener('change', updateBookingSummary);
+        document.getElementById('rebookingCheckbox').addEventListener('change', function (e) {
+            ticketState.is_rebookable = e.target.checked;
+            updateTotalDisplay(); // Add this
+            updateBooking();
         });
 
-        function calculateTotalAmount() {
-            const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
-            const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
-            const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
-            const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
+        // Add this function to handle section visibility
+        function showSection(sectionId, show) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = show ? 'block' : 'none';
+            }
+        }
 
-            return (adultTickets * ticketPrices.adult) +
-                (youthTickets * ticketPrices.youth) +
-                (childTickets * ticketPrices.child) +
-                (fullDayExtension * ticketPrices.fullDay);
+        // Update handleContinueToPayment to include the summary display
+        function handleContinueToPayment() {
+            updateBooking().then(() => {
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+                if (sessionData && sessionData.bookingId) {
+                    displayBookingSummary(sessionData.bookingId);
+                }
+
+                document.getElementById('continueToPaymentBtn').style.display = 'none';
+                showSection('customerSection', true);
+                showSection('paymentButtons', true);
+            }).catch(error => {
+                console.error('Error creating/updating booking:', error);
+                alert('Ett fel uppstod. Försök igen.');
+            });
+        }
+        // Add this to handle going back in the flow
+        function resetPaymentFlow() {
+            // Hide customer info and payment sections
+            showSection('customerSection', false);
+            showSection('paymentButtons', false);
+
+            // Show continue button
+            document.getElementById('continueToPaymentBtn').style.display = 'block';
+        }
+
+        function updateTotalDisplay() {
+            const baseTotal = (
+                (ticketState.adult * PRICES.adult) +
+                (ticketState.youth * PRICES.youth) +
+                (ticketState.kid * PRICES.kid) +
+                (ticketState.fullday * PRICES.fullday)
+            );
+
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            const rebookingTotal = ticketState.is_rebookable ? (totalTickets * PRICES.rebooking) : 0;
+
+            const total = baseTotal + rebookingTotal;
+
+            const continueBtn = document.getElementById('continueToPaymentBtn');
+            continueBtn.textContent = `Gå till betalning: ${total} kr`;
+        }
+
+        async function displayBookingSummary(bookingId) {
+            try {
+                const response = await fetch(`https://90a0-85-229-138-126.ngrok-free.app/api/bookings/${bookingId}/summary`);
+                if (!response.ok) throw new Error('Failed to fetch booking summary');
+
+                const summary = await response.json();
+
+                document.getElementById('bookingSummaryFinal').innerHTML = `
+            <p id="selectedDateTime">Datum & tid: ${summary.date} ${summary.time}</p>
+            <p id="selectedTickets">Antal biljetter:</p>
+            <ul style="list-style: none; margin-left: 20px;">
+                <li>Vuxen (400 kr): ${summary.tickets.adult} st (${summary.pricing.adultTotal} kr)</li>
+                <li>Ungdom (300 kr): ${summary.tickets.youth} st (${summary.pricing.youthTotal} kr)</li>
+                <li>Barn (200 kr): ${summary.tickets.kid} st (${summary.pricing.kidTotal} kr)</li>
+            </ul>
+            ${summary.tickets.fullDay ? `<p>Heldag: ${summary.tickets.fullDay} st (${summary.pricing.fullDayTotal} kr)</p>` : ''}
+            ${summary.is_rebookable ? `<p>Ombokningsgaranti: ${summary.pricing.rebookingTotal} kr</p>` : ''}
+            <p id="totalvat">Moms (6%): ${summary.pricing.vatAmount.toFixed(2)} kr</p>
+            <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${summary.pricing.total} kr</p>
+        `;
+            } catch (error) {
+                console.error('Error displaying booking summary:', error);
+                document.getElementById('bookingSummaryFinal').innerHTML = '<p class="error">Kunde inte ladda bokningsöversikt</p>';
+            }
+        }
+
+        async function handlePayment(paymentMethod) {
+            try {
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+                if (!sessionData || !sessionData.bookingId) {
+                    throw new Error('No active booking found');
+                }
+
+                // Collect and validate customer information
+                const customerName = document.getElementById('customerName').value.trim();
+                const customerEmail = document.getElementById('customerEmail').value.trim();
+                const customerPhone = document.getElementById('customerPhone').value.trim();
+                const customerComment = document.getElementById('customerComment').value.trim();
+
+                if (!customerName || !customerEmail) {
+                    alert('Vänligen fyll i namn och e-post.');
+                    return;
+                }
+
+                // Create payment
+                const createResponse = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        bookingId: sessionData.bookingId,
+                        paymentMethod,
+                        customerName,
+                        customerEmail,
+                        customerPhone,
+                        customerComment
+                    })
+                });
+
+                if (!createResponse.ok) {
+                    throw new Error('Failed to create payment');
+                }
+
+                const { orderId, amount } = await createResponse.json();
+
+                // Get payment form
+                const formResponse = await fetch('https://90a0-85-229-138-126.ngrok-free.app/api/get-payment-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        amount: amount,
+                        paymentMethod: paymentMethod
+                    })
+                });
+
+                if (!formResponse.ok) {
+                    throw new Error('Failed to get payment form');
+                }
+
+                const formHtml = await formResponse.text();
+
+                // Get payment container
+                const paymentContainer = document.getElementById('payment-container');
+
+                // Create and set up the new iframe
+                const iframe = document.createElement('iframe');
+                iframe.id = 'payment-frame';
+                iframe.style.width = '100%';
+                iframe.style.height = '290px'; // Increased height
+                iframe.style.border = 'none';
+                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+
+                // Clear existing content and append new iframe
+                paymentContainer.innerHTML = '';
+                paymentContainer.appendChild(iframe);
+
+                // Write the form to the iframe and submit it
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(formHtml);
+                iframeDoc.close();
+
+                // Submit the form immediately
+                const form = iframeDoc.querySelector('form');
+                if (form) {
+                    form.submit();
+                }
+
+                // Show the payment container
+                paymentContainer.style.display = 'block';
+
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Ett fel uppstod vid betalningen. Försök igen.');
+
+                // Show payment buttons again in case of error
+                document.getElementById('paymentButtons').style.display = 'block';
+            }
         }
 
 
+
+        /*   const ticketPrices = { adult: 400, youth: 300, child: 200, fullDay: 100 };
+ 
+        function updateBookingSummary() {
+                const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
+                const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
+                const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
+                const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
+    
+                const date = document.querySelector('.calendar-day.selected')?.dataset.date || 'Not selected';
+                const time = document.querySelector('.time-slot.selected')?.textContent || 'Not selected';
+    
+                const totalCost =
+                    (adultTickets * ticketPrices.adult) +
+                    (youthTickets * ticketPrices.youth) +
+                    (childTickets * ticketPrices.child) +
+                    (fullDayExtension * ticketPrices.fullDay);
+    
+                document.getElementById('selectedDateTime').textContent = `Date & Time: ${date} ${time}`;
+                document.getElementById('selectedTickets').textContent = `Tickets: ${adultTickets} adults, ${youthTickets} youth, ${childTickets} kids`;
+                document.getElementById('fullDayExtension').textContent = `Full Day: ${fullDayExtension}`;
+                document.getElementById('totalCost').textContent = `Summa: ${totalCost} kr`;
+            }
+    
+            // Event listeners
+            document.querySelectorAll('select[name]').forEach(select => {
+                select.addEventListener('change', updateBookingSummary);
+            });
+    
+            function calculateTotalAmount() {
+                const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
+                const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
+                const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
+                const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
+    
+                return (adultTickets * ticketPrices.adult) +
+                    (youthTickets * ticketPrices.youth) +
+                    (childTickets * ticketPrices.child) +
+                    (fullDayExtension * ticketPrices.fullDay);
+            }
+    */
+
+        /*
+                      // Initial auth check
+                      window.addEventListener('load', async function () {
+                          if (!await checkAuth()) return;
+                      }); */
 
     </script>
 </body>

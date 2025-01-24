@@ -8,29 +8,53 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
 
-dotenv.config();
-console.log('Starting server setup...');
-
 const app = express();
 const port = process.env.PORT || 3000;
+
+
+
+dotenv.config();
+
+console.log('Starting server setup...');
 
 // Get directory paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const frontendPath = path.join(__dirname, '../../frontend');
 
-console.log('Current directory:', __dirname);
+// CORS configuration - must come before any routes
+const corsOptions = {
+    origin: ['https://90a0-85-229-138-126.ngrok-free.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'QuickPay-Checksum-Sha256'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+
+app.set('trust proxy', true);
+
+
+// Handle OPTIONS preflight requests explicitly
+app.options('*', cors(corsOptions));
+
+// Apply CORS to all routes
+app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+    console.log(`CORS Debug: Method=${req.method}, Origin=${req.headers.origin}, Path=${req.path}`);
+    next();
+});
+
+// Rest of middleware
+app.use(express.json());
+
 console.log('Looking for frontend files in:', frontendPath);
 try {
     console.log('Files in frontend path:', fs.readdirSync(frontendPath));
 } catch (error) {
     console.error('Error reading frontend directory:', error);
 }
-
-// Set up middleware
-console.log('Setting up middleware...');
-app.use(cors());
-app.use(express.json());
 
 // Main test route
 app.get('/', (req, res) => {
@@ -53,19 +77,18 @@ console.log('Routes mounted');
 console.log('Setting up static file serving from:', frontendPath);
 app.use(express.static(frontendPath));
 
-// Add the catch-all route logger
+// Add the catch-all route logger - move before 404 handler
 app.use((req, res, next) => {
     console.log(`Request received for ${req.method} ${req.url}`);
     next();
 });
 
-// Add the 404 handler
+// Add the 404 handler last
 app.use((req, res) => {
     console.log(`404: Route not found for ${req.method} ${req.url}`);
     res.status(404).json({ error: 'Route not found' });
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
     console.log('Routes have been set up');

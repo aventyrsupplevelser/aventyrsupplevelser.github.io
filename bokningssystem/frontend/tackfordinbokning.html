@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betalning Slutförd</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: "Josefin Sans", sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status-container {
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="status-container">
+        <h1>Verifierar betalning...</h1>
+        <div class="loading"></div>
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        async function init() {
+            // Get booking number from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingNumber = urlParams.get('order_id');
+
+            if (!bookingNumber) {
+                document.getElementById('statusMessage').innerHTML =
+                    '<p style="color: red;">Ingen bokningsreferens hittades.</p>';
+                return;
+            }
+
+            // Start checking payment status
+            checkPaymentStatus(bookingNumber);
+        }
+
+        async function checkPaymentStatus(bookingNumber) {
+            try {
+                const response = await fetch(`/api/payment-status/${bookingNumber}`);
+                const data = await response.json();
+
+                if (data.status === 'completed') {
+                    document.querySelector('.loading').style.display = 'none';
+                    document.querySelector('h1').textContent = 'Betalning genomförd!';
+                    document.getElementById('statusMessage').innerHTML = `
+                        <h2>Tack för din bokning!</h2>
+                        <p>Din bokningsreferens är: ${bookingNumber}</p>
+                        <p>En bekräftelse skickas till din e-post inom kort.</p>
+                    `;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking payment status:', error);
+                return false;
+            }
+        }
+
+        // Start checking payment status every 2 seconds for up to 1 minute
+        function startStatusCheck(bookingNumber) {
+            let attempts = 0;
+            const maxAttempts = 30;
+
+            const checkInterval = setInterval(async () => {
+                attempts++;
+                const isComplete = await checkPaymentStatus(bookingNumber);
+
+                if (isComplete || attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    if (!isComplete && attempts >= maxAttempts) {
+                        document.querySelector('.loading').style.display = 'none';
+                        document.getElementById('statusMessage').innerHTML = `
+                            <p style="color: orange;">
+                                Vi kunde inte bekräfta betalningen just nu. 
+                                Du kommer få en bekräftelse via e-post när betalningen är verifierad.
+                            </p>
+                        `;
+                    }
+                }
+            }, 2000);
+        }
+
+        // Initialize when the page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+
+</html>
