@@ -1321,12 +1321,27 @@
                 if (!formResponse.ok) throw new Error('Failed to get payment form');
                 const formHtml = await formResponse.text();
 
-                // Add the form to the page and submit it
-                paymentContainer.innerHTML = formHtml;
-                const form = paymentContainer.querySelector('form');
-                if (form) {
-                    form.submit();
+                // Create a temporary container for the form
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = formHtml;
+
+                // Get the form from the temporary container
+                const form = tempContainer.querySelector('form');
+
+                if (!form) {
+                    throw new Error('Payment form not found in response');
                 }
+
+                // Add the form to the document body (hidden)
+                form.style.display = 'none';
+                document.body.appendChild(form);
+
+                // Log for debugging
+                console.log('Submitting form to:', form.action);
+                console.log('Form data:', new FormData(form));
+
+                // Submit the form
+                form.submit();
 
             } catch (error) {
                 console.error('Payment error:', error);
