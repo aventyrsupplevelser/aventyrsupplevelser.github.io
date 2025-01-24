@@ -49,6 +49,12 @@ console.log('Supabase client initialized');
 // Create router
 const router = express.Router();
 
+// Request logging middleware
+router.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+    next();
+});
+
 // Authentication helper function
 async function checkAuth() {
     const { data: { session }, error } = await supabase.auth.getSession();
@@ -378,11 +384,7 @@ router.delete('/time-slots/:id', async (req, res) => {
     }
 });
 
-// Request logging middleware
-router.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
-    next();
-});
+
 
 router.post('/bookings/pending', async (req, res) => {
     const { time_slot_id, adult_quantity, youth_quantity, kid_quantity } = req.body;
@@ -802,66 +804,56 @@ router.get('/bookings/:id/summary', async (req, res) => {
 
 
 
+// In timeSlotRoutes.js
 router.post('/payment-callback', express.json(), async (req, res) => {
+    // Send response immediately to acknowledge receipt
+    res.status(200).send('OK');
+
     try {
-        // Get the QuickPay signature
         const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
-        
         if (!quickpaySignature) {
             console.error('No QuickPay signature found in callback');
-            return res.status(200).send('No signature'); // Still return 200
+            return;
         }
 
-        // Convert the body to a string for signature verification
-        const bodyString = JSON.stringify(req.body);
-        
-        // Calculate signature
-        const calculatedSignature = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(bodyString)
-            .digest('hex');
+        // Process payment asynchronously
+        processPaymentCallback(req.body, quickpaySignature).catch(error => {
+            console.error('Error processing payment callback:', error);
+        });
 
-        if (quickpaySignature !== calculatedSignature) {
-            console.error('Invalid QuickPay signature');
-            return res.status(200).send('Invalid signature');
-        }
-
-        const payment = req.body;
-        console.log('Received payment callback:', payment);
-
-        // Check if payment is accepted and completed
-        if (payment.accepted && payment.state === 'processed') {
-            const bookingNumber = payment.order_id;
-            
-            // Update booking with payment information
-            const { error } = await supabase
-                .from('bookings')
-                .update({ 
-                    status: 'confirmed',
-                    payment_id: payment.id,
-                    payment_method: payment.metadata?.type || 'unknown',
-                    paid_amount: payment.operations.find(op => op.type === 'capture')?.amount || 0,
-                    payment_metadata: payment,
-                    payment_completed_at: new Date().toISOString()
-                })
-                .eq('booking_number', bookingNumber);
-
-            if (error) {
-                console.error('Error updating booking:', error);
-                return res.status(200).send('Database update failed');
-            }
-
-            console.log('Payment processed and booking updated successfully');
-            res.status(200).send('OK');
-        } else {
-            console.log('Payment not yet accepted or processed:', payment);
-            res.status(200).send('Payment status noted');
-        }
     } catch (error) {
-        console.error('Error processing payment callback:', error);
-        res.status(200).send('Error noted');
+        console.error('Error in payment callback:', error);
     }
 });
+
+// Separate function for payment processing
+async function processPaymentCallback(payment, signature) {
+    // Verify signature
+    const calculatedSignature = crypto
+        .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
+        .update(JSON.stringify(payment))
+        .digest('hex');
+
+    if (signature !== calculatedSignature) {
+        console.error('Invalid QuickPay signature');
+        return;
+    }
+
+    // Only proceed if payment is accepted and processed
+    if (payment.accepted && payment.state === 'processed') {
+        await supabase
+            .from('bookings')
+            .update({
+                status: 'confirmed',
+                payment_id: payment.id,
+                payment_method: payment.metadata?.type || 'unknown',
+                paid_amount: payment.operations.find(op => op.type === 'capture')?.amount || 0,
+                payment_metadata: payment,
+                payment_completed_at: new Date().toISOString()
+            })
+            .eq('booking_number', payment.order_id);
+    }
+}
 
 router.get('/payment-status/:bookingNumber', async (req, res) => {
     try {

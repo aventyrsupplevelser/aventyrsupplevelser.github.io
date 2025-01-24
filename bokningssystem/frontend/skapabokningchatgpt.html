@@ -906,7 +906,6 @@
         // Create a debounced version of updateBooking
         const debouncedUpdateBooking = debounce(updateBooking, 1000); // Wait 1 second
 
-        // Update the handleQuantityChange function
         // Modify handleQuantityChange to call validateTicketSelection
         async function handleQuantityChange(type, change) {
             const currentValue = ticketState[type];
@@ -1259,19 +1258,24 @@
                     throw new Error('No active booking found');
                 }
 
-                // Validate customer information
                 const customerInfo = validateCustomerInfo();
                 if (!customerInfo) return;
 
-                // Show payment container immediately
+                // Show loading state immediately
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
-                const formHtml = await getPaymentForm(paymentMethod, paymentResponse);
+                // Run both API calls in parallel using Promise.all
+                const [paymentResponse, formHtml] = await Promise.all([
+                    createPayment(sessionData.bookingId, paymentMethod, customerInfo),
+                    getPaymentForm(paymentMethod, {
+                        order_id: sessionData.bookingId,
+                        amount: calculateTotalAmount(), // Add this helper function
+                        paymentMethod: paymentMethod
+                    })
+                ]);
 
-                // Set up iframe after both promises resolve
                 setupPaymentIframe(formHtml, paymentResponse);
 
             } catch (error) {
