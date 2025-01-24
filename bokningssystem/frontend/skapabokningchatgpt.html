@@ -1122,64 +1122,89 @@
                 let bookingData = JSON.parse(localStorage.getItem('bookingData'));
                 const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
 
-                // Validate ticket selection
-                if (totalTickets === 0) {
-                    alert('Please select at least one ticket.');
-                    return;
-                }
+                // Common booking data for both create and update
+                const bookingDetails = {
+                    time_slot_id: currentTimeSlot,
+                    adult_quantity: ticketState.adult,
+                    youth_quantity: ticketState.youth,
+                    kid_quantity: ticketState.kid,
+                    full_day: ticketState.fullday,
+                    is_rebookable: ticketState.is_rebookable
+                };
+
+                // Show UI elements immediately
+                document.getElementById('continueToPaymentBtn').style.display = 'none';
+                showSection('customerSection', true);
+                showSection('paymentButtons', true);
 
                 // If there's no active booking or the booking is expired, create a new booking
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
-                    console.log('Creating a new booking...');
+                    console.log('Creating a new booking...', bookingDetails);
                     const createResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ...ticketState,
-                            time_slot_id: currentTimeSlot,
-                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        body: JSON.stringify(bookingDetails)
                     });
 
-                    if (!createResponse.ok) throw new Error('Failed to create booking');
+                    if (!createResponse.ok) {
+                        const errorText = await createResponse.text();
+                        console.error('Booking creation failed:', errorText);
+                        throw new Error('Failed to create booking');
+                    }
 
                     const newBooking = await createResponse.json();
+                    console.log('New booking created:', newBooking);
 
                     // Save booking data in localStorage
                     bookingData = {
                         token: newBooking.access_token,
                         bookingId: newBooking.booking_id,
-                        expiresAt: Date.now() + 15 * 60 * 1000, // 15 minutes
+                        expiresAt: Date.now() + 15 * 60 * 1000 // 15 minutes
                     };
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
                 } else {
-                    console.log('Updating existing booking...');
-                    const updateResponse = await fetch(`https://your-backend-url/api/bookings/${bookingData.bookingId}`, {
+                    console.log('Updating existing booking...', {
+                        ...bookingDetails,
+                        bookingId: bookingData.bookingId
+                    });
+                    const updateResponse = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingData.bookingId}`, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
                         body: JSON.stringify({
-                            ...ticketState,
-                            time_slot_id: currentTimeSlot,
-                            access_token: bookingData.token,
-                        }),
+                            ...bookingDetails,
+                            access_token: bookingData.token
+                        })
                     });
 
-                    if (!updateResponse.ok) throw new Error('Failed to update booking');
+                    if (!updateResponse.ok) {
+                        const errorText = await updateResponse.text();
+                        console.error('Booking update failed:', errorText);
+                        throw new Error('Failed to update booking');
+                    }
                 }
 
-                // Validate customer info
-                const customerInfo = validateCustomerInfo();
-                if (!customerInfo) return;
+                // Start booking number generation and fetch summary in parallel
+                const [bookingNumber, summary] = await Promise.all([
+                    generateBookingNumber(),
+                    fetchBookingSummary()
+                ]);
 
-                // Proceed to payment creation
-                const paymentResponse = await createPayment(bookingData.bookingId, 'swish', customerInfo);
-
-                // Generate payment form and display it
-                const formHtml = await getPaymentForm('swish', paymentResponse);
-                setupPaymentIframe(formHtml, paymentResponse);
+                localStorage.setItem('pendingBookingNumber', bookingNumber);
+                console.log('Booking process completed');
 
             } catch (error) {
                 console.error('Error in payment flow:', error);
-                alert('An error occurred. Please try again.');
+                // Revert UI if there's an error
+                document.getElementById('continueToPaymentBtn').style.display = 'block';
+                showSection('customerSection', false);
+                showSection('paymentButtons', false);
+                alert('Ett fel uppstod. Försök igen.');
             }
         }
 
