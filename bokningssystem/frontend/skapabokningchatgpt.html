@@ -1169,6 +1169,7 @@
             }
         }
 
+        // Modified handleContinueToPayment
         async function handleContinueToPayment() {
             const startTime = Date.now();
             console.log('Starting continue to payment process...');
@@ -1179,6 +1180,15 @@
             showSection('paymentButtons', true);
 
             try {
+                // Debug log to see what's in localStorage
+                console.log('Current booking data:', localStorage.getItem('bookingData'));
+
+                // First verify we have an active booking
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+                if (!sessionData?.bookingId) {
+                    throw new Error('No active booking found');
+                }
+
                 // Start booking number generation in background
                 const bookingNumberPromise = generateBookingNumber();
 
@@ -1205,11 +1215,22 @@
             }
         }
 
-        // Separated booking summary fetch
         async function fetchBookingSummary() {
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            if (sessionData && sessionData.bookingId) {
-                displayBookingSummary(sessionData.bookingId);
+            if (!sessionData || !sessionData.bookingId) {
+                throw new Error('No active booking found');
+            }
+
+            try {
+                const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}/summary`);
+                if (!response.ok) throw new Error('Failed to fetch booking summary');
+
+                const summary = await response.json();
+                displayBookingSummary(summary);
+                return summary;
+            } catch (error) {
+                console.error('Error fetching booking summary:', error);
+                throw error;
             }
         }
 
@@ -1268,8 +1289,13 @@
 
         async function handlePayment(paymentMethod) {
             const startTime = Date.now();
+            console.log('Starting payment process...');
 
             try {
+                // Debug logs to see what's in localStorage
+                console.log('Booking data:', localStorage.getItem('bookingData'));
+                console.log('Pending booking number:', localStorage.getItem('pendingBookingNumber'));
+
                 const bookingNumber = localStorage.getItem('pendingBookingNumber');
                 if (!bookingNumber) {
                     throw new Error('No booking number found');
@@ -1294,7 +1320,7 @@
                     bookingNumber
                 });
 
-                // Get payment form (now much faster since booking number exists)
+                // Get payment form
                 const formHtml = await getPaymentForm(paymentMethod, {
                     order_id: bookingNumber,
                     amount: calculateTotalAmount()
