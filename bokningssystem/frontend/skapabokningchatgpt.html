@@ -1044,62 +1044,8 @@
                 console.error('Booking error:', error);
                 alert('Ett fel uppstod vid bokningen. Försök igen.');
             }
-        } async function updateBooking() {
-            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            const bookingData = {
-                time_slot_id: currentTimeSlot,
-                adult_quantity: ticketState.adult,
-                youth_quantity: ticketState.youth,
-                kid_quantity: ticketState.kid,
-                full_day: ticketState.fullday,
-                is_rebookable: ticketState.is_rebookable  // Add this line
-
-            };
-
-            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
-
-            try {
-                if (sessionData && sessionData.bookingId && Date.now() <= sessionData.expiresAt) {
-                    // Update existing booking
-                    const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*'
-                        }, body: JSON.stringify({
-                            ...bookingData,
-                            access_token: sessionData.token
-                        })
-                    });
-
-                    if (!response.ok) throw new Error('Failed to update booking');
-
-                } else if (totalTickets > 0) {
-                    // Create new booking
-                    const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*'
-                        }, body: JSON.stringify(bookingData)
-                    });
-
-                    if (!response.ok) throw new Error('Failed to create booking');
-
-                    const booking = await response.json();
-
-                    // Save new session data
-                    localStorage.setItem('bookingData', JSON.stringify({
-                        token: booking.access_token,
-                        bookingId: booking.booking_id,
-                        expiresAt: Date.now() + 15 * 60 * 1000 // 15 minutes
-                    }));
-                }
-            } catch (error) {
-                console.error('Booking error:', error);
-                alert('Ett fel uppstod vid bokningen. Försök igen.');
-            }
         }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize BookingFlow
