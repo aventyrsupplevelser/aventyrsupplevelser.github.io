@@ -1252,40 +1252,67 @@
         }
 
         async function handlePayment(paymentMethod) {
+            const overallStart = startTiming('Total Payment Process');
+            const timings = {
+                validation: 0,
+                createPayment: 0,
+                getForm: 0,
+                setupIframe: 0
+            };
+
             try {
+                console.log('Starting payment process...');
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
                 if (!sessionData || !sessionData.bookingId) {
                     throw new Error('No active booking found');
                 }
 
+                const validationStart = startTiming('Customer Validation');
                 const customerInfo = validateCustomerInfo();
                 if (!customerInfo) return;
+                timings.validation = endTiming('Customer Validation', validationStart);
 
-                // Show loading state immediately
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
 
-                // First create the payment and get orderId
+                const createStart = startTiming('Create Payment Request');
                 const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
+                timings.createPayment = endTiming('Create Payment Request', createStart);
 
-                // Then get the form using the orderId from paymentResponse
+                const formStart = startTiming('Get Payment Form');
                 const formHtml = await getPaymentForm(paymentMethod, {
                     order_id: paymentResponse.orderId,
-                    amount: paymentResponse.amount, // Use the amount from the response
+                    amount: paymentResponse.amount,
                     paymentMethod: paymentMethod
                 });
+                timings.getForm = endTiming('Get Payment Form', formStart);
 
+                const iframeStart = startTiming('Setup Payment Iframe');
                 setupPaymentIframe(formHtml, paymentResponse);
+                timings.setupIframe = endTiming('Setup Payment Iframe', iframeStart);
+
+                const totalTime = endTiming('Total Payment Process', overallStart);
+
+                console.log('\nPayment Process Timing Summary:');
+                console.table({
+                    validation: timings.validation + 'ms',
+                    createPayment: timings.createPayment + 'ms',
+                    getForm: timings.getForm + 'ms',
+                    setupIframe: timings.setupIframe + 'ms',
+                    totalTime: totalTime + 'ms'
+                });
 
             } catch (error) {
-                console.error('Payment error:', error);
+                const errorTime = endTiming('Total Payment Process', overallStart);
+                console.error(`Payment process failed after ${errorTime}ms:`, error);
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'none';
                 document.getElementById('paymentButtons').style.display = 'block';
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
         }
+
 
         function validateCustomerInfo() {
             const customerName = document.getElementById('customerName').value.trim();
@@ -1301,76 +1328,127 @@
             return { customerName, customerEmail, customerPhone, customerComment };
         }
 
+        // Enhanced create payment with timing
         async function createPayment(bookingId, paymentMethod, customerInfo) {
-            const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    bookingId,
-                    paymentMethod,
-                    ...customerInfo
-                })
-            });
+            const startTime = startTiming('Create Payment API Call');
+            try {
+                console.log('Starting payment creation...');
+                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        bookingId,
+                        paymentMethod,
+                        ...customerInfo
+                    })
+                });
 
-            if (!response.ok) throw new Error('Failed to create payment');
-            return response.json();
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Payment creation failed:', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        error: errorText
+                    });
+                    throw new Error('Failed to create payment');
+                }
+
+                const data = await response.json();
+                endTiming('Create Payment API Call', startTime);
+                console.log('Payment created successfully:', data);
+                return data;
+            } catch (error) {
+                const duration = endTiming('Create Payment API Call', startTime);
+                console.error(`Payment creation failed after ${duration}ms:`, error);
+                throw error;
+            }
         }
 
         async function getPaymentForm(paymentMethod, paymentResponse) {
-            console.log('Getting payment form with:', { paymentMethod, paymentResponse }); // Debug log
+            const startTime = startTiming('Get Payment Form API Call');
+            console.log('Requesting payment form with:', { paymentMethod, paymentResponse });
 
-            const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({
-                    order_id: paymentResponse.order_id,
-                    amount: paymentResponse.amount,
-                    paymentMethod: paymentMethod
-                })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Payment form error:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    errorText
+            try {
+                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        order_id: paymentResponse.order_id,
+                        amount: paymentResponse.amount,
+                        paymentMethod: paymentMethod
+                    })
                 });
-                throw new Error('Failed to get payment form');
-            }
 
-            return response.text();
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Payment form generation failed:', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        error: errorText
+                    });
+                    throw new Error('Failed to get payment form');
+                }
+
+                const formHtml = await response.text();
+                const duration = endTiming('Get Payment Form API Call', startTime);
+                console.log(`Payment form retrieved successfully in ${duration}ms`);
+                return formHtml;
+            } catch (error) {
+                const duration = endTiming('Get Payment Form API Call', startTime);
+                console.error(`Payment form generation failed after ${duration}ms:`, error);
+                throw error;
+            }
         }
-        // Helper function to setup payment iframe
+
         function setupPaymentIframe(formHtml, paymentResponse) {
-            const paymentContainer = document.getElementById('payment-container');
-            const iframe = document.createElement('iframe');
-            iframe.id = 'payment-frame';
-            iframe.style.width = '100%';
-            iframe.style.height = '290px';
-            iframe.style.border = 'none';
-            iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+            const startTime = startTiming('Payment Iframe Setup');
+            try {
+                console.log('Setting up payment iframe...');
+                const paymentContainer = document.getElementById('payment-container');
+                const iframe = document.createElement('iframe');
 
-            paymentContainer.innerHTML = '';
-            paymentContainer.appendChild(iframe);
+                iframe.id = 'payment-frame';
+                iframe.style.width = '100%';
+                iframe.style.height = '290px';
+                iframe.style.border = 'none';
+                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
 
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(formHtml);
-            iframeDoc.close();
+                paymentContainer.innerHTML = '';
+                paymentContainer.appendChild(iframe);
 
-            // Submit form immediately
-            const form = iframeDoc.querySelector('form');
-            if (form) {
-                form.submit();
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(formHtml);
+                iframeDoc.close();
+
+                // Add load event listener to iframe
+                iframe.onload = () => {
+                    const loadDuration = endTiming('Iframe Load', startTime);
+                    console.log(`Payment iframe loaded in ${loadDuration}ms`);
+                };
+
+                // Submit form immediately
+                const form = iframeDoc.querySelector('form');
+                if (form) {
+                    console.log('Submitting payment form...');
+                    form.submit();
+                }
+
+                const duration = endTiming('Payment Iframe Setup', startTime);
+                console.log(`Payment iframe setup completed in ${duration}ms`);
+            } catch (error) {
+                const duration = endTiming('Payment Iframe Setup', startTime);
+                console.error(`Payment iframe setup failed after ${duration}ms:`, error);
+                throw error;
             }
         }
+
 
 
         // Add this function in skapabokningchatgpt.html alongside other helper functions
@@ -1388,6 +1466,19 @@
             // Return amount in öre (multiply by 100) since QuickPay expects it in minor units
             return (baseTotal + rebookingTotal) * 100;
         }
+
+        // Add timing logging functions
+        function startTiming(label) {
+            console.time(label);
+            return Date.now();
+        }
+
+        function endTiming(label, startTime) {
+            const duration = Date.now() - startTime;
+            console.timeEnd(label);
+            return duration;
+        }
+
 
 
 

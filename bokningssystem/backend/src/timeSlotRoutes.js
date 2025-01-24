@@ -55,6 +55,55 @@ router.use((req, res, next) => {
     next();
 });
 
+// Add this near the top of timeSlotRoutes.js, before your routes
+const timeLogger = (req, res, next) => {
+    req.startTime = Date.now();
+    
+    // Capture the original res.end
+    const oldEnd = res.end;
+    
+    // Override res.end to include timing
+    res.end = function(...args) {
+        const duration = Date.now() - req.startTime;
+        console.log(`${req.method} ${req.originalUrl} took ${duration}ms`);
+        oldEnd.apply(res, args);
+    };
+    
+    next();
+};
+
+const paymentTimingMiddleware = (req, res, next) => {
+    req.paymentTiming = {
+        start: Date.now(),
+        checkpoints: []
+    };
+
+    // Add checkpoint logging function to the request object
+    req.logCheckpoint = (checkpoint) => {
+        req.paymentTiming.checkpoints.push({
+            name: checkpoint,
+            timestamp: Date.now(),
+            timeSinceStart: Date.now() - req.paymentTiming.start
+        });
+    };
+
+    // Capture timing information on response
+    const originalEnd = res.end;
+    res.end = function(...args) {
+        const totalTime = Date.now() - req.paymentTiming.start;
+        console.log(`Payment Process Timing - ${req.originalUrl}:`);
+        console.log(`Total time: ${totalTime}ms`);
+        req.paymentTiming.checkpoints.forEach(cp => {
+            console.log(`${cp.name}: ${cp.timeSinceStart}ms`);
+        });
+        originalEnd.apply(res, args);
+    };
+
+    next();
+};
+
+router.use(timeLogger);
+
 // Authentication helper function
 async function checkAuth() {
     const { data: { session }, error } = await supabase.auth.getSession();
@@ -522,8 +571,10 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 
-router.post('/create-payment', async (req, res) => {
+router.post('/create-payment', paymentTimingMiddleware, async (req, res) => {
     try {
+        req.logCheckpoint('Starting payment creation');
+        
         const { 
             bookingId, 
             paymentMethod,
@@ -532,25 +583,22 @@ router.post('/create-payment', async (req, res) => {
             customerPhone,
             customerComment 
         } = req.body;
-        
-        // Function to generate booking number
+
         async function generateUniqueBookingNumber() {
             let isUnique = false;
             let bookingNumber;
             
             while (!isUnique) {
-                // Generate 8-digit number
                 const randomDigits = Math.floor(10000000 + Math.random() * 90000000);
                 bookingNumber = `B${randomDigits}`;
                 
-                // Check if this number already exists
                 const { data, error } = await supabase
                     .from('bookings')
                     .select('booking_number')
                     .eq('booking_number', bookingNumber)
                     .single();
                 
-                if (error && error.code === 'PGRST116') { // No rows returned
+                if (error && error.code === 'PGRST116') {
                     isUnique = true;
                 } else if (error) {
                     throw error;
@@ -560,20 +608,20 @@ router.post('/create-payment', async (req, res) => {
             return bookingNumber;
         }
 
-        // Generate unique booking number
+        req.logCheckpoint('Starting unique booking number generation');
         const bookingNumber = await generateUniqueBookingNumber();
-        console.log('Generated unique booking number:', bookingNumber);
+        req.logCheckpoint('Generated unique booking number');
 
-        // Get booking details from Supabase
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
             .select('*')
             .eq('id', bookingId)
             .single();
 
+        req.logCheckpoint('Retrieved booking details');
+
         if (bookingError) throw bookingError;
 
-        // Calculate totals
         const adultTotal = booking.adult_quantity * 400;
         const youthTotal = booking.youth_quantity * 300;
         const kidTotal = booking.kid_quantity * 200;
@@ -582,7 +630,8 @@ router.post('/create-payment', async (req, res) => {
         const rebookingTotal = booking.is_rebookable ? (totalTickets * 25) : 0;
         const totalAmount = adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal;
 
-        // Update booking with customer details and booking number
+        req.logCheckpoint('Calculated totals');
+
         const { error: updateError } = await supabase
             .from('bookings')
             .update({
@@ -595,6 +644,8 @@ router.post('/create-payment', async (req, res) => {
             .eq('id', bookingId)
             .select();
 
+        req.logCheckpoint('Updated booking with customer details');
+
         if (updateError) {
             console.error('Error updating booking:', updateError);
             throw new Error('Failed to update booking with customer details');
@@ -606,16 +657,20 @@ router.post('/create-payment', async (req, res) => {
         });
 
     } catch (error) {
+        req.logCheckpoint('Error in payment creation');
         console.error('Payment creation error:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
-router.post('/get-payment-form', (req, res) => {
+router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
     try {
+        req.logCheckpoint('Starting payment form generation');
+        
         const { amount, order_id, paymentMethod } = req.body;
         
         if (!amount || !order_id) {
+            req.logCheckpoint('Missing required parameters');
             return res.status(400).json({ error: 'Amount and order_id are required.' });
         }
 
@@ -624,8 +679,11 @@ router.post('/get-payment-form', (req, res) => {
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
 
         if (!merchant_id || !agreement_id || !apiKey) {
+            req.logCheckpoint('Missing environment variables');
             throw new Error('Missing required environment variables');
         }
+
+        req.logCheckpoint('Validated configuration');
 
         const ngrokUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
 
@@ -636,7 +694,6 @@ router.post('/get-payment-form', (req, res) => {
             payment_methods = 'swish';
         }
 
-        // Just include branding_id directly in the params
         const params = {
             version: 'v10',
             merchant_id,
@@ -650,10 +707,13 @@ router.post('/get-payment-form', (req, res) => {
             language: 'sv',
             autocapture: '1',
             payment_methods,
-            branding_id: '14851'  // Just add it here
+            branding_id: '14851'
         };
 
+        req.logCheckpoint('Built payment parameters');
+
         params.checksum = calculateChecksum(params, apiKey);
+        req.logCheckpoint('Generated checksum');
 
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net/framed">
@@ -664,8 +724,11 @@ router.post('/get-payment-form', (req, res) => {
             </form>
         `;
 
+        req.logCheckpoint('Generated form HTML');
         res.send(formHtml);
+
     } catch (error) {
+        req.logCheckpoint('Error generating payment form');
         console.error('Error generating payment form:', error);
         res.status(500).json({ error: error.message });
     }
@@ -737,59 +800,76 @@ router.get('/bookings/:id/summary', async (req, res) => {
 
 
 
-// In timeSlotRoutes.js
-router.post('/payment-callback', express.json(), async (req, res) => {
-    // Send response immediately to acknowledge receipt
+// Enhanced payment callback with timing
+router.post('/payment-callback', express.json(), paymentTimingMiddleware, async (req, res) => {
+    req.logCheckpoint('Received payment callback');
+    
+    // Send immediate response
     res.status(200).send('OK');
 
     try {
         const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
         if (!quickpaySignature) {
-            console.error('No QuickPay signature found in callback');
+            req.logCheckpoint('Missing QuickPay signature');
             return;
         }
 
-        // Process payment asynchronously
+        req.logCheckpoint('Processing payment asynchronously');
         processPaymentCallback(req.body, quickpaySignature).catch(error => {
             console.error('Error processing payment callback:', error);
         });
 
     } catch (error) {
+        req.logCheckpoint('Error in payment callback');
         console.error('Error in payment callback:', error);
     }
 });
 
-// Separate function for payment processing
 async function processPaymentCallback(payment, signature) {
-    // Verify signature
-    const calculatedSignature = crypto
-        .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-        .update(JSON.stringify(payment))
-        .digest('hex');
+    const startTime = Date.now();
+    console.log('Starting payment callback processing');
 
-    if (signature !== calculatedSignature) {
-        console.error('Invalid QuickPay signature');
-        return;
-    }
+    try {
+        const calculatedSignature = crypto
+            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
+            .update(JSON.stringify(payment))
+            .digest('hex');
 
-    // Only proceed if payment is accepted and processed
-    if (payment.accepted && payment.state === 'processed') {
-        await supabase
-            .from('bookings')
-            .update({
-                status: 'confirmed',
-                payment_id: payment.id,
-                payment_method: payment.metadata?.type || 'unknown',
-                paid_amount: payment.operations.find(op => op.type === 'capture')?.amount || 0,
-                payment_metadata: payment,
-                payment_completed_at: new Date().toISOString()
-            })
-            .eq('booking_number', payment.order_id);
+        console.log(`Signature verification took: ${Date.now() - startTime}ms`);
+
+        if (signature !== calculatedSignature) {
+            console.error('Invalid QuickPay signature');
+            return;
+        }
+
+        if (payment.accepted && payment.state === 'processed') {
+            const updateStart = Date.now();
+            await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    payment_id: payment.id,
+                    payment_method: payment.metadata?.type || 'unknown',
+                    paid_amount: payment.operations.find(op => op.type === 'capture')?.amount || 0,
+                    payment_metadata: payment,
+                    payment_completed_at: new Date().toISOString()
+                })
+                .eq('booking_number', payment.order_id);
+
+            console.log(`Database update took: ${Date.now() - updateStart}ms`);
+        }
+
+        console.log(`Total callback processing took: ${Date.now() - startTime}ms`);
+    } catch (error) {
+        console.error('Error processing payment callback:', error);
+        console.log(`Failed callback processing took: ${Date.now() - startTime}ms`);
     }
 }
 
-router.get('/payment-status/:bookingNumber', async (req, res) => {
+router.get('/payment-status/:bookingNumber', paymentTimingMiddleware, async (req, res) => {
     try {
+        req.logCheckpoint('Starting payment status check');
+        
         const { bookingNumber } = req.params;
 
         const { data: booking, error } = await supabase
@@ -798,27 +878,31 @@ router.get('/payment-status/:bookingNumber', async (req, res) => {
             .eq('booking_number', bookingNumber)
             .single();
 
+        req.logCheckpoint('Retrieved booking status');
+
         if (error) throw error;
 
         if (booking.status === 'confirmed') {
+            req.logCheckpoint('Payment confirmed');
             res.json({
                 status: 'completed',
                 paymentDetails: {
-                    amount: (booking.paid_amount - booking.refunded_amount) / 100, // Convert öre to SEK
+                    amount: (booking.paid_amount - booking.refunded_amount) / 100,
                     refunded: booking.refunded_amount > 0,
                     refundedAmount: booking.refunded_amount / 100
                 }
             });
         } else {
+            req.logCheckpoint('Payment pending');
             res.json({ status: booking.status });
         }
 
     } catch (error) {
+        req.logCheckpoint('Error checking payment status');
         console.error('Error checking payment status:', error);
         res.status(500).json({ error: 'Failed to check payment status' });
     }
 });
-
 
 // Add a new endpoint for refunds
 router.post('/bookings/:bookingNumber/refund', async (req, res) => {

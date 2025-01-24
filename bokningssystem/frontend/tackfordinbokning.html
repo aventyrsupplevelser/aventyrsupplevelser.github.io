@@ -69,46 +69,60 @@
         }
 
         async function checkPaymentStatus(bookingNumber) {
+            const startTime = startTiming(`Payment Status Check - ${bookingNumber}`);
             try {
                 const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-status/${bookingNumber}`);
                 const data = await response.json();
+
+                const duration = endTiming(`Payment Status Check - ${bookingNumber}`, startTime);
+                console.log(`Payment status check completed in ${duration}ms:`, data);
 
                 if (data.status === 'completed') {
                     document.querySelector('.loading').style.display = 'none';
                     document.querySelector('h1').textContent = 'Betalning genomförd!';
                     document.getElementById('statusMessage').innerHTML = `
-                        <h2>Tack för din bokning!</h2>
-                        <p>Din bokningsreferens är: ${bookingNumber}</p>
-                        <p>En bekräftelse skickas till din e-post inom kort.</p>
-                    `;
+                <h2>Tack för din bokning!</h2>
+                <p>Din bokningsreferens är: ${bookingNumber}</p>
+                <p>En bekräftelse skickas till din e-post inom kort.</p>
+            `;
                     return true;
                 }
                 return false;
             } catch (error) {
-                console.error('Error checking payment status:', error);
+                const duration = endTiming(`Payment Status Check - ${bookingNumber}`, startTime);
+                console.error(`Payment status check failed after ${duration}ms:`, error);
                 return false;
             }
         }
 
-        // Start checking payment status every 2 seconds for up to 1 minute
+
+        // Enhanced start status check with timing
         function startStatusCheck(bookingNumber) {
+            const startTime = startTiming('Payment Status Monitoring');
             let attempts = 0;
             const maxAttempts = 30;
 
+            console.log('Starting payment status monitoring...');
+
             const checkInterval = setInterval(async () => {
                 attempts++;
+                console.log(`Payment status check attempt ${attempts}/${maxAttempts}`);
+
                 const isComplete = await checkPaymentStatus(bookingNumber);
 
                 if (isComplete || attempts >= maxAttempts) {
                     clearInterval(checkInterval);
+                    const duration = endTiming('Payment Status Monitoring', startTime);
+                    console.log(`Payment status monitoring ended after ${duration}ms`);
+
                     if (!isComplete && attempts >= maxAttempts) {
                         document.querySelector('.loading').style.display = 'none';
                         document.getElementById('statusMessage').innerHTML = `
-                            <p style="color: orange;">
-                                Vi kunde inte bekräfta betalningen just nu. 
-                                Du kommer få en bekräftelse via e-post när betalningen är verifierad.
-                            </p>
-                        `;
+                    <p style="color: orange;">
+                        Vi kunde inte bekräfta betalningen just nu. 
+                        Du kommer få en bekräftelse via e-post när betalningen är verifierad.
+                    </p>
+                `;
                     }
                 }
             }, 2000);
