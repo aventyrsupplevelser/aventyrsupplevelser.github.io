@@ -676,7 +676,7 @@ router.post('/create-payment', async (req, res) => {
 
 router.post('/get-payment-form', (req, res) => {
     try {
-        const { amount, order_id, paymentMethod, basketInfo } = req.body;
+        const { amount, order_id, paymentMethod } = req.body;
         
         if (!amount || !order_id) {
             return res.status(400).json({ error: 'Amount and order_id are required.' });
@@ -685,6 +685,10 @@ router.post('/get-payment-form', (req, res) => {
         const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
+
+        if (!merchant_id || !agreement_id || !apiKey) {
+            throw new Error('Missing required environment variables');
+        }
 
         const ngrokUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
 
@@ -695,6 +699,7 @@ router.post('/get-payment-form', (req, res) => {
             payment_methods = 'swish';
         }
 
+        // Just include branding_id directly in the params
         const params = {
             version: 'v10',
             merchant_id,
@@ -702,41 +707,23 @@ router.post('/get-payment-form', (req, res) => {
             amount,
             currency: 'SEK',
             order_id,
-            variables: basketInfo ? {
-                booking_ref: order_id,
-                adult_tickets: `${basketInfo.tickets.adult} st (${basketInfo.pricing.adultTotal} kr)`,
-                youth_tickets: `${basketInfo.tickets.youth} st (${basketInfo.pricing.youthTotal} kr)`,
-                kid_tickets: `${basketInfo.tickets.kid} st (${basketInfo.pricing.kidTotal} kr)`,
-                date_time: `${basketInfo.date} ${basketInfo.time}`,
-                full_day: basketInfo.tickets.fullDay ? `Ja (${basketInfo.pricing.fullDayTotal} kr)` : 'Nej',
-                rebooking: basketInfo.is_rebookable ? `Ja (${basketInfo.pricing.rebookingTotal} kr)` : 'Nej',
-                vat: `${basketInfo.pricing.vatAmount.toFixed(2)} kr`,
-                total: `${basketInfo.pricing.total} kr`
-            } : undefined,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
-            cancelurl: `${ngrokUrl}/payment-cancelledd.html`,
+            cancelurl: `${ngrokUrl}/payment-cancelled.html`,
             callbackurl: `${ngrokUrl}/api/payment-callback`,
             language: 'sv',
             autocapture: '1',
             payment_methods,
-            branding_id: '14851'
+            branding_id: '14851'  // Just add it here
         };
 
-        // Only include variables in checksum if they exist
         params.checksum = calculateChecksum(params, apiKey);
 
         const formHtml = `
-            <form method="POST" action="https://payment.quickpay.net">
+            <form method="POST" action="https://payment.quickpay.net/framed">
                 ${Object.entries(params)
-                    .filter(([_, value]) => value !== undefined)
-                    .map(([key, value]) => {
-                        if (key === 'variables' && value) {
-                            return Object.entries(value).map(([varKey, varValue]) =>
-                                `<input type="hidden" name="variables[${varKey}]" value="${varValue}">`
-                            ).join('\n');
-                        }
-                        return value ? `<input type="hidden" name="${key}" value="${value}">` : '';
-                    }).join('\n')}
+                    .map(([key, value]) => 
+                        value ? `<input type="hidden" name="${key}" value="${value}">` : '')
+                    .join('\n')}
             </form>
         `;
 
@@ -746,8 +733,6 @@ router.post('/get-payment-form', (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-
 
 // In timeSlotRoutes.js
 router.get('/bookings/:id/summary', async (req, res) => {
