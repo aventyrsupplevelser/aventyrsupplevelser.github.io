@@ -1110,12 +1110,8 @@
         }
 
         async function handleContinueToPayment() {
-            console.log('Starting continue to payment process...');
             try {
                 let bookingData = JSON.parse(localStorage.getItem('bookingData'));
-                const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
-
-                // Prepare booking details
                 const bookingDetails = {
                     time_slot_id: currentTimeSlot,
                     adult_quantity: ticketState.adult,
@@ -1125,16 +1121,13 @@
                     is_rebookable: ticketState.is_rebookable,
                 };
 
-                // Get selected date and time for display
                 const selectedDate = document.querySelector('.calendar-day.selected')?.dataset.date;
                 const selectedTimeSlot = document.querySelector('.time-slot.selected')?.textContent.trim();
 
-                // Show UI elements immediately
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
                 showSection('paymentButtons', true);
 
-                // Fetch and display the summary right away
                 const totals = calculateTotal(ticketState);
                 displayBookingSummary({
                     tickets: {
@@ -1145,18 +1138,7 @@
                     totals,
                 });
 
-                // Ensure a booking number exists
-                let bookingNumber = localStorage.getItem('pendingBookingNumber');
-                if (!bookingNumber) {
-                    console.log('No booking number found, generating a new one...');
-                    bookingNumber = await generateBookingNumber();
-                    localStorage.setItem('pendingBookingNumber', bookingNumber);
-                    console.log('Generated and saved booking number:', bookingNumber);
-                }
-
-                // Update booking or create a new one in the background
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
-                    console.log('Creating a new booking in the background...', bookingDetails);
                     const createResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
                         method: 'POST',
                         headers: {
@@ -1167,25 +1149,17 @@
                     });
 
                     if (!createResponse.ok) {
-                        console.error('Failed to create booking:', await createResponse.text());
                         throw new Error('Failed to create booking');
                     }
 
                     const newBooking = await createResponse.json();
-                    console.log('New booking created:', newBooking);
-
-                    // Save booking data in localStorage
                     bookingData = {
                         token: newBooking.access_token,
                         bookingId: newBooking.booking_id,
-                        expiresAt: Date.now() + 15 * 60 * 1000, // 15 minutes
+                        expiresAt: Date.now() + 15 * 60 * 1000,
                     };
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
                 } else {
-                    console.log('Updating existing booking in the background...', {
-                        ...bookingDetails,
-                        bookingId: bookingData.bookingId,
-                    });
                     const updateResponse = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingData.bookingId}`, {
                         method: 'PUT',
                         headers: {
@@ -1199,12 +1173,9 @@
                     });
 
                     if (!updateResponse.ok) {
-                        console.error('Failed to update booking:', await updateResponse.text());
                         throw new Error('Failed to update booking');
                     }
                 }
-
-                console.log('Booking process completed in the background');
             } catch (error) {
                 console.error('Error in payment flow:', error);
                 document.getElementById('continueToPaymentBtn').style.display = 'block';
