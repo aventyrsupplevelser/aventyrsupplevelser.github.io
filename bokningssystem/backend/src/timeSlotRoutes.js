@@ -702,7 +702,7 @@ router.post('/get-payment-form', (req, res) => {
             amount,
             currency: 'SEK',
             order_id,
-            variables: {
+            variables: basketInfo ? {
                 booking_ref: order_id,
                 adult_tickets: `${basketInfo.tickets.adult} st (${basketInfo.pricing.adultTotal} kr)`,
                 youth_tickets: `${basketInfo.tickets.youth} st (${basketInfo.pricing.youthTotal} kr)`,
@@ -712,7 +712,7 @@ router.post('/get-payment-form', (req, res) => {
                 rebooking: basketInfo.is_rebookable ? `Ja (${basketInfo.pricing.rebookingTotal} kr)` : 'Nej',
                 vat: `${basketInfo.pricing.vatAmount.toFixed(2)} kr`,
                 total: `${basketInfo.pricing.total} kr`
-            },
+            } : undefined,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancelurl: `${ngrokUrl}/payment-cancelled.html`,
             callbackurl: `${ngrokUrl}/api/payment-callback`,
@@ -722,19 +722,21 @@ router.post('/get-payment-form', (req, res) => {
             branding_id: '14851'
         };
 
+        // Only include variables in checksum if they exist
         params.checksum = calculateChecksum(params, apiKey);
 
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net">
                 ${Object.entries(params)
+                    .filter(([_, value]) => value !== undefined)
                     .map(([key, value]) => {
-                        if (key === 'variables') {
+                        if (key === 'variables' && value) {
                             return Object.entries(value).map(([varKey, varValue]) =>
                                 `<input type="hidden" name="variables[${varKey}]" value="${varValue}">`
                             ).join('\n');
                         }
                         return value ? `<input type="hidden" name="${key}" value="${value}">` : '';
-                    }).flat().join('\n')}
+                    }).join('\n')}
             </form>
         `;
 
@@ -743,7 +745,6 @@ router.post('/get-payment-form', (req, res) => {
         console.error('Error generating payment form:', error);
         res.status(500).json({ error: error.message });
     }
-
 });
 
 

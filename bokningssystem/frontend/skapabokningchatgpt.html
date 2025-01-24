@@ -1278,11 +1278,7 @@
                 // Show loading state
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'loading-spinner';
-                loadingDiv.textContent = 'Laddar betalningsformulär...';
-                paymentContainer.appendChild(loadingDiv);
-
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalningsformulär...</div>';
                 document.getElementById('paymentButtons').style.display = 'none';
 
                 // Create payment
@@ -1302,6 +1298,11 @@
                 if (!createResponse.ok) throw new Error('Failed to create payment');
                 const { orderId, amount } = await createResponse.json();
 
+                // Get booking summary
+                const summaryResponse = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}/summary`);
+                if (!summaryResponse.ok) throw new Error('Failed to get booking summary');
+                const basketInfo = await summaryResponse.json();
+
                 // Get payment form
                 const formResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                     method: 'POST',
@@ -1313,23 +1314,16 @@
                         order_id: orderId,
                         amount: amount,
                         paymentMethod,
-                        basketInfo: await fetchBookingSummary(sessionData.bookingId)  // Get the current booking summary
+                        basketInfo
                     })
                 });
 
                 if (!formResponse.ok) throw new Error('Failed to get payment form');
                 const formHtml = await formResponse.text();
 
-                // Remove loading spinner
-                loadingDiv.remove();
-
-                // Add the form to the container (don't replace container contents)
-                const formDiv = document.createElement('div');
-                formDiv.innerHTML = formHtml;
-                paymentContainer.appendChild(formDiv);
-
-                // Submit the form
-                const form = formDiv.querySelector('form');
+                // Add the form to the page and submit it
+                paymentContainer.innerHTML = formHtml;
+                const form = paymentContainer.querySelector('form');
                 if (form) {
                     form.submit();
                 }
@@ -1342,7 +1336,6 @@
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
         }
-
 
 
         function validateCustomerInfo() {
