@@ -1297,7 +1297,7 @@
         function displayBookingSummary({ tickets, totals }) {
             try {
                 document.getElementById('bookingSummaryFinal').innerHTML = `
-            <p id="selectedDateTime">Datum:<span style="font-weight: bold;"> ${tickets.date || 'Not selected'}</span>Tid: <span style="font-weight: bold;"> ${tickets.time || 'Not selected'}</span></p>
+            <p id="selectedDateTime">Datum:<span style="font-weight: bold;"> ${tickets.date || 'Not selected'}</span> Tid: <span style="font-weight: bold;"> ${tickets.time || 'Not selected'}</span></p>
                 <p>Vuxen: ${tickets.adult} st (${tickets.adult * 400} kr)</p>
                 <p>Ungdom: ${tickets.youth} st (${tickets.youth * 300} kr)</p>
                 <p>Barn: ${tickets.kid} st (${tickets.kid * 200} kr)</p>
