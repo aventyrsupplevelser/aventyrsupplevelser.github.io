@@ -1573,55 +1573,6 @@
         }
 
 
-
-
-        /*   const ticketPrices = { adult: 400, youth: 300, child: 200, fullDay: 100 };
- 
-        function updateBookingSummary() {
-                const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
-                const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
-                const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
-                const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
-    
-                const date = document.querySelector('.calendar-day.selected')?.dataset.date || 'Not selected';
-                const time = document.querySelector('.time-slot.selected')?.textContent || 'Not selected';
-    
-                const totalCost =
-                    (adultTickets * ticketPrices.adult) +
-                    (youthTickets * ticketPrices.youth) +
-                    (childTickets * ticketPrices.child) +
-                    (fullDayExtension * ticketPrices.fullDay);
-    
-                document.getElementById('selectedDateTime').textContent = `Date & Time: ${date} ${time}`;
-                document.getElementById('selectedTickets').textContent = `Tickets: ${adultTickets} adults, ${youthTickets} youth, ${childTickets} kids`;
-                document.getElementById('fullDayExtension').textContent = `Full Day: ${fullDayExtension}`;
-                document.getElementById('totalCost').textContent = `Summa: ${totalCost} kr`;
-            }
-    
-            // Event listeners
-            document.querySelectorAll('select[name]').forEach(select => {
-                select.addEventListener('change', updateBookingSummary);
-            });
-    
-            function calculateTotalAmount() {
-                const adultTickets = parseInt(document.querySelector('[name="adultTickets"]').value) || 0;
-                const youthTickets = parseInt(document.querySelector('[name="youthTickets"]').value) || 0;
-                const childTickets = parseInt(document.querySelector('[name="childTickets"]').value) || 0;
-                const fullDayExtension = parseInt(document.querySelector('[name="fullDayExtensions"]')?.value) || 0;
-    
-                return (adultTickets * ticketPrices.adult) +
-                    (youthTickets * ticketPrices.youth) +
-                    (childTickets * ticketPrices.child) +
-                    (fullDayExtension * ticketPrices.fullDay);
-            }
-    */
-
-        /*
-                      // Initial auth check
-                      window.addEventListener('load', async function () {
-                          if (!await checkAuth()) return;
-                      }); */
-
     </script>
 </body>
 
