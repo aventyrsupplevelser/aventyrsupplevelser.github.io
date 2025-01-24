@@ -1364,7 +1364,21 @@
         }
 
 
+        // Add this function in skapabokningchatgpt.html alongside other helper functions
+        function calculateTotalAmount() {
+            const baseTotal = (
+                (ticketState.adult * PRICES.adult) +
+                (ticketState.youth * PRICES.youth) +
+                (ticketState.kid * PRICES.kid) +
+                (ticketState.fullday * PRICES.fullday)
+            );
 
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            const rebookingTotal = ticketState.is_rebookable ? (totalTickets * PRICES.rebooking) : 0;
+
+            // Return amount in öre (multiply by 100) since QuickPay expects it in minor units
+            return (baseTotal + rebookingTotal) * 100;
+        }
 
 
 

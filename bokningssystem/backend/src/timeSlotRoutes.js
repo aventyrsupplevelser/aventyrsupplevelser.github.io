@@ -522,71 +522,6 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 
-router.post('/test-payment', async (req, res) => {
-    try {
-        // Use API user key for both operations
-        const authHeader = `Basic ${Buffer.from(':' + process.env.QUICKPAY_API_USER_KEY).toString('base64')}`;
-        
-        // Create payment
-        const response = await fetch('https://api.quickpay.net/payments', {
-            method: 'POST',
-            headers: {
-                'Accept-Version': 'v10',
-                'Authorization': authHeader,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                order_id: `test-${Date.now()}`,
-                currency: 'SEK'
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.text();
-            console.error('Payment creation error response:', error);
-            throw new Error('Failed to create payment');
-        }
-
-        const payment = await response.json();
-        console.log('Payment created:', payment);
-        
-        // Create payment link
-        const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
-            method: 'PUT',
-            headers: {
-                'Accept-Version': 'v10',
-                'Authorization': authHeader,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                amount: 1000, // 10 SEK
-                continue_url: 'https://localhost:3000/success',
-                callback_url: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/quickpay-callback',
-                cancel_url: 'https://localhost:3000/cancel',
-                payment_methods: 'creditcard'
-            })
-        });
-
-        if (!linkResponse.ok) {
-            const error = await linkResponse.text();
-            console.error('Link creation error response:', error);
-            throw new Error('Failed to create payment link');
-        }
-
-        const linkData = await linkResponse.json();
-        console.log('Payment link created:', linkData);
-
-        res.json({ 
-            payment_id: payment.id,
-            payment_url: linkData.url 
-        });
-
-    } catch (error) {
-        console.error('Test payment error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
 router.post('/create-payment', async (req, res) => {
     try {
         const { 
@@ -799,8 +734,6 @@ router.get('/bookings/:id/summary', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-// Add this to timeSlotRoutes.js
 
 
 
