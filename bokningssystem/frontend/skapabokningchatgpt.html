@@ -1586,6 +1586,16 @@
             return duration;
         }
 
+        function clearLocalStorageOnLoad() {
+            console.log('Clearing localStorage on page load...');
+            localStorage.removeItem('bookingData');
+            localStorage.removeItem('pendingBookingNumber');
+            console.log('localStorage after clearing:', localStorage);
+        }
+
+        // Execute the function on page load
+        window.addEventListener('load', clearLocalStorageOnLoad);
+
 
     </script>
 </body>
