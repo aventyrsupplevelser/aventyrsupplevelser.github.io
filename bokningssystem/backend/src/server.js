@@ -11,10 +11,7 @@ import fs from 'fs';
 const app = express();
 const port = process.env.PORT || 3000;
 
-
-
 dotenv.config();
-
 console.log('Starting server setup...');
 
 // Get directory paths
@@ -22,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const frontendPath = path.join(__dirname, '../../frontend');
 
-// CORS configuration - must come before any routes
+// CORS configuration
 const corsOptions = {
     origin: [
         'https://aventyrsupplevelser.com',
@@ -37,21 +34,22 @@ const corsOptions = {
 
 app.set('trust proxy', true);
 
-
-// Handle OPTIONS preflight requests explicitly
+// Handle OPTIONS preflight requests
 app.options('*', cors(corsOptions));
 
 // Apply CORS to all routes
 app.use(cors(corsOptions));
 
+// CORS debug middleware
 app.use((req, res, next) => {
     console.log(`CORS Debug: Method=${req.method}, Origin=${req.headers.origin}, Path=${req.path}`);
     next();
 });
 
-// Rest of middleware
+// Basic middleware
 app.use(express.json());
 
+// Log frontend directory contents
 console.log('Looking for frontend files in:', frontendPath);
 try {
     console.log('Files in frontend path:', fs.readdirSync(frontendPath));
@@ -59,12 +57,11 @@ try {
     console.error('Error reading frontend directory:', error);
 }
 
-// Main test route
-app.get('/', (req, res) => {
-    res.json({ message: 'Server is working!' });
-});
+// 1. Serve static files FIRST
+console.log('Setting up static file serving from:', frontendPath);
+app.use(express.static(frontendPath));
 
-// Before mounting
+// 2. Mount API routes
 console.log('Available routes:');
 timeSlotRoutes.stack.forEach((r) => {
     if (r.route && r.route.path) {
@@ -72,21 +69,32 @@ timeSlotRoutes.stack.forEach((r) => {
     }
 });
 
-// Mount API routes FIRST
 app.use('/api', timeSlotRoutes);
 console.log('Routes mounted');
 
-// THEN serve static files
-console.log('Setting up static file serving from:', frontendPath);
-app.use(express.static(frontendPath));
-
-// Add the catch-all route logger - move before 404 handler
+// 3. Request logger
 app.use((req, res, next) => {
     console.log(`Request received for ${req.method} ${req.url}`);
     next();
 });
 
-// Add the 404 handler last
+// 4. Catch-all route for HTML files
+app.get('*', (req, res) => {
+    if (req.path.endsWith('.html')) {
+        // Try to serve the specific HTML file
+        const htmlPath = path.join(frontendPath, req.path);
+        if (fs.existsSync(htmlPath)) {
+            res.sendFile(htmlPath);
+        } else {
+            res.status(404).json({ error: 'HTML file not found' });
+        }
+    } else {
+        // Default to main booking page
+        res.sendFile(path.join(frontendPath, 'skapabokningchatgpt.html'));
+    }
+});
+
+// 5. 404 handler (last)
 app.use((req, res) => {
     console.log(`404: Route not found for ${req.method} ${req.url}`);
     res.status(404).json({ error: 'Route not found' });
