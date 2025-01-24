@@ -88,8 +88,6 @@
                 }
                 return false;
             } catch (error) {
-                const duration = endTiming(`Payment Status Check - ${bookingNumber}`, startTime);
-                console.error(`Payment status check failed after ${duration}ms:`, error);
                 return false;
             }
         }
@@ -110,8 +108,6 @@
 
                 if (isComplete || attempts >= maxAttempts) {
                     clearInterval(checkInterval);
-                    const duration = endTiming('Payment Status Monitoring', startTime);
-                    console.log(`Payment status monitoring ended after ${duration}ms`);
 
                     if (!isComplete && attempts >= maxAttempts) {
                         document.querySelector('.loading').style.display = 'none';
