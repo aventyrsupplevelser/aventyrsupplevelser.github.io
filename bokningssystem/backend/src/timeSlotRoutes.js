@@ -892,5 +892,37 @@ router.post('/bookings/:bookingNumber/refund', async (req, res) => {
     }
 });
 
+// Get all bookings
+router.get('/bookings', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('bookings')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get single time slot
+router.get('/time-slots/:id', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('time_slots')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching time slot:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 export default router;
