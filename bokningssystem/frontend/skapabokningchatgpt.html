@@ -1208,15 +1208,6 @@
             }
         }
 
-
-        const PRICES = {
-            adult: 400,
-            youth: 300,
-            kid: 200,
-            fullday: 100,
-            rebooking: 25,
-        };
-
         function calculateTotal(tickets) {
             const baseTotal =
                 tickets.adult * PRICES.adult +
@@ -1295,26 +1286,27 @@
             continueBtn.textContent = `Gå till betalning: ${total} kr`;
         }
 
-        async function displayBookingSummary(summary) {
+        function displayBookingSummary({ tickets, totals }) {
             try {
                 document.getElementById('bookingSummaryFinal').innerHTML = `
-            <p id="selectedDateTime">Datum & tid: ${summary.date} ${summary.time}</p>
+            <p id="selectedDateTime">Datum & tid: ${tickets.date} ${tickets.time}</p>
             <p id="selectedTickets">Antal biljetter:</p>
             <ul style="list-style: none; margin-left: 20px;">
-                <li>Vuxen (400 kr): ${summary.tickets.adult} st (${summary.pricing.adultTotal} kr)</li>
-                <li>Ungdom (300 kr): ${summary.tickets.youth} st (${summary.pricing.youthTotal} kr)</li>
-                <li>Barn (200 kr): ${summary.tickets.kid} st (${summary.pricing.kidTotal} kr)</li>
+                <li>Vuxen (400 kr): ${tickets.adult} st (${tickets.adult * 400} kr)</li>
+                <li>Ungdom (300 kr): ${tickets.youth} st (${tickets.youth * 300} kr)</li>
+                <li>Barn (200 kr): ${tickets.kid} st (${tickets.kid * 200} kr)</li>
             </ul>
-            ${summary.tickets.fullDay ? `<p>Heldag: ${summary.tickets.fullDay} st (${summary.pricing.fullDayTotal} kr)</p>` : ''}
-            ${summary.is_rebookable ? `<p>Ombokningsgaranti: ${summary.pricing.rebookingTotal} kr</p>` : ''}
-            <p id="totalvat">Moms (6%): ${summary.pricing.vatAmount.toFixed(2)} kr</p>
-            <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${summary.pricing.total} kr</p>
+            ${tickets.fullday ? `<p>Heldag: ${tickets.fullday} st (${tickets.fullday * 100} kr)</p>` : ''}
+            ${tickets.isRebookable ? `<p>Ombokningsgaranti: ${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</p>` : ''}
+            <p id="totalvat">Moms (6%): ${totals.vat.toFixed(2)} kr</p>
+            <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${totals.total} kr</p>
         `;
             } catch (error) {
                 console.error('Error displaying booking summary:', error);
                 document.getElementById('bookingSummaryFinal').innerHTML = '<p class="error">Kunde inte ladda bokningsöversikt</p>';
             }
         }
+
 
         async function handlePayment(paymentMethod) {
             const startTime = Date.now();
