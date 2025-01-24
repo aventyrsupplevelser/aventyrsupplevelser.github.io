@@ -1151,6 +1151,15 @@
                     totals,
                 });
 
+                // Ensure a booking number exists
+                let bookingNumber = localStorage.getItem('pendingBookingNumber');
+                if (!bookingNumber) {
+                    console.log('No booking number found, generating a new one...');
+                    bookingNumber = await generateBookingNumber();
+                    localStorage.setItem('pendingBookingNumber', bookingNumber);
+                    console.log('Generated and saved booking number:', bookingNumber);
+                }
+
                 // Update booking or create a new one in the background
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
                     console.log('Creating a new booking in the background...', bookingDetails);
@@ -1210,6 +1219,7 @@
                 alert('Ett fel uppstod. Försök igen.');
             }
         }
+
 
 
         function calculateTotal(tickets) {
@@ -1561,7 +1571,6 @@
             const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
             const rebookingTotal = ticketState.is_rebookable ? (totalTickets * PRICES.rebooking) : 0;
 
-            // Return amount in öre (multiply by 100) since QuickPay expects it in minor units
             return (baseTotal + rebookingTotal) * 100;
         }
 
