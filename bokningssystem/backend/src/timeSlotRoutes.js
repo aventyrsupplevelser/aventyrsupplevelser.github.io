@@ -631,7 +631,7 @@ router.post('/get-payment-form', (req, res) => {
 
         let payment_methods;
         if (paymentMethod === 'card') {
-            payment_methods = '3d-visa, 3d-visa-electron, 3d-mastercard, 3d-mastercard-debet';
+            payment_methods = 'visa, visa-electron, mastercard, mastercard-debet';
         } else if (paymentMethod === 'swish') {
             payment_methods = 'swish';
         }
