@@ -676,7 +676,7 @@ router.post('/create-payment', async (req, res) => {
 
 router.post('/get-payment-form', (req, res) => {
     try {
-        const { amount, order_id, paymentMethod } = req.body;
+        const { amount, order_id, paymentMethod, basketInfo } = req.body;
         
         if (!amount || !order_id) {
             return res.status(400).json({ error: 'Amount and order_id are required.' });
@@ -702,6 +702,17 @@ router.post('/get-payment-form', (req, res) => {
             amount,
             currency: 'SEK',
             order_id,
+            variables: {
+                booking_ref: order_id,
+                adult_tickets: `${basketInfo.tickets.adult} st (${basketInfo.pricing.adultTotal} kr)`,
+                youth_tickets: `${basketInfo.tickets.youth} st (${basketInfo.pricing.youthTotal} kr)`,
+                kid_tickets: `${basketInfo.tickets.kid} st (${basketInfo.pricing.kidTotal} kr)`,
+                date_time: `${basketInfo.date} ${basketInfo.time}`,
+                full_day: basketInfo.tickets.fullDay ? `Ja (${basketInfo.pricing.fullDayTotal} kr)` : 'Nej',
+                rebooking: basketInfo.is_rebookable ? `Ja (${basketInfo.pricing.rebookingTotal} kr)` : 'Nej',
+                vat: `${basketInfo.pricing.vatAmount.toFixed(2)} kr`,
+                total: `${basketInfo.pricing.total} kr`
+            },
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancelurl: `${ngrokUrl}/payment-cancelled.html`,
             callbackurl: `${ngrokUrl}/api/payment-callback`,
@@ -713,13 +724,17 @@ router.post('/get-payment-form', (req, res) => {
 
         params.checksum = calculateChecksum(params, apiKey);
 
-        // Return a regular form instead of an iframe form
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net">
                 ${Object.entries(params)
-                    .map(([key, value]) => 
-                        value ? `<input type="hidden" name="${key}" value="${value}">` : '')
-                    .join('\n')}
+                    .map(([key, value]) => {
+                        if (key === 'variables') {
+                            return Object.entries(value).map(([varKey, varValue]) =>
+                                `<input type="hidden" name="variables[${varKey}]" value="${varValue}">`
+                            ).join('\n');
+                        }
+                        return value ? `<input type="hidden" name="${key}" value="${value}">` : '';
+                    }).flat().join('\n')}
             </form>
         `;
 
@@ -728,7 +743,6 @@ router.post('/get-payment-form', (req, res) => {
         console.error('Error generating payment form:', error);
         res.status(500).json({ error: error.message });
     }
-});
 
 // In timeSlotRoutes.js
 router.get('/bookings/:id/summary', async (req, res) => {
