@@ -744,6 +744,10 @@ router.post('/get-payment-form', (req, res) => {
         res.status(500).json({ error: error.message });
     }
 
+});
+
+
+
 // In timeSlotRoutes.js
 router.get('/bookings/:id/summary', async (req, res) => {
     try {
