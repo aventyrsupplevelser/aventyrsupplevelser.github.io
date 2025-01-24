@@ -1293,7 +1293,7 @@
         function displayBookingSummary({ tickets, totals }) {
             try {
                 document.getElementById('bookingSummaryFinal').innerHTML = `
-            <p id="selectedDateTime">Datum & tid: ${tickets.date} ${tickets.time}</p>
+            <p id="selectedDateTime">Datum & tid: ${tickets.date || 'Not selected'} ${tickets.time || 'Not selected'}</p>
             <p id="selectedTickets">Antal biljetter:</p>
             <ul style="list-style: none; margin-left: 20px;">
                 <li>Vuxen (400 kr): ${tickets.adult} st (${tickets.adult * 400} kr)</li>
@@ -1310,6 +1310,7 @@
                 document.getElementById('bookingSummaryFinal').innerHTML = '<p class="error">Kunde inte ladda bokningsöversikt</p>';
             }
         }
+
 
 
         async function handlePayment(paymentMethod) {
