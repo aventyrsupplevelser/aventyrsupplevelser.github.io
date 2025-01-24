@@ -1258,24 +1258,69 @@
         async function handlePayment(paymentMethod) {
             try {
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!sessionData || !sessionData.bookingId) {
+                if (!sessionData?.bookingId) {
                     throw new Error('No active booking found');
                 }
 
-                // Validate customer information
-                const customerInfo = validateCustomerInfo();
-                if (!customerInfo) return;
+                // Validate customer info
+                const customerInfo = {
+                    customerName: document.getElementById('customerName').value.trim(),
+                    customerEmail: document.getElementById('customerEmail').value.trim(),
+                    customerPhone: document.getElementById('customerPhone').value.trim(),
+                    customerComment: document.getElementById('customerComment').value.trim()
+                };
 
-                // Show payment container immediately
+                if (!customerInfo.customerName || !customerInfo.customerEmail) {
+                    alert('Vänligen fyll i namn och e-post.');
+                    return;
+                }
+
+                // Show loading state
                 const paymentContainer = document.getElementById('payment-container');
                 paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalningsformulär...</div>';
+                document.getElementById('paymentButtons').style.display = 'none';
 
-                const paymentResponse = await createPayment(sessionData.bookingId, paymentMethod, customerInfo);
-                const formHtml = await getPaymentForm(paymentMethod, paymentResponse);
+                // Create payment
+                const createResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        bookingId: sessionData.bookingId,
+                        paymentMethod,
+                        ...customerInfo
+                    })
+                });
 
-                // Set up iframe after both promises resolve
-                setupPaymentIframe(formHtml, paymentResponse);
+                if (!createResponse.ok) throw new Error('Failed to create payment');
+                const { orderId, amount } = await createResponse.json();
+
+                // Get payment form
+                const formResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        amount: amount,
+                        paymentMethod
+                    })
+                });
+
+                if (!formResponse.ok) throw new Error('Failed to get payment form');
+                const formHtml = await formResponse.text();
+
+                // Add the form to the page and submit it
+                paymentContainer.innerHTML = formHtml;
+                const form = paymentContainer.querySelector('form');
+                if (form) {
+                    form.submit();
+                }
 
             } catch (error) {
                 console.error('Payment error:', error);

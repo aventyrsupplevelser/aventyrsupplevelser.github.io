@@ -686,10 +686,6 @@ router.post('/get-payment-form', (req, res) => {
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
 
-        if (!merchant_id || !agreement_id || !apiKey) {
-            throw new Error('Missing required environment variables');
-        }
-
         const ngrokUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
 
         let payment_methods;
@@ -699,7 +695,6 @@ router.post('/get-payment-form', (req, res) => {
             payment_methods = 'swish';
         }
 
-        // Just include branding_id directly in the params
         const params = {
             version: 'v10',
             merchant_id,
@@ -713,13 +708,14 @@ router.post('/get-payment-form', (req, res) => {
             language: 'sv',
             autocapture: '1',
             payment_methods,
-            branding_id: '14851'  // Just add it here
+            branding_id: '14851'
         };
 
         params.checksum = calculateChecksum(params, apiKey);
 
+        // Return a regular form instead of an iframe form
         const formHtml = `
-            <form method="POST" action="https://payment.quickpay.net/framed">
+            <form method="POST" action="https://payment.quickpay.net">
                 ${Object.entries(params)
                     .map(([key, value]) => 
                         value ? `<input type="hidden" name="${key}" value="${value}">` : '')
