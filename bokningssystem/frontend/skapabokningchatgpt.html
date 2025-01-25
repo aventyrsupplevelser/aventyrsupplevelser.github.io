@@ -226,6 +226,9 @@
         label span {
             font-size: 0.6em;
             color: #666;
+            line-height: 1.3em !important;
+            display: block;
+            margin-top: 10px;
         }
 
         input[type="date"],
@@ -459,7 +462,7 @@
                 <div class="time-slots" id="timeSlots">
                     <!-- Time slots will be populated here -->
                 </div>
-                <div id="spotsLeft" style="float: left; margin-top: 10px;"></div>
+                <div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
             </div>
             <div id="tickets" style="margin-top: 80px;">
                 <div style="background: yellow; display: inline;">Välj antal äventyrare:</div>
@@ -491,7 +494,7 @@
                     <!-- Kid tickets -->
                     <div class="ticket-selector">
                         <label style="height: 24px;">Barn 3-9 år* <br>
-                            <span>*Måste klättra med betalande vuxen</span></label>
+                            <span>*Måste klättra med <br>betalande vuxen</span></label>
                         <div>200 kr</div>
                         <div class="quantity-selector">
                             <button type="button" class="quantity-btn minus" data-ticket-type="kid">-</button>
