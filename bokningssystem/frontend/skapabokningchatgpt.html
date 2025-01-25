@@ -685,27 +685,34 @@
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
-
-                    // Create start and end of month dates
                     const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
-                        .select('start_time')
+                        .select('start_time, total_spots, available_spots')
                         .gte('start_time', startOfMonth.toISOString())
-                        .lte('start_time', endOfMonth.toISOString())
-                        .gt('available_spots', 0);
+                        .lte('start_time', endOfMonth.toISOString());
 
                     if (error) throw error;
 
-                    this.availableDates.clear();
+                    // Group slots by date and calculate availability
+                    const dateAvailability = {};
                     slots?.forEach(slot => {
                         const date = new Date(slot.start_time);
                         const dateStr = date.toISOString().split('T')[0];
-                        this.availableDates.add(dateStr);
+
+                        if (!dateAvailability[dateStr]) {
+                            dateAvailability[dateStr] = {
+                                totalSpots: 0,
+                                availableSpots: 0
+                            };
+                        }
+                        dateAvailability[dateStr].totalSpots += slot.total_spots;
+                        dateAvailability[dateStr].availableSpots += slot.available_spots;
                     });
 
+                    this.availableDates = dateAvailability;
                     this.updateAvailableDays();
                 } catch (error) {
                     console.error('Error fetching available dates:', error);
@@ -803,10 +810,22 @@
             updateAvailableDays() {
                 this.container.querySelectorAll('.calendar-day').forEach(day => {
                     const dateStr = day.dataset.date;
-                    if (this.availableDates.has(dateStr)) {
-                        day.classList.add('available');
+                    const availability = this.availableDates[dateStr];
+
+                    if (availability) {
+                        const availabilityRatio = availability.availableSpots / availability.totalSpots;
+                        if (availabilityRatio === 0) {
+                            day.style.backgroundColor = '#ff9999'; // red for full
+                            day.disabled = true;
+                        } else if (availabilityRatio <= 0.5) {
+                            day.style.backgroundColor = 'rgb(255, 255, 0)'; // yellow for less than half
+                            day.classList.add('available');
+                        } else {
+                            day.style.backgroundColor = 'rgb(173, 240, 159)'; // green for more than half
+                            day.classList.add('available');
+                        }
                     } else {
-                        day.classList.remove('available');
+                        day.style.backgroundColor = 'rgb(240, 240, 240)'; // grey for not available
                     }
                 });
             }
@@ -840,10 +859,8 @@
 
         async function loadTimeSlots(dateStr) {
             try {
-
                 clearTicketSelections();
 
-                // Create the time range in local timezone
                 const startOfDay = new Date(`${dateStr}T00:00:00`);
                 const endOfDay = new Date(`${dateStr}T23:59:59`);
 
@@ -852,25 +869,38 @@
                     .select('*')
                     .gte('start_time', startOfDay.toISOString())
                     .lte('start_time', endOfDay.toISOString())
-                    .gt('available_spots', 0)
                     .order('start_time');
 
                 if (error) throw error;
 
                 document.getElementById('timeSlots').innerHTML = slots
                     .map(slot => {
-                        // Adjust the displayed time for timezone
                         const localTime = new Date(slot.start_time);
+                        let backgroundColor;
+                        let isSelectable = true;
+
+                        if (slot.available_spots === 0) {
+                            backgroundColor = '#ff9999'; // red
+                            isSelectable = false;
+                        } else if (slot.available_spots < 10) {
+                            backgroundColor = 'rgb(255, 255, 0)'; // yellow
+                        } else {
+                            backgroundColor = 'rgb(173, 240, 159)'; // green
+                        }
+
                         return `
-                    <div class="time-slot"
+                    <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
                          data-slot-id="${slot.id}"
                          data-allows-fullday="${slot.allow_full_day}"
                          data-available-spots="${slot.available_spots}"
-                         onclick="selectTimeSlot(this)">
+                         data-availability-color="${backgroundColor}"
+                         onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
+                         style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed;' : ''}">
                         ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        ${!isSelectable ? '<br>(Fullbokad)' : ''}
                     </div>
                 `;
-                    }).join('') || '<p style="min-width: 250px;">Inga lediga tider detta datum. <br><br> Obs: om ni är fler än 10 kan ni boka en tid utanför de i kalendern.</p>';
+                    }).join('') || '<p>Inga lediga tider detta datum</p>';
 
             } catch (error) {
                 console.error('Error loading time slots:', error);
@@ -909,6 +939,14 @@
 
             const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
             const spotsLeft = maxAvailableSpots - totalSelected;
+
+            // Get the selected time slot's color
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            if (selectedSlot) {
+                const color = selectedSlot.dataset.availabilityColor;
+                spotsLeftElement.style.color = color;
+            }
+
             spotsLeftElement.textContent = `${spotsLeft} platser kvar.`;
         }
 
@@ -988,32 +1026,25 @@
         }
 
         function selectTimeSlot(element) {
+            if (element.classList.contains('disabled')) return;
 
-            // Clear previous selections
             document.querySelectorAll('.time-slot').forEach(slot =>
                 slot.classList.remove('selected'));
             element.classList.add('selected');
 
-            // Set the current time slot and max spots
             currentTimeSlot = element.dataset.slotId;
             maxAvailableSpots = parseInt(element.dataset.availableSpots);
 
-            // Clear existing ticket selections
             clearTicketSelections();
-
-            // Update spots display
             updateSpotsLeftDisplay();
 
-            // Show ticket section
             const ticketSection = document.querySelector('#tickets');
             ticketSection.classList.add('visible');
 
-            // Show the continue to payment button
-            document.getElementById('continueToPaymentBtn').style.display = 'block';
-            // Initially disable it since no tickets are selected
-            document.getElementById('continueToPaymentBtn').disabled = true;
+            const continueButton = document.getElementById('continueToPaymentBtn');
+            continueButton.style.display = 'block';
+            continueButton.disabled = true;
 
-            // Scroll to ticket section
             ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
