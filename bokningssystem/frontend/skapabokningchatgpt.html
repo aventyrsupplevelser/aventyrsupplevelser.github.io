@@ -224,7 +224,7 @@
         input[type="text"],
         input[type="email"],
         input[type="tel"],
-        input[type="comment"],
+        textarea[type="comment"],
         select {
             width: 100%;
             padding: 8px;
@@ -412,6 +412,10 @@
             margin-bottom: 20px;
             font-family: inherit;
         }
+
+        #bookingSummaryFinal p {
+            margin: 5px 0px;
+        }
     </style>
 </head>
 
@@ -493,8 +497,8 @@
                     <label class="rebooking-option"
                         style="cursor: pointer; display: flex; justify-content: space-between; margin-left: 10px;">
                         <div style="font-size: 1.5em; font-weight: 500;">25 kr per person</div>
-                        <input type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
-                    </label>
+                        <textarea type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
+                        </textarea>
                 </div>
                 <br><br>
                 <div class="button-container"
