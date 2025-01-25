@@ -224,7 +224,7 @@
         input[type="text"],
         input[type="email"],
         input[type="tel"],
-        textarea[type="comment"],
+        input[type="comment"],
         select {
             width: 100%;
             padding: 8px;
@@ -498,8 +498,8 @@
                     <label class="rebooking-option"
                         style="cursor: pointer; display: flex; justify-content: space-between; margin-left: 10px;">
                         <div style="font-size: 1.5em; font-weight: 500;">25 kr per person</div>
-                        <textarea type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
-                        </textarea>
+                        <label type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
+                        </label>
                 </div>
                 <br><br>
                 <div class="button-container"
@@ -529,7 +529,7 @@
                         <input type="tel" id="customerPhone">
                     </div>
                     <div class="form-group">
-                        <label>Kommentar</label>
+                        <textarea>Kommentar</textarea>
                         <input style="height: 100px" type="comment" id="customerComment">
                     </div>
                 </div>
