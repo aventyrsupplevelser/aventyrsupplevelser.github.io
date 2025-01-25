@@ -899,7 +899,7 @@
                         ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 `;
-                    }).join('') || '<p>Inga lediga tider detta datum</p>';
+                    }).join('') || '<p style="min-width: 300px;">Inga lediga tider detta datum. <br><br> Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.</p>';
 
             } catch (error) {
                 console.error('Error loading time slots:', error);
