@@ -1038,7 +1038,7 @@
                 if (newValue >= 0 && newValue <= totalTickets) {
                     ticketState.fullday = newValue;
                     document.getElementById('fulldayQuantity').textContent = newValue;
-                    updateTotalDisplay(); // Add this
+                    updateTotalDisplay();
                 }
                 return;
             }
@@ -1050,7 +1050,8 @@
                 updateSpotsLeftDisplay();
                 updateFulldayMaxQuantity();
                 validateTicketSelection();
-                updateTotalDisplay(); // Add this
+                updateTotalDisplay();
+                updateChildrenTicketButtons(); // Add this to check children ticket availability
             }
         }
 
@@ -1194,6 +1195,8 @@
                     resetPaymentFlow(); // Reset payment flow when quantities change
                 });
             });
+            // Disable children ticket buttons initially
+            updateChildrenTicketButtons();
         });
 
 
@@ -1608,10 +1611,7 @@
             }
         }
 
-        // Add this function to the script section in skapabokningchatgpt.html
-
-        function setupPaymentIframe(formHtml) {
-            const startTime = startTiming('Payment Iframe Setup');
+        function setupPaymentIframe(formHtml, paymentResponse) {
             try {
                 console.log('Setting up payment iframe...');
                 const paymentContainer = document.getElementById('payment-container');
@@ -1621,9 +1621,10 @@
                 iframe.style.width = '100%';
                 iframe.style.height = '330px';
                 iframe.style.border = 'none';
-                iframe.style.display = 'none';
+                iframe.style.display = 'none'; // Hide iframe initially
                 iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
 
+                // Keep spinner and add iframe
                 paymentContainer.appendChild(iframe);
 
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -1631,26 +1632,10 @@
                 iframeDoc.write(formHtml);
                 iframeDoc.close();
 
-                // Add message listener for QuickPay events
-                window.addEventListener('message', function (event) {
-                    // Check if the message is from QuickPay
-                    if (event.origin === 'https://payment.quickpay.net') {
-                        try {
-                            const data = JSON.parse(event.data);
-                            // If payment is successful, redirect to confirmation page
-                            if (data.accepted && data.state === 'processed') {
-                                const bookingNumber = localStorage.getItem('pendingBookingNumber');
-                                window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
-                            }
-                        } catch (e) {
-                            console.error('Error processing payment message:', e);
-                        }
-                    }
-                });
-
                 iframe.onload = () => {
                     const loadDuration = endTiming('Iframe Load', startTime);
                     console.log(`Payment iframe loaded in ${loadDuration}ms`);
+                    // Only now remove spinner and show iframe
                     paymentContainer.querySelector('.loading-spinner').remove();
                     iframe.style.display = 'block';
                 };
@@ -1707,6 +1692,16 @@
         // Execute the function on page load
         window.addEventListener('load', clearLocalStorageOnLoad);
 
+        function updateChildrenTicketButtons() {
+            const adultCount = ticketState.adult;
+            const kidPlusButton = document.querySelector('[data-ticket-type="kid"].plus');
+
+            if (adultCount === 0) {
+                kidPlusButton.disabled = true;
+            } else {
+                kidPlusButton.disabled = false;
+            }
+        }
 
     </script>
 </body>
