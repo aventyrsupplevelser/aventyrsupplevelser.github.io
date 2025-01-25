@@ -145,7 +145,7 @@
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, 61px);
             gap: 5px;
         }
 
@@ -1212,6 +1212,12 @@
 
         async function handleContinueToPayment() {
             try {
+
+                // Check if at least one ticket is selected
+                if (ticketState.adult + ticketState.youth + ticketState.kid === 0) {
+                    alert('Vänligen välj minst en biljett');
+                    return; // Exit the function if no tickets are selected
+                }
                 let bookingData = JSON.parse(localStorage.getItem('bookingData'));
                 const bookingDetails = {
                     time_slot_id: currentTimeSlot,
