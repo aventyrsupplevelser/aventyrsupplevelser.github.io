@@ -577,6 +577,10 @@
             return true;
         }
 
+        const available = rgb(173, 240, 159)
+        const notAvailable = rgb(240, 240, 240)
+        const fewLeft = rgb(255, 255, 0)
+
         class BookingFlow {
             constructor() {
                 this.currentStep = 1;
@@ -722,12 +726,16 @@
                 </div>
                 <div class="calendar-legend">
                     <div class="legend-item">
-                        <div class="legend-dot" style="background-color: rgb(173, 240, 159)"></div>
+                        <div class="legend-dot" style="background-color: ${available}"></div>
                         <span>Tillgänglig</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-dot" style="background-color: #f0f0f0;"></div>
-                        <span>Ej tillgänglig</span>
+                        <div class="legend-dot" style="background-color: ${fewLeft};"></div>
+                        <span>Få platser kvar</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: ${notAvailable};"></div>
+                        <span>Fullbokat</span>
                     </div>
                 </div>
             </div>
