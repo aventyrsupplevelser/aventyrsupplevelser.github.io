@@ -1611,7 +1611,9 @@
         // Add this function to the script section in skapabokningchatgpt.html
 
         function setupPaymentIframe(formHtml) {
+            const startTime = startTiming('Payment Iframe Setup');
             try {
+                console.log('Setting up payment iframe...');
                 const paymentContainer = document.getElementById('payment-container');
                 const iframe = document.createElement('iframe');
 
