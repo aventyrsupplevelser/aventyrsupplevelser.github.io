@@ -206,6 +206,10 @@
             border-radius: 50%;
         }
 
+        .legend-dot span {
+            padding: 3px 0px 0px 0px;
+        }
+
         .booking-section {
             margin-bottom: 30px;
         }
@@ -408,6 +412,16 @@
             border: 1.5px solid rgb(97, 97, 97);
             margin-bottom: 20px;
             font-family: inherit;
+            transition: 0.5s;
+        }
+
+        #paymentButtons button:hover {
+            background: rgb(216, 244, 219);
+            transition: 0.5s;
+        }
+
+        #bookingSummaryFinal {
+            margin-top: 20px;
         }
 
         #bookingSummaryFinal p {
@@ -533,7 +547,7 @@
                 <div id="bookingSummaryFinal" class="summary-box" style="width:fit-content; background: rgb(255, 255, 255); padding:
             10px; font-size: 1.3em; margin-bottom: 30px;">
                 </div>
-                <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Betalsätt:</div>
+                <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</div>
                 <div id="paymentButtons" style="display: none;">
                     <button type="button" class="payment-button" onclick="handlePayment('swish')">
                         Swish
@@ -1234,6 +1248,8 @@
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
                 showSection('paymentButtons', true);
+                customerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
 
                 const totals = calculateTotal(ticketState);
                 displayBookingSummary({
@@ -1415,6 +1431,8 @@
 
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
+                paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
 
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
