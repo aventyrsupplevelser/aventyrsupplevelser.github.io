@@ -862,11 +862,16 @@
             rebooking: 25
         };
 
-        // Helper function to update spots left display
         function updateSpotsLeftDisplay() {
+            const spotsLeftElement = document.getElementById('spotsLeft');
+            if (!currentTimeSlot) {
+                spotsLeftElement.textContent = '';
+                return;
+            }
+
             const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
             const spotsLeft = maxAvailableSpots - totalSelected;
-            document.getElementById('spotsLeft').textContent = `${spotsLeft} platser kvar.`;
+            spotsLeftElement.textContent = `${spotsLeft} platser kvar.`;
         }
 
         // Helper function to update fullday max quantity
