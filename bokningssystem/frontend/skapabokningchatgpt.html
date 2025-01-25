@@ -559,7 +559,7 @@
                     </button>
                 </div>
             </div>
-            <div id="payment-container" class="payment-section" style="display: none; margin-bottom: 50px;">
+            <div id="payment-container" class="payment-section" style="display: none; padding-bottom: 100px;">
                 <!-- iframe will be created dynamically -->
             </div>
 
@@ -1366,6 +1366,10 @@
             // Hide customer info and payment sections
             showSection('customerSection', false);
             showSection('paymentButtons', false);
+            showSection('payment-container', false);
+
+
+
 
             // Show continue button
             document.getElementById('continueToPaymentBtn').style.display = 'block';
@@ -1430,7 +1434,7 @@
                 }
 
                 paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Loading payment form...</div>';
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
                 paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
 
