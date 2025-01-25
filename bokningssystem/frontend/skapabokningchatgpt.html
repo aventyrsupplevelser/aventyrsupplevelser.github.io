@@ -416,8 +416,17 @@
         }
 
         #paymentButtons button:hover {
-            background: rgb(216, 244, 219);
+            background: rgb(229, 227, 165);
             transition: 0.5s;
+        }
+
+        #paymentButtons button:active {
+            background: rgb(205, 240, 209);
+
+        }
+
+        #paymentButtons span {
+            padding-top: 4px;
         }
 
         #bookingSummaryFinal {
@@ -550,11 +559,11 @@
                 <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</div>
                 <div id="paymentButtons" style="display: none;">
                     <button type="button" class="payment-button" onclick="handlePayment('swish')">
-                        Swish
+                        <span>Swish</span>
                         <img src="/images/swish.png">
                     </button>
                     <button type="button" class="payment-button" onclick="handlePayment('card')">
-                        Kontokort
+                        <span>Kontokort</span>
                         <img src="/images/creditcard.png">
                     </button>
                 </div>
