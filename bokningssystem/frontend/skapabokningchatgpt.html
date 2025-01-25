@@ -668,7 +668,7 @@
             constructor(container) {
                 this.container = container;
                 this.selectedDate = null;
-                this.availableDates = new Set();
+                this.availableDates = {};
                 this.currentMonth = new Date();
                 this.currentMonth.setDate(1);
                 this.init();
@@ -824,16 +824,20 @@
                         }
                     } else {
                         day.style.backgroundColor = 'rgb(240, 240, 240)'; // grey for not available
+                        day.disabled = true;
                     }
                 });
             }
 
+
             selectDate(dateStr) {
-                if (this.availableDates.has(dateStr)) {
+                if (this.availableDates[dateStr] && this.availableDates[dateStr].availableSpots > 0) {
+                    // Remove selected class from all days
                     this.container.querySelectorAll('.calendar-day').forEach(day => {
                         day.classList.remove('selected');
                     });
 
+                    // Add selected class to clicked day
                     const selectedButton = this.container.querySelector(`[data-date="${dateStr}"]`);
                     if (selectedButton) {
                         selectedButton.classList.add('selected');
