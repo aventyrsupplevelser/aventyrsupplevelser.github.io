@@ -1642,8 +1642,6 @@
                 iframeDoc.close();
 
                 iframe.onload = () => {
-                    const loadDuration = endTiming('Iframe Load', startTime);
-                    console.log(`Payment iframe loaded in ${loadDuration}ms`);
                     // Only now remove spinner and show iframe
                     paymentContainer.querySelector('.loading-spinner').remove();
                     iframe.style.display = 'block';
@@ -1662,8 +1660,6 @@
                 }
 
             } catch (error) {
-                const duration = endTiming('Payment Iframe Setup', startTime);
-                console.error(`Payment iframe setup failed after ${duration}ms:`, error);
                 throw error;
             }
         }
