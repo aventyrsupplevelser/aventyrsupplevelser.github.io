@@ -595,7 +595,7 @@
             }
 
             handleDateSelection(date) {
-
+                currentTimeSlot = null; // Add this line here
                 // Add active to time slots section
                 const timeSlotsSection = document.querySelector('#times');
                 timeSlotsSection.classList.add('visible');
@@ -789,7 +789,6 @@
 
                     loadTimeSlots(dateStr);
                     updateSpotsLeftDisplay();
-                    console.log('changed date')
                 }
             }
 
@@ -938,7 +937,6 @@
         // Function to clear all ticket selections
         // Modify clearTicketSelections to also reset rebooking
         function clearTicketSelections() {
-            currentTimeSlot = null;  // Add this line
             Object.keys(ticketState).forEach(type => {
                 if (type === 'is_rebookable') {
                     ticketState[type] = false;
