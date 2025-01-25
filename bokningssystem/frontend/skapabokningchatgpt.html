@@ -815,13 +815,13 @@
                     if (availability) {
                         const availabilityRatio = availability.availableSpots / availability.totalSpots;
                         if (availabilityRatio === 0) {
-                            day.style.backgroundColor = '#ff9999'; // red for full
+                            day.style.backgroundColor = notAvailable; // red for full
                             day.disabled = true;
                         } else if (availabilityRatio <= 0.5) {
-                            day.style.backgroundColor = 'rgb(255, 255, 0)'; // yellow for less than half
+                            day.style.backgroundColor = fewLeft; // yellow for less than half
                             day.classList.add('available');
                         } else {
-                            day.style.backgroundColor = 'rgb(173, 240, 159)'; // green for more than half
+                            day.style.backgroundColor = available; // green for more than half
                             day.classList.add('available');
                         }
                     } else {
@@ -880,12 +880,12 @@
                         let isSelectable = true;
 
                         if (slot.available_spots === 0) {
-                            backgroundColor = '#ff9999'; // red
+                            backgroundColor = notAvailable; // red
                             isSelectable = false;
                         } else if (slot.available_spots < 10) {
-                            backgroundColor = 'rgb(255, 255, 0)'; // yellow
+                            backgroundColor = fewLeft; // yellow
                         } else {
-                            backgroundColor = 'rgb(173, 240, 159)'; // green
+                            backgroundColor = available; // green
                         }
 
                         return `
@@ -895,9 +895,8 @@
                          data-available-spots="${slot.available_spots}"
                          data-availability-color="${backgroundColor}"
                          onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
-                         style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed;' : ''}">
+                         style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.6;' : ''}">
                         ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        ${!isSelectable ? '<br>(Fullbokad)' : ''}
                     </div>
                 `;
                     }).join('') || '<p>Inga lediga tider detta datum</p>';
