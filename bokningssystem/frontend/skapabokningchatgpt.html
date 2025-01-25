@@ -893,7 +893,7 @@
                          data-available-spots="${slot.available_spots}"
                          data-availability-color="${backgroundColor}"
                          onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
-                         style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.6;' : ''}">
+                         style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}">
                         ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 `;
