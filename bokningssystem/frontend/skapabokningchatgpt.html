@@ -715,7 +715,7 @@
 
             renderDays() {
                 const days = [];
-                const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                let firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
                 firstDay = firstDay === 0 ? 6 : firstDay - 1;
                 const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
 
