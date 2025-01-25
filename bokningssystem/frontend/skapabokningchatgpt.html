@@ -716,6 +716,7 @@
             renderDays() {
                 const days = [];
                 const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                firstDay = firstDay === 0 ? 6 : firstDay - 1;
                 const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
 
                 // Empty cells for days before the first day of month
@@ -863,7 +864,6 @@
         };
 
         function updateSpotsLeftDisplay() {
-            console.log('updating spots left')
             const spotsLeftElement = document.getElementById('spotsLeft');
             if (!currentTimeSlot) {
                 spotsLeftElement.textContent = '';
