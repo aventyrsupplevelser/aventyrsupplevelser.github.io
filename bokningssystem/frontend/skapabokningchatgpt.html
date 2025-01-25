@@ -445,6 +445,53 @@
             margin-block-start: 12px;
             margin-block-end: 12px;
         }
+
+        .rebooking-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* Hide the checkbox input */
+        .rebooking-switch input {
+            display: none;
+        }
+
+        /* The slider background */
+        .rebooking-switch .slider {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Slider circle */
+        .rebooking-switch .slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* When the input is checked, turn the slider green and move the circle */
+        .rebooking-switch input:checked+.slider {
+            background: #4CAF50;
+        }
+
+        .rebooking-switch input:checked+.slider::before {
+            transform: translateX(25px);
+        }
     </style>
 </head>
 
@@ -521,15 +568,17 @@
                 </div>
                 <br><br>
                 <div id="rebooking">
-                    <div style="background: yellow; display: inline;">Vill ni ha ombokningsgaranti (boka om tiden fram
-                        tills 24h innan)?</div>
+                    <div style="background: yellow; display: inline;">Vill ni ha ombokningsgaranti? </div>
+                    (boka om tiden fram
+                    tills 24h innan)?
                     <br><br>
-                    <label class="rebooking-option"
-                        style="cursor: pointer; display: flex; justify-content: space-between; margin-left: 10px;">
-                        <div style="font-size: 1.5em; font-weight: 500;">25 kr per person</div>
-                        <label type="checkbox" id="rebookingCheckbox" margin-right: 65px;">
-                        </label>
+                    <label class="rebooking-switch">
+                        <span style="font-size: 1.5em; font-weight: 500;">25 kr per person</span>
+                        <input type="checkbox" id="rebookingCheckbox">
+                        <span class="slider"></span>
+                    </label>
                 </div>
+
                 <br><br>
                 <div class="button-container"
                     style="text-align: center; margin-top: 20px; float: right; margin-bottom: 50px;">
