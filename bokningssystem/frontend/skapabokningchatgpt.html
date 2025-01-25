@@ -864,6 +864,7 @@
         };
 
         function updateSpotsLeftDisplay() {
+            console.log('updating spots left')
             const spotsLeftElement = document.getElementById('spotsLeft');
             if (!currentTimeSlot) {
                 spotsLeftElement.textContent = '';
