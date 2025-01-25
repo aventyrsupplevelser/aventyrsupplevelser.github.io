@@ -1608,10 +1608,10 @@
             }
         }
 
-        function setupPaymentIframe(formHtml, paymentResponse) {
-            const startTime = startTiming('Payment Iframe Setup');
+        // Add this function to the script section in skapabokningchatgpt.html
+
+        function setupPaymentIframe(formHtml) {
             try {
-                console.log('Setting up payment iframe...');
                 const paymentContainer = document.getElementById('payment-container');
                 const iframe = document.createElement('iframe');
 
@@ -1619,10 +1619,9 @@
                 iframe.style.width = '100%';
                 iframe.style.height = '330px';
                 iframe.style.border = 'none';
-                iframe.style.display = 'none'; // Hide iframe initially
+                iframe.style.display = 'none';
                 iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
 
-                // Keep spinner and add iframe
                 paymentContainer.appendChild(iframe);
 
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -1630,10 +1629,26 @@
                 iframeDoc.write(formHtml);
                 iframeDoc.close();
 
+                // Add message listener for QuickPay events
+                window.addEventListener('message', function (event) {
+                    // Check if the message is from QuickPay
+                    if (event.origin === 'https://payment.quickpay.net') {
+                        try {
+                            const data = JSON.parse(event.data);
+                            // If payment is successful, redirect to confirmation page
+                            if (data.accepted && data.state === 'processed') {
+                                const bookingNumber = localStorage.getItem('pendingBookingNumber');
+                                window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
+                            }
+                        } catch (e) {
+                            console.error('Error processing payment message:', e);
+                        }
+                    }
+                });
+
                 iframe.onload = () => {
                     const loadDuration = endTiming('Iframe Load', startTime);
                     console.log(`Payment iframe loaded in ${loadDuration}ms`);
-                    // Only now remove spinner and show iframe
                     paymentContainer.querySelector('.loading-spinner').remove();
                     iframe.style.display = 'block';
                 };
