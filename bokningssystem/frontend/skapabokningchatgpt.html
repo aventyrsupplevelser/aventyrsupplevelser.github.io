@@ -237,7 +237,7 @@
 
         .time-slot {
             padding: 15px 15px 10px;
-            border: 1px solid #ddd;
+            border: 2px solid #ddd;
             border-radius: 4px;
             text-align: center;
             cursor: pointer;
@@ -939,13 +939,27 @@
 
             // Get the selected time slot's color
             const selectedSlot = document.querySelector('.time-slot.selected');
-            if (selectedSlot) {
-                const color = selectedSlot.dataset.availabilityColor;
-                spotsLeftElement.style.color = color;
-            }
 
-            spotsLeftElement.textContent = `${spotsLeft} platser kvar.`;
+            if (selectedSlot && selectedSlot.availability) {
+                const availability = selectedSlot.availability;
+                const availabilityRatio = availability.availableSpots / availability.totalSpots;
+
+                // Update background color based on availability ratio
+                if (availabilityRatio === 0) {
+                    spotsLeft.style.backgroundColor = 'red'; // red for full
+                } else if (availabilityRatio <= 0.5) {
+                    spotsLeft.style.backgroundColor = 'gold'; // yellow for less than half
+                } else {
+                    spotsLeft.style.backgroundColor = 'green'; // green for more than half
+                }
+
+                // Update text content and color
+                const color = selectedSlot.dataset.availabilityColor || 'black';
+                spotsLeftElement.style.color = color;
+                spotsLeftElement.textContent = `${availability.availableSpots} platser kvar.`;
+            }
         }
+
 
         // Helper function to update fullday max quantity
         function updateFulldayMaxQuantity() {
@@ -1040,7 +1054,7 @@
 
             const continueButton = document.getElementById('continueToPaymentBtn');
             continueButton.style.display = 'block';
-            continueButton.disabled = true;
+            continueButton.classList.add('disabled');
 
             ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
@@ -1050,7 +1064,11 @@
             const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
             const continueBtn = document.getElementById('continueToPaymentBtn');
             if (continueBtn) {
-                continueBtn.disabled = totalTickets === 0;
+                if (totalTickets === 0) {
+                    continueBtn.classList.add('disabled');
+                } else {
+                    continueBtn.classList.remove('disabled');
+                }
             }
         }
 
