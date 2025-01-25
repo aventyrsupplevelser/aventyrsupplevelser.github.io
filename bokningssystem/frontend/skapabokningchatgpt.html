@@ -931,39 +931,46 @@
             rebooking: 25
         };
 
-        function updateSpotsLeftDisplay() {
-            console.log('triggered')
+        function darkenColor(color) {
+            // Convert rgb(r, g, b) to darker version
+            const rgb = color.match(/\d+/g);
+            if (rgb) {
+                const darkerRGB = rgb.map(value => Math.max(0, parseInt(value) - 50));
+                return `rgb(${darkerRGB.join(', ')})`;
+            }
+            return color;
+        }
 
+        function updateSpotsLeftDisplay() {
             const spotsLeftElement = document.getElementById('spotsLeft');
+
+            // Clear display if no time slot is selected
             if (!currentTimeSlot) {
                 spotsLeftElement.textContent = '';
                 return;
             }
 
-            const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
-            const spotsLeft = maxAvailableSpots - totalSelected;
-
-            // Get the selected time slot's color
+            // Get the selected time slot
             const selectedSlot = document.querySelector('.time-slot.selected');
-
-            if (selectedSlot && selectedSlot.availability) {
-                const availability = selectedSlot.availability;
-                const availabilityRatio = availability.availableSpots / availability.totalSpots;
-
-                // Update background color based on availability ratio
-                if (availabilityRatio === 0) {
-                    spotsLeft.style.backgroundColor = 'red'; // red for full
-                } else if (availabilityRatio <= 0.5) {
-                    spotsLeft.style.backgroundColor = 'gold'; // yellow for less than half
-                } else {
-                    spotsLeft.style.backgroundColor = 'green'; // green for more than half
-                }
-
-                // Update text content and color
-                const color = selectedSlot.dataset.availabilityColor || 'black';
-                spotsLeftElement.style.color = color;
-                spotsLeftElement.textContent = `${availability.availableSpots} platser kvar.`;
+            if (!selectedSlot) {
+                return;
             }
+
+            // Get available spots from the selected slot's data attribute
+            const availableSpots = parseInt(selectedSlot.dataset.availableSpots);
+            const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
+            const spotsLeft = availableSpots - totalSelected;
+
+            // Get the original background color and darken it
+            const originalColor = selectedSlot.dataset.availabilityColor;
+            const darkerColor = darkenColor(originalColor);
+
+            // Update the display with darker color
+            spotsLeftElement.style.color = darkerColor;
+            spotsLeftElement.textContent = `${spotsLeft} platser kvar`;
+
+            // Add bold style for better visibility
+            spotsLeftElement.style.fontWeight = '600';
         }
 
 
@@ -1357,7 +1364,7 @@
             const total = baseTotal + rebookingTotal;
 
             const continueBtn = document.getElementById('continueToPaymentBtn');
-            continueBtn.textContent = `Gå till betalning: ${total} kr`;
+            continueBtn.textContent = `Fortsätt till betalning: ${total} kr`;
         }
 
         function displayBookingSummary({ tickets, totals }) {
