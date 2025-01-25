@@ -414,8 +414,8 @@
         }
 
         #bookingSummaryFinal p {
-            margin-block-start: 5px;
-            margin-block-end: 5px;
+            margin-block-start: 12px;
+            margin-block-end: 12px;
         }
     </style>
 </head>
@@ -1310,6 +1310,7 @@
             ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st (${tickets.fullday * 100} kr)</p>` : ''}
             ${tickets.isRebookable ? `<p>Ombokningsgaranti: ${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</p>` : ''}
             <p id="totalvat">Moms (6%): ${totals.vat.toFixed(2)} kr</p>
+            <hr>
             <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${totals.total} kr</p>
         `;
             } catch (error) {
