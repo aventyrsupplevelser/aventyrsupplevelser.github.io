@@ -470,7 +470,7 @@
                             <button type="button" class="quantity-btn plus" data-ticket-type="kid">+</button>
                         </div>
                     </div>
-                    <div id="spotsLeft" style="float: right; margin-right: 20px; color: green;"></div>
+                    <div id="spotsLeft" style="float: right; margin-right: 20px;"></div>
 
 
                     <br><br>
@@ -928,6 +928,8 @@
         };
 
         function updateSpotsLeftDisplay() {
+            console.log('triggered')
+
             const spotsLeftElement = document.getElementById('spotsLeft');
             if (!currentTimeSlot) {
                 spotsLeftElement.textContent = '';
