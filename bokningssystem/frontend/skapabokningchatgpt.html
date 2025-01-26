@@ -1437,37 +1437,51 @@
         async function handlePayment(paymentMethod) {
             const paymentContainer = document.getElementById('payment-container');
 
+            // First clean up any existing payment form
+            paymentContainer.innerHTML = '';
+
+            // Hide any previous error messages
+            document.getElementById('paymentButtons').style.display = 'none';
+
             try {
+                // Show loading state
+                paymentContainer.style.display = 'block';
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
+
+                // Generate new booking number
                 const bookingNumber = await generateBookingNumber();
                 localStorage.setItem('pendingBookingNumber', bookingNumber);
 
                 const customerInfo = validateCustomerInfo();
-                if (!customerInfo) return;
+                if (!customerInfo) {
+                    throw new Error('Invalid customer info');
+                }
 
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
                 if (!sessionData?.bookingId) {
                     throw new Error('No active booking found');
                 }
 
-                paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
-                paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
+                // Update booking details
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
                     bookingNumber
                 });
 
-                // Get payment form - only pass order_id and payment method
+                // Get payment form
                 const formHtml = await getPaymentForm(paymentMethod, {
-                    order_id: bookingNumber
+                    order_id: bookingNumber,
+                    amount: calculateTotalAmount()
                 });
 
-                setupPaymentIframe(formHtml);
+                // Setup new payment iframe
+                await setupPaymentIframe(formHtml);
 
             } catch (error) {
                 console.error('Payment error:', error);
+                // Clean up on error
                 paymentContainer.style.display = 'none';
+                paymentContainer.innerHTML = '';
                 document.getElementById('paymentButtons').style.display = 'block';
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
@@ -1561,48 +1575,60 @@
             }
         }
 
-        function setupPaymentIframe(formHtml, paymentResponse) {
-            try {
-                const paymentContainer = document.getElementById('payment-container');
-                const iframe = document.createElement('iframe');
+        function setupPaymentIframe(formHtml) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const paymentContainer = document.getElementById('payment-container');
 
-                iframe.id = 'payment-frame';
-                iframe.style.width = '100%';
-                iframe.style.height = '330px';
-                iframe.style.border = 'none';
-                iframe.style.display = 'none'; // Hide iframe initially
-                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
-
-                // Keep spinner and add iframe
-                paymentContainer.appendChild(iframe);
-
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(formHtml);
-                iframeDoc.close();
-
-                iframe.onload = () => {
-                    // Only now remove spinner and show iframe
-                    paymentContainer.querySelector('.loading-spinner').remove();
-                    iframe.style.display = 'block';
-                };
-
-                const form = iframeDoc.querySelector('form');
-                if (form) {
-                    form.submit();
-
-                    // Start checking payment status right after submitting the form
-                    const bookingNumber = localStorage.getItem('pendingBookingNumber');
-                    if (bookingNumber) {
-                        checkPaymentCompletion(bookingNumber);
+                    // Remove any existing iframe
+                    const existingFrame = document.getElementById('payment-frame');
+                    if (existingFrame) {
+                        existingFrame.remove();
                     }
+
+                    const iframe = document.createElement('iframe');
+                    iframe.id = 'payment-frame';
+                    iframe.style.width = '100%';
+                    iframe.style.height = '330px';
+                    iframe.style.border = 'none';
+                    iframe.style.display = 'none';
+                    iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+
+                    // Add iframe to container
+                    paymentContainer.appendChild(iframe);
+
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(formHtml);
+                    iframeDoc.close();
+
+                    iframe.onload = () => {
+                        const spinner = paymentContainer.querySelector('.loading-spinner');
+                        if (spinner) {
+                            spinner.remove();
+                        }
+                        iframe.style.display = 'block';
+
+                        const form = iframeDoc.querySelector('form');
+                        if (form) {
+                            form.submit();
+                            const bookingNumber = localStorage.getItem('pendingBookingNumber');
+                            if (bookingNumber) {
+                                checkPaymentCompletion(bookingNumber);
+                            }
+                        }
+                        resolve();
+                    };
+
+                    iframe.onerror = () => {
+                        reject(new Error('Failed to load payment iframe'));
+                    };
+
+                } catch (error) {
+                    reject(error);
                 }
-
-            } catch (error) {
-                throw error;
-            }
+            });
         }
-
 
         function clearLocalStorageOnLoad() {
             localStorage.removeItem('bookingData');
