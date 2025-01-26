@@ -1447,6 +1447,33 @@
 
             // Show continue button
             document.getElementById('continueToPaymentBtn').style.display = 'block';
+            try {
+                // Get session data to check if there's an active booking
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+
+                if (sessionData && sessionData.bookingId) {
+                    // Update the booking with current ticket state
+                    await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        body: JSON.stringify({
+                            time_slot_id: currentTimeSlot,
+                            adult_quantity: ticketState.adult,
+                            youth_quantity: ticketState.youth,
+                            kid_quantity: ticketState.kid,
+                            full_day: ticketState.fullday,
+                            is_rebookable: ticketState.is_rebookable,
+                            access_token: sessionData.token
+                        })
+                    });
+
+                }
+            } catch (error) {
+                console.error('Error updating booking during reset:', error);
+            }
         }
 
         function updateTotalDisplay() {
