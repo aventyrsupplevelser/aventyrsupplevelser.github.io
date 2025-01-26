@@ -1478,7 +1478,7 @@
             <p>Ungdom: ${tickets.youth} st<span style="float: right;">${tickets.youth * 300} kr</span></p>
             <p>Barn: ${tickets.kid} st<span style="float: right;">${tickets.kid * 200} kr</span></p>
             ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st<span style="float: right;">${tickets.fullday * 100} kr</span></p>` : ''}
-            ${tickets.isRebookable ? `<p>Ombokningsgaranti:<span style="float: right;">${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</span></p>` : ''}
+            ${tickets.is_rebookable ? `<p>Ombokningsgaranti:<span style="float: right;">${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</span></p>` : ''}
             <hr>
             <p id="totalvat">Moms (6%):<span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
             <hr>
