@@ -407,7 +407,7 @@ router.delete('/time-slots/:id', async (req, res) => {
 
 
 router.post('/bookings/pending', async (req, res) => {
-    const { time_slot_id, adult_quantity, youth_quantity, kid_quantity } = req.body;
+    const { time_slot_id, adult_quantity, youth_quantity, kid_quantity, full_day, is_rebookable } = req.body;
 
     try {
         // Generate token in the backend
@@ -419,7 +419,9 @@ router.post('/bookings/pending', async (req, res) => {
             p_adult_quantity: adult_quantity,
             p_youth_quantity: youth_quantity,
             p_kid_quantity: kid_quantity,
-            p_access_token: accessToken, // Pass token to the procedure
+            p_access_token: accessToken, 
+            p_full_day: full_day,           
+            p_is_rebookable: is_rebookable
         });
 
         if (error) {
@@ -441,6 +443,7 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
     const { id } = req.params;
     const {
         full_day,
+        is_rebookable, 
         access_token,
         time_slot_id,
         adult_quantity,
@@ -465,7 +468,8 @@ router.put('/bookings/:id', updateLimiter, async (req, res) => {
             p_new_adult_quantity: adult_quantity,
             p_new_youth_quantity: youth_quantity,
             p_new_kid_quantity: kid_quantity,
-            p_full_day: full_day,
+            p_full_day: full_day,          
+            p_is_rebookable: is_rebookable,
             p_status: status,
             p_customer_email: customer_email,
             p_customer_name: customer_name,
