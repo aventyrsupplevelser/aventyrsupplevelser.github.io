@@ -1161,25 +1161,34 @@
             // Add listener for continue to payment button
             document.getElementById('continueToPaymentBtn').addEventListener('click', handleContinueToPayment);
 
+            // Add listeners for changes that should reset the payment flow
             document.querySelector('#calendar-container').addEventListener('click', (e) => {
                 if (e.target.classList.contains('calendar-day')) {
-                    resetPaymentFlow(true); // Changing date = time slot change
+                    resetPaymentFlow();
                 }
             });
 
             document.querySelector('#timeSlots').addEventListener('click', (e) => {
                 if (e.target.closest('.time-slot')) {
-                    resetPaymentFlow(true); // Changing time = time slot change
+                    resetPaymentFlow();
                 }
             });
 
+            // Add listeners for quantity changes
             document.querySelectorAll('.quantity-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const type = btn.dataset.ticketType;
                     const change = btn.classList.contains('plus') ? 1 : -1;
                     handleQuantityChange(type, change);
-                    resetPaymentFlow(false); // Just hide sections, no API call
+                    resetPaymentFlow();
                 });
+            });
+
+            // Add listener for rebooking checkbox
+            document.getElementById('rebookingCheckbox').addEventListener('change', function (e) {
+                ticketState.is_rebookable = e.target.checked;
+                updateTotalDisplay();
+                resetPaymentFlow();
             });
 
             // Disable children ticket buttons initially
@@ -1246,6 +1255,7 @@
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
                 showSection('paymentButtons', true);
+                localStorage.removeItem('spotsReleased');
                 customerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
 
@@ -1360,7 +1370,7 @@
 
 
         // Add this to handle going back in the flow
-        function resetPaymentFlow(isTimeSlotChange = false) {
+        function resetPaymentFlow() {
             // Hide sections
             showSection('customerSection', false);
             showSection('paymentButtons', false);
@@ -1369,27 +1379,30 @@
             // Show continue button
             document.getElementById('continueToPaymentBtn').style.display = 'block';
 
-            // Only update/release spots if time slot is changed
-            if (isTimeSlotChange) {
-                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (sessionData?.bookingId) {
-                    fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*'
-                        },
-                        body: JSON.stringify({
-                            time_slot_id: currentTimeSlot,
-                            adult_quantity: 0, // Reset quantities to release spots
-                            youth_quantity: 0,
-                            kid_quantity: 0,
-                            full_day: 0,
-                            is_rebookable: false,
-                            access_token: sessionData.token
-                        })
-                    }).catch(error => console.error('Error updating booking:', error));
-                }
+            // Only release spots if we haven't done it yet for this booking
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            const hasReleasedSpots = localStorage.getItem('spotsReleased');
+
+            if (sessionData?.bookingId && !hasReleasedSpots) {
+                fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        time_slot_id: currentTimeSlot,
+                        adult_quantity: 0,
+                        youth_quantity: 0,
+                        kid_quantity: 0,
+                        full_day: 0,
+                        is_rebookable: false,
+                        access_token: sessionData.token
+                    })
+                }).catch(error => console.error('Error updating booking:', error));
+
+                // Mark that we've released spots for this booking
+                localStorage.setItem('spotsReleased', 'true');
             }
         }
 
