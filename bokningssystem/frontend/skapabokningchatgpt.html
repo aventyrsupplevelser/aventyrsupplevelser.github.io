@@ -1318,23 +1318,26 @@
 
 
 
+        // In skapabokningchatgpt.html, replace the current calculateTotal function with this:
         function calculateTotal(tickets) {
-            const baseTotal =
-                tickets.adult * PRICES.adult +
-                tickets.youth * PRICES.youth +
-                tickets.kid * PRICES.kid +
-                tickets.fullday * PRICES.fullday;
-            const rebookingTotal = tickets.isRebookable
-                ? (tickets.adult + tickets.youth + tickets.kid) * PRICES.rebooking
-                : 0;
-            const subtotal = baseTotal + rebookingTotal;
-            const vatRate = 0.06; // 6% VAT
+            const baseTotal = (
+                (tickets.adult * PRICES.adult) +
+                (tickets.youth * PRICES.youth) +
+                (tickets.kid * PRICES.kid) +
+                (tickets.fullday * PRICES.fullday)
+            );
+
+            const totalTickets = tickets.adult + tickets.youth + tickets.kid;
+            const rebookingTotal = tickets.is_rebookable ? (totalTickets * PRICES.rebooking) : 0;
+
+            const subtotal = baseTotal + rebookingTotal;  // Make sure rebooking is added
+            const vatRate = 0.06;
             const vat = subtotal * vatRate / (1 + vatRate);
 
             return {
                 subtotal,
                 vat,
-                total: subtotal,
+                total: subtotal  // Total should include rebooking fee
             };
         }
 
