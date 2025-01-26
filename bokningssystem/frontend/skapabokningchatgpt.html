@@ -1352,7 +1352,6 @@
             validateTotalWithBackend(tickets, totals.total);
         }
 
-
         // Add this to handle going back in the flow
         function resetPaymentFlow() {
             // Hide sections
@@ -1465,7 +1464,6 @@
                     },
                     body: JSON.stringify({
                         order_id: bookingNumber,
-                        amount: calculateTotalAmount(),
                         paymentMethod: paymentMethod
                     })
                 });
@@ -1581,9 +1579,6 @@
                 throw error;
             }
         }
-
-
-
 
         function clearLocalStorageOnLoad() {
             localStorage.removeItem('bookingData');
