@@ -1269,17 +1269,6 @@
                 });
 
                 if (!bookingData || Date.now() > bookingData.expiresAt) {
-                    // Generate booking number
-                    const bookingNumberResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*'
-                        }
-                    });
-
-                    if (!bookingNumberResponse.ok) throw new Error('Failed to generate booking number');
-                    const { bookingNumber } = await bookingNumberResponse.json();
 
                     // Create booking data
                     const createResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending', {
@@ -1298,7 +1287,6 @@
                         token: newBooking.access_token,
                         bookingId: newBooking.booking_id,
                         expiresAt: Date.now() + 15 * 60 * 1000,
-                        bookingNumber: bookingNumber
                     };
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
                 }
@@ -1457,12 +1445,26 @@
                     return;
                 }
 
+
+
                 console.log('Customer info validated:', customerInfo);
 
                 // Show loading state
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
                 paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Generate booking number
+                const bookingNumberResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    }
+                });
+
+                if (!bookingNumberResponse.ok) throw new Error('Failed to generate booking number');
+                const { bookingNumber } = await bookingNumberResponse.json();
 
                 // Get session data for booking ID
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
@@ -1472,9 +1474,6 @@
                     console.error('No active booking found in session data.');
                     throw new Error('No active booking found');
                 }
-
-                const bookingNumber = sessionData.bookingNumber;
-                console.log('Booking number:', bookingNumber);
 
                 // Update booking details with customer info
                 console.log('Updating booking details for booking ID:', sessionData.bookingId);
@@ -1525,20 +1524,10 @@
                 iframeDoc.close();
                 console.log('Iframe content:', iframeDoc.documentElement.innerHTML);
 
-
                 iframe.onload = () => {
                     console.log('Iframe content loaded.');
                     paymentContainer.querySelector('.loading-spinner').remove();
                     iframe.style.display = 'block';
-                    // Log all form fields before submission
-                    console.log('Form fields:', Array.from(iframeDoc.forms[0].elements).map(el => ({
-                        name: el.name,
-                        value: el.value,
-                    })));
-
-                    // Force the form submission
-                    iframeDoc.forms[0].submit();
-                    console.log('Form manually submitted.');
                 };
 
                 iframe.onerror = (e) => {
@@ -1555,6 +1544,7 @@
             }
         }
 
+        /*
         async function generateBookingNumber() {
             try {
                 const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
@@ -1575,7 +1565,7 @@
                 console.error('Error generating booking number:', error);
                 throw error;
             }
-        }
+        } */
 
 
         function validateCustomerInfo() {
@@ -1618,7 +1608,6 @@
 
         function clearLocalStorageOnLoad() {
             localStorage.removeItem('bookingData');
-            localStorage.removeItem('pendingBookingNumber');
         }
 
         // Execute the function on page load
