@@ -576,7 +576,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         const { order_id, paymentMethod } = req.body;
         
         if (!order_id) {
-            req.logCheckpoint('Missing required parameters');
+            req.logCheckpoint('Missing order_id');
             return res.status(400).json({ error: 'order_id is required.' });
         }
 
@@ -587,7 +587,10 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             .eq('booking_number', order_id)
             .single();
 
-        if (bookingError) throw bookingError;
+        if (bookingError) {
+            req.logCheckpoint('Error fetching booking');
+            throw bookingError;
+        }
 
         // Calculate amount server-side
         const adultTotal = booking.adult_quantity * 400;
@@ -603,8 +606,8 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
 
         if (!merchant_id || !agreement_id || !apiKey) {
-            req.logCheckpoint('Missing environment variables');
-            throw new Error('Missing required environment variables');
+            req.logCheckpoint('Missing QuickPay configuration');
+            throw new Error('Missing required QuickPay configuration');
         }
 
         req.logCheckpoint('Validated configuration');
@@ -616,6 +619,9 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             payment_methods = 'visa, visa-electron, mastercard, mastercard-debet';
         } else if (paymentMethod === 'swish') {
             payment_methods = 'swish';
+        } else {
+            req.logCheckpoint('Invalid payment method');
+            return res.status(400).json({ error: 'Invalid payment method specified' });
         }
 
         const params = {
@@ -645,12 +651,21 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             </form>
         `;
 
+        if (!formHtml) {
+            req.logCheckpoint('Failed to generate form HTML');
+            throw new Error('Failed to generate payment form');
+        }
+
+        req.logCheckpoint('Successfully generated payment form');
         res.send(formHtml);
 
     } catch (error) {
         req.logCheckpoint('Error generating payment form');
         console.error('Error generating payment form:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ 
+            error: 'Failed to generate payment form',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
