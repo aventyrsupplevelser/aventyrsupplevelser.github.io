@@ -1161,28 +1161,27 @@
             // Add listener for continue to payment button
             document.getElementById('continueToPaymentBtn').addEventListener('click', handleContinueToPayment);
 
-            // Add listeners for changes that should reset the payment flow
             document.querySelector('#calendar-container').addEventListener('click', (e) => {
                 if (e.target.classList.contains('calendar-day')) {
-                    resetPaymentFlow();
+                    resetPaymentFlow(true); // Changing date = time slot change
                 }
             });
 
             document.querySelector('#timeSlots').addEventListener('click', (e) => {
                 if (e.target.closest('.time-slot')) {
-                    resetPaymentFlow();
+                    resetPaymentFlow(true); // Changing time = time slot change
                 }
             });
 
-            // Add listeners for quantity changes
             document.querySelectorAll('.quantity-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const type = btn.dataset.ticketType;
                     const change = btn.classList.contains('plus') ? 1 : -1;
                     handleQuantityChange(type, change);
-                    resetPaymentFlow(); // Reset payment flow when quantities change
+                    resetPaymentFlow(false); // Just hide sections, no API call
                 });
             });
+
             // Disable children ticket buttons initially
             updateChildrenTicketButtons();
         });
@@ -1361,9 +1360,8 @@
 
 
         // Add this to handle going back in the flow
-        function resetPaymentFlow() {
-            console.log('triggered');
-            // Hide customer info and payment sections
+        function resetPaymentFlow(isTimeSlotChange = false) {
+            // Hide sections
             showSection('customerSection', false);
             showSection('paymentButtons', false);
             showSection('payment-container', false);
@@ -1371,15 +1369,10 @@
             // Show continue button
             document.getElementById('continueToPaymentBtn').style.display = 'block';
 
-            // Return a Promise that resolves when the update is complete
-            return new Promise((resolve, reject) => {
-
-                // Get session data to check if there's an active booking
+            // Only update/release spots if time slot is changed
+            if (isTimeSlotChange) {
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-
-                if (sessionData && sessionData.bookingId) {
-                    console.log('triggeredyes');
-                    // Update the booking with current ticket state
+                if (sessionData?.bookingId) {
                     fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
                         method: 'PUT',
                         headers: {
@@ -1388,24 +1381,16 @@
                         },
                         body: JSON.stringify({
                             time_slot_id: currentTimeSlot,
-                            adult_quantity: ticketState.adult,
-                            youth_quantity: ticketState.youth,
-                            kid_quantity: ticketState.kid,
-                            full_day: ticketState.fullday,
-                            is_rebookable: ticketState.is_rebookable,
+                            adult_quantity: 0, // Reset quantities to release spots
+                            youth_quantity: 0,
+                            kid_quantity: 0,
+                            full_day: 0,
+                            is_rebookable: false,
                             access_token: sessionData.token
                         })
-                    })
-                        .then(resolve)
-                        .catch(error => {
-                            console.error('Error updating booking during reset:', error);
-                            reject(error);
-                        });
-                } else {
-                    // If no active booking, just resolve
-                    resolve();
+                    }).catch(error => console.error('Error updating booking:', error));
                 }
-            });
+            }
         }
 
         function updateTotalDisplay() {
