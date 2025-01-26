@@ -1442,18 +1442,17 @@
             showSection('paymentButtons', false);
             showSection('payment-container', false);
 
-
-
-
             // Show continue button
             document.getElementById('continueToPaymentBtn').style.display = 'block';
-            try {
+
+            // Return a Promise that resolves when the update is complete
+            return new Promise((resolve, reject) => {
                 // Get session data to check if there's an active booking
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
 
                 if (sessionData && sessionData.bookingId) {
                     // Update the booking with current ticket state
-                    await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
+                    fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1468,12 +1467,17 @@
                             is_rebookable: ticketState.is_rebookable,
                             access_token: sessionData.token
                         })
-                    });
-
+                    })
+                        .then(resolve)
+                        .catch(error => {
+                            console.error('Error updating booking during reset:', error);
+                            reject(error);
+                        });
+                } else {
+                    // If no active booking, just resolve
+                    resolve();
                 }
-            } catch (error) {
-                console.error('Error updating booking during reset:', error);
-            }
+            });
         }
 
         function updateTotalDisplay() {
