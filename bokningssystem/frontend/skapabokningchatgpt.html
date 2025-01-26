@@ -1559,59 +1559,46 @@
             }
         }
 
-        function setupPaymentIframe(formHtml) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const paymentContainer = document.getElementById('payment-container');
+        function setupPaymentIframe(formHtml, paymentResponse) {
+            try {
+                const paymentContainer = document.getElementById('payment-container');
+                const iframe = document.createElement('iframe');
 
-                    // Remove any existing iframe
-                    const existingFrame = document.getElementById('payment-frame');
-                    if (existingFrame) {
-                        existingFrame.remove();
+                iframe.id = 'payment-frame';
+                iframe.style.width = '100%';
+                iframe.style.height = '330px';
+                iframe.style.border = 'none';
+                iframe.style.display = 'none'; // Hide iframe initially
+                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+
+                // Keep spinner and add iframe
+                paymentContainer.appendChild(iframe);
+
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(formHtml);
+                iframeDoc.close();
+
+                iframe.onload = () => {
+                    // Only now remove spinner and show iframe
+                    paymentContainer.querySelector('.loading-spinner').remove();
+                    iframe.style.display = 'block';
+                };
+
+                const form = iframeDoc.querySelector('form');
+                if (form) {
+                    form.submit();
+
+                    // Start checking payment status right after submitting the form
+                    const bookingNumber = localStorage.getItem('pendingBookingNumber');
+                    if (bookingNumber) {
+                        checkPaymentCompletion(bookingNumber);
                     }
-
-                    const iframe = document.createElement('iframe');
-                    iframe.id = 'payment-frame';
-                    iframe.style.width = '100%';
-                    iframe.style.height = '330px';
-                    iframe.style.border = 'none';
-                    iframe.style.display = 'none';
-                    iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
-
-                    // Add iframe to container
-                    paymentContainer.appendChild(iframe);
-
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    iframeDoc.open();
-                    iframeDoc.write(formHtml);
-                    iframeDoc.close();
-
-                    iframe.onload = () => {
-                        const spinner = paymentContainer.querySelector('.loading-spinner');
-                        if (spinner) {
-                            spinner.remove();
-                        }
-                        iframe.style.display = 'block';
-
-                        const form = iframeDoc.querySelector('form');
-                        if (form) {
-                            form.submit();
-                            const bookingNumber = localStorage.getItem('pendingBookingNumber');
-                            if (bookingNumber) {
-                                checkPaymentCompletion(bookingNumber);
-                            }
-                        }
-                        resolve();
-                    };
-
-                    iframe.onerror = () => {
-                        reject(new Error('Failed to load payment iframe'));
-                    };
-
-                } catch (error) {
-                    reject(error);
                 }
-            });
+
+            } catch (error) {
+                throw error;
+            }
         }
 
         function clearLocalStorageOnLoad() {
