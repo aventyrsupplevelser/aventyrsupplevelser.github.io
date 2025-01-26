@@ -1528,7 +1528,8 @@
 
                 iframe.onload = () => {
                     console.log('Iframe content loaded.');
-
+                    paymentContainer.querySelector('.loading-spinner').remove();
+                    iframe.style.display = 'block';
                     // Log all form fields before submission
                     console.log('Form fields:', Array.from(iframeDoc.forms[0].elements).map(el => ({
                         name: el.name,
