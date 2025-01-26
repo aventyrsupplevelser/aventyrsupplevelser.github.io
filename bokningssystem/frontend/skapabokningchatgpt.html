@@ -1215,7 +1215,6 @@
                 localStorage.removeItem('bookingData');
                 alert('Your booking session has expired. Please restart.');
             }
-
         });
 
         document.getElementById('rebookingCheckbox').addEventListener('change', function (e) {
@@ -1454,8 +1453,6 @@
 
 
         async function handlePayment(paymentMethod) {
-            const startTime = Date.now();
-            console.log('Starting payment process...');
             const paymentContainer = document.getElementById('payment-container');
 
             try {
@@ -1487,7 +1484,6 @@
                 });
 
                 setupPaymentIframe(formHtml);
-                console.log(`Payment setup completed in ${Date.now() - startTime}ms`);
 
             } catch (error) {
                 console.error('Payment error:', error);
@@ -1536,7 +1532,6 @@
 
         async function updateBookingDetails(bookingId, customerDetails) {
             try {
-                console.log('Updating booking details:', { bookingId, customerDetails });
                 const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/details`, {
                     method: 'PUT',
                     headers: {
@@ -1561,9 +1556,7 @@
 
         // Enhanced create payment with timing
         async function createPayment(bookingId, paymentMethod, customerInfo) {
-            const startTime = startTiming('Create Payment API Call');
             try {
-                console.log('Starting payment creation...');
                 const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
                     method: 'POST',
                     headers: {
@@ -1588,20 +1581,13 @@
                 }
 
                 const data = await response.json();
-                endTiming('Create Payment API Call', startTime);
-                console.log('Payment created successfully:', data);
                 return data;
             } catch (error) {
-                const duration = endTiming('Create Payment API Call', startTime);
-                console.error(`Payment creation failed after ${duration}ms:`, error);
                 throw error;
             }
         }
 
         async function getPaymentForm(paymentMethod, paymentResponse) {
-            const startTime = startTiming('Get Payment Form API Call');
-            console.log('Requesting payment form with:', { paymentMethod, paymentResponse });
-
             try {
                 const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                     method: 'POST',
@@ -1627,19 +1613,14 @@
                 }
 
                 const formHtml = await response.text();
-                const duration = endTiming('Get Payment Form API Call', startTime);
-                console.log(`Payment form retrieved successfully in ${duration}ms`);
                 return formHtml;
             } catch (error) {
-                const duration = endTiming('Get Payment Form API Call', startTime);
-                console.error(`Payment form generation failed after ${duration}ms:`, error);
                 throw error;
             }
         }
 
         function setupPaymentIframe(formHtml, paymentResponse) {
             try {
-                console.log('Setting up payment iframe...');
                 const paymentContainer = document.getElementById('payment-container');
                 const iframe = document.createElement('iframe');
 
@@ -1666,7 +1647,6 @@
 
                 const form = iframeDoc.querySelector('form');
                 if (form) {
-                    console.log('Submitting payment form...');
                     form.submit();
 
                     // Start checking payment status right after submitting the form
@@ -1698,23 +1678,9 @@
             return (baseTotal + rebookingTotal) * 100;
         }
 
-        // Add timing logging functions
-        function startTiming(label) {
-            console.time(label);
-            return Date.now();
-        }
-
-        function endTiming(label, startTime) {
-            const duration = Date.now() - startTime;
-            console.timeEnd(label);
-            return duration;
-        }
-
         function clearLocalStorageOnLoad() {
-            console.log('Clearing localStorage on page load...');
             localStorage.removeItem('bookingData');
             localStorage.removeItem('pendingBookingNumber');
-            console.log('localStorage after clearing:', localStorage);
         }
 
         // Execute the function on page load
