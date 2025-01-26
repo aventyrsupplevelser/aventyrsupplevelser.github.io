@@ -1373,11 +1373,12 @@
 
             // Return a Promise that resolves when the update is complete
             return new Promise((resolve, reject) => {
-                console.log('triggeredyes');
+
                 // Get session data to check if there's an active booking
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
 
                 if (sessionData && sessionData.bookingId) {
+                    console.log('triggeredyes');
                     // Update the booking with current ticket state
                     fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
                         method: 'PUT',
