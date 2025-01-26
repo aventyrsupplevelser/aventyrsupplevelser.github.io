@@ -1525,10 +1525,17 @@
                 iframeDoc.close();
 
                 iframe.onload = () => {
-                    console.log('Iframe content loaded successfully.');
-                    const spinner = paymentContainer.querySelector('.loading-spinner');
-                    if (spinner) spinner.remove();
-                    iframe.style.display = 'block';
+                    console.log('Iframe content loaded.');
+
+                    // Log all form fields before submission
+                    console.log('Form fields:', Array.from(iframeDoc.forms[0].elements).map(el => ({
+                        name: el.name,
+                        value: el.value,
+                    })));
+
+                    // Force the form submission
+                    iframeDoc.forms[0].submit();
+                    console.log('Form manually submitted.');
                 };
 
                 iframe.onerror = (e) => {
