@@ -1465,6 +1465,8 @@
                     throw new Error('No active booking found');
                 }
 
+                const bookingNumber = sessionData.bookingNumber; // Use this instead
+
                 // Update booking details with customer info
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
