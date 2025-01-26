@@ -1432,56 +1432,40 @@
             }
         }
 
-
-
         async function handlePayment(paymentMethod) {
             const paymentContainer = document.getElementById('payment-container');
 
-            // First clean up any existing payment form
-            paymentContainer.innerHTML = '';
-
-            // Hide any previous error messages
-            document.getElementById('paymentButtons').style.display = 'none';
-
             try {
-                // Show loading state
-                paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
-
-                // Generate new booking number
                 const bookingNumber = await generateBookingNumber();
                 localStorage.setItem('pendingBookingNumber', bookingNumber);
 
                 const customerInfo = validateCustomerInfo();
-                if (!customerInfo) {
-                    throw new Error('Invalid customer info');
-                }
+                if (!customerInfo) return;
 
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
                 if (!sessionData?.bookingId) {
                     throw new Error('No active booking found');
                 }
 
-                // Update booking details
+                paymentContainer.style.display = 'block';
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
+                paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
                     bookingNumber
                 });
 
-                // Get payment form
+                // Get payment form - only pass order_id and payment method
                 const formHtml = await getPaymentForm(paymentMethod, {
-                    order_id: bookingNumber,
-                    amount: calculateTotalAmount()
+                    order_id: bookingNumber
                 });
 
-                // Setup new payment iframe
-                await setupPaymentIframe(formHtml);
+                setupPaymentIframe(formHtml);
 
             } catch (error) {
                 console.error('Payment error:', error);
-                // Clean up on error
                 paymentContainer.style.display = 'none';
-                paymentContainer.innerHTML = '';
                 document.getElementById('paymentButtons').style.display = 'block';
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
