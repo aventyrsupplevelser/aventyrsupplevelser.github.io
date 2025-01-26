@@ -1469,17 +1469,20 @@
         function displayBookingSummary({ tickets, totals }) {
             try {
                 document.getElementById('bookingSummaryFinal').innerHTML = `
-            <p id="selectedDateTime">Datum:<span style="font-weight: bold;"> ${tickets.date || 'Not selected'}</span> Tid: <span style="font-weight: bold;"> ${tickets.time || 'Not selected'}</span></p>
-                 <hr>
-            <p>Vuxen: ${tickets.adult} st, ${tickets.adult * 400} kr</p>
-                <p>Ungdom: ${tickets.youth} st, ${tickets.youth * 300} kr</p>
-                <p>Barn: ${tickets.kid} st, ${tickets.kid * 200} kr</p>
-            ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st, ${tickets.fullday * 100} kr</p>` : ''}
-            ${tickets.isRebookable ? `<p>Ombokningsgaranti: ${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</p>` : ''}
-             <hr>
-            <p id="totalvat">Moms (6%): ${totals.vat.toFixed(2)} kr</p>
+            <p id="selectedDateTime">
+                Datum: <span style="font-weight: bold;">${tickets.date || 'Not selected'}</span>
+                Tid: <span style="font-weight: bold;">${tickets.time || 'Not selected'}</span>
+            </p>
             <hr>
-            <p id="totalCost" style="font-weight: bold;">Totalt att betala: ${totals.total} kr</p>
+            <p>Vuxen: ${tickets.adult} st<span style="float: right;">${tickets.adult * 400} kr</span></p>
+            <p>Ungdom: ${tickets.youth} st<span style="float: right;">${tickets.youth * 300} kr</span></p>
+            <p>Barn: ${tickets.kid} st<span style="float: right;">${tickets.kid * 200} kr</span></p>
+            ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st<span style="float: right;">${tickets.fullday * 100} kr</span></p>` : ''}
+            ${tickets.isRebookable ? `<p>Ombokningsgaranti:<span style="float: right;">${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</span></p>` : ''}
+            <hr>
+            <p id="totalvat">Moms (6%):<span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
+            <hr>
+            <p id="totalCost" style="font-weight: bold;">Totalt att betala:<span style="float: right;">${totals.total} kr</span></p>
         `;
             } catch (error) {
                 console.error('Error displaying booking summary:', error);
