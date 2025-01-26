@@ -1523,6 +1523,8 @@
                 iframeDoc.open();
                 iframeDoc.write(formHtml);
                 iframeDoc.close();
+                console.log('Iframe content:', iframeDoc.documentElement.innerHTML);
+
 
                 iframe.onload = () => {
                     console.log('Iframe content loaded.');
