@@ -569,59 +569,34 @@ router.delete('/bookings/:id', async (req, res) => {
 });
 
 
-router.post('/create-payment', paymentTimingMiddleware, async (req, res) => {
+router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
     try {
-        req.logCheckpoint('Starting payment creation');
+        req.logCheckpoint('Starting payment form generation');
         
-        const { 
-            bookingId,
-            paymentMethod,
-            bookingNumber  // Now passed in from client
-        } = req.body;
+        const { order_id, paymentMethod } = req.body;
         
-        // Just get booking details for amount calculation
+        if (!order_id) {
+            req.logCheckpoint('Missing required parameters');
+            return res.status(400).json({ error: 'order_id is required.' });
+        }
+
+        // Look up the booking by order_id
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
             .select('*')
-            .eq('id', bookingId)
+            .eq('booking_number', order_id)
             .single();
 
         if (bookingError) throw bookingError;
-        req.logCheckpoint('Retrieved booking details');
 
-        // Calculate totals
+        // Calculate amount server-side
         const adultTotal = booking.adult_quantity * 400;
         const youthTotal = booking.youth_quantity * 300;
         const kidTotal = booking.kid_quantity * 200;
         const fullDayTotal = booking.full_day * 100;
         const totalTickets = booking.adult_quantity + booking.youth_quantity + booking.kid_quantity;
         const rebookingTotal = booking.is_rebookable ? (totalTickets * 25) : 0;
-        const totalAmount = adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal;
-
-        req.logCheckpoint('Calculated totals');
-
-        res.json({ 
-            orderId: bookingNumber,
-            amount: totalAmount * 100  // Convert to öre
-        });
-
-    } catch (error) {
-        req.logCheckpoint('Error in payment creation');
-        console.error('Payment creation error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
-    try {
-        req.logCheckpoint('Starting payment form generation');
-        
-        const { amount, order_id, paymentMethod } = req.body;
-        
-        if (!amount || !order_id) {
-            req.logCheckpoint('Missing required parameters');
-            return res.status(400).json({ error: 'Amount and order_id are required.' });
-        }
+        const amount = (adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal) * 100; // in öre
 
         const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
@@ -647,7 +622,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
             version: 'v10',
             merchant_id,
             agreement_id,
-            amount,
+            amount,  // Server-calculated amount
             currency: 'SEK',
             order_id,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
@@ -659,10 +634,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
             branding_id: '14851'
         };
 
-        req.logCheckpoint('Built payment parameters');
-
         params.checksum = calculateChecksum(params, apiKey);
-        req.logCheckpoint('Generated checksum');
 
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net/framed">
@@ -673,7 +645,6 @@ router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
             </form>
         `;
 
-        req.logCheckpoint('Generated form HTML');
         res.send(formHtml);
 
     } catch (error) {
@@ -682,32 +653,6 @@ router.post('/get-payment-form', paymentTimingMiddleware, (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-router.post('/validate-total', async (req, res) => {
-    const { tickets, calculatedTotal } = req.body;
-  
-    try {
-      const adultTotal = tickets.adult * 400;
-      const youthTotal = tickets.youth * 300;
-      const kidTotal = tickets.kid * 200;
-      const fullDayTotal = tickets.fullday * 100;
-      const rebookingTotal = tickets.isRebookable
-        ? (tickets.adult + tickets.youth + tickets.kid) * 25
-        : 0;
-  
-      const backendSubtotal =
-        adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal;
-      const vatRate = 0.06;
-      const backendTotal = backendSubtotal;
-  
-      const isValid = backendTotal === calculatedTotal;
-  
-      res.json({ isValid, backendTotal });
-    } catch (error) {
-      console.error('Error validating total:', error);
-      res.status(500).json({ error: 'Validation failed' });
-    }
-  });
 
 router.post('/generate-booking-number', async (req, res) => {
     try {

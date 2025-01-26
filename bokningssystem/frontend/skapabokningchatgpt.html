@@ -1340,24 +1340,6 @@
             };
         }
 
-        async function validateTotalWithBackend(tickets, calculatedTotal) {
-            try {
-                const response = await fetch('/api/validate-total', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tickets, calculatedTotal }),
-                });
-                const { isValid, backendTotal } = await response.json();
-
-                if (!isValid) {
-                    alert(
-                        `There is a mismatch in the total cost. Backend calculated: ${backendTotal} kr`
-                    );
-                }
-            } catch (error) {
-                console.error('Error validating total:', error);
-            }
-        }
 
         async function handleBooking(tickets) {
             // Calculate total on frontend
@@ -1456,7 +1438,6 @@
             const paymentContainer = document.getElementById('payment-container');
 
             try {
-                // Generate new booking number when payment method is selected
                 const bookingNumber = await generateBookingNumber();
                 localStorage.setItem('pendingBookingNumber', bookingNumber);
 
@@ -1472,15 +1453,14 @@
                 paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
                 paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
                     bookingNumber
                 });
 
+                // Get payment form - only pass order_id and payment method
                 const formHtml = await getPaymentForm(paymentMethod, {
-                    order_id: bookingNumber,
-                    amount: calculateTotalAmount()
+                    order_id: bookingNumber
                 });
 
                 setupPaymentIframe(formHtml);
@@ -1554,40 +1534,10 @@
             }
         }
 
-        // Enhanced create payment with timing
-        async function createPayment(bookingId, paymentMethod, customerInfo) {
-            try {
-                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/create-payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
-                    },
-                    body: JSON.stringify({
-                        bookingId,
-                        paymentMethod,
-                        ...customerInfo
-                    })
-                });
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Payment creation failed:', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        error: errorText
-                    });
-                    throw new Error('Failed to create payment');
-                }
+        async function getPaymentForm(paymentMethod, { order_id }) {
+            const startTime = startTiming('Get Payment Form API Call');
 
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        async function getPaymentForm(paymentMethod, paymentResponse) {
             try {
                 const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                     method: 'POST',
@@ -1596,25 +1546,20 @@
                         'Access-Control-Allow-Origin': '*'
                     },
                     body: JSON.stringify({
-                        order_id: paymentResponse.order_id,
-                        amount: paymentResponse.amount,
-                        paymentMethod: paymentMethod
+                        order_id,
+                        paymentMethod
                     })
                 });
 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Payment form generation failed:', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        error: errorText
-                    });
                     throw new Error('Failed to get payment form');
                 }
 
                 const formHtml = await response.text();
+                console.log(`Payment form retrieved in ${Date.now() - startTime}ms`);
                 return formHtml;
             } catch (error) {
+                console.error(`Payment form generation failed after ${Date.now() - startTime}ms:`, error);
                 throw error;
             }
         }
@@ -1661,22 +1606,6 @@
             }
         }
 
-
-
-        // Add this function in skapabokningchatgpt.html alongside other helper functions
-        function calculateTotalAmount() {
-            const baseTotal = (
-                (ticketState.adult * PRICES.adult) +
-                (ticketState.youth * PRICES.youth) +
-                (ticketState.kid * PRICES.kid) +
-                (ticketState.fullday * PRICES.fullday)
-            );
-
-            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
-            const rebookingTotal = ticketState.is_rebookable ? (totalTickets * PRICES.rebooking) : 0;
-
-            return (baseTotal + rebookingTotal) * 100;
-        }
 
         function clearLocalStorageOnLoad() {
             localStorage.removeItem('bookingData');
