@@ -782,10 +782,18 @@
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('start_time, total_spots, available_spots')
-                        .gte('start_time', cutoffTime.toISOString()) // Use cutoff time instead of startOfMonth
+                        .gte('start_time', cutoffTime.toISOString())
                         .lte('start_time', endOfMonth.toISOString());
 
                     if (error) throw error;
+
+                    // If no available slots in this month, move to next month and try again
+                    if (!slots?.some(slot => slot.available_spots > 0)) {
+                        this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
+                        this.render();
+                        await this.fetchAvailableDates();
+                        return;
+                    }
 
                     // Group slots by date and calculate availability
                     const dateAvailability = {};
