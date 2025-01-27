@@ -1367,9 +1367,10 @@
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             if (bookingData && Date.now() > bookingData.expiresAt) {
                 console.log('Clearing expired booking data...');
+                restartBookingProcess();
                 localStorage.removeItem('bookingData');
             }
-        }, 60000); // Check every minute
+        }, 10000); // Check every minute
 
 
         function showMessage(message) {
