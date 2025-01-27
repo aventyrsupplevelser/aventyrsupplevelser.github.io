@@ -770,14 +770,6 @@
 
             async fetchAvailableDates() {
                 try {
-                    // Add infinity check
-                    if (!this._skipCount) this._skipCount = 0;
-                    if (this._skipCount > 12) {
-                        console.log('No available slots found in next 12 months');
-                        this._skipCount = 0;
-                        return;
-                    }
-
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
@@ -803,22 +795,6 @@
 
                     if (error) throw error;
 
-                    console.log(`Checking month ${month}/${year}, found ${slots?.length || 0} slots`);
-
-                    // If no available slots in this month, move to next month and try again
-                    const hasAvailableSlots = slots?.some(slot => slot.available_spots > 0);
-
-                    if (!hasAvailableSlots) {
-                        this._skipCount++;
-                        console.log(`No available slots in ${month}/${year}, moving to next month`);
-                        this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
-                        this.render();
-                        return this.fetchAvailableDates();
-                    }
-
-                    // Reset skip counter when we find available slots
-                    this._skipCount = 0;
-
                     const dateAvailability = {};
                     slots?.forEach(slot => {
                         const date = new Date(slot.start_time);
@@ -836,9 +812,11 @@
 
                     this.availableDates = dateAvailability;
                     this.updateAvailableDays();
+
+                    return slots?.some(slot => slot.available_spots > 0) || false;
                 } catch (error) {
                     console.error('Error fetching available dates:', error);
-                    this._skipCount = 0; // Reset counter on error
+                    return false;
                 }
             }
 
@@ -911,26 +889,56 @@
 
             attachEventListeners() {
                 this.container.querySelector('#prevMonth').addEventListener('click', async (e) => {
-                    e.preventDefault(); // Prevent any default behavior
-                    console.log('Previous month clicked'); // Debug log
+                    e.preventDefault();
+                    console.log('Previous month clicked');
                     const now = new Date();
+                    const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
+
+                    // Add infinity check
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) {
+                        console.log('No available slots found in last 12 months');
+                        this._skipCount = 0;
+                        return;
+                    }
+
                     const newMonth = new Date(this.currentMonth);
                     newMonth.setMonth(this.currentMonth.getMonth() - 1);
 
-                    // Don't go before current month
-                    if (newMonth.getMonth() >= now.getMonth() || newMonth.getFullYear() > now.getFullYear()) {
+                    if (newMonth >= currentMonthYear) {
                         this.currentMonth = newMonth;
                         this.render();
-                        await this.fetchAvailableDates();
+                        const hasSlots = await this.fetchAvailableDates();
+                        if (!hasSlots) {
+                            this._skipCount++;
+                            this.container.querySelector('#prevMonth').click();
+                        } else {
+                            this._skipCount = 0;
+                        }
                     }
                 });
 
                 this.container.querySelector('#nextMonth').addEventListener('click', async (e) => {
-                    e.preventDefault(); // Prevent any default behavior
-                    console.log('Next month clicked'); // Debug log
+                    e.preventDefault();
+                    console.log('Next month clicked');
+
+                    // Add infinity check
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) {
+                        console.log('No available slots found in next 12 months');
+                        this._skipCount = 0;
+                        return;
+                    }
+
                     this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
                     this.render();
-                    await this.fetchAvailableDates();
+                    const hasSlots = await this.fetchAvailableDates();
+                    if (!hasSlots) {
+                        this._skipCount++;
+                        this.container.querySelector('#nextMonth').click();
+                    } else {
+                        this._skipCount = 0;
+                    }
                 });
 
                 this.container.querySelectorAll('.calendar-day').forEach(day => {
