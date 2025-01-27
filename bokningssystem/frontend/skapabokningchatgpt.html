@@ -1449,7 +1449,7 @@
             ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st<span style="float: right;">${tickets.fullday * 100} kr</span></p>` : ''}
             ${tickets.is_rebookable ? `<p>Ombokningsgaranti:<span style="float: right;">${(tickets.adult + tickets.youth + tickets.kid) * 25} kr</span></p>` : ''}
             <hr>
-            <p id="totalvat">Moms (6%):<span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
+            <p id="totalvat">Varav moms (6%):<span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
             <hr>
             <p id="totalCost" style="font-weight: bold;">Totalt att betala:<span style="float: right;">${totals.total} kr</span></p>
         `;
