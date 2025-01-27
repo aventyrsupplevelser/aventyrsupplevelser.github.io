@@ -1125,15 +1125,20 @@
         function selectTimeSlot(element) {
             if (element.classList.contains('disabled')) return;
 
+            // Remove selected class from all time slots and add to clicked one
             document.querySelectorAll('.time-slot').forEach(slot =>
                 slot.classList.remove('selected'));
             element.classList.add('selected');
 
+            // Update current state
             currentTimeSlot = element.dataset.slotId;
             maxAvailableSpots = parseInt(element.dataset.availableSpots);
 
+            // Clear existing selections BEFORE updating display
+            clearTicketSelections();
+
             // Show/hide full day section based on allows_fullday attribute
-            const fulldaySection = document.getElementsByClassName('fulldaySection');
+            const fulldaySection = document.getElementById('fulldaySection');
             const allowsFullDay = element.dataset.allowsFullday === 'true';
 
             if (fulldaySection) {
@@ -1146,16 +1151,19 @@
                 }
             }
 
-            clearTicketSelections();
+            // Make sure currentTimeSlot is set before updating spots display
             updateSpotsLeftDisplay();
 
+            // Show ticket section
             const ticketSection = document.querySelector('#tickets');
             ticketSection.classList.add('visible');
 
+            // Show and disable continue button
             const continueButton = document.getElementById('continueToPaymentBtn');
             continueButton.style.display = 'block';
             continueButton.classList.add('disabled');
 
+            // Scroll to ticket section
             ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
