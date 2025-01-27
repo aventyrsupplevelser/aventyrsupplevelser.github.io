@@ -498,6 +498,9 @@
 
 <body>
     <form id="bookingForm">
+        <div id="messageContainer"
+            style="display: none; margin-bottom: 20px; padding: 15px; background-color: rgb(255, 243, 205); border-radius: 4px; text-align: center; font-size: 1.2em;">
+        </div>
         <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
                 <div style="background: yellow; display: inline;"> Välj klätterdatum:</div>
@@ -1369,7 +1372,42 @@
         }, 60000); // Check every minute
 
 
+        function showMessage(message) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.style.display = 'block';
+            messageContainer.textContent = message;
 
+            // Scroll to top to ensure message is visible
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartBookingProcess() {
+            // Clear all selections
+            clearTicketSelections();
+
+            // Reset time slots
+            const timeSlots = document.getElementById('timeSlots');
+            timeSlots.innerHTML = '';
+            document.getElementById('times').classList.remove('visible');
+
+            // Hide sections
+            showSection('customerSection', false);
+            showSection('paymentButtons', false);
+            showSection('payment-container', false);
+
+            // Reset the continue button
+            const continueBtn = document.getElementById('continueToPaymentBtn');
+            continueBtn.style.display = 'none';
+            continueBtn.classList.add('disabled');
+
+            // Clear any selected calendar day
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('selected');
+            });
+
+            // Show expired session message
+            showMessage('Din bokningssession har gått ut. Vänligen börja om din bokning.');
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
@@ -1377,7 +1415,10 @@
             if (bookingData && Date.now() > bookingData.expiresAt) {
                 console.log('Cleaning up expired booking data...');
                 localStorage.removeItem('bookingData');
-                alert('Your booking session has expired. Please restart.');
+                restartBookingProcess();
+            } else {
+                // Hide message container if no expired session
+                document.getElementById('messageContainer').style.display = 'none';
             }
         });
 
