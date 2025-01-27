@@ -770,6 +770,14 @@
 
             async fetchAvailableDates() {
                 try {
+                    // Add infinity check
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) {
+                        console.log('No available slots found in next 12 months');
+                        this._skipCount = 0;
+                        return;
+                    }
+
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
@@ -781,14 +789,17 @@
                     const cutoffTime = new Date();
                     cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
 
-                    // Use the later of startOfMonth or cutoffTime
-                    const queryStartTime = startOfMonth > cutoffTime ? startOfMonth : cutoffTime;
+                    // Use the later of startOfMonth or cutoffTime ONLY if we're in current month
+                    const now = new Date();
+                    const isCurrentMonth = now.getMonth() === startOfMonth.getMonth() &&
+                        now.getFullYear() === startOfMonth.getFullYear();
+                    const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
 
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('start_time, total_spots, available_spots')
-                        .gte('start_time', queryStartTime.toISOString()) // Use queryStartTime here
-                        .lt('start_time', endOfMonth.toISOString());     // Use lt instead of lte to be precise
+                        .gte('start_time', queryStartTime.toISOString())
+                        .lt('start_time', endOfMonth.toISOString());
 
                     if (error) throw error;
 
@@ -798,13 +809,16 @@
                     const hasAvailableSlots = slots?.some(slot => slot.available_spots > 0);
 
                     if (!hasAvailableSlots) {
+                        this._skipCount++;
                         console.log(`No available slots in ${month}/${year}, moving to next month`);
                         this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
                         this.render();
                         return this.fetchAvailableDates();
                     }
 
-                    // Rest of the code remains the same...
+                    // Reset skip counter when we find available slots
+                    this._skipCount = 0;
+
                     const dateAvailability = {};
                     slots?.forEach(slot => {
                         const date = new Date(slot.start_time);
@@ -824,6 +838,7 @@
                     this.updateAvailableDays();
                 } catch (error) {
                     console.error('Error fetching available dates:', error);
+                    this._skipCount = 0; // Reset counter on error
                 }
             }
 
