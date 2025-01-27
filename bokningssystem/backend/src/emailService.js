@@ -64,8 +64,12 @@ class EmailService {
             const rebookingSum = booking.is_rebookable ? 
                 (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
     
-            // Format payment method for display
             const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
+
+            // Build rebooking URL with access token
+        const rebookingUrl = booking.is_rebookable ? 
+        `https://aventyrsupplevelser.com/bokningssystem/frontend/bokaomtid.html?booking_id=${booking.id}&token=${booking.access_token}` : 
+        null;
     
             const msg = {
                 to: booking.customer_email,
@@ -88,13 +92,14 @@ class EmailService {
                     adult_quantity: booking.adult_quantity,
                     youth_quantity: booking.youth_quantity,
                     kid_quantity: booking.kid_quantity,
-                    adult_sum: adultSum,      // New field
-                    youth_sum: youthSum,      // New field
-                    kid_sum: kidSum,          // New field
+                    adult_sum: adultSum,     
+                    youth_sum: youthSum,     
+                    kid_sum: kidSum,         
                     full_day: booking.full_day,
-                    full_day_sum: fullDaySum, // New field
+                    full_day_sum: fullDaySum,
                     is_rebookable: booking.is_rebookable,
-                    rebooking_sum: rebookingSum, // New field
+                    rebooking_sum: rebookingSum,
+                    ombokningsurl: rebookingUrl,
                     amount_ex_vat: amountExVat,
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),

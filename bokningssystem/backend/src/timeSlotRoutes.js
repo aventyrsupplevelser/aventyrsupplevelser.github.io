@@ -909,4 +909,95 @@ router.get('/time-slots/:id', async (req, res) => {
     }
 });
 
+// In timeSlotRoutes.js
+
+router.put('/bookings/:id/rebook', updateLimiter, async (req, res) => {
+    const { id } = req.params;
+    const {
+        access_token,
+        time_slot_id,
+    } = req.body;
+
+    if (!access_token) {
+        return res.status(401).json({ error: 'No access token provided' });
+    }
+
+    try {
+        // First get the current booking to check expiration and rebooking permission
+        const { data: currentBooking, error: fetchError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('id', id)
+            .eq('access_token', access_token)
+            .single();
+
+        if (fetchError || !currentBooking) {
+            return res.status(401).json({ error: 'Invalid access token or booking not found' });
+        }
+
+        // Check if booking has rebooking permission
+        if (!currentBooking.is_rebookable) {
+            return res.status(403).json({ 
+                error: 'Denna bokning har inte ombokningsgaranti' 
+            });
+        }
+
+        // Check if booking is within 24 hours
+        const bookingTime = new Date(currentBooking.time_slots.start_time);
+        const now = new Date();
+        const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
+
+        if (hoursUntilBooking < 24) {
+            return res.status(400).json({ 
+                error: 'Ombokningar måste göras senast 24 timmar innan bokad tid' 
+            });
+        }
+
+        // If we get here, proceed with the update
+        const { data, error } = await supabase.rpc('manage_booking', {
+            p_booking_id: id,
+            p_new_time_slot_id: time_slot_id,
+            p_status: currentBooking.status, // Maintain current status
+            // Keep all quantities the same
+            p_adult_quantity: currentBooking.adult_quantity,
+            p_youth_quantity: currentBooking.youth_quantity,
+            p_kid_quantity: currentBooking.kid_quantity,
+            p_full_day: currentBooking.full_day,
+            p_is_rebookable: currentBooking.is_rebookable,
+            // Keep customer details the same
+            p_customer_email: currentBooking.customer_email,
+            p_customer_name: currentBooking.customer_name,
+            p_customer_phone: currentBooking.customer_phone,
+            p_comments: currentBooking.comments
+        });
+
+        if (error) {
+            console.error('Error rebooking:', error.message);
+            return res.status(400).json({ error: error.message });
+        }
+
+        // Send confirmation email about the rebooking
+        try {
+            await EmailService.sendBookingConfirmation({
+                ...currentBooking,
+                start_time: (await supabase
+                    .from('time_slots')
+                    .select('start_time')
+                    .eq('id', time_slot_id)
+                    .single()
+                ).data.start_time
+            });
+        } catch (emailError) {
+            console.error('Error sending rebooking confirmation email:', emailError);
+            // Don't return error since the rebooking itself was successful
+        }
+
+        res.json({ message: 'Booking rescheduled successfully' });
+
+    } catch (error) {
+        console.error('Unexpected error during rebooking:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export default router;
