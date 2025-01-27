@@ -1445,8 +1445,6 @@
                     return;
                 }
 
-
-
                 console.log('Customer info validated:', customerInfo);
 
                 // Show loading state
@@ -1497,7 +1495,6 @@
                     }),
                 });
 
-                console.log('Payment form fetch response status:', formResponse.status);
                 if (!formResponse.ok) {
                     const errorText = await formResponse.text();
                     console.error('Failed to fetch payment form:', errorText);
@@ -1507,7 +1504,7 @@
                 const formHtml = await formResponse.text();
                 console.log('Payment form HTML received:', formHtml);
 
-                // Setup iframe for payment form
+                // Create and set up iframe
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
                 iframe.style.height = '330px';
@@ -1518,23 +1515,20 @@
                 paymentContainer.appendChild(iframe);
 
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                console.log('Writing payment form to iframe.');
                 iframeDoc.open();
                 iframeDoc.write(formHtml);
                 iframeDoc.close();
-                console.log('Iframe content:', iframeDoc.documentElement.innerHTML);
 
                 iframe.onload = () => {
-                    console.log('Iframe content loaded.');
                     paymentContainer.querySelector('.loading-spinner').remove();
                     iframe.style.display = 'block';
                 };
 
-                iframe.onerror = (e) => {
-                    console.error('Iframe failed to load:', e);
-                    paymentContainer.style.display = 'none';
-                    alert('Ett fel uppstod vid betalningen. Försök igen.');
-                };
+                const form = iframeDoc.querySelector('form');
+                if (form) {
+                    form.submit();
+                }
+
             } catch (error) {
                 console.error('Payment error:', error);
                 paymentContainer.style.display = 'none';
