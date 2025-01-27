@@ -662,19 +662,28 @@ router.post('/payment-callback',
                 return res.status(400).send('Missing signature');
             }
 
+            // Log raw body details
+            console.log('Raw body type:', typeof req.body);
+            console.log('Is Buffer?', Buffer.isBuffer(req.body));
+            
+            // Make sure we have a buffer
+            const bodyBuffer = Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body));
+
             // Verify the signature with raw body
             const calculatedSignature = crypto
                 .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-                .update(req.body)
+                .update(bodyBuffer)
                 .digest('hex');
 
             if (quickpaySignature !== calculatedSignature) {
                 console.error('Invalid signature');
+                console.log('Received:', quickpaySignature);
+                console.log('Calculated:', calculatedSignature);
                 return res.status(400).send('Invalid signature');
             }
 
-            // Parse the raw body after verification
-            const payment = JSON.parse(req.body.toString('utf8'));
+            // Parse the raw body
+            const payment = JSON.parse(bodyBuffer.toString('utf8'));
             
             console.log('Payment data:', {
                 order_id: payment.order_id,
@@ -685,7 +694,7 @@ router.post('/payment-callback',
             // Send success response immediately
             res.status(200).send('OK');
 
-            // Process the payment asynchronously
+            // Process payment asynchronously
             await processPaymentCallback(payment);
 
         } catch (error) {
