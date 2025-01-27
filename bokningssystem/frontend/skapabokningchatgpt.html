@@ -1491,7 +1491,7 @@
                     bookingData = {
                         token: newBooking.access_token,
                         bookingId: newBooking.booking_id,
-                        expiresAt: Date.now() + 15 * 60 * 1000,
+                        expiresAt: Date.now() + 30 * 60 * 1000,
                     };
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
                 }
@@ -1510,6 +1510,11 @@
 
                     if (!updateResponse.ok) {
                         throw new Error('Failed to update booking');
+                    }
+
+                    if (updateResponse.ok) {
+                        bookingData.expiresAt = Date.now() + 30 * 60 * 1000;  // Reset to 30 minutes
+                        localStorage.setItem('bookingData', JSON.stringify(bookingData));
                     }
                 }
             } catch (error) {
@@ -1794,6 +1799,14 @@
                     const errorText = await response.text();
                     console.error('Failed to update booking details:', errorText);
                     throw new Error('Failed to update booking details');
+                }
+
+                if (response.ok) {
+                    const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+                    if (bookingData) {
+                        bookingData.expiresAt = Date.now() + 30 * 60 * 1000; // Reset to 30 minutes
+                        localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                    }
                 }
 
                 return await response.json();
