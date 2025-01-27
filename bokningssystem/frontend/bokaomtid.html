@@ -523,6 +523,10 @@
         let selectedTimeSlot = null;
         let totalRequired = 0; // Will be set based on current booking
 
+        const available = "rgb(173, 240, 159)";
+        const notAvailable = "rgb(255, 128, 124)";
+        const fewLeft = "rgb(255, 199, 5)";
+
         class BookingCalendar {
             constructor(container) {
                 this.container = container;
