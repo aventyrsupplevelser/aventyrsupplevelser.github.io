@@ -772,9 +772,7 @@
                     currentTimeSlot = null;  // Clear the current time slot
 
                     this.selectedDate = dateStr;
-                    clearTicketSelections();
                     loadTimeSlots(dateStr);
-                    updateTicketButtonStates();  // Update button states after clearing time slot
                 }
             }
 
@@ -783,62 +781,6 @@
                     month: 'long',
                     year: 'numeric'
                 });
-            }
-        }
-
-        async function loadTimeSlots(dateStr) {
-            try {
-                clearTicketSelections();
-
-                // Create start and end of the selected date
-                const startOfDay = new Date(`${dateStr}T00:00:00`);
-                const endOfDay = new Date(`${dateStr}T23:59:59`);
-
-                // Add cutoff time check with 60-minute buffer
-                const cutoffTime = new Date();
-                cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
-
-                const { data: slots, error } = await supabaseClient
-                    .from('time_slots')
-                    .select('*')
-                    .gte('start_time', cutoffTime.toISOString()) // Filter future slots
-                    .gte('start_time', startOfDay.toISOString()) // Filter selected date start
-                    .lte('start_time', endOfDay.toISOString()) // Filter selected date end
-                    .order('start_time');
-
-                if (error) throw error;
-
-                document.getElementById('timeSlots').innerHTML = slots?.map(slot => {
-                    const localTime = new Date(slot.start_time);
-                    let backgroundColor;
-                    let isSelectable = true;
-
-                    if (slot.available_spots === 0) {
-                        backgroundColor = notAvailable; // red
-                        isSelectable = false;
-                    } else if (slot.available_spots < 10) {
-                        backgroundColor = fewLeft; // yellow
-                    } else {
-                        backgroundColor = available; // green
-                    }
-
-                    return `
-                <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
-                     data-slot-id="${slot.id}"
-                     data-allows-fullday="${slot.allow_full_day}"
-                     data-available-spots="${slot.available_spots}"
-                     data-availability-color="${backgroundColor}"
-                     onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
-                     style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}">
-                    ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </div>
-            `;
-                }).join('') || '<p style="min-width: 300px;">Inga lediga tider detta datum. <br><br> Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.</p>';
-
-            } catch (error) {
-                console.error('Error loading time slots:', error);
-                document.getElementById('timeSlots').innerHTML =
-                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
             }
         }
 
