@@ -1490,7 +1490,7 @@
                     bookingData = {
                         token: newBooking.access_token,
                         bookingId: newBooking.booking_id,
-                        expiresAt: Date.now() + 1 * 10 * 1000,
+                        expiresAt: Date.now() + 30 * 60 * 1000,
                     };
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
                 }
@@ -1803,7 +1803,7 @@
                 if (response.ok) {
                     const bookingData = JSON.parse(localStorage.getItem('bookingData'));
                     if (bookingData) {
-                        bookingData.expiresAt = Date.now() + 1 * 10 * 1000; // Reset to 30 minutes
+                        bookingData.expiresAt = Date.now() + 30 * 60 * 1000; // Reset to 30 minutes
                         localStorage.setItem('bookingData', JSON.stringify(bookingData));
                     }
                 }
