@@ -623,6 +623,25 @@
                         <textarea style="height: 100px" type="comment" id="customerComment"></textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="termsCheckbox" required>
+                        Jag accepterr <a href="http://aventyrsupplevelser.com/reglerochvillkor">regler och villkor</a>
+                    </label>
+                    <div id="termsError" class="error" style="display: none;">
+                        Du måste acceptera regler och villkor innan du kan fortsätta.
+                    </div>
+                    <label>
+                        <input type="checkbox" id="kod">
+                        Jag har presentkort eller rabattkod
+                        <div>
+                            <input type="text" id="kod">
+                            <button id="useCode">Använd kod</button>
+                        </div>
+                    </label>
+                    <div style="display: none;">
+                    </div>
+                </div>
                 <div id="bookingSummaryFinal" class="summary-box" style="width:380px; background: rgb(255, 255, 255); padding:
             10px; font-size: 1.3em; margin-bottom: 30px;">
                 </div>
@@ -1641,7 +1660,33 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const termsError = document.getElementById('termsError');
+
+            // Whenever the checkbox is toggled:
+            termsCheckbox.addEventListener('change', () => {
+                // If checked, hide the error message
+                if (termsCheckbox.checked) {
+                    termsError.style.display = 'none';
+                }
+            });
+        });
+
         async function handlePayment(paymentMethod) {
+
+            // 1. Check if terms are accepted
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const termsError = document.getElementById('termsError');
+            if (!termsCheckbox.checked) {
+                termsError.style.display = 'block'; // Show the error
+                termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return; // Stop if not accepted
+            }
+
+            // Hide the error if we passed the check
+            termsError.style.display = 'none';
+
             const paymentContainer = document.getElementById('payment-container');
 
             try {
@@ -1744,29 +1789,6 @@
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
         }
-
-        /*
-        async function generateBookingNumber() {
-            try {
-                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to generate booking number');
-                }
-
-                const data = await response.json();
-                return data.bookingNumber;
-            } catch (error) {
-                console.error('Error generating booking number:', error);
-                throw error;
-            }
-        } */
 
 
         function validateCustomerInfo() {
