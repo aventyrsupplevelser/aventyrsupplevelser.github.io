@@ -700,15 +700,27 @@ router.post('/payment-callback',
     }
 );
 
-// Process the payment callback
 async function processPaymentCallback(payment) {
-    const startTime = Date.now();
-    console.log('Starting payment callback processing');
+    console.log('Processing payment callback for order:', payment.order_id);
 
     try {
         if (payment.accepted && payment.state === 'processed') {
-            const updateStart = Date.now();
+            console.log('Payment was accepted and processed');
             
+            // First check current booking status
+            const { data: currentBooking, error: checkError } = await supabase
+                .from('bookings')
+                .select('status')
+                .eq('booking_number', payment.order_id)
+                .single();
+
+            if (checkError) {
+                console.error('Error checking current booking:', checkError);
+                return;
+            }
+
+            console.log('Current booking status:', currentBooking.status);
+
             // Update booking status
             const { data: updatedBooking, error: updateError } = await supabase
                 .from('bookings')
@@ -729,31 +741,28 @@ async function processPaymentCallback(payment) {
                 return;
             }
 
-            console.log(`Database update took: ${Date.now() - updateStart}ms`);
+            console.log('Successfully updated booking status to confirmed');
 
             // Send confirmation email
             if (updatedBooking) {
-                const emailStart = Date.now();
                 try {
                     await EmailService.sendBookingConfirmation({
                         ...updatedBooking,
                         start_time: updatedBooking.time_slots.start_time
                     });
-                    console.log(`Email sending took: ${Date.now() - emailStart}ms`);
+                    console.log('Confirmation email sent successfully');
                 } catch (emailError) {
                     console.error('Error sending confirmation email:', emailError);
                 }
             }
+        } else {
+            console.log('Payment not accepted or not processed:', payment.state);
         }
 
-        console.log(`Total callback processing took: ${Date.now() - startTime}ms`);
     } catch (error) {
-        console.error('Error processing payment callback:', error);
-        console.log(`Failed callback processing took: ${Date.now() - startTime}ms`);
+        console.error('Error in payment callback:', error);
     }
 }
-
-// In timeSlotRoutes.js
 
 router.get('/payment-status/:bookingNumber', paymentTimingMiddleware, async (req, res) => {
     try {
