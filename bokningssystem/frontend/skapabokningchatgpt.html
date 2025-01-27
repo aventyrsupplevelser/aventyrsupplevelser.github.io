@@ -499,7 +499,7 @@
 <body>
     <form id="bookingForm">
         <div id="messageContainer"
-            style="display: none; margin-bottom: 20px; padding: 15px 15px 10px; background-color: rgb(255, 243, 205); border-radius: 4px; text-align: center; font-size: 1.2em;">
+            style="display: none; margin: 20px auto; padding: 15px 15px 10px; background-color: rgb(255, 243, 205); border-radius: 4px; text-align: center; font-size: 1.2em;">
         </div>
         <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
@@ -1375,7 +1375,7 @@
 
         function showMessage(message) {
             const messageContainer = document.getElementById('messageContainer');
-            messageContainer.style.display = 'block';
+            messageContainer.style.display = 'inline-block';
             messageContainer.innerHTML = message; // This renders the HTML tags properly
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
