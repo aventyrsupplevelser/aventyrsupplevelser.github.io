@@ -1077,10 +1077,17 @@
             fulldayMinus.disabled = ticketState.fullday <= 0;
         }
 
-        // Modify handleQuantityChange to call validateTicketSelection
         async function handleQuantityChange(type, change) {
+            const timeSlotSelected = document.querySelector('.time-slot.selected');
             const currentValue = ticketState[type];
             const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            if (!timeSlotSelected && type !== 'fullday') {
+                updateTicketButtonStates();
+                return;
+            }
+
+            const maxAvailableSpots = timeSlotSelected ? parseInt(timeSlotSelected.dataset.availableSpots) : 0;
 
             if (type === 'fullday') {
                 const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
@@ -1088,38 +1095,48 @@
                 if (newValue >= 0 && newValue <= totalTickets) {
                     ticketState.fullday = newValue;
                     document.getElementById('fulldayQuantity').textContent = newValue;
-                    updateTotalDisplay();
                 }
-                return;
+            } else {
+                const newValue = currentValue + change;
+                if (newValue >= 0 && totalSelected + change <= maxAvailableSpots) {
+                    if (type === 'kid' && ticketState.adult === 0) {
+                        return;
+                    }
+
+                    ticketState[type] = newValue;
+                    document.getElementById(`${type}Quantity`).textContent = newValue;
+                }
             }
 
-            const newValue = currentValue + change;
-            if (newValue >= 0 && totalSelected + change <= maxAvailableSpots) {
-                ticketState[type] = newValue;
-                document.getElementById(`${type}Quantity`).textContent = newValue;
-                updateSpotsLeftDisplay();
-                updateFulldayMaxQuantity();
-                validateTicketSelection();
-                updateTotalDisplay();
-                updateChildrenTicketButtons(); // Add this to check children ticket availability
-            }
+            updateTicketButtonStates();
+            updateSpotsLeftDisplay();
+            validateTicketSelection();
+            updateTotalDisplay();
         }
 
 
-        // Function to clear all ticket selections
-        // Modify clearTicketSelections to also reset rebooking
         function clearTicketSelections() {
-            Object.keys(ticketState).forEach(type => {
-                if (type === 'is_rebookable') {
-                    ticketState[type] = false;
-                    document.getElementById('rebookingCheckbox').checked = false;
-                } else {
-                    ticketState[type] = 0;
-                    document.getElementById(`${type}Quantity`).textContent = '0';
+            // Reset all ticket quantities
+            ['adult', 'youth', 'kid', 'fullday'].forEach(type => {
+                ticketState[type] = 0;
+                const quantityElement = document.getElementById(`${type}Quantity`);
+                if (quantityElement) {
+                    quantityElement.textContent = '0';
                 }
             });
+
+            // Reset rebooking checkbox
+            ticketState.is_rebookable = false;
+            const rebookingCheckbox = document.getElementById('rebookingCheckbox');
+            if (rebookingCheckbox) {
+                rebookingCheckbox.checked = false;
+            }
+
+            // Update all states and displays
+            updateTicketButtonStates();
             updateSpotsLeftDisplay();
-            updateFulldayMaxQuantity();
+            validateTicketSelection();
+            updateTotalDisplay();
         }
 
         function selectTimeSlot(element) {
@@ -1165,6 +1182,45 @@
 
             // Scroll to ticket section
             ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function updateTicketButtonStates() {
+            const timeSlotSelected = document.querySelector('.time-slot.selected');
+            const maxAvailableSpots = timeSlotSelected ? parseInt(timeSlotSelected.dataset.availableSpots) : 0;
+            const totalSelected = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            // Update regular ticket buttons
+            ['adult', 'youth', 'kid'].forEach(type => {
+                const plusBtn = document.querySelector(`[data-ticket-type="${type}"].plus`);
+                const minusBtn = document.querySelector(`[data-ticket-type="${type}"].minus`);
+
+                if (plusBtn && minusBtn) {
+                    // Plus button logic
+                    plusBtn.disabled = !timeSlotSelected || totalSelected >= maxAvailableSpots;
+                    if (type === 'kid') {
+                        plusBtn.disabled = plusBtn.disabled || ticketState.adult === 0;
+                    }
+
+                    // Minus button logic
+                    minusBtn.disabled = ticketState[type] === 0;
+
+                    // Update visual states
+                    plusBtn.style.opacity = plusBtn.disabled ? '0.5' : '1';
+                    minusBtn.style.opacity = minusBtn.disabled ? '0.5' : '1';
+                }
+            });
+
+            // Update full day buttons
+            const fulldayPlus = document.querySelector('[data-ticket-type="fullday"].plus');
+            const fulldayMinus = document.querySelector('[data-ticket-type="fullday"].minus');
+
+            if (fulldayPlus && fulldayMinus) {
+                fulldayPlus.disabled = ticketState.fullday >= totalSelected;
+                fulldayMinus.disabled = ticketState.fullday === 0;
+
+                fulldayPlus.style.opacity = fulldayPlus.disabled ? '0.5' : '1';
+                fulldayMinus.style.opacity = fulldayMinus.disabled ? '0.5' : '1';
+            }
         }
 
         // Add this new function to check ticket quantities
