@@ -527,6 +527,219 @@
         const notAvailable = "rgb(255, 128, 124)";
         const fewLeft = "rgb(255, 199, 5)";
 
+        // Modify the init function to add better error handling
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            bookingId = urlParams.get('booking_id');
+            accessToken = urlParams.get('token');
+
+            if (!bookingId || !accessToken) {
+                showError('Ogiltig länk. Kontrollera att du använder länken från ditt mail.');
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
+                    {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                );
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Kunde inte hitta bokningen');
+                }
+
+                currentBooking = await response.json();
+
+                // Calculate total required spots
+                totalRequired = currentBooking.adult_quantity +
+                    currentBooking.youth_quantity +
+                    currentBooking.kid_quantity;
+
+                // Check if rebooking is still allowed
+                const bookingTime = new Date(currentBooking.time_slots.start_time);
+                const now = new Date();
+                const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
+
+                if (hoursUntilBooking < 24) {
+                    throw new Error('Ombokningar måste göras senast 24 timmar innan bokad tid');
+                }
+
+                showBookingForm();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+
+        function showCurrentBooking() {
+            // Get the booking start time from the time_slots object
+            const startTime = currentBooking.time_slots.start_time;
+
+            // Format the date
+            const bookingDate = new Date(startTime);
+            const formattedDate = bookingDate.toLocaleDateString('sv-SE', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            // Format the time
+            const formattedTime = bookingDate.toLocaleTimeString('sv-SE', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+
+            document.getElementById('currentBookingDetails').innerHTML = `
+        <p>Datum: <strong>${formattedDate}</strong></p>
+        <p>Tid: <strong>${formattedTime}</strong></p>
+        <p>Antal personer:</p>
+        ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
+        ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
+        ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
+        ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
+    `;
+        }
+
+        class BookingFlow {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 3;
+
+                // Initialize everything after we define the methods
+                this.init();
+            }
+
+            init() {
+                // Initialize calendar first
+                const calendarContainer = document.createElement('div');
+                calendarContainer.id = 'calendar-container';
+                const formGroup = document.querySelector('.booking-section .form-group');
+                formGroup.appendChild(calendarContainer);
+
+                // Create calendar instance
+                this.calendar = new BookingCalendar(calendarContainer, loadTimeSlots);
+
+                // Now initialize event listeners after calendar exists
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Listen for date selection via event delegation from the calendar container
+                document.querySelector('#calendar-container').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('calendar-day') && !e.target.disabled) {
+                        this.handleDateSelection(e.target.dataset.date);
+                    }
+                });
+
+                const timeSlots = document.querySelector('#timeSlots');
+                timeSlots.addEventListener('click', (e) => {
+                    if (e.target.closest('.time-slot')) {
+                        this.handleTimeSelection(e.target.closest('.time-slot'));
+                    }
+                });
+            }
+
+            handleDateSelection(date) {
+                currentTimeSlot = null; // Add this line here
+                // Add active to time slots section
+                const timeSlotsSection = document.querySelector('#times');
+                timeSlotsSection.classList.add('visible');
+
+                // Show time slots section
+                const timeSlots = document.querySelector('.time-slots');
+                timeSlots.classList.add('visible');
+
+                // Scroll to time slots
+                timeSlots.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Load time slots
+                loadTimeSlots(date);
+            }
+
+            handleTimeSelection(timeSlotElement) {
+                // Show ticket section
+                const ticketSection = document.querySelector('#tickets');
+                ticketSection.classList.add('visible');
+
+                // Scroll to ticket section
+                ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Update available spots
+                currentAvailableSpots = parseInt(timeSlotElement.dataset.availableSpots);
+
+            }
+
+        }
+
+        class BookingFlow {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 3;
+
+                // Initialize everything after we define the methods
+                this.init();
+            }
+
+            init() {
+                // Initialize calendar first
+                const calendarContainer = document.createElement('div');
+                calendarContainer.id = 'calendar-container';
+                const formGroup = document.querySelector('.booking-section .form-group');
+                formGroup.appendChild(calendarContainer);
+
+                // Create calendar instance
+                this.calendar = new BookingCalendar(calendarContainer, loadTimeSlots);
+
+                // Now initialize event listeners after calendar exists
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Listen for date selection via event delegation from the calendar container
+                document.querySelector('#calendar-container').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('calendar-day') && !e.target.disabled) {
+                        this.handleDateSelection(e.target.dataset.date);
+                    }
+                });
+
+                // Rest of the event listeners...
+                const timeSlots = document.querySelector('#timeSlots');
+                timeSlots.addEventListener('click', (e) => {
+                    if (e.target.closest('.time-slot')) {
+                        this.handleTimeSelection(e.target.closest('.time-slot'));
+                    }
+                });
+
+                // Listen for ticket changes to enable/disable continue button
+                const ticketSection = document.querySelector('.ticket-section');
+                ticketSection.addEventListener('change', () => {
+                    this.validateTicketSelection();
+                });
+            }
+
+            handleDateSelection(date) {
+                currentTimeSlot = null; // Add this line here
+                // Add active to time slots section
+                const timeSlotsSection = document.querySelector('#times');
+                timeSlotsSection.classList.add('visible');
+
+                // Show time slots section
+                const timeSlots = document.querySelector('.time-slots');
+                timeSlots.classList.add('visible');
+
+                // Scroll to time slots
+                timeSlots.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Load time slots
+                loadTimeSlots(date);
+            }
+        }
+
         class BookingCalendar {
             constructor(container) {
                 this.container = container;
@@ -546,43 +759,51 @@
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
-                    const startOfMonth = new Date(year, month - 1, 1);
+
+                    // Get first and last day of the month
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+
+                    // Create cutoff time 60 minutes from now
                     const cutoffTime = new Date();
                     cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
 
+                    // Use the later of startOfMonth or cutoffTime ONLY if we're in current month
+                    const now = new Date();
+                    const isCurrentMonth = now.getMonth() === startOfMonth.getMonth() &&
+                        now.getFullYear() === startOfMonth.getFullYear();
+                    const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
+
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
-                        .select('start_time, total_spots, available_spots, allow_full_day')
-                        .gte('start_time', cutoffTime.toISOString())
+                        .select('start_time, total_spots, available_spots')
+                        .gte('start_time', queryStartTime.toISOString())
                         .lt('start_time', endOfMonth.toISOString());
 
                     if (error) throw error;
 
                     const dateAvailability = {};
                     slots?.forEach(slot => {
-                        // Only consider slots that have enough available spots and match full_day requirement
-                        if (slot.available_spots >= totalRequired &&
-                            (!currentBooking.full_day || slot.allow_full_day)) {
-                            const date = new Date(slot.start_time);
-                            const dateStr = date.toISOString().split('T')[0];
+                        const date = new Date(slot.start_time);
+                        const dateStr = date.toISOString().split('T')[0];
 
-                            if (!dateAvailability[dateStr]) {
-                                dateAvailability[dateStr] = {
-                                    totalSpots: 0,
-                                    availableSpots: 0,
-                                    allowsFullDay: slot.allow_full_day
-                                };
-                            }
-                            dateAvailability[dateStr].totalSpots += slot.total_spots;
-                            dateAvailability[dateStr].availableSpots += slot.available_spots;
+                        if (!dateAvailability[dateStr]) {
+                            dateAvailability[dateStr] = {
+                                totalSpots: 0,
+                                availableSpots: 0
+                            };
                         }
+                        dateAvailability[dateStr].totalSpots += slot.total_spots;
+                        dateAvailability[dateStr].availableSpots += slot.available_spots;
                     });
 
                     this.availableDates = dateAvailability;
                     this.updateAvailableDays();
+
+                    return slots?.some(slot => slot.available_spots > 0) || false;
                 } catch (error) {
                     console.error('Error fetching available dates:', error);
+                    return false;
                 }
             }
 
@@ -776,7 +997,9 @@
                     currentTimeSlot = null;  // Clear the current time slot
 
                     this.selectedDate = dateStr;
+                    clearTicketSelections();
                     loadTimeSlots(dateStr);
+                    updateTicketButtonStates();  // Update button states after clearing time slot
                 }
             }
 
@@ -788,135 +1011,53 @@
             }
         }
 
-
-        // Modify the init function to add better error handling
-        async function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            bookingId = urlParams.get('booking_id');
-            accessToken = urlParams.get('token');
-
-            if (!bookingId || !accessToken) {
-                showError('Ogiltig länk. Kontrollera att du använder länken från ditt mail.');
-                return;
-            }
-
-            try {
-                const response = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
-                    {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' }
-                    }
-                );
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Kunde inte hitta bokningen');
-                }
-
-                currentBooking = await response.json();
-
-                // Calculate total required spots
-                totalRequired = currentBooking.adult_quantity +
-                    currentBooking.youth_quantity +
-                    currentBooking.kid_quantity;
-
-                // Check if rebooking is still allowed
-                const bookingTime = new Date(currentBooking.time_slots.start_time);
-                const now = new Date();
-                const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
-
-                if (hoursUntilBooking < 24) {
-                    throw new Error('Ombokningar måste göras senast 24 timmar innan bokad tid');
-                }
-
-                showBookingForm();
-            } catch (error) {
-                showError(error.message);
-            }
-        }
-
-        function showBookingForm() {
-            // Hide loading and error messages
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-
-            // Show the booking form
-            const bookingForm = document.getElementById('bookingForm');
-            bookingForm.style.display = 'block';
-
-            // Show current booking details
-            showCurrentBooking();
-
-            // Initialize calendar after showing the form
-            const calendarContainer = document.getElementById('calendar-container');
-            new BookingCalendar(calendarContainer);
-        }
-
-        function showCurrentBooking() {
-            // Get the booking start time from the time_slots object
-            const startTime = currentBooking.time_slots.start_time;
-
-            // Format the date
-            const bookingDate = new Date(startTime);
-            const formattedDate = bookingDate.toLocaleDateString('sv-SE', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-
-            // Format the time
-            const formattedTime = bookingDate.toLocaleTimeString('sv-SE', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
-
-            document.getElementById('currentBookingDetails').innerHTML = `
-        <p>Datum: <strong>${formattedDate}</strong></p>
-        <p>Tid: <strong>${formattedTime}</strong></p>
-        <p>Antal personer:</p>
-        ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
-        ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
-        ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
-        ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
-    `;
-        }
-
         async function loadTimeSlots(dateStr) {
             try {
+
+                // Create start and end of the selected date
                 const startOfDay = new Date(`${dateStr}T00:00:00`);
                 const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                // Add cutoff time check with 60-minute buffer
                 const cutoffTime = new Date();
                 cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
 
                 const { data: slots, error } = await supabaseClient
                     .from('time_slots')
                     .select('*')
-                    .gte('start_time', cutoffTime.toISOString())
-                    .gte('start_time', startOfDay.toISOString())
-                    .lte('start_time', endOfDay.toISOString())
+                    .gte('start_time', cutoffTime.toISOString()) // Filter future slots
+                    .gte('start_time', startOfDay.toISOString()) // Filter selected date start
+                    .lte('start_time', endOfDay.toISOString()) // Filter selected date end
                     .order('start_time');
 
                 if (error) throw error;
 
-                document.getElementById('timeSlots').innerHTML = slots
-                    .filter(slot =>
-                        slot.available_spots >= totalRequired &&
-                        (!currentBooking.full_day || slot.allow_full_day)
-                    )
-                    .map(slot => {
-                        const localTime = new Date(slot.start_time);
-                        return `
-                            <div class="time-slot"
-                                 onclick="selectTimeSlot(this)"
-                                 data-slot-id="${slot.id}"
-                                 data-available-spots="${slot.available_spots}">
-                                ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </div>
-                        `;
-                    })
-                    .join('') || '<p>Inga lediga tider detta datum.</p>';
+                document.getElementById('timeSlots').innerHTML = slots?.map(slot => {
+                    const localTime = new Date(slot.start_time);
+                    let backgroundColor;
+                    let isSelectable = true;
+
+                    if (slot.available_spots === 0) {
+                        backgroundColor = notAvailable; // red
+                        isSelectable = false;
+                    } else if (slot.available_spots < 10) {
+                        backgroundColor = fewLeft; // yellow
+                    } else {
+                        backgroundColor = available; // green
+                    }
+
+                    return `
+                <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
+                     data-slot-id="${slot.id}"
+                     data-allows-fullday="${slot.allow_full_day}"
+                     data-available-spots="${slot.available_spots}"
+                     data-availability-color="${backgroundColor}"
+                     onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
+                     style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}">
+                    ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+            `;
+                }).join('') || '<p style="min-width: 300px;">Inga lediga tider detta datum. <br><br> Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.</p>';
 
             } catch (error) {
                 console.error('Error loading time slots:', error);
@@ -925,13 +1066,7 @@
             }
         }
 
-        function selectTimeSlot(element) {
-            document.querySelectorAll('.time-slot').forEach(slot =>
-                slot.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedTimeSlot = element.dataset.slotId;
-            document.getElementById('confirmSection').style.display = 'block';
-        }
+
 
         async function confirmRebooking() {
             if (!selectedTimeSlot) {
@@ -963,42 +1098,6 @@
             }
         }
 
-        // Add error handling function
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.cssText = `
-        display: block;
-        color: red;
-        background-color: #ffe6e6;
-        border: 1px solid red;
-        padding: 14px 14px 9px;
-        margin: 20px auto;
-        font-size: 1.0em;
-        border-radius: 3px;
-        width: 300px;
-        line-height: 1.4em;
-        text-align: center;
-    `;
-        }
-
-        // Add message display function
-        function showMessage(message) {
-            const messageContainer = document.getElementById('messageContainer');
-            messageContainer.style.cssText = `
-        display: block;
-        margin: 40px auto;
-        width: fit-content;
-        padding: 20px;
-        text-align: center;
-        background-color: #f0f8f0;
-        border: 1px solid #4CAF50;
-        border-radius: 4px;
-    `;
-            messageContainer.innerHTML = message;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
@@ -1009,3 +1108,5 @@
 </body>
 
 </html>
+
+document.getElementById('confirmSection').style.display = 'block';
