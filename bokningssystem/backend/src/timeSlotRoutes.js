@@ -753,11 +753,12 @@ async function processPaymentCallback(payment) {
     }
 }
 
+// In timeSlotRoutes.js
+
 router.get('/payment-status/:bookingNumber', paymentTimingMiddleware, async (req, res) => {
     try {
-        req.logCheckpoint('Starting payment status check');
-        
         const { bookingNumber } = req.params;
+        console.log('Checking payment status for booking:', bookingNumber);
 
         const { data: booking, error } = await supabase
             .from('bookings')
@@ -765,12 +766,15 @@ router.get('/payment-status/:bookingNumber', paymentTimingMiddleware, async (req
             .eq('booking_number', bookingNumber)
             .single();
 
-        req.logCheckpoint('Retrieved booking status');
+        if (error) {
+            console.error('Error fetching booking status:', error);
+            throw error;
+        }
 
-        if (error) throw error;
+        console.log('Retrieved booking status:', booking);
 
         if (booking.status === 'confirmed') {
-            req.logCheckpoint('Payment confirmed');
+            console.log('Payment confirmed for booking:', bookingNumber);
             res.json({
                 status: 'completed',
                 paymentDetails: {
@@ -780,12 +784,11 @@ router.get('/payment-status/:bookingNumber', paymentTimingMiddleware, async (req
                 }
             });
         } else {
-            req.logCheckpoint('Payment pending');
+            console.log('Payment pending for booking:', bookingNumber, 'Status:', booking.status);
             res.json({ status: booking.status });
         }
 
     } catch (error) {
-        req.logCheckpoint('Error checking payment status');
         console.error('Error checking payment status:', error);
         res.status(500).json({ error: 'Failed to check payment status' });
     }
