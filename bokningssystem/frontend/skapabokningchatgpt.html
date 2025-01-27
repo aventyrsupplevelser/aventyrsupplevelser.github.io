@@ -557,7 +557,7 @@
                     <br><br>
 
                     <!-- Full day extension -->
-                    <div class="ticket-selector">
+                    <div class="ticket-selector" id="fulldaySection">
                         <label>Heldag (till 17.00)</label>
                         <div>100 kr</div>
                         <div class="quantity-selector">
@@ -1128,6 +1128,20 @@
 
             currentTimeSlot = element.dataset.slotId;
             maxAvailableSpots = parseInt(element.dataset.availableSpots);
+
+            // Show/hide full day section based on allows_fullday attribute
+            const fulldaySection = document.getElementById('fulldaySection');
+            const allowsFullDay = element.dataset.allowsFullday === 'true';
+
+            if (fulldaySection) {
+                fulldaySection.style.display = allowsFullDay ? 'flex' : 'none';
+                // Reset full day quantity if hiding the section
+                if (!allowsFullDay) {
+                    ticketState.fullday = 0;
+                    document.getElementById('fulldayQuantity').textContent = '0';
+                    updateTotalDisplay();
+                }
+            }
 
             clearTicketSelections();
             updateSpotsLeftDisplay();
