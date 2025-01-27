@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
+import EmailService from './emailService.js';
+
+
 
 const updateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
