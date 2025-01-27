@@ -1436,23 +1436,15 @@
             const paymentContainer = document.getElementById('payment-container');
 
             try {
-                console.log('Starting handlePayment with method:', paymentMethod);
-
-                // Validate customer info
                 const customerInfo = validateCustomerInfo();
                 if (!customerInfo) {
-                    console.warn('Customer info validation failed.');
                     return;
                 }
 
-                console.log('Customer info validated:', customerInfo);
-
-                // Show loading state
                 paymentContainer.style.display = 'block';
                 paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div>';
                 paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-                // Generate booking number
                 const bookingNumberResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
                     method: 'POST',
                     headers: {
@@ -1464,25 +1456,16 @@
                 if (!bookingNumberResponse.ok) throw new Error('Failed to generate booking number');
                 const { bookingNumber } = await bookingNumberResponse.json();
 
-                // Get session data for booking ID
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                console.log('Session data from localStorage:', sessionData);
-
                 if (!sessionData?.bookingId) {
-                    console.error('No active booking found in session data.');
                     throw new Error('No active booking found');
                 }
 
-                // Update booking details with customer info
-                console.log('Updating booking details for booking ID:', sessionData.bookingId);
                 await updateBookingDetails(sessionData.bookingId, {
                     ...customerInfo,
                     bookingNumber,
                 });
-                console.log('Booking details updated successfully.');
 
-                // Fetch payment form HTML from the backend
-                console.log('Fetching payment form from backend.');
                 const formResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form', {
                     method: 'POST',
                     headers: {
@@ -1496,15 +1479,11 @@
                 });
 
                 if (!formResponse.ok) {
-                    const errorText = await formResponse.text();
-                    console.error('Failed to fetch payment form:', errorText);
                     throw new Error('Failed to get payment form');
                 }
 
                 const formHtml = await formResponse.text();
-                console.log('Payment form HTML received:', formHtml);
 
-                // Create and set up iframe
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
                 iframe.style.height = '330px';
@@ -1530,7 +1509,6 @@
                 }
 
             } catch (error) {
-                console.error('Payment error:', error);
                 paymentContainer.style.display = 'none';
                 const paymentButtons = document.getElementById('paymentButtons');
                 if (paymentButtons) paymentButtons.style.display = 'block';
