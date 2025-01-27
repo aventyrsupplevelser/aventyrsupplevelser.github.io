@@ -932,11 +932,16 @@
                         selectedButton.classList.add('selected');
                     }
 
+                    // Clear any selected time slot
+                    document.querySelectorAll('.time-slot').forEach(slot => {
+                        slot.classList.remove('selected');
+                    });
+                    currentTimeSlot = null;  // Clear the current time slot
+
                     this.selectedDate = dateStr;
                     clearTicketSelections();
-
                     loadTimeSlots(dateStr);
-                    updateSpotsLeftDisplay();
+                    updateTicketButtonStates();  // Update button states after clearing time slot
                 }
             }
 
