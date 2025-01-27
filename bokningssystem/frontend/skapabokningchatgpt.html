@@ -409,6 +409,7 @@
             background: #f8f8f8;
             border-radius: 4px;
             font-family: "Josefin Sans", sans-serif;
+            margin-bottom: 30px;
         }
 
         .loading {
@@ -1785,7 +1786,7 @@
                 }
 
                 paymentContainer.style.display = 'block';
-                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...<br><br><br><div class="loading"></div></div>';
+                paymentContainer.innerHTML = '<div class="loading-spinner">Laddar betalning...</div><div class="loading"></div>';
                 paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
                 const bookingNumberResponse = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number', {
