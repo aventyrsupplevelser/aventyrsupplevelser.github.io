@@ -508,13 +508,8 @@
             display: inline-flex;
             align-items: center;
             cursor: pointer;
-            /* show pointer on hover */
-            font-size: 1.3em;
-            /* inherit or set your label text size */
             user-select: none;
-            /* prevent text highlight on double-click */
             position: relative;
-            /* for containing absolutely positioned input */
         }
 
         /* Hide the native checkbox */
@@ -540,15 +535,11 @@
             background-color: #fff;
             transition: background-color 0.2s, border-color 0.2s;
             box-sizing: border-box;
-            /* make sure border is included in total size */
             position: relative;
-            /* so we can position the checkmark pseudo-element */
         }
 
-        /* Hover effect: slightly change border color */
         .custom-checkbox:hover .checkmark {
             border-color: #555;
-            /* or any color you like */
         }
 
         /* Focus ring if the checkbox is tabbed to */
@@ -559,7 +550,6 @@
         /* When checked, change the background & border color */
         .custom-checkbox input[type="checkbox"]:checked+.checkmark {
             background-color: #4CAF50;
-            /* "checked" color */
             border-color: #4CAF50;
         }
 
