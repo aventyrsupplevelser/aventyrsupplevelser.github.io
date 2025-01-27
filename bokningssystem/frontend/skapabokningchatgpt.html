@@ -848,6 +848,22 @@
                 </div>
             </div>
         `;
+                // Add this new code here, after rendering the HTML but before attaching event listeners
+                const now = new Date();
+                const prevMonthButton = this.container.querySelector('#prevMonth');
+                const isCurrentMonth = this.currentMonth.getMonth() === now.getMonth() &&
+                    this.currentMonth.getFullYear() === now.getFullYear();
+
+                if (isCurrentMonth) {
+                    prevMonthButton.disabled = true;
+                    prevMonthButton.style.opacity = '0.5';
+                    prevMonthButton.style.cursor = 'not-allowed';
+                } else {
+                    prevMonthButton.disabled = false;
+                    prevMonthButton.style.opacity = '1';
+                    prevMonthButton.style.cursor = 'pointer';
+                }
+
                 this.attachEventListeners();
             }
 
@@ -887,17 +903,17 @@
                 return days.join('');
             }
 
+
+
             attachEventListeners() {
                 this.container.querySelector('#prevMonth').addEventListener('click', async (e) => {
                     e.preventDefault();
-                    console.log('Previous month clicked');
                     const now = new Date();
                     const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
 
                     // Add infinity check
                     if (!this._skipCount) this._skipCount = 0;
                     if (this._skipCount > 12) {
-                        console.log('No available slots found in last 12 months');
                         this._skipCount = 0;
                         return;
                     }
@@ -920,12 +936,10 @@
 
                 this.container.querySelector('#nextMonth').addEventListener('click', async (e) => {
                     e.preventDefault();
-                    console.log('Next month clicked');
 
                     // Add infinity check
                     if (!this._skipCount) this._skipCount = 0;
                     if (this._skipCount > 12) {
-                        console.log('No available slots found in next 12 months');
                         this._skipCount = 0;
                         return;
                     }
