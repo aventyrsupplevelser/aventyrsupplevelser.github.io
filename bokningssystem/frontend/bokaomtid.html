@@ -512,9 +512,23 @@
 
     <script>
         const { createClient } = supabase;
+        /* const supabaseClient = createClient(
+             'https://czbvtmrqzvovytzqokko.supabase.co',
+             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+         ); */
+
         const supabaseClient = createClient(
             'https://czbvtmrqzvovytzqokko.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo',
+            {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true
+                },
+                headers: {
+                    'Origin': 'http://127.0.0.1:5500'
+                }
+            }
         );
 
         let bookingId;
@@ -529,21 +543,25 @@
 
         // Modify the init function to add better error handling
         async function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            bookingId = urlParams.get('booking_id');
-            accessToken = urlParams.get('token');
-
-            if (!bookingId || !accessToken) {
-                showError('Ogiltig länk. Kontrollera att du använder länken från ditt mail.');
-                return;
-            }
-
             try {
+                const urlParams = new URLSearchParams(window.location.search);
+                bookingId = urlParams.get('booking_id');
+                accessToken = urlParams.get('token');
+
+                if (!bookingId || !accessToken) {
+                    showError('Ogiltig länk. Kontrollera att du använder länken från ditt mail.');
+                    return;
+                }
+
                 const response = await fetch(
                     `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
                     {
                         method: 'GET',
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Origin': 'http://127.0.0.1:5500'
+                        },
+                        credentials: 'include'
                     }
                 );
 
@@ -569,10 +587,13 @@
                 }
 
                 showBookingForm();
+
             } catch (error) {
-                showError(error.message);
+                showError(error.message || 'Ett fel uppstod vid hämtning av bokningen');
+                console.error('Initialization error:', error);
             }
         }
+
 
 
         function showCurrentBooking() {
@@ -605,76 +626,39 @@
     `;
         }
 
-        class BookingFlow {
-            constructor() {
-                this.currentStep = 1;
-                this.totalSteps = 3;
+        function showBookingForm() {
+            // Hide loading and error messages
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
 
-                // Initialize everything after we define the methods
-                this.init();
-            }
+            // Show the booking form
+            const bookingForm = document.getElementById('bookingForm');
+            bookingForm.style.display = 'block';
 
-            init() {
-                // Initialize calendar first
-                const calendarContainer = document.createElement('div');
-                calendarContainer.id = 'calendar-container';
-                const formGroup = document.querySelector('.booking-section .form-group');
-                formGroup.appendChild(calendarContainer);
+            // Show current booking details
+            showCurrentBooking();
 
-                // Create calendar instance
-                this.calendar = new BookingCalendar(calendarContainer, loadTimeSlots);
-
-                // Now initialize event listeners after calendar exists
-                this.initializeEventListeners();
-            }
-
-            initializeEventListeners() {
-                // Listen for date selection via event delegation from the calendar container
-                document.querySelector('#calendar-container').addEventListener('click', (e) => {
-                    if (e.target.classList.contains('calendar-day') && !e.target.disabled) {
-                        this.handleDateSelection(e.target.dataset.date);
-                    }
-                });
-
-                const timeSlots = document.querySelector('#timeSlots');
-                timeSlots.addEventListener('click', (e) => {
-                    if (e.target.closest('.time-slot')) {
-                        this.handleTimeSelection(e.target.closest('.time-slot'));
-                    }
-                });
-            }
-
-            handleDateSelection(date) {
-                currentTimeSlot = null; // Add this line here
-                // Add active to time slots section
-                const timeSlotsSection = document.querySelector('#times');
-                timeSlotsSection.classList.add('visible');
-
-                // Show time slots section
-                const timeSlots = document.querySelector('.time-slots');
-                timeSlots.classList.add('visible');
-
-                // Scroll to time slots
-                timeSlots.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                // Load time slots
-                loadTimeSlots(date);
-            }
-
-            handleTimeSelection(timeSlotElement) {
-                // Show ticket section
-                const ticketSection = document.querySelector('#tickets');
-                ticketSection.classList.add('visible');
-
-                // Scroll to ticket section
-                ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                // Update available spots
-                currentAvailableSpots = parseInt(timeSlotElement.dataset.availableSpots);
-
-            }
-
+            // Initialize the calendar
+            const calendar = new BookingCalendar(document.getElementById('calendar-container'));
         }
+
+        // Add error handling function
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Add message display function
+        function showMessage(message) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.style.display = 'block';
+            messageContainer.innerHTML = message;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
 
         class BookingFlow {
             constructor() {
@@ -715,11 +699,6 @@
                     }
                 });
 
-                // Listen for ticket changes to enable/disable continue button
-                const ticketSection = document.querySelector('.ticket-section');
-                ticketSection.addEventListener('change', () => {
-                    this.validateTicketSelection();
-                });
             }
 
             handleDateSelection(date) {
@@ -755,52 +734,52 @@
                 await this.fetchAvailableDates();
             }
 
+            // Update fetchAvailableDates in BookingCalendar class
             async fetchAvailableDates() {
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
                     // Get first and last day of the month
-                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
+                    const startOfMonth = new Date(year, month - 1, 1);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
-                    // Create cutoff time 60 minutes from now
+                    // Create cutoff time 24 hours from now for rebooking requirement
                     const cutoffTime = new Date();
-                    cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
-
-                    // Use the later of startOfMonth or cutoffTime ONLY if we're in current month
-                    const now = new Date();
-                    const isCurrentMonth = now.getMonth() === startOfMonth.getMonth() &&
-                        now.getFullYear() === startOfMonth.getFullYear();
-                    const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
+                    cutoffTime.setHours(cutoffTime.getHours() + 24);
 
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
-                        .select('start_time, total_spots, available_spots')
-                        .gte('start_time', queryStartTime.toISOString())
-                        .lt('start_time', endOfMonth.toISOString());
+                        .select('*')
+                        .gte('start_time', cutoffTime.toISOString())
+                        .lt('start_time', endOfMonth.toISOString())
+                        .order('start_time');
 
                     if (error) throw error;
 
                     const dateAvailability = {};
                     slots?.forEach(slot => {
-                        const date = new Date(slot.start_time);
-                        const dateStr = date.toISOString().split('T')[0];
+                        // Only consider slots that have enough spots for the booking
+                        if (slot.available_spots >= totalRequired &&
+                            (!currentBooking.full_day || slot.allow_full_day)) {
+                            const date = new Date(slot.start_time);
+                            const dateStr = date.toISOString().split('T')[0];
 
-                        if (!dateAvailability[dateStr]) {
-                            dateAvailability[dateStr] = {
-                                totalSpots: 0,
-                                availableSpots: 0
-                            };
+                            if (!dateAvailability[dateStr]) {
+                                dateAvailability[dateStr] = {
+                                    totalSpots: 0,
+                                    availableSpots: 0,
+                                    allowsFullDay: slot.allow_full_day
+                                };
+                            }
+                            dateAvailability[dateStr].totalSpots += slot.total_spots;
+                            dateAvailability[dateStr].availableSpots += slot.available_spots;
                         }
-                        dateAvailability[dateStr].totalSpots += slot.total_spots;
-                        dateAvailability[dateStr].availableSpots += slot.available_spots;
                     });
 
                     this.availableDates = dateAvailability;
                     this.updateAvailableDays();
-
-                    return slots?.some(slot => slot.available_spots > 0) || false;
+                    return Object.keys(dateAvailability).length > 0;
                 } catch (error) {
                     console.error('Error fetching available dates:', error);
                     return false;
@@ -997,9 +976,7 @@
                     currentTimeSlot = null;  // Clear the current time slot
 
                     this.selectedDate = dateStr;
-                    clearTicketSelections();
                     loadTimeSlots(dateStr);
-                    updateTicketButtonStates();  // Update button states after clearing time slot
                 }
             }
 
@@ -1066,6 +1043,39 @@
             }
         }
 
+        function selectTimeSlot(element) {
+            if (element.classList.contains('disabled')) return;
+
+            // Remove selected class from all time slots
+            document.querySelectorAll('.time-slot').forEach(slot =>
+                slot.classList.remove('selected'));
+
+            // Add selected class to clicked slot
+            element.classList.add('selected');
+
+            // Update selected time slot ID
+            selectedTimeSlot = element.dataset.slotId;
+
+            // Show confirm section
+            document.getElementById('confirmSection').style.display = 'block';
+        }
+
+        // Simplified event listener initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remove duplicate call to init()
+            init();
+
+            // Initialize time slot click handler
+            document.querySelector('#timeSlots').addEventListener('click', (e) => {
+                const timeSlot = e.target.closest('.time-slot');
+                if (timeSlot && !timeSlot.classList.contains('disabled')) {
+                    selectTimeSlot(timeSlot);
+                }
+            });
+
+            // Initialize confirm button handler
+            document.getElementById('confirmRebookingBtn').addEventListener('click', confirmRebooking);
+        });
 
 
         async function confirmRebooking() {
@@ -1076,10 +1086,18 @@
 
             try {
                 const response = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
+                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook`,
                     {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Origin': 'http://127.0.0.1:5500'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            time_slot_id: selectedTimeSlot,
+                            access_token: accessToken
+                        })
                     }
                 );
 
@@ -1094,19 +1112,11 @@
                 }, 3000);
 
             } catch (error) {
-                showError(error.message);
+                showError(error.message || 'Ett fel uppstod vid ombokning');
+                console.error('Rebooking error:', error);
             }
         }
-
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', () => {
-            init();
-            document.getElementById('confirmRebookingBtn').addEventListener('click', confirmRebooking);
-        });
     </script>
 </body>
 
 </html>
-
-document.getElementById('confirmSection').style.display = 'block';

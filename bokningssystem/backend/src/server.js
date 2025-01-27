@@ -24,6 +24,8 @@ const corsOptions = {
     origin: [
         'https://aventyrsupplevelser.com',
         'https://aventyrsupplevelsergithubio-testing.up.railway.app',
+        'http://127.0.0.1:5500',      
+        'http://localhost:5500'    
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'QuickPay-Checksum-Sha256'],
