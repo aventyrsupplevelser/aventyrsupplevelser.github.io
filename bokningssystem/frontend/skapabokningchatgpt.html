@@ -532,14 +532,11 @@
         /* The "checkmark" box (the custom drawn box) */
         .custom-checkbox .checkmark {
             width: 24px;
-            /* size of the box */
             height: 24px;
             border: 2px solid #888;
-            /* default border color */
             border-radius: 4px;
-            /* optional: slightly rounded corners */
-            margin-right: 10px;
-            /* space between box and text */
+            margin-right: 15px;
+            margin-top: -2px !important;
             background-color: #fff;
             transition: background-color 0.2s, border-color 0.2s;
             box-sizing: border-box;
@@ -570,14 +567,12 @@
         .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
             content: "";
             position: absolute;
-            left: 7px;
-            top: 3px;
+            left: 6px;
+            top: 2px;
             width: 6px;
             height: 12px;
             border: solid #fff;
-            /* White check */
-            border-width: 0 2px 2px 0;
-            /* make a "tick" shape */
+            border-width: 0 2.5px 2.5px 0;
             transform: rotate(45deg);
         }
     </style>
