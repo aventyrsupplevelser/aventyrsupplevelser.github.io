@@ -7,6 +7,7 @@
     <title>Boka om tid - Sörsjön</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         body {
             font-family: "Josefin Sans", sans-serif;
@@ -15,41 +16,573 @@
             padding: 20px;
         }
 
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 50px;
+        }
+
+
+        .time-slots {
+            display: none;
+            max-width: 600px;
+            margin: 20px auto 0px;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 10px;
+            font-size: 1.3em;
+        }
+
+        .time-slots.visible {
+            display: grid;
+        }
+
+        .ticket-section {
+            padding-top: 0px;
+            max-width: 600px;
+            margin: 20px auto 0px;
+        }
+
+        .ticket-section.visible {
+            display: block;
+        }
+
+        .nav-buttons {
+            display: none;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-buttons.visible {
+            display: flex;
+        }
+
+        /* Optional: Add smooth transitions */
+        #times,
+        #tickets {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #times.visible,
+        #tickets.visible {
+            opacity: 1;
+        }
+
+
+        .booking-section.active {
+            display: block;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 20px 0;
+        }
+
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-indicator.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step-indicator.completed {
+            background: #45a049;
+            color: white;
+        }
+
+        .step-line {
+            flex-grow: 1;
+            height: 2px;
+            background: #f0f0f0;
+            margin: 0 10px;
+            margin-top: 15px;
+        }
+
+        .step-line.completed {
+            background: #45a049;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .calendar-container {
+            font-family: "Josefin Sans", sans-serif;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 61px);
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+            padding: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: auto;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            /* All dates start as grey */
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-family: "josefin sans";
+            padding-top: 12px;
+        }
+
+        .calendar-day:disabled {
+            background-color: #f0f0f0;
+            color: #676767;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.available {
+            background-color: rgb(173, 240, 159);
+            color: #1a1a1a;
+        }
+
+        .calendar-day.selected {
+            border: 2px solid #5a5a5a;
+        }
+
+        .calendar-legend {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .legend-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+        .legend-item span {
+            padding: 3px 0px 0px 0px;
+        }
+
+        .booking-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+        }
+
+        label span {
+            font-size: 0.6em;
+            color: #666;
+            line-height: 1.3em !important;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea[type="comment"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1.5px solid #515151;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .time-slot {
+            padding: 12px 12px 7px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .time-slot.selected {
+            border: 2px solid rgb(90, 90, 90);
+        }
+
+        .ticket-selector {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            padding: 14px 10px 9px;
+        }
+
+        .ticket-selector label {
+            width: 235px;
+        }
+
+        .ticket-selector div {
+            font-weight: 700;
+        }
+
+        .ticket-selector select {
+            width: 80px;
+        }
+
+        button {
+            color: rgb(50, 50, 50);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            background: rgb(246, 244, 221);
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         .error {
             color: red;
-            padding: 10px;
-            margin: 10px 0;
+            background-color: #ffe6e6;
+            /* light red background */
             border: 1px solid red;
-            border-radius: 4px;
+            padding: 14px 14px 9px;
+            margin-top: 10px;
+            font-size: 1.0em;
+            display: none;
+            border-radius: 3px;
+            width: 300px;
+            line-height: 1.4em;
         }
 
         .success {
             color: green;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid green;
+            margin-top: 5px;
+        }
+
+        #addonSection {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        #backButton,
+        #proceedButton {
+            font-size: 1.5em;
+        }
+
+        #backButton {
+            display: none;
+            /* Hidden by default */
+        }
+
+        #proceedButton {
+            display: none;
+            /* Hidden initially */
+            margin-left: auto;
+            /* Push to right */
+        }
+
+        #bookingForm {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 20px;
+            width: 129px;
+            margin-top: -5px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .quantity-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .quantity-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .quantity {
+            min-width: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: 500;
+            padding: 8px 10px 3px;
+            border: 1.5px solid rgb(90, 90, 90);
+            border-radius: 3px;
+        }
+
+        #continueToPaymentBtn.disabled {
+            background: rgb(210, 210, 210);
+            opacity: 0.5;
+        }
+
+        .btn-cancel {
+            display: none !important;
+        }
+
+        #customerbox {
+            display: grid;
+            grid-template-columns: 250px 250px;
+            gap: 0px 40px;
+        }
+
+        /* Add this inside your existing <style> tag */
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            height: 290px;
+            background: #f8f8f8;
             border-radius: 4px;
+            font-family: "Josefin Sans", sans-serif;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #paymentButtons {
+            display: flex;
+            flex-direction: column;
+        }
+
+        button img {
+            height: 40px;
+        }
+
+        #paymentButtons button {
+            display: flex;
+            justify-content: space-between;
+            background: rgb(244, 244, 231);
+            align-items: center;
+            width: 300px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border: 1.5px solid rgb(97, 97, 97);
+            margin-bottom: 20px;
+            font-family: inherit;
+            transition: 0.5s;
+        }
+
+        #paymentButtons button:hover {
+            background: rgb(243, 243, 176);
+            transition: 0.5s;
+        }
+
+        #paymentButtons button:focus {
+            background: rgb(189, 237, 182);
+
+        }
+
+        #paymentButtons span {
+            padding-top: 4px;
+        }
+
+        #bookingSummaryFinal {
+            margin-top: 20px;
+        }
+
+        #bookingSummaryFinal p {
+            margin-block-start: 12px;
+            margin-block-end: 12px;
         }
     </style>
 </head>
 
 <body>
+    <div id="messageContainer"
+        style="display: none; margin: 40px auto; width: fit-content; padding: 20px; text-align: center;"></div>
+
     <div id="loading">Verifierar bokning...</div>
-    <div id="error" style="display: none;" class="error"></div>
+    <div id="error" style="display: none;"></div>
+
     <div id="bookingForm" style="display: none;">
         <h2>Boka om tid</h2>
-        <div id="currentBooking"></div>
-        <div id="timeSelection">
-            <h3>Välj ny tid</h3>
-            <div id="calendar"></div>
-            <div id="timeSlots"></div>
+
+        <!-- Current booking info -->
+        <div id="currentBooking">
+            <h3>Din nuvarande bokning</h3>
+            <div id="currentBookingDetails"></div>
+        </div>
+
+        <br><br>
+        <div id="newBookingSection">
+            <div style="background: yellow; display: inline;">Välj en ny dag:</div>
+            <div id="calendar-container"></div>
+
+            <div id="times">
+                <div style="background: yellow; display: inline;">Välj en ny tid:</div>
+                <div class="time-slots" id="timeSlots"></div>
+                <div id="spotsLeft"></div>
+            </div>
+
+            <div id="confirmSection" style="display: none;">
+                <button type="button" id="confirmRebookingBtn">Bekräfta ombokning</button>
+            </div>
         </div>
     </div>
 
     <script>
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
         let bookingId;
         let accessToken;
         let currentBooking;
+        let selectedTimeSlot = null;
+        const totalRequired = 0; // Will be set based on current booking
+
+        class BookingCalendar {
+            constructor(container) {
+                this.container = container;
+                this.selectedDate = null;
+                this.availableDates = {};
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.init();
+            }
+
+            async init() {
+                this.render();
+                await this.fetchAvailableDates();
+            }
+
+            async fetchAvailableDates() {
+                try {
+                    const year = this.currentMonth.getFullYear();
+                    const month = this.currentMonth.getMonth() + 1;
+                    const startOfMonth = new Date(year, month - 1, 1);
+                    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+                    const cutoffTime = new Date();
+                    cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
+
+                    const { data: slots, error } = await supabaseClient
+                        .from('time_slots')
+                        .select('start_time, total_spots, available_spots, allow_full_day')
+                        .gte('start_time', cutoffTime.toISOString())
+                        .lt('start_time', endOfMonth.toISOString());
+
+                    if (error) throw error;
+
+                    const dateAvailability = {};
+                    slots?.forEach(slot => {
+                        // Only consider slots that have enough available spots and match full_day requirement
+                        if (slot.available_spots >= totalRequired &&
+                            (!currentBooking.full_day || slot.allow_full_day)) {
+                            const date = new Date(slot.start_time);
+                            const dateStr = date.toISOString().split('T')[0];
+
+                            if (!dateAvailability[dateStr]) {
+                                dateAvailability[dateStr] = {
+                                    totalSpots: 0,
+                                    availableSpots: 0,
+                                    allowsFullDay: slot.allow_full_day
+                                };
+                            }
+                            dateAvailability[dateStr].totalSpots += slot.total_spots;
+                            dateAvailability[dateStr].availableSpots += slot.available_spots;
+                        }
+                    });
+
+                    this.availableDates = dateAvailability;
+                    this.updateAvailableDays();
+                } catch (error) {
+                    console.error('Error fetching available dates:', error);
+                }
+            }
+
+            // ... rest of calendar methods from your main booking page ...
+        }
 
         async function init() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -62,21 +595,21 @@
             }
 
             try {
-                // Fetch booking details
                 const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}`, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Kunde inte hitta bokningen');
-                }
+                if (!response.ok) throw new Error('Kunde inte hitta bokningen');
 
                 currentBooking = await response.json();
 
-                // Check if rebooking is still allowed (24h before start time)
+                // Calculate total required spots
+                totalRequired = currentBooking.adult_quantity +
+                    currentBooking.youth_quantity +
+                    currentBooking.kid_quantity;
+
+                // Check if rebooking is still allowed
                 const bookingTime = new Date(currentBooking.start_time);
                 const now = new Date();
                 const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
@@ -91,19 +624,7 @@
             }
         }
 
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function showBookingForm() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('bookingForm').style.display = 'block';
-
-            // Show current booking details
-            const currentBookingDiv = document.getElementById('currentBooking');
+        function showCurrentBooking() {
             const bookingDate = new Date(currentBooking.start_time).toLocaleDateString('sv-SE', {
                 day: 'numeric',
                 month: 'long',
@@ -115,24 +636,120 @@
                 hour12: false
             });
 
-            currentBookingDiv.innerHTML = `
-                <h3>Nuvarande bokning</h3>
-                <p>Datum: ${bookingDate}</p>
-                <p>Tid: ${bookingTime}</p>
-                <p>Antal personer: ${currentBooking.adult_quantity + currentBooking.youth_quantity + currentBooking.kid_quantity}</p>
+            document.getElementById('currentBookingDetails').innerHTML = `
+                <p>Datum: <strong>${bookingDate}</strong></p>
+                <p>Tid: <strong>${bookingTime}</strong></p>
+                <p>Antal personer:</p>
+                ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
+                ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
+                ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
+                ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
             `;
-
-            // Initialize calendar and time slots
-            initializeCalendar();
         }
 
-        // Add calendar and time slot selection functionality similar to your main booking page
-        function initializeCalendar() {
-            // Add your calendar initialization code here
-            // You can reuse much of the code from your main booking page
+        async function loadTimeSlots(dateStr) {
+            try {
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+                const cutoffTime = new Date();
+                cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
+
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select('*')
+                    .gte('start_time', cutoffTime.toISOString())
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
+                    .order('start_time');
+
+                if (error) throw error;
+
+                document.getElementById('timeSlots').innerHTML = slots
+                    .filter(slot =>
+                        slot.available_spots >= totalRequired &&
+                        (!currentBooking.full_day || slot.allow_full_day)
+                    )
+                    .map(slot => {
+                        const localTime = new Date(slot.start_time);
+                        return `
+                            <div class="time-slot"
+                                 onclick="selectTimeSlot(this)"
+                                 data-slot-id="${slot.id}"
+                                 data-available-spots="${slot.available_spots}">
+                                ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                        `;
+                    })
+                    .join('') || '<p>Inga lediga tider detta datum.</p>';
+
+            } catch (error) {
+                console.error('Error loading time slots:', error);
+                document.getElementById('timeSlots').innerHTML =
+                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
+            }
         }
 
-        init();
+        function selectTimeSlot(element) {
+            document.querySelectorAll('.time-slot').forEach(slot =>
+                slot.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedTimeSlot = element.dataset.slotId;
+            document.getElementById('confirmSection').style.display = 'block';
+        }
+
+        async function confirmRebooking() {
+            if (!selectedTimeSlot) {
+                showError('Välj en ny tid först');
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            access_token: accessToken,
+                            time_slot_id: selectedTimeSlot
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to update booking');
+                }
+
+                showMessage('Din bokning har ombokats! Ett bekräftelsemail skickas inom kort.');
+                setTimeout(() => {
+                    window.location.href = 'https://aventyrsupplevelser.com';
+                }, 3000);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showMessage(message) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.style.display = 'block';
+            messageContainer.innerHTML = message;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            document.getElementById('confirmRebookingBtn').addEventListener('click', confirmRebooking);
+        });
     </script>
 </body>
 
