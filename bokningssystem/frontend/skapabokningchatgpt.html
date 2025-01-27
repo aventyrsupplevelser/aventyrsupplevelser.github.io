@@ -502,6 +502,84 @@
         .rebooking-switch input:checked+.slider::before {
             transform: translateX(25px);
         }
+
+        /* Wrap everything in a label so we can click the text to toggle */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            /* show pointer on hover */
+            font-size: 1em;
+            /* inherit or set your label text size */
+            user-select: none;
+            /* prevent text highlight on double-click */
+            position: relative;
+            /* for containing absolutely positioned input */
+        }
+
+        /* Hide the native checkbox */
+        .custom-checkbox input[type="checkbox"] {
+            position: absolute;
+            /* remove it from the layout flow */
+            opacity: 0;
+            /* make it invisible */
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        /* The "checkmark" box (the custom drawn box) */
+        .custom-checkbox .checkmark {
+            width: 24px;
+            /* size of the box */
+            height: 24px;
+            border: 2px solid #888;
+            /* default border color */
+            border-radius: 4px;
+            /* optional: slightly rounded corners */
+            margin-right: 10px;
+            /* space between box and text */
+            background-color: #fff;
+            transition: background-color 0.2s, border-color 0.2s;
+            box-sizing: border-box;
+            /* make sure border is included in total size */
+            position: relative;
+            /* so we can position the checkmark pseudo-element */
+        }
+
+        /* Hover effect: slightly change border color */
+        .custom-checkbox:hover .checkmark {
+            border-color: #555;
+            /* or any color you like */
+        }
+
+        /* Focus ring if the checkbox is tabbed to */
+        .custom-checkbox input[type="checkbox"]:focus+.checkmark {
+            box-shadow: 0 0 3px 2px rgba(100, 150, 250, 0.5);
+        }
+
+        /* When checked, change the background & border color */
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+            background-color: #4CAF50;
+            /* "checked" color */
+            border-color: #4CAF50;
+        }
+
+        /* Create the actual checkmark when checked (white tick) */
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid #fff;
+            /* White check */
+            border-width: 0 2px 2px 0;
+            /* make a "tick" shape */
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 
@@ -646,10 +724,10 @@
             10px; font-size: 1.3em; margin-bottom: 30px;">
                 </div>
                 <div class="form-group" style="margin-bottom: 30px; font-size: 1.3em;">
-                    <label>
-                        <input type="checkbox" id="termsCheckbox" required>
-                        Jag accepterar <a href="http://aventyrsupplevelser.com/reglerochvillkor">regler och
-                            bokningsvillkor</a>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="termsCheckbox">
+                        <span class="checkmark"></span>
+                        Jag accepterar regler och villkor
                     </label>
                     <div id="termsError" class="error" style="display: none;">
                         Du måste acceptera regler och villkor innan du kan fortsätta.
