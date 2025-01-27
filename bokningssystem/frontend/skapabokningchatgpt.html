@@ -552,14 +552,14 @@
                     </div>
 
 
-
-                    <div id="fulldaySection">
-                        <br><br>
-                        <div style="background: yellow; display: inline;">Välj antal som vill förlänga tiden:</div>
+                    <br><br>
+                    <div>
+                        <div style="background: yellow; display: inline;" class="fulldaySection">Välj antal som vill
+                            förlänga tiden:</div>
                         <br><br>
 
                         <!-- Full day extension -->
-                        <div class="ticket-selector">
+                        <div class="ticket-selector fulldaySection">
                             <label>Heldag (till 17.00)</label>
                             <div>100 kr</div>
                             <div class="quantity-selector">
@@ -1133,7 +1133,7 @@
             maxAvailableSpots = parseInt(element.dataset.availableSpots);
 
             // Show/hide full day section based on allows_fullday attribute
-            const fulldaySection = document.getElementById('fulldaySection');
+            const fulldaySection = document.getElementsByClassName('fulldaySection');
             const allowsFullDay = element.dataset.allowsFullday === 'true';
 
             if (fulldaySection) {
