@@ -133,46 +133,6 @@ function flattenParams(params, result = {}, path = []) {
     return result;
 }
 
-// Updated verification middleware
-function verifyQuickPayCallback(req, res, next) {
-    try {
-        const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
-        
-        if (!quickpaySignature) {
-            console.error('No QuickPay signature found in callback');
-            return res.status(401).send('No signature');
-        }
-
-        // The body should be a Buffer at this point
-        const rawBody = req.body;
-        
-        if (!Buffer.isBuffer(rawBody)) {
-            console.error('Expected raw body to be Buffer');
-            return res.status(400).send('Invalid body format');
-        }
-
-        // Calculate signature using the raw buffer
-        const calculatedSignature = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(rawBody)
-            .digest('hex');
-
-        if (quickpaySignature !== calculatedSignature) {
-            console.error('Invalid QuickPay signature');
-            console.log('Received:', quickpaySignature);
-            console.log('Calculated:', calculatedSignature);
-            return res.status(401).send('Invalid signature');
-        }
-
-        // Parse the raw body as JSON for the next middleware
-        req.body = JSON.parse(rawBody.toString('utf8'));
-        next();
-    } catch (error) {
-        console.error('Error in QuickPay verification:', error);
-        res.status(500).send('Verification error');
-    }
-}
-
 // Update your signin route to be more explicit
 router.post('/signin', async (req, res) => {
     console.log('Starting signin process...');
@@ -684,53 +644,73 @@ router.post('/generate-booking-number', async (req, res) => {
     }
 });
 
-
-
-// Enhanced payment callback with timing
-router.post('/payment-callback', express.json(), paymentTimingMiddleware, async (req, res) => {
-    req.logCheckpoint('Received payment callback');
-    
-    // Send immediate response
-    res.status(200).send('OK');
-
+const verifyQuickPayCallback = (req, res, next) => {
     try {
         const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
+        
         if (!quickpaySignature) {
-            req.logCheckpoint('Missing QuickPay signature');
-            return;
+            console.error('No QuickPay signature found in callback');
+            return res.status(401).send('No signature');
         }
 
+        const rawBody = req.body;
+        if (!Buffer.isBuffer(rawBody)) {
+            console.error('Expected raw body to be Buffer');
+            return res.status(400).send('Invalid body format');
+        }
+
+        const calculatedSignature = crypto
+            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
+            .update(rawBody)
+            .digest('hex');
+
+        if (quickpaySignature !== calculatedSignature) {
+            console.error('Invalid QuickPay signature');
+            console.log('Received:', quickpaySignature);
+            console.log('Calculated:', calculatedSignature);
+            return res.status(401).send('Invalid signature');
+        }
+
+        // Parse the raw body for the next middleware
+        req.body = JSON.parse(rawBody.toString('utf8'));
+        next();
+    } catch (error) {
+        console.error('Error in QuickPay verification:', error);
+        res.status(500).send('Verification error');
+    }
+};
+
+
+
+router.post('/payment-callback', 
+    rawBodyParser,           // Parse raw body for signature verification
+    paymentTimingMiddleware, // Add timing logs
+    verifyQuickPayCallback,  // Verify QuickPay signature
+    async (req, res) => {
+        req.logCheckpoint('Received payment callback');
+        
+        // Send immediate response
+        res.status(200).send('OK');
+
+        // Process payment asynchronously
         req.logCheckpoint('Processing payment asynchronously');
-        processPaymentCallback(req.body, quickpaySignature).catch(error => {
+        processPaymentCallback(req.body).catch(error => {
             console.error('Error processing payment callback:', error);
         });
-
-    } catch (error) {
-        req.logCheckpoint('Error in payment callback');
-        console.error('Error in payment callback:', error);
     }
-});
+);
 
-async function processPaymentCallback(payment, signature) {
+// Process the payment callback
+async function processPaymentCallback(payment) {
     const startTime = Date.now();
     console.log('Starting payment callback processing');
 
     try {
-        const calculatedSignature = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(JSON.stringify(payment))
-            .digest('hex');
-
-        console.log(`Signature verification took: ${Date.now() - startTime}ms`);
-
-        if (signature !== calculatedSignature) {
-            console.error('Invalid QuickPay signature');
-            return;
-        }
-
         if (payment.accepted && payment.state === 'processed') {
             const updateStart = Date.now();
-            await supabase
+            
+            // Update booking status
+            const { data: updatedBooking, error: updateError } = await supabase
                 .from('bookings')
                 .update({
                     status: 'confirmed',
@@ -740,9 +720,30 @@ async function processPaymentCallback(payment, signature) {
                     payment_metadata: payment,
                     payment_completed_at: new Date().toISOString()
                 })
-                .eq('booking_number', payment.order_id);
+                .eq('booking_number', payment.order_id)
+                .select('*, time_slots(*)')
+                .single();
+
+            if (updateError) {
+                console.error('Error updating booking:', updateError);
+                return;
+            }
 
             console.log(`Database update took: ${Date.now() - updateStart}ms`);
+
+            // Send confirmation email
+            if (updatedBooking) {
+                const emailStart = Date.now();
+                try {
+                    await EmailService.sendBookingConfirmation({
+                        ...updatedBooking,
+                        start_time: updatedBooking.time_slots.start_time
+                    });
+                    console.log(`Email sending took: ${Date.now() - emailStart}ms`);
+                } catch (emailError) {
+                    console.error('Error sending confirmation email:', emailError);
+                }
+            }
         }
 
         console.log(`Total callback processing took: ${Date.now() - startTime}ms`);
