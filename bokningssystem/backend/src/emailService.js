@@ -4,6 +4,27 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Initialize SendGrid with API key
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL;
+const SENDGRID_BOOKING_TEMPLATE_ID = process.env.SENDGRID_BOOKING_TEMPLATE_ID;
+
+// Verify required environment variables
+if (!SENDGRID_API_KEY) {
+    console.error('Missing SENDGRID_API_KEY environment variable');
+    throw new Error('SendGrid API key is required');
+}
+
+if (!SENDGRID_FROM_EMAIL) {
+    console.error('Missing SENDGRID_FROM_EMAIL environment variable');
+    throw new Error('SendGrid sender email is required');
+}
+
+if (!SENDGRID_BOOKING_TEMPLATE_ID) {
+    console.error('Missing SENDGRID_BOOKING_TEMPLATE_ID environment variable');
+    throw new Error('SendGrid booking template ID is required');
+}
+
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 class EmailService {
