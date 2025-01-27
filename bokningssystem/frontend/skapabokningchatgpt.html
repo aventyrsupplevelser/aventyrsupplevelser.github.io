@@ -1376,9 +1376,7 @@
         function showMessage(message) {
             const messageContainer = document.getElementById('messageContainer');
             messageContainer.style.display = 'block';
-            messageContainer.textContent = message;
-
-            // Scroll to top to ensure message is visible
+            messageContainer.innerHTML = message; // This renders the HTML tags properly
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1407,7 +1405,7 @@
             });
 
             // Show expired session message
-            showMessage('Din bokningssession har gått ut. \n\n Vänligen börja om din bokning.');
+            showMessage('Din bokningssession har gått ut. <br><br> Vänligen börja om din bokning.');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
