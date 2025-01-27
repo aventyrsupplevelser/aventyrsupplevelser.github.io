@@ -775,10 +775,14 @@
                     const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
+                    // Create cutoff time 60 minutes from now
+                    const cutoffTime = new Date();
+                    cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
+
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('start_time, total_spots, available_spots')
-                        .gte('start_time', startOfMonth.toISOString())
+                        .gte('start_time', cutoffTime.toISOString()) // Use cutoff time instead of startOfMonth
                         .lte('start_time', endOfMonth.toISOString());
 
                     if (error) throw error;
