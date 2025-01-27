@@ -770,6 +770,15 @@
 
             async fetchAvailableDates() {
                 try {
+
+                    // Add a counter to prevent infinite recursion
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) { // Don't look more than 12 months ahead
+                        console.log('No available slots found in next 12 months');
+                        this._skipCount = 0;
+                        return;
+                    }
+
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
                     const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
@@ -886,14 +895,16 @@
             }
 
             attachEventListeners() {
-                this.container.querySelector('#prevMonth').addEventListener('click', () => {
+                this.container.querySelector('#prevMonth').addEventListener('click', async () => {
                     this.currentMonth.setMonth(this.currentMonth.getMonth() - 1);
-                    this.init();
+                    this.render();
+                    await this.fetchAvailableDates(); // This will now auto-skip empty months
                 });
 
-                this.container.querySelector('#nextMonth').addEventListener('click', () => {
+                this.container.querySelector('#nextMonth').addEventListener('click', async () => {
                     this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
-                    this.init();
+                    this.render();
+                    await this.fetchAvailableDates(); // This will now auto-skip empty months
                 });
 
                 this.container.querySelectorAll('.calendar-day').forEach(day => {
