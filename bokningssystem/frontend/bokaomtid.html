@@ -854,26 +854,33 @@
         }
 
         function showCurrentBooking() {
-            const bookingDate = new Date(currentBooking.start_time).toLocaleDateString('sv-SE', {
+            // Get the booking start time from the time_slots object
+            const startTime = currentBooking.time_slots.start_time;
+
+            // Format the date
+            const bookingDate = new Date(startTime);
+            const formattedDate = bookingDate.toLocaleDateString('sv-SE', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
             });
-            const bookingTime = new Date(currentBooking.start_time).toLocaleTimeString('sv-SE', {
+
+            // Format the time
+            const formattedTime = bookingDate.toLocaleTimeString('sv-SE', {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false
             });
 
             document.getElementById('currentBookingDetails').innerHTML = `
-                <p>Datum: <strong>${bookingDate}</strong></p>
-                <p>Tid: <strong>${bookingTime}</strong></p>
-                <p>Antal personer:</p>
-                ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
-                ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
-                ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
-                ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
-            `;
+        <p>Datum: <strong>${formattedDate}</strong></p>
+        <p>Tid: <strong>${formattedTime}</strong></p>
+        <p>Antal personer:</p>
+        ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
+        ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
+        ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
+        ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
+    `;
         }
 
         async function loadTimeSlots(dateStr) {
