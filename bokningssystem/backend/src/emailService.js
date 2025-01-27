@@ -50,28 +50,28 @@ class EmailService {
 
     static async sendBookingConfirmation(booking) {
         try {
-            if (!booking.customer_email) {
-                console.error('Customer email is required');
-                return null;
-            }
-
             // Calculate VAT (6%)
             const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
             const vatRate = 0.06;
             const amountExVat = Math.round(totalAmountInSEK / (1 + vatRate));
             const vatAmount = totalAmountInSEK - amountExVat;
-
+    
+            // Calculate individual sums
+            const adultSum = booking.adult_quantity * 400;
+            const youthSum = booking.youth_quantity * 300;
+            const kidSum = booking.kid_quantity * 200;
+            const fullDaySum = booking.full_day * 100;  // full_day is now a number
+            const rebookingSum = booking.is_rebookable ? 
+                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+    
             // Format payment method for display
             const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
-
+    
             const msg = {
                 to: booking.customer_email,
-                from: {
-                    email: SENDGRID_FROM_EMAIL,
-                    name: 'Sörsjöns Äventyrspark'
-                },
+                from: process.env.SENDGRID_FROM_EMAIL,
                 subject: 'Bokningsbekräftelse - Sörsjöns Äventyrspark',
-                templateId: SENDGRID_BOOKING_TEMPLATE_ID,
+                templateId: process.env.SENDGRID_BOOKING_TEMPLATE_ID,
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
                     customer_name: booking.customer_name,
@@ -84,8 +84,13 @@ class EmailService {
                     adult_quantity: booking.adult_quantity,
                     youth_quantity: booking.youth_quantity,
                     kid_quantity: booking.kid_quantity,
-                    full_day: booking.full_day ? 'Ja' : 'Nej',
-                    is_rebookable: booking.is_rebookable ? 'Ja' : 'Nej',
+                    adult_sum: adultSum,      // New field
+                    youth_sum: youthSum,      // New field
+                    kid_sum: kidSum,          // New field
+                    full_day: booking.full_day,
+                    full_day_sum: fullDaySum, // New field
+                    is_rebookable: booking.is_rebookable,
+                    rebooking_sum: rebookingSum, // New field
                     amount_ex_vat: amountExVat,
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
@@ -94,8 +99,7 @@ class EmailService {
                     special_instructions: booking.comments || ''
                 }
             };
-
-            console.log('Attempting to send confirmation email to:', booking.customer_email);
+    
             const response = await sgMail.send(msg);
             console.log('Confirmation email sent successfully:', response[0].statusCode);
             return response;
@@ -104,10 +108,6 @@ class EmailService {
             if (error.response) {
                 console.error('Error details:', error.response.body);
             }
-            // Log additional debugging information
-            console.error('API Key length:', SENDGRID_API_KEY?.length);
-            console.error('From email:', SENDGRID_FROM_EMAIL);
-            console.error('Template ID:', SENDGRID_BOOKING_TEMPLATE_ID);
             return null;
         }
     }
