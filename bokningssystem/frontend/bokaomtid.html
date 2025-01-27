@@ -582,8 +582,266 @@
                 }
             }
 
-            // ... rest of calendar methods from your main booking page ...
+            render() {
+                this.container.innerHTML = `
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth">&larr;</button>
+                    <h3>${this.getMonthDisplay()}</h3>
+                    <button id="nextMonth">&rarr;</button>
+                </div>
+                <div class="calendar-grid">
+                    ${this.renderWeekdays()}
+                    ${this.renderDays()}
+                </div>
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: ${available}"></div>
+                        <span>Tillgänglig</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: ${fewLeft};"></div>
+                        <span>Få platser kvar</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background-color: ${notAvailable};"></div>
+                        <span>Fullbokat</span>
+                    </div>
+                </div>
+            </div>
+        `;
+                // Add this new code here, after rendering the HTML but before attaching event listeners
+                const now = new Date();
+                const prevMonthButton = this.container.querySelector('#prevMonth');
+                const isCurrentMonth = this.currentMonth.getMonth() === now.getMonth() &&
+                    this.currentMonth.getFullYear() === now.getFullYear();
+
+                if (isCurrentMonth) {
+                    prevMonthButton.disabled = true;
+                    prevMonthButton.style.opacity = '0.5';
+                    prevMonthButton.style.cursor = 'not-allowed';
+                } else {
+                    prevMonthButton.disabled = false;
+                    prevMonthButton.style.opacity = '1';
+                    prevMonthButton.style.cursor = 'pointer';
+                }
+
+                this.attachEventListeners();
+            }
+
+            renderWeekdays() {
+                const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+                return weekdays.map(day =>
+                    `<div class="calendar-weekday">${day}</div>`
+                ).join('');
+            }
+
+            renderDays() {
+                const days = [];
+                let firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                firstDay = firstDay === 0 ? 6 : firstDay - 1;
+                const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
+
+                // Empty cells for days before the first day of month
+                for (let i = 0; i < firstDay; i++) {
+                    days.push('<div></div>');
+                }
+
+                // Add all days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    const isPast = new Date(dateStr) < new Date(new Date().toDateString());
+
+                    days.push(`
+                <button 
+                    type="button"
+                    class="calendar-day" 
+                    data-date="${dateStr}"
+                    ${isPast ? 'disabled' : ''}
+                >${day}</button>
+            `);
+                }
+
+                return days.join('');
+            }
+
+
+
+            attachEventListeners() {
+                this.container.querySelector('#prevMonth').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const now = new Date();
+                    const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
+
+                    // Add infinity check
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) {
+                        this._skipCount = 0;
+                        return;
+                    }
+
+                    const newMonth = new Date(this.currentMonth);
+                    newMonth.setMonth(this.currentMonth.getMonth() - 1);
+
+                    if (newMonth >= currentMonthYear) {
+                        this.currentMonth = newMonth;
+                        this.render();
+                        const hasSlots = await this.fetchAvailableDates();
+                        if (!hasSlots) {
+                            this._skipCount++;
+                            this.container.querySelector('#prevMonth').click();
+                        } else {
+                            this._skipCount = 0;
+                        }
+                    }
+                });
+
+                this.container.querySelector('#nextMonth').addEventListener('click', async (e) => {
+                    e.preventDefault();
+
+                    // Add infinity check
+                    if (!this._skipCount) this._skipCount = 0;
+                    if (this._skipCount > 12) {
+                        this._skipCount = 0;
+                        return;
+                    }
+
+                    this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
+                    this.render();
+                    const hasSlots = await this.fetchAvailableDates();
+                    if (!hasSlots) {
+                        this._skipCount++;
+                        this.container.querySelector('#nextMonth').click();
+                    } else {
+                        this._skipCount = 0;
+                    }
+                });
+
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    day.addEventListener('click', (e) => {
+                        if (!e.target.disabled) {
+                            const dateStr = e.target.dataset.date;
+                            this.selectDate(dateStr);
+                        }
+                    });
+                });
+            }
+
+            updateAvailableDays() {
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    const dateStr = day.dataset.date;
+                    const availability = this.availableDates[dateStr];
+
+                    if (availability) {
+                        const availabilityRatio = availability.availableSpots / availability.totalSpots;
+                        if (availabilityRatio === 0) {
+                            day.style.backgroundColor = notAvailable; // red for full
+                            day.disabled = true;
+                        } else if (availabilityRatio <= 0.5) {
+                            day.style.backgroundColor = fewLeft; // yellow for less than half
+                            day.classList.add('available');
+                        } else {
+                            day.style.backgroundColor = available; // green for more than half
+                            day.classList.add('available');
+                        }
+                    } else {
+                        day.style.backgroundColor = 'rgb(240, 240, 240)'; // grey for not available
+                        day.disabled = true;
+                    }
+                });
+            }
+
+
+            selectDate(dateStr) {
+                if (this.availableDates[dateStr] && this.availableDates[dateStr].availableSpots > 0) {
+                    // Remove selected class from all days
+                    this.container.querySelectorAll('.calendar-day').forEach(day => {
+                        day.classList.remove('selected');
+                    });
+
+                    // Add selected class to clicked day
+                    const selectedButton = this.container.querySelector(`[data-date="${dateStr}"]`);
+                    if (selectedButton) {
+                        selectedButton.classList.add('selected');
+                    }
+
+                    // Clear any selected time slot
+                    document.querySelectorAll('.time-slot').forEach(slot => {
+                        slot.classList.remove('selected');
+                    });
+                    currentTimeSlot = null;  // Clear the current time slot
+
+                    this.selectedDate = dateStr;
+                    clearTicketSelections();
+                    loadTimeSlots(dateStr);
+                    updateTicketButtonStates();  // Update button states after clearing time slot
+                }
+            }
+
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
         }
+
+        async function loadTimeSlots(dateStr) {
+            try {
+                clearTicketSelections();
+
+                // Create start and end of the selected date
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                // Add cutoff time check with 60-minute buffer
+                const cutoffTime = new Date();
+                cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
+
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select('*')
+                    .gte('start_time', cutoffTime.toISOString()) // Filter future slots
+                    .gte('start_time', startOfDay.toISOString()) // Filter selected date start
+                    .lte('start_time', endOfDay.toISOString()) // Filter selected date end
+                    .order('start_time');
+
+                if (error) throw error;
+
+                document.getElementById('timeSlots').innerHTML = slots?.map(slot => {
+                    const localTime = new Date(slot.start_time);
+                    let backgroundColor;
+                    let isSelectable = true;
+
+                    if (slot.available_spots === 0) {
+                        backgroundColor = notAvailable; // red
+                        isSelectable = false;
+                    } else if (slot.available_spots < 10) {
+                        backgroundColor = fewLeft; // yellow
+                    } else {
+                        backgroundColor = available; // green
+                    }
+
+                    return `
+                <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
+                     data-slot-id="${slot.id}"
+                     data-allows-fullday="${slot.allow_full_day}"
+                     data-available-spots="${slot.available_spots}"
+                     data-availability-color="${backgroundColor}"
+                     onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
+                     style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}">
+                    ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+            `;
+                }).join('') || '<p style="min-width: 300px;">Inga lediga tider detta datum. <br><br> Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.</p>';
+
+            } catch (error) {
+                console.error('Error loading time slots:', error);
+                document.getElementById('timeSlots').innerHTML =
+                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
+            }
+        }
+
 
         async function init() {
             const urlParams = new URLSearchParams(window.location.search);
