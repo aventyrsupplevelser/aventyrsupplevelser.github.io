@@ -17,7 +17,7 @@ const updateLimiter = rateLimit({
 
 const rawBodyParser = express.raw({ 
     type: 'application/json',
-    limit: '50mb'  // Adjust if needed
+    limit: '50mb'  // Increase limit if needed
 });
 
 
@@ -644,59 +644,52 @@ router.post('/generate-booking-number', async (req, res) => {
     }
 });
 
-const verifyQuickPayCallback = (req, res, next) => {
-    try {
-        const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
-        
-        if (!quickpaySignature) {
-            console.error('No QuickPay signature found in callback');
-            return res.status(401).send('No signature');
-        }
-
-        const rawBody = req.body;
-        if (!Buffer.isBuffer(rawBody)) {
-            console.error('Expected raw body to be Buffer');
-            return res.status(400).send('Invalid body format');
-        }
-
-        const calculatedSignature = crypto
-            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
-            .update(rawBody)
-            .digest('hex');
-
-        if (quickpaySignature !== calculatedSignature) {
-            console.error('Invalid QuickPay signature');
-            console.log('Received:', quickpaySignature);
-            console.log('Calculated:', calculatedSignature);
-            return res.status(401).send('Invalid signature');
-        }
-
-        // Parse the raw body for the next middleware
-        req.body = JSON.parse(rawBody.toString('utf8'));
-        next();
-    } catch (error) {
-        console.error('Error in QuickPay verification:', error);
-        res.status(500).send('Verification error');
-    }
-};
-
-
-
 router.post('/payment-callback', 
-    rawBodyParser,           // Parse raw body for signature verification
-    paymentTimingMiddleware, // Add timing logs
-    verifyQuickPayCallback,  // Verify QuickPay signature
+    rawBodyParser,           
+    paymentTimingMiddleware, 
     async (req, res) => {
-        req.logCheckpoint('Received payment callback');
+        console.log('----------------------------------------');
+        console.log('Payment callback received');
         
-        // Send immediate response
-        res.status(200).send('OK');
+        try {
+            // Get QuickPay signature
+            const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
+            if (!quickpaySignature) {
+                console.error('Missing QuickPay signature');
+                return res.status(400).send('Missing signature');
+            }
 
-        // Process payment asynchronously
-        req.logCheckpoint('Processing payment asynchronously');
-        processPaymentCallback(req.body).catch(error => {
-            console.error('Error processing payment callback:', error);
-        });
+            // Verify the signature with raw body
+            const calculatedSignature = crypto
+                .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
+                .update(req.body)
+                .digest('hex');
+
+            if (quickpaySignature !== calculatedSignature) {
+                console.error('Invalid signature');
+                return res.status(400).send('Invalid signature');
+            }
+
+            // Parse the raw body after verification
+            const payment = JSON.parse(req.body.toString('utf8'));
+            
+            console.log('Payment data:', {
+                order_id: payment.order_id,
+                state: payment.state,
+                accepted: payment.accepted
+            });
+
+            // Send success response immediately
+            res.status(200).send('OK');
+
+            // Process the payment asynchronously
+            await processPaymentCallback(payment);
+
+        } catch (error) {
+            console.error('Error processing callback:', error);
+            // Still return 200 to prevent retries
+            res.status(200).send('OK');
+        }
     }
 );
 
