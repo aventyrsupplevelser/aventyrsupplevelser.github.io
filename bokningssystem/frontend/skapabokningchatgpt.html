@@ -957,21 +957,20 @@
             }
         }
 
-        async loadTimeSlots(dateStr) {
+        async function loadTimeSlots(dateStr) {
             try {
                 clearTicketSelections();
 
-                const startOfDay = new Date(`${dateStr}T00:00:00`);
                 const endOfDay = new Date(`${dateStr}T23:59:59`);
 
-                // Add cutoff time check here too
+                // Add cutoff time check with 60-minute buffer
                 const cutoffTime = new Date();
                 cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
 
                 const { data: slots, error } = await supabaseClient
                     .from('time_slots')
                     .select('*')
-                    .gte('start_time', cutoffTime.toISOString()) // Use cutoff time
+                    .gte('start_time', cutoffTime.toISOString())
                     .lte('start_time', endOfDay.toISOString())
                     .order('start_time');
 
