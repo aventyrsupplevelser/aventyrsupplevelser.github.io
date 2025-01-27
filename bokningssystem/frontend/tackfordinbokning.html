@@ -63,17 +63,14 @@
                 return;
             }
 
-            console.log('Starting status check for booking number:', bookingNumber);
 
             // Start payment status polling
             const paymentVerified = await startStatusCheck(bookingNumber);
 
             if (paymentVerified) {
                 // Clear booking-related data from localStorage
-                console.log('Clearing localStorage for new bookings...');
                 localStorage.removeItem('bookingData');
                 localStorage.removeItem('pendingBookingNumber');
-                console.log('localStorage after clearing:', localStorage);
             }
         }
 
@@ -83,7 +80,6 @@
                 if (!response.ok) throw new Error('Failed to fetch payment status');
 
                 const data = await response.json();
-                console.log('Payment status response:', data);
 
                 if (data.status === 'completed') {
                     document.querySelector('.loading').style.display = 'none';
