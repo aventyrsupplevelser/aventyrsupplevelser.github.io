@@ -593,7 +593,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             order_id,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancelurl: `${ngrokUrl}/payment-cancelled.html`,
-            callbackurl: `${ngrokUrl}/api/payment-callback`,
+            callbackurl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
             language: 'sv',
             autocapture: '1',
             payment_methods,
