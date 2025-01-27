@@ -1000,4 +1000,51 @@ router.put('/bookings/:id/rebook', updateLimiter, async (req, res) => {
     }
 });
 
+router.get('/bookings/:id/rebook', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const access_token = req.query.token;
+
+        if (!access_token) {
+            return res.status(401).json({ error: 'No access token provided' });
+        }
+
+        // Get booking with access token validation
+        const { data: booking, error: fetchError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('id', id)
+            .eq('access_token', access_token)
+            .single();
+
+        if (fetchError || !booking) {
+            return res.status(401).json({ error: 'Invalid access token or booking not found' });
+        }
+
+        // Check if booking has rebooking permission
+        if (!booking.is_rebookable) {
+            return res.status(403).json({ 
+                error: 'Denna bokning har inte ombokningsgaranti' 
+            });
+        }
+
+        // Check if booking is within 24 hours
+        const bookingTime = new Date(booking.time_slots.start_time);
+        const now = new Date();
+        const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
+
+        if (hoursUntilBooking < 24) {
+            return res.status(400).json({ 
+                error: 'Ombokningar måste göras senast 24 timmar innan bokad tid' 
+            });
+        }
+
+        res.json(booking);
+
+    } catch (error) {
+        console.error('Error fetching booking for rebooking:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export default router;
