@@ -606,7 +606,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         params.checksum = calculateChecksum(params, apiKey);
 
         const formHtml = `
-            <form method="POST" action="https://payment.quickpay.net/framed">
+            <form method="POST" action="https://payment.quickpay.net/framed" target="_top">
                 ${Object.entries(params)
                     .map(([key, value]) => 
                         value ? `<input type="hidden" name="${key}" value="${value}">` : '')

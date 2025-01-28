@@ -1593,7 +1593,7 @@
                 iframe.style.height = '330px';
                 iframe.style.border = 'none';
                 iframe.style.display = 'none';
-                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation');
 
                 paymentContainer.appendChild(iframe);
 
@@ -1610,27 +1610,6 @@
                 // Auto-submit the form inside the iframe if needed
                 const form = iframeDoc.querySelector('form');
                 if (form) form.submit();
-
-                // Poll payment status
-                let attempts = 0;
-                const maxAttempts = 60;
-                const interval = setInterval(async () => {
-                    try {
-                        const resp = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-status/${bookingNumber}`);
-                        const data = await resp.json();
-
-                        if (data.status === 'completed') {
-                            clearInterval(interval);
-                            window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
-                        } else if (++attempts >= maxAttempts) {
-                            clearInterval(interval);
-                            // Payment not completed in the timeframe
-                        }
-                    } catch (err) {
-                        console.error('Error checking payment status:', err);
-                        clearInterval(interval);
-                    }
-                }, 1000);
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
