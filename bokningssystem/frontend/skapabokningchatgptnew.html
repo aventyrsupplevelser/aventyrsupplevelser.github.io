@@ -1028,6 +1028,7 @@
             }
 
             selectDate(dateStr) {
+                document.getElementById('messageContainer').style.display = 'none';
                 // Remove any previously selected
                 this.container.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
 
@@ -1379,7 +1380,6 @@
             };
         }
 
-        // Display final summary in #bookingSummaryFinal
         function displayBookingSummary({ tickets, totals }) {
             try {
                 const summaryEl = document.getElementById('bookingSummaryFinal');
@@ -1388,24 +1388,48 @@
                 const totalRebook = (tickets.adult + tickets.youth + tickets.kid) * PRICES.rebooking;
 
                 summaryEl.innerHTML = `
-              <p id="selectedDateTime">
-                Datum: <span style="font-weight: bold;">${tickets.date || ''}</span>
-                <p>Tid: <span style="font-weight: bold;">${tickets.time || ''}</span></p>
-              </p>
-              <hr>
-              ${tickets.adult ? `<p>Vuxen: ${tickets.adult} st <span style="float: right;">${tickets.adult * PRICES.adult} kr</span></p>` : ''}
-              ${tickets.youth ? `<p>Ungdom: ${tickets.youth} st <span style="float: right;">${tickets.youth * PRICES.youth} kr</span></p>` : ''}
-              ${tickets.kid ? `<p>Barn: ${tickets.kid} st <span style="float: right;">${tickets.kid * PRICES.kid} kr</span></p>` : ''}
-              ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st <span style="float: right;">${tickets.fullday * PRICES.fullday} kr</span></p>` : ''} 
-              ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
-              <hr>
-              <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
-              <hr>
-              <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
-            `;
+      <p id="selectedDateTime">
+        Datum: <span style="font-weight: bold;">${tickets.date || ''}</span>
+        <p>Tid: <span style="font-weight: bold;">${tickets.time || ''}</span></p>
+      </p>
+      <hr>
+      ${tickets.adult ? `<p>Vuxen: ${tickets.adult} st <span style="float: right;">${tickets.adult * PRICES.adult} kr</span></p>` : ''}
+      ${tickets.youth ? `<p>Ungdom: ${tickets.youth} st <span style="float: right;">${tickets.youth * PRICES.youth} kr</span></p>` : ''}
+      ${tickets.kid ? `<p>Barn: ${tickets.kid} st <span style="float: right;">${tickets.kid * PRICES.kid} kr</span></p>` : ''}
+      ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st <span style="float: right;">${tickets.fullday * PRICES.fullday} kr</span></p>` : ''}
+      ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
+      <hr>
+      <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
+      <hr>
+      <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
+
+      <hr>
+      <!-- This is the timer we will update -->
+      <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: green;"></p>
+    `;
             } catch (err) {
                 console.error('Error displaying summary:', err);
             }
+        }
+
+        function updateTimeRemaining() {
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+            const timeRemainingEl = document.getElementById('timeRemaining');
+
+            // If no element or no data, do nothing
+            if (!timeRemainingEl || !bookingData?.expiresAt) {
+                return;
+            }
+
+            const now = Date.now();
+            const diffMs = bookingData.expiresAt - now;
+            if (diffMs <= 0) {
+                // Expired
+                timeRemainingEl.textContent = "Din bokningssession har gått ut.";
+                return;
+            }
+            const diffMinutes = Math.floor(diffMs / (1000 * 60));
+            timeRemainingEl.textContent = `Gör klart din bokning inom ${diffMinutes} minut${diffMinutes !== 1 ? 'er' : ''}.`;
         }
 
         /********************************************
@@ -1423,6 +1447,7 @@
                 // Show customer form section
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
+                customerSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 showSection('paymentButtons', true);
 
                 const dateEl = document.querySelector('.calendar-day.selected');
@@ -1438,10 +1463,19 @@
                     time: selectedTime
                 };
                 const totals = calculateTotal(summaryTickets);
-                displayBookingSummary({ tickets: summaryTickets, totals });
 
                 // Make or update the "pending" booking on the server
+                displayBookingSummary({ tickets: summaryTickets, totals });
+
                 await createOrUpdatePendingBooking(summaryTickets);
+
+                updateTimeRemaining();
+
+                // Optional: Start an interval for every minute
+                if (!window.timeRemainingInterval) {
+                    window.timeRemainingInterval = setInterval(updateTimeRemaining, 60000);
+                }
+
 
             } catch (error) {
                 console.error('Error in handleContinueToPayment:', error);
@@ -1543,12 +1577,16 @@
             </div>
           `;
 
+
             // Validate customer info
             const customerInfo = validateCustomerInfo();
             if (!customerInfo) {
                 paymentContainer.style.display = 'none';
                 return;
             }
+
+            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
 
             try {
                 // Generate a booking number, update booking details, then get payment form
@@ -1672,7 +1710,7 @@
             // Extend local bookingData's expiry
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             if (bookingData) {
-                bookingData.expiresAt = Date.now() + 1 * 10 * 1000;
+                bookingData.expiresAt = Date.now() + 30 * 60 * 1000;
                 localStorage.setItem('bookingData', JSON.stringify(bookingData));
             }
             return response.json();
@@ -1801,6 +1839,7 @@
             clearTicketSelections();
             document.querySelector('#timeSlots').innerHTML = '';
             document.getElementById('times').classList.remove('visible');
+            showSection('tickets', false);
             showSection('customerSection', false);
             showSection('paymentButtons', false);
             showSection('payment-container', false);
