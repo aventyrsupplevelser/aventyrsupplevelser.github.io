@@ -24,16 +24,12 @@
 
 
         .time-slots {
-            display: none;
+            display: grid;
             max-width: 600px;
             margin: 20px auto 0px;
             grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
             font-size: 1.3em;
-        }
-
-        .time-slots.visible {
-            display: grid;
         }
 
         .ticket-section {
@@ -57,14 +53,12 @@
         }
 
         /* Optional: Add smooth transitions */
-        #times,
-        #tickets {
+        #times {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
         }
 
-        #times.visible,
-        #tickets.visible {
+        #times.visible {
             opacity: 1;
         }
 
@@ -703,6 +697,7 @@
 
             handleDateSelection(date) {
                 currentTimeSlot = null; // Add this line here
+                console.log('Selected date!!!:', date);
                 // Add active to time slots section
                 const timeSlotsSection = document.querySelector('#times');
                 timeSlotsSection.classList.add('visible');
@@ -923,6 +918,7 @@
 
                 this.container.querySelectorAll('.calendar-day').forEach(day => {
                     day.addEventListener('click', (e) => {
+                        console.log("Day clicked:", e.target.dataset.date); // <--- Add a log
                         if (!e.target.disabled) {
                             const dateStr = e.target.dataset.date;
                             this.selectDate(dateStr);
@@ -973,9 +969,13 @@
                     document.querySelectorAll('.time-slot').forEach(slot => {
                         slot.classList.remove('selected');
                     });
-                    currentTimeSlot = null;  // Clear the current time slot
+                    selectedTimeSlot = null;  // Use the global variable instead
+
+                    // Hide confirm section when date changes
+                    document.getElementById('confirmSection').style.display = 'none';
 
                     this.selectedDate = dateStr;
+
                     loadTimeSlots(dateStr);
                 }
             }
@@ -990,6 +990,7 @@
 
         async function loadTimeSlots(dateStr) {
             try {
+                console.log('Loading time slots for:', dateStr);
 
                 // Create start and end of the selected date
                 const startOfDay = new Date(`${dateStr}T00:00:00`);
@@ -1007,7 +1008,12 @@
                     .lte('start_time', endOfDay.toISOString()) // Filter selected date end
                     .order('start_time');
 
+                console.log("Slots from Supabase:", slots, "Error:", error); // <-- ADD THIS
+
+
                 if (error) throw error;
+
+
 
                 document.getElementById('timeSlots').innerHTML = slots?.map(slot => {
                     const localTime = new Date(slot.start_time);
@@ -1022,6 +1028,9 @@
                     } else {
                         backgroundColor = available; // green
                     }
+
+                    const timeSlotsSection = document.querySelector('#times');
+                    timeSlotsSection.classList.add('visible');
 
                     return `
                 <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
@@ -1045,7 +1054,7 @@
 
         function selectTimeSlot(element) {
             if (element.classList.contains('disabled')) return;
-
+            console.log('Selected time slot:', element.dataset.slotId);
             // Remove selected class from all time slots
             document.querySelectorAll('.time-slot').forEach(slot =>
                 slot.classList.remove('selected'));
