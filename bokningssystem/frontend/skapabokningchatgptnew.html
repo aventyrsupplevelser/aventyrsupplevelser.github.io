@@ -1754,16 +1754,6 @@
                 }
             });
 
-            // 8. Payment method buttons
-            document.getElementById('paymentButtons').addEventListener('click', (e) => {
-                const btn = e.target.closest('.payment-button');
-                if (!btn) return;
-                const method = btn.getAttribute('onclick')?.match(/'(.*?)'/);
-                if (method && method[1]) {
-                    handlePayment(method[1]);
-                }
-            });
-
             // 9. Handle local booking data expiration
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             if (bookingData && Date.now() > bookingData.expiresAt) {
