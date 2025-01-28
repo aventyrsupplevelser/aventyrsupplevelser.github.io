@@ -74,7 +74,6 @@ class EmailService {
             const msg = {
                 to: booking.customer_email,
                 from: process.env.SENDGRID_FROM_EMAIL,
-                subject: 'Bokningsbekräftelse - Sörsjöns Äventyrspark',
                 templateId: process.env.SENDGRID_BOOKING_TEMPLATE_ID,
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
@@ -106,6 +105,41 @@ class EmailService {
                     payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
                     payment_method: paymentMethodDisplay,
                     special_instructions: booking.comments || ''
+                }
+            };
+    
+            const response = await sgMail.send(msg);
+            console.log('Confirmation email sent successfully:', response[0].statusCode);
+            return response;
+        } catch (error) {
+            console.error('Error sending confirmation email:', error);
+            if (error.response) {
+                console.error('Error details:', error.response.body);
+            }
+            return null;
+        }
+    }
+
+
+    static async ombokningConfirmation(booking) {
+        try {
+            const msg = {
+                to: booking.customer_email,
+                from: process.env.SENDGRID_FROM_EMAIL,
+                templateId: process.env.SENDGRID_OMBOKNING_ID,
+                dynamic_template_data: {
+                    booking_number: booking.booking_number,
+                    customer_name: booking.customer_name,
+                    booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    }),
+                    booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false 
+                    }),
                 }
             };
     

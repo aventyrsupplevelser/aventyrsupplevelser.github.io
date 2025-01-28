@@ -12,7 +12,7 @@
         body {
             font-family: "Josefin Sans", sans-serif;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 0 auto 50px;
             padding: 20px;
         }
 
@@ -163,7 +163,7 @@
         }
 
         .time-slot {
-            padding: 12px;
+            padding: 12px 12px 8px;
             border: 2px solid transparent;
             border-radius: 4px;
             text-align: center;
@@ -180,7 +180,7 @@
         }
 
         #confirmSection {
-            margin-top: 20px;
+            margin: 50px auto;
             text-align: center;
             display: none;
         }
@@ -211,6 +211,10 @@
 </head>
 
 <body>
+    <header>
+        <img src="/sorsjon/images/sorsjonheader.png"" alt=" Sörsjön header"
+            style="max-width: 600px; margin: 50px auto; display: block;">
+    </header>
     <div id="messageContainer"></div>
     <div id="loading">Verifierar bokning...</div>
     <div id="error"></div>
@@ -219,7 +223,7 @@
     <div id="bookingForm">
         <h2>Boka om tid</h2>
         <div id="currentBooking">
-            <h3>Din nuvarande bokning</h3>
+            <h3>Din nuvarande bokning:</h3>
             <div id="currentBookingDetails"></div>
         </div>
 
@@ -234,7 +238,9 @@
             </div>
 
             <div id="confirmSection">
-                <button type="button" id="confirmRebookingBtn">Bekräfta ombokning</button>
+                <button type="button" style="font-size: 1.5em; padding: 20px 20px 15px; font-family: 'Josefin Sans';"
+                    id="confirmRebookingBtn">Bekräfta
+                    ombokning</button>
             </div>
         </div>
     </div>
@@ -357,12 +363,11 @@
             let html = `
         <p>Datum: <strong>${formattedDate}</strong></p>
         <p>Tid: <strong>${formattedTime}</strong></p>
-        <p>Antal personer:</p>
       `;
             if (adult_quantity) html += `<p>Vuxen: ${adult_quantity} st</p>`;
             if (youth_quantity) html += `<p>Ungdom: ${youth_quantity} st</p>`;
             if (kid_quantity) html += `<p>Barn: ${kid_quantity} st</p>`;
-            if (full_day) html += `<p>Förlängning till heldag: Ja</p>`;
+            if (full_day) html += `<p>Förlängning till heldag (17.00): ${full_day} st </p>`;
 
             document.getElementById('currentBookingDetails').innerHTML = html;
         }
@@ -388,6 +393,8 @@
             el.classList.add('selected');
 
             selectedTimeSlot = el.dataset.slotId;
+
+            confirmSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             // Show confirm button
             document.getElementById('confirmSection').style.display = 'block';

@@ -984,7 +984,7 @@ router.put('/bookings/:id/rebook', updateLimiter, async (req, res) => {
   
         // We'll try to send the new start_time
         if (!slotErr && newSlot) {
-          await EmailService.sendBookingConfirmation({
+          await EmailService.ombokningConfirmation({
             ...currentBooking,
             start_time: newSlot.start_time
           });
