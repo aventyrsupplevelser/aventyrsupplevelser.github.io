@@ -901,6 +901,13 @@
                 this.attachEventListeners();
             }
 
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
             renderWeekdays() {
                 const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
                 return weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
