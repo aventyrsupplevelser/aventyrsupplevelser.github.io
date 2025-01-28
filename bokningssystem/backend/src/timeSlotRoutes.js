@@ -537,7 +537,8 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         req.logCheckpoint('Starting payment form generation');
         
         const { order_id, paymentMethod } = req.body;
-        
+        console.log('order ID recieved:', req.body.order_id);
+
         if (!order_id) {
             req.logCheckpoint('Missing order_id');
             return res.status(400).json({ error: 'order_id is required.' });
