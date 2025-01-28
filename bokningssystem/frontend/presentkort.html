@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Köp Presentkort - Sörsjön</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Josefin Sans', sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 50px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 20px;
+            border: 1.5px solid #515151;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .sum-selector {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            background: rgb(246, 244, 221);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 15px;
+        }
+
+        .quantity-btn:hover {
+            background-color: #45a049;
+        }
+
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #sumValue {
+            font-size: 1.5em;
+            font-weight: 500;
+            min-width: 60px;
+            display: inline-block;
+        }
+
+        #paymentButtons {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #paymentButtons button {
+            display: flex;
+            justify-content: space-between;
+            background: rgb(244, 244, 231);
+            align-items: center;
+            width: 300px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border: 1.5px solid rgb(97, 97, 97);
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            margin: 0 auto 20px;
+        }
+
+        #paymentButtons button:hover {
+            background: rgb(243, 243, 176);
+        }
+
+        #paymentContainer {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            margin: 20px auto;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #888;
+            border-radius: 4px;
+            margin-right: 15px;
+            margin-top: -2px;
+            background-color: #fff;
+            transition: background-color 0.2s, border-color 0.2s;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .custom-checkbox:hover .checkmark {
+            border-color: #555;
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid #fff;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg);
+        }
+
+        .error {
+            color: red;
+            background-color: #ffe6e6;
+            border: 1px solid red;
+            padding: 14px 14px 9px;
+            margin: 10px 0;
+            font-size: 1.0em;
+            display: none;
+            border-radius: 3px;
+            width: 300px;
+            line-height: 1.4em;
+        }
+
+        button img {
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="/sorsjon/images/sorsjonheader.png" alt="Sörsjön header"
+            style="max-width: 600px; margin: 50px auto; display: block;">
+    </header>
+
+    <h2>Köp Presentkort</h2>
+
+    <div class="sum-selector">
+        <label style="background:yellow;display:inline-block;margin-bottom: 20px;">Presentkortssumma (SEK):</label>
+        <br>
+        <button id="minusBtn" class="quantity-btn" disabled>-</button>
+        <span id="sumValue">0</span>
+        <button id="plusBtn" class="quantity-btn">+</button>
+    </div>
+
+    <div id="details">
+        <label>Presentkortet är till:</label>
+        <input type="text" id="giftTo" placeholder="Mottagarens namn" />
+
+        <label>Presentkortet är från:</label>
+        <input type="text" id="giftFrom" placeholder="Ditt namn" />
+
+        <label>Din (köparens) e-post:</label>
+        <input type="email" id="purchaserEmail" placeholder="exempel@email.com" />
+
+        <label class="custom-checkbox">
+            <input type="checkbox" id="termsCheckbox">
+            <span class="checkmark"></span>
+            Jag accepterar regler och villkor
+        </label>
+        <div id="termsError" class="error">Du måste acceptera villkor innan du kan fortsätta.</div>
+    </div>
+
+    <div id="paymentButtons">
+        <label style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</label>
+        <button id="swishBtn">
+            <span>Swish</span>
+            <img src="/images/swish.png" alt="Swish">
+        </button>
+        <button id="cardBtn">
+            <span>Kontokort</span>
+            <img src="/images/creditcard.png" alt="Credit Card">
+        </button>
+    </div>
+
+    <div id="paymentContainer">
+        <div class="loading-spinner"></div>
+        <p>Laddar betalningsfönster...</p>
+    </div>
+
+    <script>
+        let sumValue = 0;
+
+        const sumEl = document.getElementById('sumValue');
+        const minusBtn = document.getElementById('minusBtn');
+        const plusBtn = document.getElementById('plusBtn');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const termsError = document.getElementById('termsError');
+        const paymentButtons = document.getElementById('paymentButtons');
+        const paymentContainer = document.getElementById('paymentContainer');
+
+        // Increment sum in 100s
+        plusBtn.addEventListener('click', () => {
+            sumValue += 100;
+            sumEl.textContent = sumValue;
+            if (sumValue > 0) {
+                minusBtn.disabled = false;
+            }
+            maybeShowPaymentButtons();
+        });
+
+        minusBtn.addEventListener('click', () => {
+            if (sumValue >= 100) {
+                sumValue -= 100;
+                sumEl.textContent = sumValue;
+            }
+            if (sumValue === 0) {
+                minusBtn.disabled = true;
+            }
+            maybeShowPaymentButtons();
+        });
+
+        function maybeShowPaymentButtons() {
+            const giftTo = document.getElementById('giftTo').value.trim();
+            const giftFrom = document.getElementById('giftFrom').value.trim();
+            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
+            const termsChecked = termsCheckbox.checked;
+
+            if (sumValue > 0 && giftTo && giftFrom && purchaserEmail && termsChecked) {
+                paymentButtons.style.display = 'block';
+                termsError.style.display = 'none';
+            } else {
+                paymentButtons.style.display = 'none';
+            }
+        }
+
+        // Add input watchers
+        document.getElementById('giftTo').addEventListener('input', maybeShowPaymentButtons);
+        document.getElementById('giftFrom').addEventListener('input', maybeShowPaymentButtons);
+        document.getElementById('purchaserEmail').addEventListener('input', maybeShowPaymentButtons);
+        termsCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                termsError.style.display = 'none';
+            }
+            maybeShowPaymentButtons();
+        });
+
+        // Payment handlers
+        document.getElementById('swishBtn').addEventListener('click', () => handlePayment('swish'));
+        document.getElementById('cardBtn').addEventListener('click', () => handlePayment('card'));
+
+        async function handlePayment(method) {
+            if (!termsCheckbox.checked) {
+                termsError.style.display = 'block';
+                termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if (sumValue === 0) {
+                alert('Vänligen välj en presentkortssumma större än 0');
+                return;
+            }
+
+            paymentButtons.style.display = 'none';
+            paymentContainer.style.display = 'block';
+            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const giftTo = document.getElementById('giftTo').value.trim();
+            const giftFrom = document.getElementById('giftFrom').value.trim();
+            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
+
+            try {
+                // Get payment form
+                const response = await fetch('/api/giftcards/payment-form', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        gift_to: giftTo,
+                        gift_from: giftFrom,
+                        purchaser_email: purchaserEmail,
+                        sum_in_sek: sumValue,
+                        paymentMethod: method
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to get payment form');
+                const formHtml = await response.text();
+
+                // Create payment iframe
+                paymentContainer.innerHTML = '';
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '330px';
+                iframe.style.border = 'none';
+                iframe.style.display = 'none';
+                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+                paymentContainer.appendChild(iframe);
+
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(formHtml);
+                iframeDoc.close();
+
+                iframe.onload = () => {
+                    iframe.style.display = 'block';
+                };
+
+                // Auto-submit the form
+                const form = iframeDoc.querySelector('form');
+                if (form) form.submit();
+
+            } catch (err) {
+                console.error(err);
+                paymentContainer.innerHTML = 'Ett fel uppstod när betalningsformuläret laddades.';
+                paymentButtons.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1049,4 +1049,165 @@ router.get('/bookings/:id/rebook', async (req, res) => {
     }
 });
 
+// Get the payment form for a gift card purchase
+router.post('/giftcards/payment-form', async (req, res) => {
+    try {
+        const { gift_to, gift_from, purchaser_email, sum_in_sek, paymentMethod } = req.body;
+
+        // Generate a unique 6-digit number for the gift card
+        const { data: giftCardNumber, error: numberError } = await supabase
+            .rpc('generate_gift_card_number');
+
+        if (numberError) {
+            console.error('Error generating number:', numberError);
+            return res.status(400).json({ error: numberError.message });
+        }
+
+        // For QuickPay, amount is in öre (cents)
+        const amount = sum_in_sek * 100;
+
+        // Build QuickPay params
+        const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
+        const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
+        const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
+
+        const params = {
+            version: 'v10',
+            merchant_id,
+            agreement_id,
+            amount,
+            currency: 'SEK',
+            order_id: giftCardNumber,
+            continueurl: `https://aventyrsupplevelser.com/tackfordittkop.html`,
+            cancelurl: 'https://aventyrsupplevelser.com/cancelled.html',
+            callbackurl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-callback',
+            language: 'sv',
+            autocapture: '1',
+            payment_methods: paymentMethod === 'swish' ? 'swish' : 'visa,mastercard',
+            variables: {
+                gift_to,
+                gift_from,
+                purchaser_email
+            }
+        };
+
+        // Generate checksum
+        params.checksum = calculateChecksum(params, apiKey);
+
+        // Build the payment form HTML
+        const formHtml = `
+            <form method="POST" action="https://payment.quickpay.net/framed">
+                ${Object.entries(params)
+                    .map(([key, value]) => 
+                        value ? `<input type="hidden" name="${key}" value="${value}">` : '')
+                    .join('\n')}
+            </form>
+        `;
+
+        res.send(formHtml);
+
+    } catch (err) {
+        console.error('Error generating gift card payment form:', err);
+        res.status(500).json({ error: 'Failed to generate payment form' });
+    }
+});
+
+// Payment callback handler
+router.post('/giftcards/payment-callback', rawBodyParser, async (req, res) => {
+    console.log('Gift card payment callback received');
+    
+    try {
+        // Verify QuickPay signature
+        const quickpaySignature = req.get('QuickPay-Checksum-Sha256');
+        if (!quickpaySignature) {
+            console.error('Missing QuickPay signature');
+            return res.status(400).send('Missing signature');
+        }
+
+        const bodyBuffer = Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body));
+        
+        const calculatedSignature = crypto
+            .createHmac('sha256', process.env.QUICKPAY_PRIVATE_KEY)
+            .update(bodyBuffer)
+            .digest('hex');
+
+        if (quickpaySignature !== calculatedSignature) {
+            console.error('Invalid signature', {
+                received: quickpaySignature,
+                calculated: calculatedSignature
+            });
+            return res.status(400).send('Invalid signature');
+        }
+
+        // Parse payment data
+        const payment = JSON.parse(bodyBuffer.toString('utf8'));
+        console.log('Payment data:', {
+            order_id: payment.order_id,
+            state: payment.state,
+            accepted: payment.accepted
+        });
+
+        // Send immediate response
+        res.status(200).send('OK');
+
+        // Process the rest asynchronously
+        await processGiftCardPayment(payment);
+
+    } catch (error) {
+        console.error('Error in gift card payment callback:', error);
+        res.status(200).send('OK');
+    }
+});
+
+async function processGiftCardPayment(payment) {
+    try {
+        if (!payment.accepted || payment.state !== 'processed') {
+            console.log('Payment not accepted or not processed:', payment.state);
+            return;
+        }
+
+        const variables = payment.variables || {};
+        const amount = payment.operations.find(op => op.type === 'capture')?.amount || 0;
+
+        // Create new gift card in Supabase
+        const { data: giftCard, error: insertError } = await supabase
+            .from('gift_cards')
+            .insert({
+                gift_card_number: payment.order_id,
+                sum_in_sek: amount / 100,
+                gift_to: variables.gift_to || null,
+                gift_from: variables.gift_from || null,
+                purchaser_email: variables.purchaser_email || null,
+                payment_id: payment.id,
+                payment_method: payment.metadata?.type || 'unknown',
+                payment_completed_at: new Date().toISOString(),
+                status: 'active',
+                valid_until: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            })
+            .select()
+            .single();
+
+        if (insertError) {
+            throw new Error(`Failed to create gift card: ${insertError.message}`);
+        }
+
+        // Send confirmation email
+        try {
+            await EmailService.sendGiftConfirmation({
+                gift_to: variables.gift_to,
+                gift_from: variables.gift_from,
+                purchaser_email: variables.purchaser_email,
+                gift_card_number: payment.order_id,
+                sum_in_sek: amount / 100
+            });
+            console.log('Gift card confirmation email sent successfully');
+        } catch (emailError) {
+            console.error('Failed to send gift card confirmation email:', emailError);
+        }
+
+    } catch (error) {
+        console.error('Error processing gift card payment:', error);
+    }
+}
+
 export default router;
