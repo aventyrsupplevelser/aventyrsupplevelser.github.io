@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Boka om tid - Sörsjön</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         body {
@@ -22,101 +22,47 @@
             margin-top: 50px;
         }
 
-
-        .time-slots {
-            display: grid;
-            max-width: 600px;
-            margin: 20px auto 0px;
-            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-            gap: 10px;
-            font-size: 1.3em;
+        #loading {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1.2em;
         }
 
-        .ticket-section {
-            padding-top: 0px;
-            max-width: 600px;
-            margin: 20px auto 0px;
-        }
-
-        .ticket-section.visible {
-            display: block;
-        }
-
-        .nav-buttons {
-            display: none;
-            justify-content: space-between;
+        #error {
+            text-align: center;
             margin-top: 20px;
-        }
-
-        .nav-buttons.visible {
-            display: flex;
-        }
-
-        /* Optional: Add smooth transitions */
-        #times {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        #times.visible {
-            opacity: 1;
-        }
-
-
-        .booking-section.active {
-            display: block;
-        }
-
-        .progress-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 20px 0;
-        }
-
-        .step-indicator {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .step-indicator.active {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .step-indicator.completed {
-            background: #45a049;
-            color: white;
-        }
-
-        .step-line {
-            flex-grow: 1;
-            height: 2px;
-            background: #f0f0f0;
-            margin: 0 10px;
-            margin-top: 15px;
-        }
-
-        .step-line.completed {
-            background: #45a049;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .hidden {
+            color: red;
             display: none;
         }
 
+        #messageContainer {
+            display: none;
+            margin: 40px auto;
+            width: fit-content;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            background-color: #fafafa;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #bookingForm {
+            display: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Current booking info */
+        #currentBooking {
+            margin-top: 30px;
+        }
+
+        #currentBookingDetails p {
+            margin: 5px 0;
+        }
+
+        /* Calendar styles */
         .calendar-container {
             font-family: "Josefin Sans", sans-serif;
             background: white;
@@ -153,13 +99,11 @@
             align-items: center;
             justify-content: center;
             background: #f0f0f0;
-            /* All dates start as grey */
             font-size: 1.1em;
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.2s;
             border: 2px solid transparent;
-            font-family: "josefin sans";
             padding-top: 12px;
         }
 
@@ -198,80 +142,50 @@
             border-radius: 50%;
         }
 
-        .legend-item span {
-            padding: 3px 0px 0px 0px;
+        /* Time slots */
+        #times {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            max-width: 600px;
+            margin: 20px auto 0;
         }
 
-        .booking-section {
-            margin-bottom: 30px;
+        #times.visible {
+            opacity: 1;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-        }
-
-        label span {
-            font-size: 0.6em;
-            color: #666;
-            line-height: 1.3em !important;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input[type="date"],
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        textarea[type="comment"],
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1.5px solid #515151;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 16px;
-            margin-top: 5px;
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 10px;
+            font-size: 1.3em;
+            margin-top: 15px;
         }
 
         .time-slot {
-            padding: 12px 12px 7px;
+            padding: 12px;
             border: 2px solid transparent;
             border-radius: 4px;
             text-align: center;
             cursor: pointer;
         }
 
+        .time-slot.disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
         .time-slot.selected {
             border: 2px solid rgb(90, 90, 90);
         }
 
-        .ticket-selector {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            padding: 14px 10px 9px;
+        #confirmSection {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
         }
 
-        .ticket-selector label {
-            width: 235px;
-        }
-
-        .ticket-selector div {
-            font-weight: 700;
-        }
-
-        .ticket-selector select {
-            width: 80px;
-        }
-
+        /* Buttons & colors */
         button {
             color: rgb(50, 50, 50);
             padding: 10px 20px;
@@ -285,210 +199,31 @@
 
         button:hover {
             background-color: #45a049;
+            color: #fff;
         }
 
         .error {
             color: red;
-            background-color: #ffe6e6;
-            /* light red background */
-            border: 1px solid red;
-            padding: 14px 14px 9px;
             margin-top: 10px;
-            font-size: 1.0em;
-            display: none;
-            border-radius: 3px;
-            width: 300px;
-            line-height: 1.4em;
-        }
-
-        .success {
-            color: green;
-            margin-top: 5px;
-        }
-
-        #addonSection {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        #backButton,
-        #proceedButton {
-            font-size: 1.5em;
-        }
-
-        #backButton {
-            display: none;
-            /* Hidden by default */
-        }
-
-        #proceedButton {
-            display: none;
-            /* Hidden initially */
-            margin-left: auto;
-            /* Push to right */
-        }
-
-        #bookingForm {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 20px;
-            width: 129px;
-            margin-top: -5px;
-        }
-
-        .quantity-btn {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            background: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
-
-        .quantity-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .quantity-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .quantity {
-            min-width: 20px;
-            text-align: center;
-            font-size: 0.8em;
-            font-weight: 500;
-            padding: 8px 10px 3px;
-            border: 1.5px solid rgb(90, 90, 90);
-            border-radius: 3px;
-        }
-
-        #continueToPaymentBtn.disabled {
-            background: rgb(210, 210, 210);
-            opacity: 0.5;
-        }
-
-        .btn-cancel {
-            display: none !important;
-        }
-
-        #customerbox {
-            display: grid;
-            grid-template-columns: 250px 250px;
-            gap: 0px 40px;
-        }
-
-        /* Add this inside your existing <style> tag */
-        .loading-spinner {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            height: 290px;
-            background: #f8f8f8;
-            border-radius: 4px;
-            font-family: "Josefin Sans", sans-serif;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 3px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 3px solid #3498db;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #paymentButtons {
-            display: flex;
-            flex-direction: column;
-        }
-
-        button img {
-            height: 40px;
-        }
-
-        #paymentButtons button {
-            display: flex;
-            justify-content: space-between;
-            background: rgb(244, 244, 231);
-            align-items: center;
-            width: 300px;
-            font-size: 1.3em;
-            font-weight: 700;
-            border: 1.5px solid rgb(97, 97, 97);
-            margin-bottom: 20px;
-            font-family: inherit;
-            transition: 0.5s;
-        }
-
-        #paymentButtons button:hover {
-            background: rgb(243, 243, 176);
-            transition: 0.5s;
-        }
-
-        #paymentButtons button:focus {
-            background: rgb(189, 237, 182);
-
-        }
-
-        #paymentButtons span {
-            padding-top: 4px;
-        }
-
-        #bookingSummaryFinal {
-            margin-top: 20px;
-        }
-
-        #bookingSummaryFinal p {
-            margin-block-start: 12px;
-            margin-block-end: 12px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div id="messageContainer"
-        style="display: none; margin: 40px auto; width: fit-content; padding: 20px; text-align: center;"></div>
-
+    <div id="messageContainer"></div>
     <div id="loading">Verifierar bokning...</div>
-    <div id="error" style="display: none;"></div>
+    <div id="error"></div>
 
-    <div id="bookingForm" style="display: none;">
+    <!-- The main form container -->
+    <div id="bookingForm">
         <h2>Boka om tid</h2>
-
-        <!-- Current booking info -->
         <div id="currentBooking">
             <h3>Din nuvarande bokning</h3>
             <div id="currentBookingDetails"></div>
         </div>
 
-        <br><br>
-        <div id="newBookingSection">
+        <div id="newBookingSection" style="margin-top:30px;">
             <div style="background: yellow; display: inline;">Välj en ny dag:</div>
             <div id="calendar-container"></div>
 
@@ -498,44 +233,33 @@
                 <div id="spotsLeft"></div>
             </div>
 
-            <div id="confirmSection" style="display: none;">
+            <div id="confirmSection">
                 <button type="button" id="confirmRebookingBtn">Bekräfta ombokning</button>
             </div>
         </div>
     </div>
 
     <script>
+        /* 1) Initialize Supabase */
         const { createClient } = supabase;
-        /* const supabaseClient = createClient(
-             'https://czbvtmrqzvovytzqokko.supabase.co',
-             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
-         ); */
-
         const supabaseClient = createClient(
             'https://czbvtmrqzvovytzqokko.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo',
-            {
-                auth: {
-                    autoRefreshToken: true,
-                    persistSession: true
-                },
-                headers: {
-                    'Origin': 'http://127.0.0.1:5500'
-                }
-            }
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
         );
 
         let bookingId;
         let accessToken;
         let currentBooking;
         let selectedTimeSlot = null;
-        let totalRequired = 0; // Will be set based on current booking
+        let totalRequired = 0; // sum of adult + youth + kid
 
+        // Color codes
         const available = "rgb(173, 240, 159)";
         const notAvailable = "rgb(255, 128, 124)";
         const fewLeft = "rgb(255, 199, 5)";
 
-        // Modify the init function to add better error handling
+        document.addEventListener('DOMContentLoaded', init);
+
         async function init() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -543,17 +267,17 @@
                 accessToken = urlParams.get('token');
 
                 if (!bookingId || !accessToken) {
-                    showError('Ogiltig länk. Kontrollera att du använder länken från ditt mail.');
+                    showError("Ogiltig länk. Kontrollera att du använder länken från ditt mail.");
                     return;
                 }
 
+                // 1) Fetch the existing booking
                 const response = await fetch(
                     `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
                     {
                         method: 'GET',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Origin': 'http://127.0.0.1:5500'
+                            'Content-Type': 'application/json'
                         },
                         credentials: 'include'
                     }
@@ -566,20 +290,20 @@
 
                 currentBooking = await response.json();
 
-                // Calculate total required spots
-                totalRequired = currentBooking.adult_quantity +
-                    currentBooking.youth_quantity +
-                    currentBooking.kid_quantity;
+                // 2) Calculate total required spots
+                const { adult_quantity, youth_quantity, kid_quantity, full_day } = currentBooking;
+                let totalSpots = (adult_quantity ?? 0) + (youth_quantity ?? 0) + (kid_quantity ?? 0);
+                totalRequired = totalSpots;
 
-                // Check if rebooking is still allowed
+                // 3) Check if rebooking is still allowed (24h rule)
                 const bookingTime = new Date(currentBooking.time_slots.start_time);
                 const now = new Date();
                 const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
-
                 if (hoursUntilBooking < 24) {
                     throw new Error('Ombokningar måste göras senast 24 timmar innan bokad tid');
                 }
 
+                // Show the form
                 showBookingForm();
 
             } catch (error) {
@@ -588,132 +312,128 @@
             }
         }
 
+        function showBookingForm() {
+            // Hide loading
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
 
+            // Show the main booking form
+            const formEl = document.getElementById('bookingForm');
+            formEl.style.display = 'block';
 
-        function showCurrentBooking() {
-            // Get the booking start time from the time_slots object
-            const startTime = currentBooking.time_slots.start_time;
+            // Fill in current booking details
+            renderCurrentBooking();
 
-            // Format the date
-            const bookingDate = new Date(startTime);
-            const formattedDate = bookingDate.toLocaleDateString('sv-SE', {
+            // Initialize the calendar
+            new BookingCalendar(document.getElementById('calendar-container'));
+
+            // Listen for time slot clicks
+            document.getElementById('timeSlots').addEventListener('click', (e) => {
+                const slotEl = e.target.closest('.time-slot');
+                if (slotEl && !slotEl.classList.contains('disabled')) {
+                    selectTimeSlot(slotEl);
+                }
+            });
+
+            // Confirm rebooking
+            document.getElementById('confirmRebookingBtn').addEventListener('click', confirmRebooking);
+        }
+
+        function renderCurrentBooking() {
+            const { time_slots, adult_quantity, youth_quantity, kid_quantity, full_day } = currentBooking;
+            const startTime = new Date(time_slots.start_time);
+
+            const formattedDate = startTime.toLocaleDateString('sv-SE', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
             });
-
-            // Format the time
-            const formattedTime = bookingDate.toLocaleTimeString('sv-SE', {
+            const formattedTime = startTime.toLocaleTimeString('sv-SE', {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false
             });
 
-            document.getElementById('currentBookingDetails').innerHTML = `
+            let html = `
         <p>Datum: <strong>${formattedDate}</strong></p>
         <p>Tid: <strong>${formattedTime}</strong></p>
         <p>Antal personer:</p>
-        ${currentBooking.adult_quantity ? `<p>Vuxen: ${currentBooking.adult_quantity} st</p>` : ''}
-        ${currentBooking.youth_quantity ? `<p>Ungdom: ${currentBooking.youth_quantity} st</p>` : ''}
-        ${currentBooking.kid_quantity ? `<p>Barn: ${currentBooking.kid_quantity} st</p>` : ''}
-        ${currentBooking.full_day ? `<p>Förlängning till heldag: Ja</p>` : ''}
-    `;
+      `;
+            if (adult_quantity) html += `<p>Vuxen: ${adult_quantity} st</p>`;
+            if (youth_quantity) html += `<p>Ungdom: ${youth_quantity} st</p>`;
+            if (kid_quantity) html += `<p>Barn: ${kid_quantity} st</p>`;
+            if (full_day) html += `<p>Förlängning till heldag: Ja</p>`;
+
+            document.getElementById('currentBookingDetails').innerHTML = html;
         }
 
-        function showBookingForm() {
-            // Hide loading and error messages
+        /* Error & Message Helpers */
+        function showError(msg) {
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-
-            // Show the booking form
-            const bookingForm = document.getElementById('bookingForm');
-            bookingForm.style.display = 'block';
-
-            // Show current booking details
-            showCurrentBooking();
-
-            // Initialize the calendar
-            const calendar = new BookingCalendar(document.getElementById('calendar-container'));
+            const errEl = document.getElementById('error');
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
         }
-
-        // Add error handling function
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        // Add message display function
-        function showMessage(message) {
-            const messageContainer = document.getElementById('messageContainer');
-            messageContainer.style.display = 'block';
-            messageContainer.innerHTML = message;
+        function showMessage(msg) {
+            const container = document.getElementById('messageContainer');
+            container.style.display = 'block';
+            container.innerHTML = msg;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        /* Time Slot Selection */
+        function selectTimeSlot(el) {
+            // Clear previous selection
+            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            el.classList.add('selected');
 
+            selectedTimeSlot = el.dataset.slotId;
 
-        class BookingFlow {
-            constructor() {
-                this.currentStep = 1;
-                this.totalSteps = 3;
+            // Show confirm button
+            document.getElementById('confirmSection').style.display = 'block';
+        }
 
-                // Initialize everything after we define the methods
-                this.init();
+        /* Confirm Rebooking PUT call */
+        async function confirmRebooking() {
+            if (!selectedTimeSlot) {
+                showError('Välj en ny tid först');
+                return;
             }
 
-            init() {
-                // Initialize calendar first
-                const calendarContainer = document.createElement('div');
-                calendarContainer.id = 'calendar-container';
-                const formGroup = document.querySelector('.booking-section .form-group');
-                formGroup.appendChild(calendarContainer);
-
-                // Create calendar instance
-                this.calendar = new BookingCalendar(calendarContainer, loadTimeSlots);
-
-                // Now initialize event listeners after calendar exists
-                this.initializeEventListeners();
-            }
-
-            initializeEventListeners() {
-                // Listen for date selection via event delegation from the calendar container
-                document.querySelector('#calendar-container').addEventListener('click', (e) => {
-                    if (e.target.classList.contains('calendar-day') && !e.target.disabled) {
-                        this.handleDateSelection(e.target.dataset.date);
+            try {
+                const response = await fetch(
+                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            time_slot_id: selectedTimeSlot,
+                            access_token: accessToken
+                        })
                     }
-                });
+                );
 
-                // Rest of the event listeners...
-                const timeSlots = document.querySelector('#timeSlots');
-                timeSlots.addEventListener('click', (e) => {
-                    if (e.target.closest('.time-slot')) {
-                        this.handleTimeSelection(e.target.closest('.time-slot'));
-                    }
-                });
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Misslyckades att uppdatera bokning');
+                }
 
-            }
+                showMessage('Din bokning har ombokats! Ett bekräftelsemail skickas inom kort.');
+                setTimeout(() => {
+                    // Redirect or do something else
+                    window.location.href = 'https://aventyrsupplevelser.com/sorsjon';
+                }, 3000);
 
-            handleDateSelection(date) {
-                currentTimeSlot = null; // Add this line here
-                console.log('Selected date!!!:', date);
-                // Add active to time slots section
-                const timeSlotsSection = document.querySelector('#times');
-                timeSlotsSection.classList.add('visible');
-
-                // Show time slots section
-                const timeSlots = document.querySelector('.time-slots');
-                timeSlots.classList.add('visible');
-
-                // Scroll to time slots
-                timeSlots.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-                // Load time slots
-                loadTimeSlots(date);
+            } catch (error) {
+                showError(error.message || 'Ett fel uppstod vid ombokning');
+                console.error('Rebooking error:', error);
             }
         }
 
+        /************************************************
+         * BookingCalendar Class
+         ************************************************/
         class BookingCalendar {
             constructor(container) {
                 this.container = container;
@@ -729,255 +449,220 @@
                 await this.fetchAvailableDates();
             }
 
-            // Update fetchAvailableDates in BookingCalendar class
             async fetchAvailableDates() {
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
-                    // Get first and last day of the month
-                    const startOfMonth = new Date(year, month - 1, 1);
+                    // Start & end of the month
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
-                    // Create cutoff time 24 hours from now for rebooking requirement
+                    // We require slots >= (now + 60min)
                     const cutoffTime = new Date();
-                    cutoffTime.setHours(cutoffTime.getHours() + 24);
+                    cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
 
-                    const { data: slots, error } = await supabaseClient
+                    // If booking has full_day, we must only consider time slots with allow_full_day = true
+                    const mustAllowFullDay = !!currentBooking.full_day;
+
+                    // Query Supabase
+                    let { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('*')
-                        .gte('start_time', cutoffTime.toISOString())
-                        .lt('start_time', endOfMonth.toISOString())
+                        .gte('start_time', cutoffTime.toISOString()) // only future times
+                        .gte('start_time', startOfMonth.toISOString())
+                        .lte('start_time', endOfMonth.toISOString())
                         .order('start_time');
 
                     if (error) throw error;
 
-                    const dateAvailability = {};
-                    slots?.forEach(slot => {
-                        // Only consider slots that have enough spots for the booking
-                        if (slot.available_spots >= totalRequired &&
-                            (!currentBooking.full_day || slot.allow_full_day)) {
-                            const date = new Date(slot.start_time);
-                            const dateStr = date.toISOString().split('T')[0];
-
-                            if (!dateAvailability[dateStr]) {
-                                dateAvailability[dateStr] = {
-                                    totalSpots: 0,
-                                    availableSpots: 0,
-                                    allowsFullDay: slot.allow_full_day
-                                };
-                            }
-                            dateAvailability[dateStr].totalSpots += slot.total_spots;
-                            dateAvailability[dateStr].availableSpots += slot.available_spots;
-                        }
+                    // Filter out any slot that doesn't meet the conditions:
+                    // 1) available_spots >= totalRequired
+                    // 2) if mustAllowFullDay => slot.allow_full_day == true
+                    slots = slots.filter(slot => {
+                        if (slot.available_spots < totalRequired) return false;
+                        if (mustAllowFullDay && !slot.allow_full_day) return false;
+                        return true;
                     });
+
+                    // Group them by date => sum totalSpots & available
+                    const dateAvailability = {};
+                    for (const slot of slots) {
+                        const date = new Date(slot.start_time);
+                        const dateStr = date.toISOString().split('T')[0];
+
+                        if (!dateAvailability[dateStr]) {
+                            dateAvailability[dateStr] = { totalSpots: 0, availableSpots: 0 };
+                        }
+                        dateAvailability[dateStr].totalSpots += slot.total_spots;
+                        dateAvailability[dateStr].availableSpots += slot.available_spots;
+                    }
 
                     this.availableDates = dateAvailability;
                     this.updateAvailableDays();
-                    return Object.keys(dateAvailability).length > 0;
-                } catch (error) {
-                    console.error('Error fetching available dates:', error);
+                    return true;
+                } catch (err) {
+                    console.error("fetchAvailableDates error:", err);
                     return false;
                 }
             }
 
             render() {
                 this.container.innerHTML = `
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button id="prevMonth">&larr;</button>
-                    <h3>${this.getMonthDisplay()}</h3>
-                    <button id="nextMonth">&rarr;</button>
-                </div>
-                <div class="calendar-grid">
-                    ${this.renderWeekdays()}
-                    ${this.renderDays()}
-                </div>
-                <div class="calendar-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background-color: ${available}"></div>
-                        <span>Tillgänglig</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background-color: ${fewLeft};"></div>
-                        <span>Få platser kvar</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background-color: ${notAvailable};"></div>
-                        <span>Fullbokat</span>
-                    </div>
-                </div>
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <button id="prevMonth">&larr;</button>
+              <h3>${this.getMonthDisplay()}</h3>
+              <button id="nextMonth">&rarr;</button>
             </div>
+            <div class="calendar-grid">
+              ${this.renderWeekdays()}
+              ${this.renderDays()}
+            </div>
+            <div class="calendar-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background-color: ${available}"></div>
+                <span>Tillgänglig</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background-color: ${fewLeft};"></div>
+                <span>Få platser kvar</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background-color: ${notAvailable};"></div>
+                <span>Fullbokat</span>
+              </div>
+            </div>
+          </div>
         `;
-                // Add this new code here, after rendering the HTML but before attaching event listeners
-                const now = new Date();
-                const prevMonthButton = this.container.querySelector('#prevMonth');
-                const isCurrentMonth = this.currentMonth.getMonth() === now.getMonth() &&
-                    this.currentMonth.getFullYear() === now.getFullYear();
 
-                if (isCurrentMonth) {
-                    prevMonthButton.disabled = true;
-                    prevMonthButton.style.opacity = '0.5';
-                    prevMonthButton.style.cursor = 'not-allowed';
-                } else {
-                    prevMonthButton.disabled = false;
-                    prevMonthButton.style.opacity = '1';
-                    prevMonthButton.style.cursor = 'pointer';
-                }
-
+                // Handle prev/next logic
                 this.attachEventListeners();
             }
 
             renderWeekdays() {
                 const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
-                return weekdays.map(day =>
-                    `<div class="calendar-weekday">${day}</div>`
-                ).join('');
+                return weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
             }
 
             renderDays() {
                 const days = [];
                 let firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
-                firstDay = firstDay === 0 ? 6 : firstDay - 1;
+                firstDay = (firstDay === 0) ? 6 : (firstDay - 1);
                 const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
 
-                // Empty cells for days before the first day of month
+                // Empty slots before the first day
                 for (let i = 0; i < firstDay; i++) {
-                    days.push('<div></div>');
+                    days.push(`<div></div>`);
                 }
 
-                // Add all days
+                // Render each date
                 for (let day = 1; day <= daysInMonth; day++) {
-                    const dateStr = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    const dateStr = `${this.currentMonth.getFullYear()}-${String(this.currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const isPast = new Date(dateStr) < new Date(new Date().toDateString());
 
                     days.push(`
-                <button 
-                    type="button"
-                    class="calendar-day" 
-                    data-date="${dateStr}"
-                    ${isPast ? 'disabled' : ''}
-                >${day}</button>
-            `);
+            <button
+              type="button"
+              class="calendar-day"
+              data-date="${dateStr}"
+              ${isPast ? 'disabled' : ''}
+            >
+              ${day}
+            </button>
+          `);
                 }
 
                 return days.join('');
             }
 
-
+            updateAvailableDays() {
+                this.container.querySelectorAll('.calendar-day').forEach(dayEl => {
+                    const dateStr = dayEl.dataset.date;
+                    const availability = this.availableDates[dateStr];
+                    if (availability) {
+                        const ratio = availability.availableSpots / availability.totalSpots;
+                        if (ratio <= 0) {
+                            dayEl.style.backgroundColor = notAvailable;
+                            dayEl.disabled = true;
+                        } else if (ratio <= 0.5) {
+                            dayEl.style.backgroundColor = fewLeft;
+                            dayEl.classList.add('available');
+                        } else {
+                            dayEl.style.backgroundColor = available;
+                            dayEl.classList.add('available');
+                        }
+                    } else {
+                        // Not available or no times that meet the conditions
+                        dayEl.style.backgroundColor = '#f0f0f0';
+                        dayEl.disabled = true;
+                    }
+                });
+            }
 
             attachEventListeners() {
-                this.container.querySelector('#prevMonth').addEventListener('click', async (e) => {
+                const now = new Date();
+                const isSameMonth = (
+                    now.getMonth() === this.currentMonth.getMonth() &&
+                    now.getFullYear() === this.currentMonth.getFullYear()
+                );
+                const prevBtn = this.container.querySelector('#prevMonth');
+                if (isSameMonth) {
+                    prevBtn.disabled = true;
+                    prevBtn.style.opacity = '0.5';
+                    prevBtn.style.cursor = 'not-allowed';
+                } else {
+                    prevBtn.disabled = false;
+                    prevBtn.style.opacity = '1';
+                    prevBtn.style.cursor = 'pointer';
+                }
+
+                // Prev month
+                prevBtn.addEventListener('click', async e => {
                     e.preventDefault();
-                    const now = new Date();
-                    const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
-
-                    // Add infinity check
-                    if (!this._skipCount) this._skipCount = 0;
-                    if (this._skipCount > 12) {
-                        this._skipCount = 0;
-                        return;
-                    }
-
                     const newMonth = new Date(this.currentMonth);
                     newMonth.setMonth(this.currentMonth.getMonth() - 1);
-
-                    if (newMonth >= currentMonthYear) {
+                    // Prevent going before this month if you want
+                    const monthStart = new Date(now.getFullYear(), now.getMonth());
+                    if (newMonth >= monthStart) {
                         this.currentMonth = newMonth;
                         this.render();
-                        const hasSlots = await this.fetchAvailableDates();
-                        if (!hasSlots) {
-                            this._skipCount++;
-                            this.container.querySelector('#prevMonth').click();
-                        } else {
-                            this._skipCount = 0;
-                        }
+                        await this.fetchAvailableDates();
+                        this.updateAvailableDays();
                     }
                 });
 
-                this.container.querySelector('#nextMonth').addEventListener('click', async (e) => {
+                // Next month
+                const nextBtn = this.container.querySelector('#nextMonth');
+                nextBtn.addEventListener('click', async e => {
                     e.preventDefault();
-
-                    // Add infinity check
-                    if (!this._skipCount) this._skipCount = 0;
-                    if (this._skipCount > 12) {
-                        this._skipCount = 0;
-                        return;
-                    }
-
                     this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
                     this.render();
-                    const hasSlots = await this.fetchAvailableDates();
-                    if (!hasSlots) {
-                        this._skipCount++;
-                        this.container.querySelector('#nextMonth').click();
-                    } else {
-                        this._skipCount = 0;
-                    }
+                    await this.fetchAvailableDates();
+                    this.updateAvailableDays();
                 });
 
-                this.container.querySelectorAll('.calendar-day').forEach(day => {
-                    day.addEventListener('click', (e) => {
-                        console.log("Day clicked:", e.target.dataset.date); // <--- Add a log
-                        if (!e.target.disabled) {
-                            const dateStr = e.target.dataset.date;
-                            this.selectDate(dateStr);
+                // Day click
+                this.container.querySelectorAll('.calendar-day').forEach(dayEl => {
+                    dayEl.addEventListener('click', (e) => {
+                        if (!dayEl.disabled) {
+                            this.selectDate(dayEl.dataset.date);
                         }
                     });
                 });
             }
-
-            updateAvailableDays() {
-                this.container.querySelectorAll('.calendar-day').forEach(day => {
-                    const dateStr = day.dataset.date;
-                    const availability = this.availableDates[dateStr];
-
-                    if (availability) {
-                        const availabilityRatio = availability.availableSpots / availability.totalSpots;
-                        if (availabilityRatio === 0) {
-                            day.style.backgroundColor = notAvailable; // red for full
-                            day.disabled = true;
-                        } else if (availabilityRatio <= 0.5) {
-                            day.style.backgroundColor = fewLeft; // yellow for less than half
-                            day.classList.add('available');
-                        } else {
-                            day.style.backgroundColor = available; // green for more than half
-                            day.classList.add('available');
-                        }
-                    } else {
-                        day.style.backgroundColor = 'rgb(240, 240, 240)'; // grey for not available
-                        day.disabled = true;
-                    }
-                });
-            }
-
 
             selectDate(dateStr) {
-                if (this.availableDates[dateStr] && this.availableDates[dateStr].availableSpots > 0) {
-                    // Remove selected class from all days
-                    this.container.querySelectorAll('.calendar-day').forEach(day => {
-                        day.classList.remove('selected');
-                    });
+                // Clear selection
+                this.container.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
+                const btn = this.container.querySelector(`[data-date="${dateStr}"]`);
+                if (btn) btn.classList.add('selected');
 
-                    // Add selected class to clicked day
-                    const selectedButton = this.container.querySelector(`[data-date="${dateStr}"]`);
-                    if (selectedButton) {
-                        selectedButton.classList.add('selected');
-                    }
-
-                    // Clear any selected time slot
-                    document.querySelectorAll('.time-slot').forEach(slot => {
-                        slot.classList.remove('selected');
-                    });
-                    selectedTimeSlot = null;  // Use the global variable instead
-
-                    // Hide confirm section when date changes
-                    document.getElementById('confirmSection').style.display = 'none';
-
-                    this.selectedDate = dateStr;
-
-                    loadTimeSlots(dateStr);
-                }
+                // Clear any previously chosen time slot
+                selectedTimeSlot = null;
+                document.getElementById('confirmSection').style.display = 'none';
+                // Load specific day times
+                loadTimeSlots(dateStr);
             }
 
             getMonthDisplay() {
@@ -988,141 +673,93 @@
             }
         }
 
+        /************************************************
+         * Load specific day time slots that meet conditions
+         ************************************************/
         async function loadTimeSlots(dateStr) {
             try {
-                console.log('Loading time slots for:', dateStr);
+                // Show the times container
+                const timesSection = document.getElementById('times');
+                timesSection.classList.add('visible');
 
-                // Create start and end of the selected date
+                // Start & end of the day
                 const startOfDay = new Date(`${dateStr}T00:00:00`);
                 const endOfDay = new Date(`${dateStr}T23:59:59`);
 
-                // Add cutoff time check with 60-minute buffer
-                const cutoffTime = new Date();
-                cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
+                // 60-min cutoff from now
+                const cutoff = new Date();
+                cutoff.setMinutes(cutoff.getMinutes() + 60);
 
-                const { data: slots, error } = await supabaseClient
+                // If full_day is needed, require allow_full_day
+                const mustAllowFullDay = !!currentBooking.full_day;
+
+                // Query
+                let { data: slots, error } = await supabaseClient
                     .from('time_slots')
                     .select('*')
-                    .gte('start_time', cutoffTime.toISOString()) // Filter future slots
-                    .gte('start_time', startOfDay.toISOString()) // Filter selected date start
-                    .lte('start_time', endOfDay.toISOString()) // Filter selected date end
+                    .gte('start_time', cutoff.toISOString())
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
                     .order('start_time');
-
-                console.log("Slots from Supabase:", slots, "Error:", error); // <-- ADD THIS
-
 
                 if (error) throw error;
 
+                // Filter for available_spots >= totalRequired
+                // And if we need full_day, slot.allow_full_day must be true
+                slots = slots.filter(slot => {
+                    if (slot.available_spots < totalRequired) return false;
+                    if (mustAllowFullDay && !slot.allow_full_day) return false;
+                    return true;
+                });
 
+                const timeSlotsDiv = document.getElementById('timeSlots');
+                if (!slots || slots.length === 0) {
+                    timeSlotsDiv.innerHTML = `
+            <p style="min-width: 300px;">
+              Inga lediga tider detta datum. <br><br>
+              Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.
+            </p>`;
+                    return;
+                }
 
-                document.getElementById('timeSlots').innerHTML = slots?.map(slot => {
+                const slotHtml = slots.map(slot => {
                     const localTime = new Date(slot.start_time);
-                    let backgroundColor;
+                    let bgColor = available;
                     let isSelectable = true;
 
                     if (slot.available_spots === 0) {
-                        backgroundColor = notAvailable; // red
+                        bgColor = notAvailable;
                         isSelectable = false;
                     } else if (slot.available_spots < 10) {
-                        backgroundColor = fewLeft; // yellow
-                    } else {
-                        backgroundColor = available; // green
+                        bgColor = fewLeft;
                     }
 
-                    const timeSlotsSection = document.querySelector('#times');
-                    timeSlotsSection.classList.add('visible');
+                    const displayTime = localTime.toLocaleTimeString([], {
+                        hour: '2-digit', minute: '2-digit'
+                    });
 
                     return `
-                <div class="time-slot ${!isSelectable ? 'disabled' : ''}"
-                     data-slot-id="${slot.id}"
-                     data-allows-fullday="${slot.allow_full_day}"
-                     data-available-spots="${slot.available_spots}"
-                     data-availability-color="${backgroundColor}"
-                     onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
-                     style="background-color: ${backgroundColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}">
-                    ${localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </div>
-            `;
-                }).join('') || '<p style="min-width: 300px;">Inga lediga tider detta datum. <br><br> Om ni är fler än 10 kan ni boka en tid utanför de i kalendern genom att maila oss.</p>';
+            <div 
+              class="time-slot ${isSelectable ? '' : 'disabled'}"
+              data-slot-id="${slot.id}"
+              data-allows-fullday="${slot.allow_full_day}"
+              data-available-spots="${slot.available_spots}"
+              data-availability-color="${bgColor}"
+              style="background-color: ${bgColor}; ${!isSelectable ? 'cursor: not-allowed; opacity: 0.4;' : ''}"
+              onclick="${isSelectable ? 'selectTimeSlot(this)' : ''}"
+            >
+              ${displayTime}
+            </div>
+          `;
+                }).join('');
 
-            } catch (error) {
-                console.error('Error loading time slots:', error);
-                document.getElementById('timeSlots').innerHTML =
-                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
-            }
-        }
+                timeSlotsDiv.innerHTML = slotHtml;
 
-        function selectTimeSlot(element) {
-            if (element.classList.contains('disabled')) return;
-            console.log('Selected time slot:', element.dataset.slotId);
-            // Remove selected class from all time slots
-            document.querySelectorAll('.time-slot').forEach(slot =>
-                slot.classList.remove('selected'));
-
-            // Add selected class to clicked slot
-            element.classList.add('selected');
-
-            // Update selected time slot ID
-            selectedTimeSlot = element.dataset.slotId;
-
-            // Show confirm section
-            document.getElementById('confirmSection').style.display = 'block';
-        }
-
-        // Simplified event listener initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            // Remove duplicate call to init()
-            init();
-
-            // Initialize time slot click handler
-            document.querySelector('#timeSlots').addEventListener('click', (e) => {
-                const timeSlot = e.target.closest('.time-slot');
-                if (timeSlot && !timeSlot.classList.contains('disabled')) {
-                    selectTimeSlot(timeSlot);
-                }
-            });
-
-            // Initialize confirm button handler
-            document.getElementById('confirmRebookingBtn').addEventListener('click', confirmRebooking);
-        });
-
-
-        async function confirmRebooking() {
-            if (!selectedTimeSlot) {
-                showError('Välj en ny tid först');
-                return;
-            }
-
-            try {
-                const response = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Origin': 'http://127.0.0.1:5500'
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            time_slot_id: selectedTimeSlot,
-                            access_token: accessToken
-                        })
-                    }
-                );
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Failed to update booking');
-                }
-
-                showMessage('Din bokning har ombokats! Ett bekräftelsemail skickas inom kort.');
-                setTimeout(() => {
-                    window.location.href = 'https://aventyrsupplevelser.com/sorsjon';
-                }, 3000);
-
-            } catch (error) {
-                showError(error.message || 'Ett fel uppstod vid ombokning');
-                console.error('Rebooking error:', error);
+            } catch (err) {
+                console.error('Error loading time slots:', err);
+                document.getElementById('timeSlots').innerHTML = `
+          <p class="error">Kunde inte ladda tider. Försök igen.</p>
+        `;
             }
         }
     </script>
