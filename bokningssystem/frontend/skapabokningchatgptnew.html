@@ -1580,7 +1580,10 @@
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Origin': '*',
                         },
-                        body: JSON.stringify({ order_id: bookingNumber, paymentMethod }),
+                        body: JSON.stringify({
+                            order_id: bookingNumber,
+                            paymentMethod,
+                        }),
                     }
                 );
                 if (!formResponse.ok) throw new Error('Failed to get payment form');
