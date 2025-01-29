@@ -1498,7 +1498,7 @@
 
             // If there's no existing local booking or it's expired, create new
             if (!bookingData || Date.now() > bookingData.expiresAt) {
-                const { data, error } = await supabase.rpc('create_booking', {
+                const { data, error } = await supabaseClient.rpc('create_booking', {
                     // Parameters must match the function signature exactly
                     p_time_slot_id: currentTimeSlot,
                     p_adult_quantity: tickets.adult,
@@ -1519,7 +1519,7 @@
             }
             else {
                 // Update existing booking
-                const { error } = await supabase.rpc('manage_booking', {
+                const { error } = await supabaseClient.rpc('manage_booking', {
                     p_booking_id: bookingData.bookingId,
                     p_new_time_slot_id: currentTimeSlot,
                     p_new_adult_quantity: tickets.adult,
