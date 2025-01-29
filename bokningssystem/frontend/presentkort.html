@@ -294,8 +294,10 @@
                 alert('Vänligen välj en presentkortssumma större än 0');
                 return;
             }
-
+            paymentContainer.style.display = 'block';
+            paymentContainer.innerHTML = '<div class="loading-spinner"></div><p>Laddar betalningsfönster...</p>';
             paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
 
             const giftTo = document.getElementById('giftTo').value.trim();
             const giftFrom = document.getElementById('giftFrom').value.trim();
@@ -322,7 +324,7 @@
                 paymentContainer.innerHTML = '';
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
-                iframe.style.height = '330px';
+                iframe.style.height = '370px';
                 iframe.style.border = 'none';
                 iframe.style.display = 'none';
                 iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
