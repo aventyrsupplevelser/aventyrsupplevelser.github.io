@@ -306,8 +306,8 @@
             const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
 
             try {
-                // Get payment form
-                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-form', {  // Add /api prefix
+                // Get the payment form
+                const response = await fetch('/api/giftcards/payment-form', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -322,11 +322,19 @@
                 if (!response.ok) throw new Error('Failed to get payment form');
                 const formHtml = await response.text();
 
-                // Create payment iframe
+                // Extract the gift card number from the form HTML
+                const orderIdMatch = formHtml.match(/name="order_id" value="([^"]+)"/);
+                const giftCardNumber = orderIdMatch ? orderIdMatch[1] : null;
+
+                if (!giftCardNumber) {
+                    throw new Error('Failed to get gift card number from form');
+                }
+
+                // Create iframe and handle form as before
                 paymentContainer.innerHTML = '';
                 const iframe = document.createElement('iframe');
                 iframe.style.width = '100%';
-                iframe.style.height = '370px';
+                iframe.style.height = '330px';
                 iframe.style.border = 'none';
                 iframe.style.display = 'none';
                 iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
@@ -345,6 +353,7 @@
                 const form = iframeDoc.querySelector('form');
                 if (form) form.submit();
 
+                // Start checking payment status with the extracted gift card number
                 let attempts = 0;
                 const maxAttempts = 60;
                 const interval = setInterval(async () => {
