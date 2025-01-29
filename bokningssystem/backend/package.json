@@ -18,5 +18,8 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "supabase": "^2.9.6"
+  }
 }

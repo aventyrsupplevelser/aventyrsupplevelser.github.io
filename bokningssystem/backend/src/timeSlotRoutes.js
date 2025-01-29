@@ -5,8 +5,6 @@ import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
 import EmailService from './emailService.js';
 
-
-
 const updateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
@@ -22,7 +20,6 @@ const rawBodyParser = express.raw({
     type: 'application/json',
     limit: '50mb'  // Increase limit if needed
 });
-
 
 // First, load environment variables
 dotenv.config();
@@ -908,8 +905,6 @@ router.get('/time-slots/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-// In timeSlotRoutes.js
 
 router.put('/bookings/:id/rebook', updateLimiter, async (req, res) => {
     const { id } = req.params;

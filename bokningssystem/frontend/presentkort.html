@@ -360,11 +360,13 @@
                     try {
                         const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-status/${giftCardNumber}`);
                         const data = await response.json();
+                        console.log('Payment status response:', data);
 
-                        if (data.gift_card_number === giftCardNumber) {
+                        // Check if paymentDetails exists and contains giftCardNumber
+                        if (data.paymentDetails?.giftCardNumber) {
                             clearInterval(interval);
                             console.log('Payment completed:', data);
-                            window.location.href = `tackfordittkop.html?order_id=${giftCardNumber}`;
+                            window.location.href = `/tackfordittkop?order_id=${giftCardNumber}`;
                         } else if (++attempts >= maxAttempts) {
                             clearInterval(interval);
                         }
