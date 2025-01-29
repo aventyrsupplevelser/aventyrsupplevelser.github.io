@@ -1235,7 +1235,7 @@ router.get('/giftcards/payment-status/:giftCardNumber', paymentTimingMiddleware,
 
         const { data: giftCard, error } = await supabase
             .from('gift_cards')
-            .select('status, payment_id, sum_in_sek')
+            .select('payment_id, sum_in_sek')
             .eq('gift_card_number', giftCardNumber)
             .single();
 
@@ -1244,12 +1244,11 @@ router.get('/giftcards/payment-status/:giftCardNumber', paymentTimingMiddleware,
             throw error;
         }
 
-        console.log('Retrieved gift card status:', giftCard);
+        console.log('Retrieved gift card:', giftCard);
 
-        if (giftCard.status === 'active') {
+        if (giftCard.payment_id) {
             console.log('Payment confirmed for gift card:', giftCardNumber);
             res.json({
-                status: 'completed',
                 paymentDetails: {
                     amount: giftCard.sum_in_sek,
                     giftCardNumber: giftCardNumber
@@ -1257,7 +1256,7 @@ router.get('/giftcards/payment-status/:giftCardNumber', paymentTimingMiddleware,
             });
         } else {
             console.log('Payment pending for gift card:', giftCardNumber);
-            res.json({ status: giftCard.status });
+            res.json({ status: 'pending' });  // Changed to return explicit 'pending' status
         }
 
     } catch (error) {
