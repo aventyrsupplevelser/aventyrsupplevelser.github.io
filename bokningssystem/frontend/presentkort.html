@@ -363,6 +363,7 @@
 
                         if (data.gift_card_number === giftCardNumber) {
                             clearInterval(interval);
+                            console.log('Payment completed:', data);
                             window.location.href = `tackfordittkop.html?order_id=${giftCardNumber}`;
                         } else if (++attempts >= maxAttempts) {
                             clearInterval(interval);
