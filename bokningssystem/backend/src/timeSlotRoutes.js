@@ -1052,6 +1052,7 @@ router.get('/bookings/:id/rebook', async (req, res) => {
 // Get the payment form for a gift card purchase
 router.post('/giftcards/payment-form', async (req, res) => {
     try {
+        console.log('Generating gift card payment form');
         const { gift_to, gift_from, purchaser_email, sum_in_sek, paymentMethod } = req.body;
 
         // Generate a unique 6-digit number for the gift card

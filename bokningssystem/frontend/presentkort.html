@@ -326,7 +326,7 @@
 
             try {
                 // Get payment form
-                const response = await fetch('/api/giftcards/payment-form', {
+                const response = await fetch('/api/giftcards/payment-form', {  // Add /api prefix
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
