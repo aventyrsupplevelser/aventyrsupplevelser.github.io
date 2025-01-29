@@ -1493,67 +1493,51 @@
             el.style.display = show ? 'block' : 'none';
         }
 
-        // Example “create or update booking” (placeholder)
         async function createOrUpdatePendingBooking(tickets) {
-            // In your code, you handle localStorage bookingData, token, etc.
-            // This is just to ensure you don’t lose that functionality.
-            // E.g. the user’s 30-min session is created or updated on the server.
-            // (Retained from your code – adjust as needed.)
             let bookingData = JSON.parse(localStorage.getItem('bookingData'));
-            const bookingDetails = {
-                time_slot_id: currentTimeSlot,
-                adult_quantity: tickets.adult,
-                youth_quantity: tickets.youth,
-                kid_quantity: tickets.kid,
-                full_day: tickets.fullday,
-                is_rebookable: tickets.is_rebookable
-            };
 
-            // If there's no existing local booking or it's expired, do POST
+            // If there's no existing local booking or it's expired, create new
             if (!bookingData || Date.now() > bookingData.expiresAt) {
                 const { data, error } = await supabase.rpc('create_booking', {
-                    p_time_slot_id: selectedTimeSlot,
-                    p_adult_quantity: ticketState.adult,
-                    p_youth_quantity: ticketState.youth,
-                    p_kid_quantity: ticketState.kid,
-                    p_full_day: ticketState.fullday,
-                    p_is_rebookable: ticketState.is_rebookable
+                    // Parameters must match the function signature exactly
+                    p_time_slot_id: currentTimeSlot,
+                    p_adult_quantity: tickets.adult,
+                    p_youth_quantity: tickets.youth,
+                    p_kid_quantity: tickets.kid,
+                    p_full_day: tickets.fullday,
+                    p_is_rebookable: tickets.is_rebookable
                 });
 
-                if (error) {
-                    console.error('Error creating booking:', error);
-                    // Handle error appropriately
-                    return;
-                }
+                if (error) throw error;
 
-                // Store booking data in localStorage or state
-                localStorage.setItem('bookingData', JSON.stringify({
+                bookingData = {
                     bookingId: data.booking_id,
                     token: data.access_token,
                     expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
-                }));
+                };
+                localStorage.setItem('bookingData', JSON.stringify(bookingData));
             }
             else {
                 // Update existing booking
-                const updateResponse = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingData.bookingId}`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                        },
-                        body: JSON.stringify({
-                            ...bookingDetails,
-                            access_token: bookingData.token,
-                        }),
-                    }
-                );
-                if (!updateResponse.ok) throw new Error('Failed to update booking');
+                const { error } = await supabase.rpc('manage_booking', {
+                    p_booking_id: bookingData.bookingId,
+                    p_new_time_slot_id: currentTimeSlot,
+                    p_new_adult_quantity: tickets.adult,
+                    p_new_youth_quantity: tickets.youth,
+                    p_new_kid_quantity: tickets.kid,
+                    p_full_day: tickets.fullday,
+                    p_is_rebookable: tickets.is_rebookable,
+                    p_status: 'pending'
+                });
 
+                if (error) throw error;
+
+                // Extend expiry
                 bookingData.expiresAt = Date.now() + 30 * 60 * 1000;
                 localStorage.setItem('bookingData', JSON.stringify(bookingData));
             }
+
+            return bookingData;
         }
 
         /********************************************
