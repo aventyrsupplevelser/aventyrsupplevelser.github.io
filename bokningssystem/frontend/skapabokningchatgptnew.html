@@ -1511,25 +1511,27 @@
 
             // If there's no existing local booking or it's expired, do POST
             if (!bookingData || Date.now() > bookingData.expiresAt) {
-                const createResponse = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/pending',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                        },
-                        body: JSON.stringify(bookingDetails),
-                    }
-                );
-                if (!createResponse.ok) throw new Error('Failed to create booking');
-                const newBooking = await createResponse.json();
-                bookingData = {
-                    token: newBooking.access_token,
-                    bookingId: newBooking.booking_id,
-                    expiresAt: Date.now() + 30 * 60 * 1000, // 30 min
-                };
-                localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                const { data, error } = await supabase.rpc('create_booking', {
+                    p_time_slot_id: selectedTimeSlot,
+                    p_adult_quantity: ticketState.adult,
+                    p_youth_quantity: ticketState.youth,
+                    p_kid_quantity: ticketState.kid,
+                    p_full_day: ticketState.fullday,
+                    p_is_rebookable: ticketState.is_rebookable
+                });
+
+                if (error) {
+                    console.error('Error creating booking:', error);
+                    // Handle error appropriately
+                    return;
+                }
+
+                // Store booking data in localStorage or state
+                localStorage.setItem('bookingData', JSON.stringify({
+                    bookingId: data.booking_id,
+                    token: data.access_token,
+                    expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
+                }));
             }
             else {
                 // Update existing booking
