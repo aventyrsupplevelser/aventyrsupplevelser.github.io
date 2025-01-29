@@ -1200,7 +1200,6 @@ async function processGiftCardPayment(payment) {
                 payment_id: payment.id,
                 payment_method: payment.metadata?.type || 'unknown',
                 payment_completed_at: new Date().toISOString(),
-                status: 'active',
                 valid_until: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
             })
             .select()
