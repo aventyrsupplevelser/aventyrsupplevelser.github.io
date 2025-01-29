@@ -1178,6 +1178,7 @@ router.post('/giftcards/payment-callback', rawBodyParser, async (req, res) => {
 });
 
 async function processGiftCardPayment(payment) {
+    console.log('Processing gift card payment:', payment.order_id); 
     try {
         if (!payment.accepted || payment.state !== 'processed') {
             console.log('Payment not accepted or not processed:', payment.state);
