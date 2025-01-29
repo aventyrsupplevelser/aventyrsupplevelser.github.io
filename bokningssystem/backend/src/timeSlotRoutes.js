@@ -1228,4 +1228,42 @@ async function processGiftCardPayment(payment) {
     }
 }
 
+router.get('/giftcards/payment-status/:giftCardNumber', paymentTimingMiddleware, async (req, res) => {
+    try {
+        const { giftCardNumber } = req.params;
+        console.log('Checking gift card payment status for:', giftCardNumber);
+
+        const { data: giftCard, error } = await supabase
+            .from('gift_cards')
+            .select('status, payment_id, sum_in_sek')
+            .eq('gift_card_number', giftCardNumber)
+            .single();
+
+        if (error) {
+            console.error('Error fetching gift card status:', error);
+            throw error;
+        }
+
+        console.log('Retrieved gift card status:', giftCard);
+
+        if (giftCard.status === 'active') {
+            console.log('Payment confirmed for gift card:', giftCardNumber);
+            res.json({
+                status: 'completed',
+                paymentDetails: {
+                    amount: giftCard.sum_in_sek,
+                    giftCardNumber: giftCardNumber
+                }
+            });
+        } else {
+            console.log('Payment pending for gift card:', giftCardNumber);
+            res.json({ status: giftCard.status });
+        }
+
+    } catch (error) {
+        console.error('Error checking gift card payment status:', error);
+        res.status(500).json({ error: 'Failed to check payment status' });
+    }
+});
+
 export default router;

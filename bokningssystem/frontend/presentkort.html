@@ -345,6 +345,25 @@
                 const form = iframeDoc.querySelector('form');
                 if (form) form.submit();
 
+                let attempts = 0;
+                const maxAttempts = 60;
+                const interval = setInterval(async () => {
+                    try {
+                        const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-status/${giftCardNumber}`);
+                        const data = await response.json();
+
+                        if (data.status === 'completed') {
+                            clearInterval(interval);
+                            window.location.href = `tackfordittkop.html?order_id=${giftCardNumber}`;
+                        } else if (++attempts >= maxAttempts) {
+                            clearInterval(interval);
+                        }
+                    } catch (error) {
+                        console.error('Error checking payment status:', error);
+                        clearInterval(interval);
+                    }
+                }, 1000);
+
             } catch (err) {
                 console.error(err);
                 paymentContainer.innerHTML = 'Ett fel uppstod när betalningsformuläret laddades.';
