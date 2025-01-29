@@ -15,6 +15,11 @@
             padding: 20px;
         }
 
+        body>div {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
         h2 {
             text-align: center;
             font-size: 2.5em;
@@ -40,7 +45,7 @@
         }
 
         .sum-selector {
-            margin: 30px 0;
+            margin: 30px auto 50px;
             text-align: center;
         }
 
@@ -67,12 +72,11 @@
         #sumValue {
             font-size: 1.5em;
             font-weight: 500;
-            min-width: 60px;
+            min-width: 100px;
             display: inline-block;
         }
 
         #paymentButtons {
-            display: none;
             margin-top: 30px;
             text-align: center;
         }
@@ -201,10 +205,11 @@
     <h2>Köp Presentkort</h2>
 
     <div class="sum-selector">
-        <label style="background:yellow;display:inline-block;margin-bottom: 20px;">Presentkortssumma (SEK):</label>
+        <label style="background:yellow;display:inline-block;margin-bottom: 20px; font-size: 1em;">Välj
+            presentkortssumma:</label>
         <br>
         <button id="minusBtn" class="quantity-btn" disabled>-</button>
-        <span id="sumValue">0</span>
+        <span id="sumValue">0 kr</span>
         <button id="plusBtn" class="quantity-btn">+</button>
     </div>
 
@@ -257,48 +262,22 @@
         // Increment sum in 100s
         plusBtn.addEventListener('click', () => {
             sumValue += 100;
-            sumEl.textContent = sumValue;
+            sumEl.textContent = sumValue + ' kr';
             if (sumValue > 0) {
                 minusBtn.disabled = false;
             }
-            maybeShowPaymentButtons();
         });
 
         minusBtn.addEventListener('click', () => {
             if (sumValue >= 100) {
                 sumValue -= 100;
-                sumEl.textContent = sumValue;
+                sumEl.textContent = sumValue + ' kr';;
             }
             if (sumValue === 0) {
                 minusBtn.disabled = true;
             }
-            maybeShowPaymentButtons();
         });
 
-        function maybeShowPaymentButtons() {
-            const giftTo = document.getElementById('giftTo').value.trim();
-            const giftFrom = document.getElementById('giftFrom').value.trim();
-            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
-            const termsChecked = termsCheckbox.checked;
-
-            if (sumValue > 0 && giftTo && giftFrom && purchaserEmail && termsChecked) {
-                paymentButtons.style.display = 'block';
-                termsError.style.display = 'none';
-            } else {
-                paymentButtons.style.display = 'none';
-            }
-        }
-
-        // Add input watchers
-        document.getElementById('giftTo').addEventListener('input', maybeShowPaymentButtons);
-        document.getElementById('giftFrom').addEventListener('input', maybeShowPaymentButtons);
-        document.getElementById('purchaserEmail').addEventListener('input', maybeShowPaymentButtons);
-        termsCheckbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                termsError.style.display = 'none';
-            }
-            maybeShowPaymentButtons();
-        });
 
         // Payment handlers
         document.getElementById('swishBtn').addEventListener('click', () => handlePayment('swish'));
@@ -316,8 +295,6 @@
                 return;
             }
 
-            paymentButtons.style.display = 'none';
-            paymentContainer.style.display = 'block';
             paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             const giftTo = document.getElementById('giftTo').value.trim();
