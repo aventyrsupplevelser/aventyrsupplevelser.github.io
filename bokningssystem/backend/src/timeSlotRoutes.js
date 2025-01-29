@@ -1059,6 +1059,7 @@ router.post('/giftcards/payment-form', async (req, res) => {
             paymentMethod 
         } = req.body;
 
+        // Validate required fields
         if (!purchaser_email || !sum_in_sek) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
@@ -1074,11 +1075,11 @@ router.post('/giftcards/payment-form', async (req, res) => {
             return res.status(400).json({ error: numberError.message });
         }
 
-        // QuickPay params
         const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
 
+        // Build the params object including variables
         const params = {
             version: 'v10',
             merchant_id,
@@ -1092,21 +1093,32 @@ router.post('/giftcards/payment-form', async (req, res) => {
             language: 'sv',
             autocapture: '1',
             payment_methods: paymentMethod === 'swish' ? 'swish' : 'visa,mastercard',
-            branding_id: '14851'
+            branding_id: '14851',
+            variables: {
+                gift_to: gift_to || '',
+                gift_from: gift_from || '',
+                purchaser_email: purchaser_email || ''
+            }
         };
 
+        // Calculate checksum with all params including variables
         params.checksum = calculateChecksum(params, apiKey);
 
-        // Add variables after checksum calculation
+        // Generate form HTML
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net/framed">
                 ${Object.entries(params)
-                    .map(([key, value]) => 
-                        value ? `<input type="hidden" name="${key}" value="${value}">` : '')
+                    .map(([key, value]) => {
+                        if (key === 'variables') {
+                            // Handle variables object specially
+                            return Object.entries(value)
+                                .map(([vKey, vVal]) => 
+                                    `<input type="hidden" name="variables[${vKey}]" value="${vVal}">`)
+                                .join('\n');
+                        }
+                        return value ? `<input type="hidden" name="${key}" value="${value}">` : '';
+                    })
                     .join('\n')}
-                <input type="hidden" name="variables[gift_to]" value="${gift_to || ''}">
-                <input type="hidden" name="variables[gift_from]" value="${gift_from || ''}">
-                <input type="hidden" name="variables[purchaser_email]" value="${purchaser_email || ''}">
             </form>
         `;
 
