@@ -1049,13 +1049,23 @@ router.get('/bookings/:id/rebook', async (req, res) => {
     }
 });
 
-// Get the payment form for a gift card purchase
 router.post('/giftcards/payment-form', async (req, res) => {
     try {
-        console.log('Generating gift card payment form');
-        const { gift_to, gift_from, purchaser_email, sum_in_sek, paymentMethod } = req.body;
+        const { 
+            gift_to, 
+            gift_from, 
+            purchaser_email, 
+            sum_in_sek, 
+            paymentMethod 
+        } = req.body;
 
-        // Generate a unique 6-digit number for the gift card
+        if (!purchaser_email || !sum_in_sek) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const amount = Math.round(sum_in_sek * 100);
+
+        // Generate gift card number
         const { data: giftCardNumber, error: numberError } = await supabase
             .rpc('generate_gift_card_number');
 
@@ -1064,10 +1074,7 @@ router.post('/giftcards/payment-form', async (req, res) => {
             return res.status(400).json({ error: numberError.message });
         }
 
-        // For QuickPay, amount is in öre (cents)
-        const amount = sum_in_sek * 100;
-
-        // Build QuickPay params
+        // QuickPay params
         const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
         const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
@@ -1079,29 +1086,27 @@ router.post('/giftcards/payment-form', async (req, res) => {
             amount,
             currency: 'SEK',
             order_id: giftCardNumber,
-            continueurl: `https://aventyrsupplevelser.com/tackfordittkop.html`,
+            continueurl: 'https://aventyrsupplevelser.com/tackfordittkop.html',
             cancelurl: 'https://aventyrsupplevelser.com/cancelled.html',
             callbackurl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-callback',
             language: 'sv',
             autocapture: '1',
             payment_methods: paymentMethod === 'swish' ? 'swish' : 'visa,mastercard',
-            variables: {
-                gift_to,
-                gift_from,
-                purchaser_email
-            }
+            branding_id: '14851'
         };
 
-        // Generate checksum
         params.checksum = calculateChecksum(params, apiKey);
 
-        // Build the payment form HTML
+        // Add variables after checksum calculation
         const formHtml = `
             <form method="POST" action="https://payment.quickpay.net/framed">
                 ${Object.entries(params)
                     .map(([key, value]) => 
                         value ? `<input type="hidden" name="${key}" value="${value}">` : '')
                     .join('\n')}
+                <input type="hidden" name="variables[gift_to]" value="${gift_to || ''}">
+                <input type="hidden" name="variables[gift_from]" value="${gift_from || ''}">
+                <input type="hidden" name="variables[purchaser_email]" value="${purchaser_email || ''}">
             </form>
         `;
 
