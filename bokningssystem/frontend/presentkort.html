@@ -35,7 +35,7 @@
         input[type="text"],
         input[type="email"] {
             width: 100%;
-            padding: 8px;
+            padding: 12px 8px 8px;
             margin-top: 4px;
             margin-bottom: 20px;
             border: 1.5px solid #515151;
@@ -50,14 +50,14 @@
         }
 
         .quantity-btn {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             font-size: 1.2em;
             background: rgb(246, 244, 221);
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin: 0 15px;
+            margin: 0 3px;
         }
 
         .quantity-btn:hover {
@@ -70,6 +70,7 @@
         }
 
         #sumValue {
+            margin-bottom: -5px;
             font-size: 1.5em;
             font-weight: 500;
             min-width: 100px;
@@ -197,12 +198,12 @@
 </head>
 
 <body>
-    <header>
+    <!-- <header>
         <img src="/sorsjon/images/sorsjonheader.png" alt="Sörsjön header"
             style="max-width: 600px; margin: 50px auto; display: block;">
-    </header>
+    </header> 
 
-    <h2>Köp presentkort</h2>
+    <h2>Köp presentkort</h2>-->
 
     <div class="sum-selector">
         <label style="background:yellow;display:inline-block;margin-bottom: 20px; font-size: 1em;">Välj
@@ -222,17 +223,18 @@
 
         <label>Din (köparens) e-post:</label>
         <input type="email" id="purchaserEmail" placeholder="Din email" />
-
-        <label class="custom-checkbox">
+        Presentkortet är giltigt i 12 månader.
+        <label class="custom-checkbox" style="margin-top: 60px;">
             <input type="checkbox" id="termsCheckbox">
             <span class="checkmark"></span>
-            Jag accepterar regler och villkor
+            Jag accepterar&nbsp;<a href="/reglerochvillkor">regler och villkor</a>
         </label>
         <div id="termsError" class="error">Du måste acceptera villkor innan du kan fortsätta.</div>
     </div>
 
     <div id="paymentButtons">
-        <label style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</label>
+        <label style="background: yellow; display: inline-block; margin-bottom: 20px; font-size: 1em;">Välj
+            betalsätt:</label>
         <button id="swishBtn">
             <span>Swish</span>
             <img src="/images/swish.png" alt="Swish">

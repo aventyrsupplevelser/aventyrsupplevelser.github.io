@@ -1087,7 +1087,7 @@ router.post('/giftcards/payment-form', async (req, res) => {
             amount,
             currency: 'SEK',
             order_id: giftCardNumber,
-            continueurl: 'https://aventyrsupplevelser.com/tackfordittkop.html',
+            continueurl: 'https://aventyrsupplevelser.com/tackfordittkop',
             cancelurl: 'https://aventyrsupplevelser.com/cancelled.html',
             callbackurl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-callback',
             language: 'sv',
