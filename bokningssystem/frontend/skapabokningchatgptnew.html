@@ -1634,9 +1634,6 @@
             `;
                 }
 
-                // Start checking payment status
-                startPaymentStatusCheck(bookingData.bookingId);
-
             } catch (error) {
                 console.error('Swish payment error:', error);
                 paymentContainer.innerHTML = `

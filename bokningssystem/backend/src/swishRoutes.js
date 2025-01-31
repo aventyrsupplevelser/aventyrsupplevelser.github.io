@@ -54,6 +54,8 @@ router.post('/create-payment', async (req, res) => {
             paymentData
         );
 
+        console.log('Payment request created:', response.data);
+
         // Return different responses based on mobile/desktop
         if (isMobile) {
             res.json({
