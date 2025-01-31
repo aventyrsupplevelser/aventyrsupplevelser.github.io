@@ -14,9 +14,9 @@ const __dirname = dirname(__filename);
 
 // Initialize HTTPS agent with certificates
 const agent = new Agent({
-    cert: fs.readFileSync(path.join(__dirname, '../../certnew.pem'), 'utf8'),
-    key: fs.readFileSync(path.join(__dirname, '../../PrivateKey.key'), 'utf8'),
-    ca: fs.readFileSync(path.join(__dirname, '../../Swish_TLS_RootCA.pem'), 'utf8')
+    cert: fs.readFileSync(path.join(__dirname, '../certnew.pem'), 'utf8'),
+    key: fs.readFileSync(path.join(__dirname, '../PrivateKey.key'), 'utf8'),
+    ca: fs.readFileSync(path.join(__dirname, '../Swish_TLS_RootCA.pem'), 'utf8')
 });
 
 // Create Swish client
