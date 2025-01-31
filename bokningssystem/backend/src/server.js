@@ -7,6 +7,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
+import swishRoutes from './swishRoutes.js';
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -72,6 +74,8 @@ timeSlotRoutes.stack.forEach((r) => {
 });
 
 app.use('/api', timeSlotRoutes);
+app.use('/api/swish', swishRoutes);
+
 console.log('Routes mounted');
 
 // 3. Request logger

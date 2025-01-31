@@ -704,9 +704,12 @@
                     </label>
                 </div>
                 <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Fyll i information:</div>
+                <div id="requiredInfoMessage" class="error"
+                    style="display: none; margin-bottom: 20px; width: fit-content;">Vänligen fyll i namn och
+                    e-postadress.</div>
                 <div id="customerbox">
                     <div class="form-group">
-                        <label>Förnamn*</label>
+                        <label>Namn*</label>
                         <input type="text" id="customerName" required data-required>
                     </div>
                     <div class="form-group">
@@ -737,7 +740,12 @@
                     </div>
                 </div>
                 <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</div>
+
                 <div id="paymentButtons" style="display: none;">
+                    <button type="button" class="payment-button" onclick="handleSwishPayment()">
+                        <span>Swish!</span>
+                        <img src="/images/swish.png">
+                    </button>
                     <button type="button" class="payment-button" onclick="handlePayment('swish')">
                         <span>Swish</span>
                         <img src="/images/swish.png">
@@ -1521,13 +1529,15 @@
                 // Update existing booking
                 const { error } = await supabaseClient.rpc('manage_booking', {
                     p_booking_id: bookingData.bookingId,
+                    p_access_token: bookingData.token,
                     p_new_time_slot_id: currentTimeSlot,
                     p_new_adult_quantity: tickets.adult,
                     p_new_youth_quantity: tickets.youth,
                     p_new_kid_quantity: tickets.kid,
                     p_full_day: tickets.fullday,
                     p_is_rebookable: tickets.is_rebookable,
-                    p_status: 'pending'
+                    p_status: 'pending',
+                    p_delete: false
                 });
 
                 if (error) throw error;
@@ -1543,8 +1553,9 @@
         /********************************************
          * 9) Payment Handling
          ********************************************/
-        async function handlePayment(paymentMethod) {
-            // Terms acceptance
+
+        async function handleSwishPayment() {
+            // Initial validations
             const termsCheckbox = document.getElementById('termsCheckbox');
             const termsError = document.getElementById('termsError');
             if (!termsCheckbox.checked) {
@@ -1552,48 +1563,158 @@
                 termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
-            termsError.style.display = 'none'; // hide error
+            termsError.style.display = 'none';
+
+            // Get booking data
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+            if (!bookingData) {
+                alert('No active booking found');
+                return;
+            }
+
+            const totals = calculateTotal(ticketState);
+            const totalAmount = totals.total;
 
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
             paymentContainer.innerHTML = `
-            <div class="loading-spinner">
-              <div>Laddar betalning...</div>
-              <div class="loading"></div>
-            </div>
-          `;
+        <div class="loading-spinner">
+            <div>Laddar Swish...</div>
+            <div class="loading"></div>
+        </div>
+    `;
 
-
-            // Validate customer info
-            const customerInfo = validateCustomerInfo();
-            if (!customerInfo) {
-                paymentContainer.style.display = 'none';
-                return;
-            }
-
-            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             try {
-                // Generate a booking number, update booking details, then get payment form
+                // For desktop users, get their phone number
+                let phoneNumber = null;
+                if (!isMobile) {
+                    phoneNumber = prompt('Ange ditt Swish-nummer:');
+                    if (!phoneNumber) {
+                        paymentContainer.style.display = 'none';
+                        return;
+                    }
+                    // Format phone number: remove first 0 and add 46
+                    phoneNumber = phoneNumber.startsWith('0') ?
+                        '46' + phoneNumber.substring(1) : phoneNumber;
+                }
+
+                // Create payment request
+                const response = await fetch(
+                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/create-payment',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            amount: totalAmount,
+                            bookingNumber: bookingData.bookingId,
+                            isMobile,
+                            payerAlias: phoneNumber || null
+                        })
+                    }
+                );
+
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Payment failed');
+                }
+
+                if (isMobile && result.token) {
+                    // Open Swish app
+                    const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.bookingId}`;
+                    window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
+                } else {
+                    // Show instructions for desktop users
+                    paymentContainer.innerHTML = `
+                <div style="text-align: center; margin: 20px;">
+                    <h3>Öppna Swish-appen på din telefon</h3>
+                    <p>Referensnummer: ${bookingData.bookingId}</p>
+                </div>
+            `;
+                }
+
+                // Start checking payment status
+                startPaymentStatusCheck(bookingData.bookingId);
+
+            } catch (error) {
+                console.error('Swish payment error:', error);
+                paymentContainer.innerHTML = `
+            <div class="error" style="text-align: center; margin: 20px;">
+                <p>Betalning misslyckades: ${error.message}</p>
+                <button onclick="handleSwishPayment()" style="margin-top: 10px;">
+                    Försök igen
+                </button>
+            </div>
+        `;
+            }
+        }
+
+        async function handlePayment(paymentMethod) {
+
+            // Get customer info
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerComment = document.getElementById('customerComment').value.trim();
+
+            // Validate required fields
+            if (!customerName || !customerEmail) {
+                requiredInfoMessage.style.display = 'block';
+                requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            requiredInfoMessage.style.display = 'none';
+            // Terms acceptance
+
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const termsError = document.getElementById('termsError');
+            if (!termsCheckbox.checked) {
+                termsError.style.display = 'block';
+                termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            termsError.style.display = 'none';
+
+            // Show loading spinner
+            const paymentContainer = document.getElementById('payment-container');
+            paymentContainer.style.display = 'block';
+            paymentContainer.innerHTML = `
+        <div class="loading-spinner">
+            <div>Laddar betalning...</div>
+            <div class="loading"></div>
+        </div>
+    `;
+            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            try {
+                // Generate booking number
                 const bookingNumberResponse = await fetch(
                     'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number',
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+                        headers: { 'Content-Type': 'application/json' }
                     }
                 );
                 if (!bookingNumberResponse.ok) throw new Error('Failed to generate booking number');
                 const { bookingNumber } = await bookingNumberResponse.json();
 
-                // Update booking with customer details & bookingNumber
+                // Get session data
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
                 if (!sessionData?.bookingId) throw new Error('No active booking found');
 
-                await updateBookingDetails(sessionData.bookingId, {
-                    ...customerInfo,
-                    bookingNumber
+                // Update booking details
+                const { error: updateError } = await supabaseClient.rpc('manage_booking', {
+                    p_booking_id: sessionData.bookingId,
+                    p_access_token: sessionData.token,
+                    p_customer_name: customerName,
+                    p_customer_email: customerEmail,
+                    p_customer_phone: customerPhone,
+                    p_comments: customerComment,
+                    p_delete: false
                 });
+
+                if (updateError) throw updateError;
 
                 // Request the payment form from server
                 const formResponse = await fetch(
@@ -1665,43 +1786,6 @@
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
         }
-
-        function validateCustomerInfo() {
-            const customerName = document.getElementById('customerName').value.trim();
-            const customerEmail = document.getElementById('customerEmail').value.trim();
-            const customerPhone = document.getElementById('customerPhone').value.trim();
-            const customerComment = document.getElementById('customerComment').value.trim();
-
-            if (!customerName || !customerEmail) {
-                alert('Vänligen fyll i namn och e-post.');
-                return null;
-            }
-            return { customerName, customerEmail, customerPhone, customerComment };
-        }
-
-        async function updateBookingDetails(bookingId, details) {
-            const response = await fetch(
-                `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/details`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
-                    },
-                    body: JSON.stringify(details)
-                }
-            );
-            if (!response.ok) throw new Error('Failed to update booking details');
-
-            // Extend local bookingData's expiry
-            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
-            if (bookingData) {
-                bookingData.expiresAt = Date.now() + 30 * 60 * 1000;
-                localStorage.setItem('bookingData', JSON.stringify(bookingData));
-            }
-            return response.json();
-        }
-
         /****************************************
          * 10) Misc Helpers (reset flow, etc.)
          ****************************************/
