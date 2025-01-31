@@ -35,12 +35,12 @@ router.post('/create-payment', async (req, res) => {
 
         // Prepare payment data
         const paymentData = {
-            payeePaymentReference: bookingNumber,
-            callbackUrl: `${process.env.PUBLIC_URL}/api/swish-callback`,
+            payeePaymentReference: 12345678,
+            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352', // Your Swish number
             currency: 'SEK',
             amount: amount.toString(),
-            message: `Booking ${bookingNumber}`
+            message: `test`
         };
 
         // Add payerAlias for E-commerce flow (desktop)
