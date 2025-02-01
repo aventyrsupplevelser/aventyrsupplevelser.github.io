@@ -91,12 +91,7 @@ router.post('/swish-callback', express.raw({ type: 'application/json' }), async 
         console.log('Callback headers:', req.headers);
 console.log('Callback raw body:', req.body.toString());
 
-        // Verify Swish signature
-        const signature = req.get('Swish-Signature');
-        if (!signature) {
-            console.error('Missing Swish signature');
-            return res.status(400).send('Missing signature');
-        }
+      
 
         // Parse the callback data
         const payment = JSON.parse(req.body.toString());
