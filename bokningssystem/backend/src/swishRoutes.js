@@ -87,6 +87,10 @@ router.post('/create-payment', async (req, res) => {
 // Handle Swish callback
 router.post('/swish-callback', express.raw({ type: 'application/json' }), async (req, res) => {
     try {
+
+        console.log('Callback headers:', req.headers);
+console.log('Callback raw body:', req.body.toString());
+
         // Verify Swish signature
         const signature = req.get('Swish-Signature');
         if (!signature) {
