@@ -109,29 +109,20 @@ router.post('/swish-callback', express.raw({ type: 'application/json' }), async 
     }
 });
 
-// Check payment status
-router.get('/payment-status/:id', async (req, res) => {
+router.post('/swish-callback', express.json(), async (req, res) => {
     try {
-        const { id } = req.params;
+        // Now req.body is already parsed
+        const payment = req.body;
+        console.log('Received Swish callback:', payment);
 
-        const response = await swishClient.get(`/paymentrequests/${id}`);
-        const payment = response.data;
+        res.status(200).send('OK');
 
         if (payment.status === 'PAID') {
-            res.json({
-                status: 'completed',
-                paymentDetails: {
-                    amount: parseFloat(payment.amount),
-                    reference: payment.payeePaymentReference
-                }
-            });
-        } else {
-            res.json({ status: payment.status.toLowerCase() });
+            await updateBookingPaymentStatus(payment);
         }
-
     } catch (error) {
-        console.error('Error checking payment status:', error);
-        res.status(500).json({ error: 'Failed to check payment status' });
+        console.error('Swish callback error:', error);
+        res.status(200).send('OK');
     }
 });
 
