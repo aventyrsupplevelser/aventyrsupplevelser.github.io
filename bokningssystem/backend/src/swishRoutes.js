@@ -84,30 +84,7 @@ router.post('/create-payment', async (req, res) => {
     }
 });
 
-// Handle Swish callback
-router.post('/swish-callback', express.raw({ type: 'application/json' }), async (req, res) => {
-    try {
 
-        // Parse the callback data
-        const payment = JSON.parse(req.body.toString());
-        console.log('Received Swish callback:', payment);
-
-        // Return 200 OK immediately to acknowledge receipt
-        res.status(200).send('OK');
-
-        // Process payment result asynchronously
-        if (payment.status === 'PAID') {
-            // Update booking status in Supabase
-            // You'll need to implement this part
-            await updateBookingPaymentStatus(payment);
-        }
-
-    } catch (error) {
-        console.error('Swish callback error:', error);
-        // Still return 200 to prevent retries
-        res.status(200).send('OK');
-    }
-});
 
 router.post('/swish-callback', express.json(), async (req, res) => {
     try {
