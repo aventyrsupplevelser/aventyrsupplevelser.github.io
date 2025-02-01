@@ -94,9 +94,6 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
         res.status(200).send('OK');
 
-        if (payment.status === 'PAID') {
-            await updateBookingPaymentStatus(payment);
-        }
     } catch (error) {
         console.error('Swish callback error:', error);
         res.status(200).send('OK');
