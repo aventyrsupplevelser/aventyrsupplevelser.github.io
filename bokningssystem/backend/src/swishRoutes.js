@@ -12,57 +12,48 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Initialize HTTPS agent with certificates
+// Load certificates more simply
+const cert = fs.readFileSync(path.join(__dirname, '../certnew.pem'), 'utf8');
+const key = fs.readFileSync(path.join(__dirname, '../PrivateKey.key'), 'utf8');
+
+// Create HTTPS agent with just the necessary certs
 const agent = new Agent({
-    cert: fs.readFileSync(path.join(__dirname, '../certnew.pem'), 'utf8'),
-    key: fs.readFileSync(path.join(__dirname, '../PrivateKey.key'), 'utf8'),
-    ca: fs.readFileSync(path.join(__dirname, '../Swish_TLS_RootCA.pem'), 'utf8'),
-    rejectUnauthorized: true  // Enable certificate validation
+    cert: cert,
+    key: key,
+    rejectUnauthorized: false // temporarily disable certificate validation for testing
 });
 
-// Create Swish client for sandbox
+// Create Swish client
 const swishClient = axios.create({
     httpsAgent: agent,
     baseURL: 'https://staging.getswish.pub.tds.tieto.com',
-    headers: {
-        'Content-Type': 'application/json'
-    }
 });
 
+// Rest of your router code...
 router.post('/create-payment', async (req, res) => {
     try {
         const { amount, bookingNumber, isMobile, payerAlias } = req.body;
         
-        console.log('Received payment request:', {
-            amount,
-            bookingNumber,
-            isMobile,
-            payerAlias,
-        });
+        // Log incoming request
+        console.log('Payment request:', { amount, bookingNumber, isMobile, payerAlias });
 
-        // Generate instruction ID
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
-        console.log('Generated instruction ID:', instructionId);
-
-        // Prepare payment data with sandbox Swish number
+        
         const paymentData = {
-            payeePaymentReference: bookingNumber,
+            payeePaymentReference: 123456,
             callbackUrl: `${process.env.PUBLIC_URL}/api/swish/swish-callback`,
-            payeeAlias: '1231049352', // Your sandbox Swish number
+            payeeAlias: '1231049352',  // Your sandbox Swish number
             currency: 'SEK',
             amount: amount.toString(),
-            message: `${bookingNumber}`,
-            callbackIdentifier: crypto.randomBytes(16).toString('hex').toUpperCase()
+            message: bookingNumber
         };
 
         if (payerAlias) {
             paymentData.payerAlias = payerAlias;
-            console.log('Adding payer alias:', payerAlias);
         }
 
-        console.log('Making Swish request with data:', paymentData);
+        console.log('Making Swish request:', paymentData);
 
-        // Make request to Swish sandbox
         const response = await swishClient.put(
             `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             paymentData
@@ -70,11 +61,11 @@ router.post('/create-payment', async (req, res) => {
 
         console.log('Swish response:', {
             status: response.status,
+            statusText: response.statusText,
             headers: response.headers,
             data: response.data
         });
 
-        // Return different responses based on mobile/desktop
         if (isMobile) {
             res.json({
                 success: true,
@@ -89,21 +80,16 @@ router.post('/create-payment', async (req, res) => {
         }
 
     } catch (error) {
-        // Enhanced error logging
-        console.error('Detailed error:', {
+        console.error('Payment error:', {
             message: error.message,
             response: error.response?.data,
-            request: error.request,
-            status: error.response?.status,
-            stack: error.stack,
             config: {
                 url: error.config?.url,
                 method: error.config?.method,
-                headers: error.config?.headers,
                 data: error.config?.data
             }
         });
-
+        
         res.status(400).json({
             success: false,
             error: error.response?.data?.message || error.message
