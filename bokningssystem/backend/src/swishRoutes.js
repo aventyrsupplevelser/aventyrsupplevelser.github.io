@@ -26,27 +26,39 @@ const swishClient = axios.create({
 });
 
 // Create payment request
-router.post('/create-payment', async (req, res) => {
+//In swishRoutes.js, add this logging:
+
+router.post('/swish-payment', async (req, res) => {
     try {
         const { amount, bookingNumber, isMobile, payerAlias } = req.body;
+        
+        console.log('Received payment request:', {
+            amount,
+            bookingNumber,
+            isMobile,
+            payerAlias,
+        });
 
         // Generate instruction ID
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
+        console.log('Generated instruction ID:', instructionId);
 
         // Prepare payment data
         const paymentData = {
-            payeePaymentReference: 12345678,
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
-            payeeAlias: '1231049352', // Your Swish number
+            payeePaymentReference: bookingNumber,
+            callbackUrl: `${process.env.PUBLIC_URL}/api/swish-callback`,
+            payeeAlias: '1231049352',
             currency: 'SEK',
             amount: amount.toString(),
-            message: `test`
+            message: `Booking ${bookingNumber}`
         };
 
-        // Add payerAlias for E-commerce flow (desktop)
         if (payerAlias) {
             paymentData.payerAlias = payerAlias;
+            console.log('Adding payer alias:', payerAlias);
         }
+
+        console.log('Making Swish request with data:', paymentData);
 
         // Make request to Swish
         const response = await swishClient.put(
@@ -54,24 +66,17 @@ router.post('/create-payment', async (req, res) => {
             paymentData
         );
 
-        console.log('Payment request created:', response.data);
+        console.log('Swish response headers:', response.headers);
+        console.log('Swish response status:', response.status);
+        console.log('Swish response data:', response.data);
 
-        // Return different responses based on mobile/desktop
-        if (isMobile) {
-            res.json({
-                success: true,
-                paymentId: instructionId,
-                token: response.headers['paymentrequesttoken']
-            });
-        } else {
-            res.json({
-                success: true,
-                paymentId: instructionId
-            });
-        }
-
+        // Rest of the code...
     } catch (error) {
-        console.error('Swish payment error:', error.response?.data || error);
+        console.error('Detailed error:', {
+            message: error.message,
+            response: error.response?.data,
+            stack: error.stack
+        });
         res.status(400).json({
             success: false,
             error: error.response?.data?.message || error.message

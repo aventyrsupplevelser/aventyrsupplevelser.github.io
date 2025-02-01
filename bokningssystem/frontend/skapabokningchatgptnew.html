@@ -1587,7 +1587,6 @@
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             try {
-                // For desktop users, get their phone number
                 let phoneNumber = null;
                 if (!isMobile) {
                     phoneNumber = prompt('Ange ditt Swish-nummer:');
@@ -1595,9 +1594,7 @@
                         paymentContainer.style.display = 'none';
                         return;
                     }
-                    // Format phone number: remove first 0 and add 46
-                    phoneNumber = phoneNumber.startsWith('0') ?
-                        '46' + phoneNumber.substring(1) : phoneNumber;
+                    phoneNumber = formatPhoneNumber(phoneNumber);
                 }
 
                 // Create payment request
@@ -1645,6 +1642,24 @@
             </div>
         `;
             }
+        }
+
+        function formatPhoneNumber(phone) {
+            // Remove any spaces, hyphens, plus signs
+            phone = phone.replace(/[\s\-\+]/g, '');
+
+            // If starts with 0, replace with 46
+            if (phone.startsWith('0')) {
+                return '46' + phone.substring(1);
+            }
+
+            // If starts with 46, use as is
+            if (phone.startsWith('46')) {
+                return phone;
+            }
+
+            // Otherwise assume it needs 46 prefix
+            return '46' + phone;
         }
 
         async function handlePayment(paymentMethod) {
