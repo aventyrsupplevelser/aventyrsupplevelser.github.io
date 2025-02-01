@@ -20,7 +20,6 @@ const key = fs.readFileSync(path.join(__dirname, '../PrivateKey.key'), 'utf8');
 const agent = new Agent({
     cert: cert,
     key: key,
-    rejectUnauthorized: false // temporarily disable certificate validation for testing
 });
 
 // Create Swish client
