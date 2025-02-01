@@ -1587,6 +1587,7 @@
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             try {
+                // For desktop users, get their phone number
                 let phoneNumber = null;
                 if (!isMobile) {
                     phoneNumber = prompt('Ange ditt Swish-nummer:');
@@ -1594,7 +1595,6 @@
                         paymentContainer.style.display = 'none';
                         return;
                     }
-                    phoneNumber = formatPhoneNumber(phoneNumber);
                 }
 
                 // Create payment request
