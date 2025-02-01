@@ -28,7 +28,7 @@ const swishClient = axios.create({
 // Create payment request
 //In swishRoutes.js, add this logging:
 
-router.post('/swish-payment', async (req, res) => {
+router.post('/create-payment', async (req, res) => {
     try {
         const { amount, bookingNumber, isMobile, payerAlias } = req.body;
         
