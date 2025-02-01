@@ -47,10 +47,10 @@ router.post('/create-payment', async (req, res) => {
         const paymentData = {
             payeePaymentReference: bookingNumber,
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
-            payeeAlias: '1231049352',
+            payeeAlias: '1231049352',,
             currency: 'SEK',
             amount: amount.toString(),
-            message: `Booking ${bookingNumber}`
+            message: `${bookingNumber}`
         };
 
         if (payerAlias) {
