@@ -88,11 +88,6 @@ router.post('/create-payment', async (req, res) => {
 router.post('/swish-callback', express.raw({ type: 'application/json' }), async (req, res) => {
     try {
 
-        console.log('Callback headers:', req.headers);
-console.log('Callback raw body:', req.body.toString());
-
-      
-
         // Parse the callback data
         const payment = JSON.parse(req.body.toString());
         console.log('Received Swish callback:', payment);

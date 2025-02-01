@@ -1644,24 +1644,6 @@
             }
         }
 
-        function formatPhoneNumber(phone) {
-            // Remove any spaces, hyphens, plus signs
-            phone = phone.replace(/[\s\-\+]/g, '');
-
-            // If starts with 0, replace with 46
-            if (phone.startsWith('0')) {
-                return '46' + phone.substring(1);
-            }
-
-            // If starts with 46, use as is
-            if (phone.startsWith('46')) {
-                return phone;
-            }
-
-            // Otherwise assume it needs 46 prefix
-            return '46' + phone;
-        }
-
         async function handlePayment(paymentMethod) {
 
             // Get customer info
