@@ -22,7 +22,7 @@ const agent = new Agent({
 // Create Swish client
 const swishClient = axios.create({
     httpsAgent: agent,
-    baseURL: 'https://mss.cpc.getswish.net/swish-cpcapi/api/v2'
+    baseURL: 'https://staging.getswish.pub.tds.tieto.com'
 });
 
 // Create payment request
@@ -62,7 +62,7 @@ router.post('/create-payment', async (req, res) => {
 
         // Make request to Swish
         const response = await swishClient.put(
-            `/paymentrequests/${instructionId}`,
+            `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             paymentData
         );
 
