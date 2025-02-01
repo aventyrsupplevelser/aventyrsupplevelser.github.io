@@ -49,9 +49,9 @@ router.post('/create-payment', async (req, res) => {
             message: bookingNumber
         };
 
-        if (payerAlias) {
+       /* if (payerAlias) {
             paymentData.payerAlias = payerAlias;
-        }
+        } */
 
         console.log('Making Swish request:', paymentData);
 
