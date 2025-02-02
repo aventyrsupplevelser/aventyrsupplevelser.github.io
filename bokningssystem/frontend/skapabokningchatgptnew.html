@@ -621,7 +621,7 @@
                     </div>
 
                     <!-- Youth tickets -->
-                    <div class="ticket-selector" style="background: rgb(239, 239, 239);">
+                    <div class="ticket-selector" style="background-color: rgb(245, 245, 245);">
                         <label>Ungdom 10-16 år</label>
                         <div>300 kr</div>
                         <div class="quantity-selector">
@@ -651,7 +651,7 @@
                         <br class="fulldaySection"><br class="fulldaySection">
 
                         <!-- Full day extension -->
-                        <div class="ticket-selector fulldaySection">
+                        <div class="ticket-selector fulldaySection" style="background-color: rgb(245, 245, 245);">
                             <label>Heldag (till 17.00)</label>
                             <div>100 kr</div>
                             <div class="quantity-selector">
@@ -817,33 +817,37 @@
             }
 
             async init() {
-                // Initial render
+                // First, render the calendar for the current month.
                 this.render();
 
-                // Load which dates are available
+                // Then, fetch the available dates.
                 await this.fetchAvailableDates();
+
+                // If no available dates were found on the initial load, try moving forward.
+                if (Object.keys(this.availableDates).length === 0) {
+                    this.changeMonth(1);
+                }
             }
 
-            async fetchAvailableDates(depth = 0, direction = 'forward') {
-                const maxMonths = 7; // maximum months to try in the given direction
+            async fetchAvailableDates() {
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
-                    // Calculate the start and end of the current month
+                    // Start & end of selected month
                     const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
-                    // If we're in the current month, skip times earlier than now + 60 minutes
+                    // If user is on the current month, skip any times < now+60 min
                     const now = new Date();
                     const cutoffTime = new Date();
                     cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
-                    const isCurrentMonth =
-                        now.getMonth() === startOfMonth.getMonth() &&
-                        now.getFullYear() === startOfMonth.getFullYear();
+
+                    const isCurrentMonth = (now.getMonth() === startOfMonth.getMonth()) &&
+                        (now.getFullYear() === startOfMonth.getFullYear());
                     const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
 
-                    // Fetch available time slots for this month from Supabase
+                    // Fetch from Supabase
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('start_time, total_spots, available_spots')
@@ -852,47 +856,12 @@
 
                     if (error) throw error;
 
-                    // If no slots found, try recursing in the given direction if we haven't reached max depth
-                    if (!slots || slots.length === 0) {
-                        if (depth < maxMonths) {
-                            if (direction === 'forward') {
-                                this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
-                            } else {
-                                this.currentMonth.setMonth(this.currentMonth.getMonth() - 1);
-                            }
-                            this.render(); // re-render the calendar for the updated month
-                            return this.fetchAvailableDates(depth + 1, direction);
-                        } else {
-                            // We've exceeded the maximum allowed months in this direction.
-                            // Disable the appropriate arrow button and show a message.
-                            if (direction === 'forward') {
-                                const nextBtn = this.container.querySelector('#nextMonth');
-                                if (nextBtn) {
-                                    nextBtn.disabled = true;
-                                    nextBtn.style.opacity = '0.5';
-                                    nextBtn.style.cursor = 'not-allowed';
-                                }
-                            } else {
-                                const prevBtn = this.container.querySelector('#prevMonth');
-                                if (prevBtn) {
-                                    prevBtn.disabled = true;
-                                    prevBtn.style.opacity = '0.5';
-                                    prevBtn.style.cursor = 'not-allowed';
-                                }
-                            }
-                            this.container.insertAdjacentHTML(
-                                'beforeend',
-                                `<p style="padding:10px; text-align:center;">Inga tillgängliga tider i denna riktning.</p>`
-                            );
-                            return;
-                        }
-                    }
-
-                    // Process the slots if found: tally total and available spots by date
+                    // Tally totalSpots & availableSpots by date
                     const dateAvailability = {};
-                    slots.forEach((slot) => {
+                    slots.forEach(slot => {
                         const date = new Date(slot.start_time);
                         const dateStr = date.toISOString().split('T')[0];
+
                         if (!dateAvailability[dateStr]) {
                             dateAvailability[dateStr] = { totalSpots: 0, availableSpots: 0 };
                         }
@@ -906,8 +875,6 @@
                     console.error('Error fetching available dates:', error);
                 }
             }
-
-
 
             render() {
                 // Build the calendar HTML
@@ -1025,22 +992,37 @@
                 });
             }
 
-            async changeMonth(direction) {
+            async changeMonth(direction, depth = 0) {
+                const maxDepth = 7; // maximum number of months to skip in a row
+                // Calculate the new month based on the direction
                 const newMonth = new Date(this.currentMonth);
                 newMonth.setMonth(this.currentMonth.getMonth() + direction);
 
-                // Prevent going before current month if we want that logic
+                // Prevent going backwards before the current month if that's desired
                 const now = new Date();
                 const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
                 if (direction < 0 && newMonth < currentMonthYear) {
-                    return; // do nothing
+                    return; // do nothing if trying to go back too far
                 }
 
+                // Set and render the new month
                 this.currentMonth = newMonth;
-                this.render();           // re-render the HTML
-                await this.fetchAvailableDates();  // refresh availability
+                this.render();
+
+                // Refresh available dates for the current month
+                await this.fetchAvailableDates();
+
+                // Check if any available dates were found for this month.
+                // (Assuming fetchAvailableDates() updates this.availableDates.)
+                if (Object.keys(this.availableDates).length === 0 && depth < maxDepth) {
+                    // No available dates were found in this month—skip to the next/previous month.
+                    return this.changeMonth(direction, depth + 1);
+                }
+
+                // Finally, update the days in the calendar (which colors them based on availability, etc.)
                 this.updateAvailableDays();
             }
+
 
             updateAvailableDays() {
                 // Color each day according to availability
@@ -1095,6 +1077,7 @@
 
                 // Actually load the time slots for this date
                 loadTimeSlots(dateStr);
+                updateTicketButtonStates();
             }
         }
 
@@ -1240,22 +1223,27 @@
         }
 
         function updateTicketButtonStates() {
+            // If no time slot is selected, disable all ticket selector arrows
+            if (!currentTimeSlot) {
+                document.querySelectorAll('.quantity-btn').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                });
+                return;
+            }
+
+            // Otherwise, enable and update buttons normally
             const selectedSlot = document.querySelector('.time-slot.selected');
             const availableSpots = selectedSlot ? parseInt(selectedSlot.dataset.availableSpots) : 0;
-
-            // Common logic for plus/minus
             const totalChosen = ticketState.adult + ticketState.youth + ticketState.kid;
 
-            // Adult
+            // Update each type of ticket
             handleButton('adult', availableSpots, totalChosen);
-            // Youth
             handleButton('youth', availableSpots, totalChosen);
-            // Kid
             handleButton('kid', availableSpots, totalChosen);
-            // Fullday
             updateFulldayButtons();
 
-            // Update the continue button if we have any tickets
+            // Enable or disable the "continue" button based on selection
             validateTicketSelection();
         }
 
@@ -1327,6 +1315,17 @@
                     ticketState[type] = newValue;
                     document.getElementById(`${type}Quantity`).textContent = newValue.toString();
                 }
+            }
+
+            if (type === 'adult' && ticketState.adult === 0 && ticketState.kid > 0) {
+                ticketState.kid = 0;
+                document.getElementById('kidQuantity').textContent = '0';
+            }
+
+            const mainTicketsTotal = ticketState.adult + ticketState.youth + ticketState.kid;
+            if (ticketState.fullday > mainTicketsTotal) {
+                ticketState.fullday = mainTicketsTotal;
+                document.getElementById('fulldayQuantity').textContent = mainTicketsTotal.toString();
             }
 
             // Re-check after changes
@@ -1676,6 +1675,33 @@
             </div>
         `;
             }
+
+            updateCustomer();
+        }
+
+        async function updateCustomer() {
+
+            // Get customer info
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerComment = document.getElementById('customerComment').value.trim();
+            console.log(customerComment);
+
+            // Get session data
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            if (!sessionData?.bookingId) throw new Error('No active booking found');
+
+            // Update booking details
+            const { error: updateError } = await supabaseClient.rpc('manage_booking', {
+                p_booking_id: sessionData.bookingId,
+                p_access_token: sessionData.token,
+                p_customer_name: customerName,
+                p_customer_email: customerEmail,
+                p_comments: customerComment
+            });
+
+            if (updateError) throw updateError;
+
         }
 
         async function handlePayment(paymentMethod) {
@@ -1684,6 +1710,7 @@
             const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
             const customerComment = document.getElementById('customerComment').value.trim();
+            console.log(customerComment);
 
             // Validate required fields
             if (!customerName || !customerEmail) {
