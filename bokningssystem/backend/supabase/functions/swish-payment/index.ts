@@ -1,22 +1,61 @@
-// supabase/functions/swish-payment/index.ts
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import axios from 'https://esm.sh/axios@1.7.9'
 import { Agent } from 'https://deno.land/std@0.170.0/node/https.ts'
 
-// Get certificates from environment variables
-const cert = Deno.env.get('SWISH_CERTIFICATE')
-const key = Deno.env.get('SWISH_PRIVATE_KEY')
-
-if (!cert || !key) {
-  throw new Error('Missing certificate environment variables')
+function normalizeCertificate(cert: string): string {
+  return cert
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .trim();
 }
+
+function getCertificates() {
+  const rawCert = Deno.env.get('SWISH_CERTIFICATE');
+  const rawKey = Deno.env.get('SWISH_PRIVATE_KEY');
+
+  if (!rawCert || !rawKey) {
+    throw new Error('Missing required environment variables');
+  }
+
+  const decodedCert = normalizeCertificate(atob(rawCert));
+  const decodedKey = normalizeCertificate(atob(rawKey));
+
+  const certs = decodedCert
+    .split('-----END CERTIFICATE-----\n')
+    .map(cert => cert.trim())
+    .filter(cert => cert.length > 0)
+    .map(cert => `${cert}\n-----END CERTIFICATE-----\n`);
+
+  const clientCert = certs[0];
+  const ca = certs.slice(1);
+
+  console.log('Certificate count:', certs.length);
+  console.log('Client cert lines:', clientCert.split('\n').length);
+  console.log('CA certs lines:', ca.map(c => c.split('\n').length));
+
+  return {
+    cert: clientCert,
+    key: decodedKey,
+    ca
+  };
+}
+
+// Get the certificates
+const { cert, key, ca } = getCertificates();
 
 // Create HTTPS agent with the certificates
 const agent = new Agent({
-  cert: cert,
-  key: key,
-  rejectUnauthorized: false // Same as working example
-})
+  cert,
+  key,
+  ca,
+  rejectUnauthorized: false
+});
+
+// Create Swish client
+const swishClient = axios.create({
+  httpsAgent: agent,
+  baseURL: 'https://staging.getswish.pub.tds.tieto.com',
+});
 
 // Create Swish client
 const swishClient = axios.create({
