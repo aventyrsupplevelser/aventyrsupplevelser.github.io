@@ -717,10 +717,6 @@
                         <input type="email" id="customerEmail" required data-required>
                     </div>
                     <div class="form-group">
-                        <label>Telefon</label>
-                        <input type="tel" id="customerPhone">
-                    </div>
-                    <div class="form-group">
                         <label>Kommentar</label>
                         <textarea style="height: 100px" type="comment" id="customerComment"></textarea>
                     </div>
@@ -1544,6 +1540,7 @@
                 // Extend expiry
                 bookingData.expiresAt = Date.now() + 30 * 60 * 1000;
                 localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                localStorage.removeItem('spotsReleased');
             }
 
             return bookingData;
@@ -1648,7 +1645,6 @@
             // Get customer info
             const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
-            const customerPhone = document.getElementById('customerPhone').value.trim();
             const customerComment = document.getElementById('customerComment').value.trim();
 
             // Validate required fields
@@ -1702,7 +1698,6 @@
                     p_access_token: sessionData.token,
                     p_customer_name: customerName,
                     p_customer_email: customerEmail,
-                    p_customer_phone: customerPhone,
                     p_comments: customerComment,
                     p_delete: false
                 });
@@ -1796,23 +1791,30 @@
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             const hasReleasedSpots = localStorage.getItem('spotsReleased');
             if (sessionData?.bookingId && !hasReleasedSpots) {
-                fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${sessionData.bookingId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-                    body: JSON.stringify({
-                        time_slot_id: currentTimeSlot,
-                        adult_quantity: 0,
-                        youth_quantity: 0,
-                        kid_quantity: 0,
-                        full_day: 0,
-                        is_rebookable: false,
-                        access_token: sessionData.token
+                // Call your Supabase RPC "manage_booking" function to update the booking
+                supabaseClient
+                    .rpc('manage_booking', {
+                        p_booking_id: sessionData.bookingId,
+                        p_access_token: sessionData.token,
+                        p_new_time_slot_id: currentTimeSlot,
+                        p_new_adult_quantity: 0,
+                        p_new_youth_quantity: 0,
+                        p_new_kid_quantity: 0,
+                        p_full_day: 0,
+                        p_is_rebookable: false,
+                        p_delete: false
                     })
-                }).catch(console.error);
+                    .then(({ error }) => {
+                        if (error) {
+                            console.error('Error releasing spots via rpc manage_booking:', error);
+                        }
+                    })
+                    .catch(console.error);
 
                 localStorage.setItem('spotsReleased', 'true');
             }
         }
+
 
         // Clear local storage on page load
         function clearLocalStorageOnLoad() {
