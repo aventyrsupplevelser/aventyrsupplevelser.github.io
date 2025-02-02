@@ -824,25 +824,26 @@
                 await this.fetchAvailableDates();
             }
 
-            async fetchAvailableDates() {
+            async fetchAvailableDates(depth = 0, direction = 'forward') {
+                const maxMonths = 7; // maximum months to try in the given direction
                 try {
                     const year = this.currentMonth.getFullYear();
                     const month = this.currentMonth.getMonth() + 1;
 
-                    // Start & end of selected month
+                    // Calculate the start and end of the current month
                     const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
                     const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
-                    // If user is on the current month, skip any times < now+60 min
+                    // If we're in the current month, skip times earlier than now + 60 minutes
                     const now = new Date();
                     const cutoffTime = new Date();
                     cutoffTime.setMinutes(cutoffTime.getMinutes() + 60);
-
-                    const isCurrentMonth = (now.getMonth() === startOfMonth.getMonth()) &&
-                        (now.getFullYear() === startOfMonth.getFullYear());
+                    const isCurrentMonth =
+                        now.getMonth() === startOfMonth.getMonth() &&
+                        now.getFullYear() === startOfMonth.getFullYear();
                     const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
 
-                    // Fetch from Supabase
+                    // Fetch available time slots for this month from Supabase
                     const { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('start_time, total_spots, available_spots')
@@ -851,12 +852,47 @@
 
                     if (error) throw error;
 
-                    // Tally totalSpots & availableSpots by date
+                    // If no slots found, try recursing in the given direction if we haven't reached max depth
+                    if (!slots || slots.length === 0) {
+                        if (depth < maxMonths) {
+                            if (direction === 'forward') {
+                                this.currentMonth.setMonth(this.currentMonth.getMonth() + 1);
+                            } else {
+                                this.currentMonth.setMonth(this.currentMonth.getMonth() - 1);
+                            }
+                            this.render(); // re-render the calendar for the updated month
+                            return this.fetchAvailableDates(depth + 1, direction);
+                        } else {
+                            // We've exceeded the maximum allowed months in this direction.
+                            // Disable the appropriate arrow button and show a message.
+                            if (direction === 'forward') {
+                                const nextBtn = this.container.querySelector('#nextMonth');
+                                if (nextBtn) {
+                                    nextBtn.disabled = true;
+                                    nextBtn.style.opacity = '0.5';
+                                    nextBtn.style.cursor = 'not-allowed';
+                                }
+                            } else {
+                                const prevBtn = this.container.querySelector('#prevMonth');
+                                if (prevBtn) {
+                                    prevBtn.disabled = true;
+                                    prevBtn.style.opacity = '0.5';
+                                    prevBtn.style.cursor = 'not-allowed';
+                                }
+                            }
+                            this.container.insertAdjacentHTML(
+                                'beforeend',
+                                `<p style="padding:10px; text-align:center;">Inga tillgängliga tider i denna riktning.</p>`
+                            );
+                            return;
+                        }
+                    }
+
+                    // Process the slots if found: tally total and available spots by date
                     const dateAvailability = {};
-                    slots.forEach(slot => {
+                    slots.forEach((slot) => {
                         const date = new Date(slot.start_time);
                         const dateStr = date.toISOString().split('T')[0];
-
                         if (!dateAvailability[dateStr]) {
                             dateAvailability[dateStr] = { totalSpots: 0, availableSpots: 0 };
                         }
@@ -870,6 +906,8 @@
                     console.error('Error fetching available dates:', error);
                 }
             }
+
+
 
             render() {
                 // Build the calendar HTML
