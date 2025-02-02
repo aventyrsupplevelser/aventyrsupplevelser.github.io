@@ -1,55 +1,57 @@
-// In backend/src/swishRoutes.js
 import express from 'express';
 import { Agent } from 'https';
 import axios from 'axios';
-import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import dotenv from 'dotenv';
 
-const router = express.Router();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+dotenv.config();
 
-// Load certificates more simply
-const cert = fs.readFileSync(path.join(__dirname, '../certnew.pem'), 'utf8');
-const key = fs.readFileSync(path.join(__dirname, '../PrivateKey.key'), 'utf8');
+// Decode from Base64
+function getCertificates() {
+    const rawCert = process.env.SWISH_CERTIFICATE;
+    const rawKey = process.env.SWISH_PRIVATE_KEY;
 
-// Create HTTPS agent with just the necessary certs
-const agent = new Agent({
-    cert: cert,
-    key: key,
-});
+    if (!rawCert || !rawKey) {
+        throw new Error('Missing required environment variables');
+    }
 
-// Create Swish client
+    const cert = Buffer.from(rawCert, 'base64').toString('utf8');
+    const key = Buffer.from(rawKey, 'base64').toString('utf8');
+
+    return { cert, key };
+}
+
+// Load the certificates
+const { cert, key } = getCertificates();
+
+// Create HTTPS agent
+const agent = new Agent({ cert, key });
+
+// Create an Axios instance with mTLS
 const swishClient = axios.create({
     httpsAgent: agent,
     baseURL: 'https://staging.getswish.pub.tds.tieto.com',
 });
 
-// Rest of your router code...
-router.post('/create-payment', async (req, res) => {
+const app = express();
+app.use(express.json());
+
+app.post('/swish-payment', async (req, res) => {
     try {
         const { amount, bookingNumber, isMobile, payerAlias } = req.body;
-        
-        // Log incoming request
-        console.log('Payment request:', { amount, bookingNumber, isMobile, payerAlias });
-
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
-        
+
         const paymentData = {
-            payeePaymentReference: 123456,
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
-            payeeAlias: '1231049352',  // Your sandbox Swish number
+            payeePaymentReference: bookingNumber,
+            callbackUrl: 'https://yourserver.com/api/swish-callback',
+            payeeAlias: '1231049352',
             currency: 'SEK',
             amount: amount.toString(),
             message: bookingNumber
         };
 
-       if (payerAlias) {
+        if (payerAlias) {
             paymentData.payerAlias = payerAlias;
-        } 
+        }
 
         console.log('Making Swish request:', paymentData);
 
@@ -58,42 +60,21 @@ router.post('/create-payment', async (req, res) => {
             paymentData
         );
 
-        console.log('Swish response:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers,
-            data: response.data
+        res.json({
+            success: true,
+            paymentId: instructionId,
+            token: response.headers['paymentrequesttoken']
         });
-
-        if (isMobile) {
-            res.json({
-                success: true,
-                paymentId: instructionId,
-                token: response.headers['paymentrequesttoken']
-            });
-        } else {
-            res.json({
-                success: true,
-                paymentId: instructionId
-            });
-        }
 
     } catch (error) {
-        console.error('Payment error:', {
-            message: error.message,
-            response: error.response?.data,
-            config: {
-                url: error.config?.url,
-                method: error.config?.method,
-                data: error.config?.data
-            }
-        });
-        
-        res.status(400).json({
-            success: false,
-            error: error.response?.data?.message || error.message
-        });
+        console.error('Swish payment error:', error);
+        res.status(400).json({ success: false, error: error.message });
     }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 // Handle callbacks from Swish
