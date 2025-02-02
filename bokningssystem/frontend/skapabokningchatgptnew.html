@@ -1580,6 +1580,33 @@
                 localStorage.removeItem('spotsReleased');
             }
 
+            // Define the handler function
+            const handleBookingUpdate = (payload) => {
+                console.log('Booking update received:', payload);
+                if (payload.new.status === 'confirmed') {
+                    // Payment successful
+                    window.location.href = `tackfordinbokning.html?order_id=${payload.new.booking_number}`;
+                } else if (['cancelled', 'declined', 'error'].includes(payload.new.status)) {
+                    // Payment failed
+                    alert('Betalningen misslyckades. Försök igen.');
+                }
+            };
+
+            // Set up subscription using access token for security
+            const channel = supabaseClient
+                .channel('booking_updates')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'bookings',
+                        filter: `access_token=eq.${bookingData.token}`
+                    },
+                    handleBookingUpdate
+                )
+                .subscribe();
+
             return bookingData;
         }
 
