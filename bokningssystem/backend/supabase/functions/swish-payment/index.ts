@@ -1,6 +1,5 @@
+// supabase/functions/swish-payment/index.ts
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import axios from 'https://esm.sh/axios@1.7.9'
-import { Agent } from 'https://deno.land/std@0.170.0/node/https.ts'
 
 function normalizeCertificate(cert: string): string {
   return cert
@@ -26,45 +25,16 @@ function getCertificates() {
     .filter(cert => cert.length > 0)
     .map(cert => `${cert}\n-----END CERTIFICATE-----\n`);
 
-  const clientCert = certs[0];
-  const ca = certs.slice(1);
-
   console.log('Certificate count:', certs.length);
-  console.log('Client cert lines:', clientCert.split('\n').length);
-  console.log('CA certs lines:', ca.map(c => c.split('\n').length));
+  console.log('Client cert lines:', certs.map(c => c.split('\n').length));
 
   return {
-    cert: clientCert,
-    key: decodedKey,
-    ca
+    cert: decodedCert, // Use full chain
+    key: decodedKey
   };
 }
 
-// Get the certificates
-const { cert, key, ca } = getCertificates();
-
-// Create HTTPS agent with the certificates
-const agent = new Agent({
-  cert,
-  key,
-  ca,
-  rejectUnauthorized: false
-});
-
-// Create Swish client
-const swishClient = axios.create({
-  httpsAgent: agent,
-  baseURL: 'https://staging.getswish.pub.tds.tieto.com',
-});
-
-// Create Swish client
-const swishClient = axios.create({
-  httpsAgent: agent,
-  baseURL: 'https://staging.getswish.pub.tds.tieto.com',
-})
-
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
       headers: {
@@ -72,54 +42,64 @@ serve(async (req) => {
         'Access-Control-Allow-Methods': 'POST',
         'Access-Control-Allow-Headers': 'Content-Type',
       }
-    })
+    });
   }
 
   try {
-    // Parse request body
-    const { amount, bookingNumber, isMobile, payerAlias } = await req.json()
+    const { cert, key } = getCertificates();
+    const { amount, bookingNumber, isMobile, payerAlias } = await req.json();
     
-    // Log incoming request
-    console.log('Payment request:', { amount, bookingNumber, isMobile, payerAlias })
+    console.log('Payment request:', { amount, bookingNumber, isMobile, payerAlias });
 
-    // Generate instruction ID (same as original)
-    const instructionId = crypto.randomUUID().replace(/-/g, '').toUpperCase()
+    const instructionId = crypto.randomUUID().replace(/-/g, '').toUpperCase();
 
-    // Prepare payment data (same as original)
     const paymentData = {
-      payeePaymentReference: 123456,
+      payeePaymentReference: bookingNumber,
       callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
       payeeAlias: '1231049352',
       currency: 'SEK',
       amount: amount.toString(),
       message: bookingNumber
-    }
+    };
 
     if (payerAlias) {
-      paymentData.payerAlias = payerAlias
+      paymentData.payerAlias = payerAlias;
     }
 
-    console.log('Making Swish request:', paymentData)
+    console.log('Making Swish request:', paymentData);
 
-    // Make request to Swish
-    const response = await swishClient.put(
-      `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-      paymentData
-    )
+    // Use native fetch with TLS certificates
+    const response = await fetch(
+      `https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+        // @ts-ignore - These options exist in Deno but TypeScript doesn't know about them
+        cert: cert,
+        key: key,
+      }
+    );
 
-    console.log('Swish response:', {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-      data: response.data
-    })
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Swish error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText
+      });
+      throw new Error(errorText || 'Failed to create payment request');
+    }
 
-    // Return response based on mobile/desktop (same as original)
+    const token = response.headers.get('paymentrequesttoken');
+    
     return new Response(
       JSON.stringify({
         success: true,
         paymentId: instructionId,
-        token: isMobile ? response.headers['paymentrequesttoken'] : undefined
+        token: isMobile ? token : undefined
       }),
       {
         headers: {
@@ -127,23 +107,15 @@ serve(async (req) => {
           'Access-Control-Allow-Origin': '*',
         }
       }
-    )
+    );
 
   } catch (error) {
-    console.error('Payment error:', {
-      message: error.message,
-      response: error.response?.data,
-      config: {
-        url: error.config?.url,
-        method: error.config?.method,
-        data: error.config?.data
-      }
-    })
+    console.error('Payment error:', error);
 
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: error.response?.data?.message || error.message 
+        error: error.message
       }),
       { 
         status: 400,
@@ -152,6 +124,6 @@ serve(async (req) => {
           'Access-Control-Allow-Origin': '*',
         }
       }
-    )
+    );
   }
-})
+});
