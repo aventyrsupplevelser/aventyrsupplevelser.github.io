@@ -45,14 +45,13 @@ const swishClient = axios.create({
 
 router.post('/swish-payment', async (req, res) => {
     try {
-        const { bookingNumber, isMobile, payerAlias, token } = req.body;
+        const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
         console.log('Swish payment request:', req.body);
-        console.log('Token:', token);
-        console.log(token.type);
+        console.log('Token:', access_token);
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
-            p_access_token: token
+            p_access_token: access_token
         });
       if (error) throw error;
 
