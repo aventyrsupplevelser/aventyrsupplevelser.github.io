@@ -1640,7 +1640,8 @@
                         body: JSON.stringify({
                             bookingNumber: bookingData.booking_number,
                             isMobile,
-                            payerAlias: phoneNumber || null
+                            payerAlias: phoneNumber || null,
+                            access_token: bookingData.token
                         })
                     }
                 );
@@ -1710,7 +1711,6 @@
             const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
             const customerComment = document.getElementById('customerComment').value.trim();
-            console.log(customerComment);
 
             // Validate required fields
             if (!customerName || !customerEmail) {
