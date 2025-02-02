@@ -40,7 +40,6 @@ router.post('/create-payment', async (req, res) => {
         
         const paymentData = {
             payeePaymentReference: 123456,
-            payerAlias: '46793403478',  // Your sandbox Swish number
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352',  // Your sandbox Swish number
             currency: 'SEK',
@@ -48,9 +47,9 @@ router.post('/create-payment', async (req, res) => {
             message: bookingNumber
         };
 
-       /* if (payerAlias) {
+       if (payerAlias) {
             paymentData.payerAlias = payerAlias;
-        } */
+        } 
 
         console.log('Making Swish request:', paymentData);
 
