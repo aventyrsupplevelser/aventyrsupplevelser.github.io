@@ -32,10 +32,7 @@ const swishClient = axios.create({
     baseURL: 'https://staging.getswish.pub.tds.tieto.com',
 });
 
-const app = express();
-app.use(express.json());
-
-app.post('/swish-payment', async (req, res) => {
+router.post('/swish-payment', async (req, res) => {
     try {
         const { amount, bookingNumber, isMobile, payerAlias } = req.body;
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
@@ -70,11 +67,6 @@ app.post('/swish-payment', async (req, res) => {
         console.error('Swish payment error:', error);
         res.status(400).json({ success: false, error: error.message });
     }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
 });
 
 // Handle callbacks from Swish
