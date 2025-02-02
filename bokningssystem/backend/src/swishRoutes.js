@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const router = express.Router(); // <--- You forgot this line!
+
 // Decode from Base64
 function getCertificates() {
     const rawCert = process.env.SWISH_CERTIFICATE;
