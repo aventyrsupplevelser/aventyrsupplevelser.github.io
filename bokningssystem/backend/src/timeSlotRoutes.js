@@ -540,26 +540,12 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             return res.status(400).json({ error: 'order_id is required.' });
         }
 
-        // Look up the booking by order_id
-        const { data: booking, error: bookingError } = await supabase
-            .from('bookings')
-            .select('*')
-            .eq('booking_number', order_id)
-            .single();
+        const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
+            p_access_token: accessToken
+        });
+      if (error) throw error;
 
-        if (bookingError) {
-            req.logCheckpoint('Error fetching booking');
-            throw bookingError;
-        }
-
-        // Calculate amount server-side
-        const adultTotal = booking.adult_quantity * 400;
-        const youthTotal = booking.youth_quantity * 300;
-        const kidTotal = booking.kid_quantity * 200;
-        const fullDayTotal = booking.full_day * 100;
-        const totalTickets = booking.adult_quantity + booking.youth_quantity + booking.kid_quantity;
-        const rebookingTotal = booking.is_rebookable ? (totalTickets * 25) : 0;
-        const amount = (adultTotal + youthTotal + kidTotal + fullDayTotal + rebookingTotal) * 100; // in öre
+      const amount = data;
 
         const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
         const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
@@ -588,7 +574,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             version: 'v10',
             merchant_id,
             agreement_id,
-            amount,  // Server-calculated amount
+            amount,
             currency: 'SEK',
             order_id,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,

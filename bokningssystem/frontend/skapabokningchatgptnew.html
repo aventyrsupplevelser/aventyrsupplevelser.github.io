@@ -1540,7 +1540,6 @@
             // If there's no existing local booking or it's expired, create new
             if (!bookingData || Date.now() > bookingData.expiresAt) {
                 const { data, error } = await supabaseClient.rpc('create_booking', {
-                    // Parameters must match the function signature exactly
                     p_time_slot_id: currentTimeSlot,
                     p_adult_quantity: tickets.adult,
                     p_youth_quantity: tickets.youth,
@@ -1554,7 +1553,8 @@
                 bookingData = {
                     bookingId: data.booking_id,
                     token: data.access_token,
-                    expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
+                    expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
+                    booking_number: data.booking_number
                 };
                 localStorage.setItem('bookingData', JSON.stringify(bookingData));
             }
@@ -1605,8 +1605,9 @@
                 return;
             }
 
+            /*
             const totals = calculateTotal(ticketState);
-            const totalAmount = totals.total;
+            const totalAmount = totals.total; */
 
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
@@ -1637,8 +1638,7 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            amount: totalAmount,
-                            bookingNumber: 'abc123',
+                            bookingNumber: bookingData.booking_number,
                             isMobile,
                             payerAlias: phoneNumber || null
                         })
