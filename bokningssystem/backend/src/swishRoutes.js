@@ -2,9 +2,19 @@ import express from 'express';
 import { Agent } from 'https';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import crypto from 'crypto';  
+import crypto from 'crypto'; 
+import { createClient } from '@supabase/supabase-js';
+
 
 dotenv.config();
+
+// Initialize Supabase client
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+console.log('Supabase client initialized');
 
 const router = express.Router(); // <--- You forgot this line!
 
@@ -39,7 +49,7 @@ router.post('/swish-payment', async (req, res) => {
     try {
         const { bookingNumber, isMobile, payerAlias } = req.body;
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
-        
+
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
             p_access_token: accessToken
         });
