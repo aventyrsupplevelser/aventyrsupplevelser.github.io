@@ -83,7 +83,7 @@ router.post('/swish-payment', async (req, res) => {
             payeeAlias: '1231049352',
             currency: 'SEK',
             amount: amount,
-            callbackIdentifier: 'TESTTESTTESTTESTTESTTESTTESTTEST'
+            callbackIdentifier: '780339D7A08C70755DB9BFC28F611A2C'
             }
         );
 
