@@ -67,7 +67,7 @@ router.post('/swish-payment', async (req, res) => {
         console.log(typeof bookingNumber);
 
         const paymentData = {
-            payeePaymentReference: bookingNumber,
+            payeePaymentReference: `${bookingNumber}`,
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352',
             currency: 'SEK',
@@ -84,7 +84,16 @@ router.post('/swish-payment', async (req, res) => {
 
         const response = await swishClient.put(
             `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-            paymentData
+            {
+                payeePaymentReference: "B128494",  // Use a simple test reference
+                callbackUrl: "https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback",
+                payeeAlias: "1231049352",
+                currency: "SEK",
+                amount: "100.00",  // Hardcode a test amount as string with 2 decimals
+                message: "Test köp",
+                payerAlias: "46793403478",
+                callbackIdentifier: 'testtesttesttesttesttesttesttest'
+            }
         );
 
         res.json({
