@@ -1872,7 +1872,7 @@
             let interval = 1000; // Start checking every second
 
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            const bookingNumber = sessionData.bookingId;
+            const bookingNumber = sessionData.booking_number;
 
             const checkStatus = setInterval(async () => {
                 try {
