@@ -57,10 +57,10 @@ router.post('/swish-payment', async (req, res) => {
         const testPayment = {
             payeePaymentReference: '0123456789',
             callbackUrl: 'https://example.com/swishcallback',
-            payeeAlias: '1234679304',
+            payeeAlias: '1231049352',
             currency: 'SEK',
             payerAlias: '4671234768',
-            amount: '100',
+            amount: 100,
             message: 'Kingston USB Flash Drive 8 GB'
         };
 
