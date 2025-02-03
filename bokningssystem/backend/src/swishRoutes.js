@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import EmailService from './emailService.js';
 import crypto from 'crypto';
+import { console } from 'inspector';
 
 
 
@@ -39,6 +40,9 @@ const { cert, key } = getCertificates();
 // Create HTTPS agent
 const agent = new Agent({ cert, key });
 
+console.log('cert:', cert);
+console.log('key:', key);
+
 // Create an Axios instance with mTLS
 const swishClient = axios.create({
     httpsAgent: agent,
@@ -56,10 +60,10 @@ router.post('/swish-payment', async (req, res) => {
         // Test data exactly as in their documentation
         const testPayment = {
             payeePaymentReference: '0123456789',
-            callbackUrl: 'https://example.com/swishcallback',
+            callbackUrl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback',
             payeeAlias: '1231049352',
             currency: 'SEK',
-            payerAlias: '4671234768',
+            payerAlias: '46793403478',
             amount: 100,
             message: 'Kingston USB Flash Drive 8 GB'
         };
