@@ -50,6 +50,7 @@ router.post('/swish-payment', async (req, res) => {
         const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
         console.log('Swish payment request:', req.body);
         console.log('Token:', access_token);
+        console.log('Booking number:', bookingNumber);
         const instructionId = crypto.randomUUID().replace(/-/g, "").toUpperCase();
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
