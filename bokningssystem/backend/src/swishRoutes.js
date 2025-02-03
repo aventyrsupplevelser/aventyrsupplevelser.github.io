@@ -5,8 +5,6 @@ import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import EmailService from './emailService.js';
 import crypto from 'crypto';
-import { console } from 'inspector';
-
 
 dotenv.config();
 
