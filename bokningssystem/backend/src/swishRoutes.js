@@ -59,7 +59,10 @@ router.post('/swish-payment', async (req, res) => {
       if (error) throw error;
 
       const amount = data / 100;
-
+        console.log('Amount:', amount);
+        console.log('Data:', data);
+        console.log(typeof amount);
+        
         const paymentData = {
             payeePaymentReference: bookingNumber,
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
