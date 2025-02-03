@@ -729,9 +729,8 @@
                     e-postadress.</div>
                 <div id="customerbox">
                     <div class="form-group">
-                        <label>Namn*</label>
-                        <input type="text" name="firstName" autocomplete="given-name" for="firstName" id="customerName"
-                            required data-required>
+                        <label for="name">Namn*</label>
+                        <input type="text" name="name" autocomplete="name" id="customerName" required data-required>
                     </div>
                     <div class="form-group">
                         <label>Email*</label>
@@ -1744,6 +1743,30 @@
 
             checkPaymentStatus();
             updateCustomer();
+        }
+
+        async function updateCustomer() {
+
+            // Get customer info
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerComment = document.getElementById('customerComment').value.trim();
+
+            // Get session data
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            if (!sessionData?.bookingId) throw new Error('No active booking found');
+
+            // Update booking details
+            const { error: updateError } = await supabaseClient.rpc('manage_booking', {
+                p_booking_id: sessionData.bookingId,
+                p_access_token: sessionData.token,
+                p_customer_name: customerName,
+                p_customer_email: customerEmail,
+                p_comments: customerComment
+            });
+
+            if (updateError) throw updateError;
+
         }
 
         async function handlePayment(paymentMethod) {
