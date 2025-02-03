@@ -67,7 +67,7 @@ router.post('/swish-payment', async (req, res) => {
             currency: 'SEK',
             amount: amount,
             message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: testtesttesttesttesttesttesttest
+            callbackIdentifier: 'TESTTESTTESTTESTTESTTESTTESTTEST'
         };
 
         if (payerAlias) {
@@ -79,13 +79,11 @@ router.post('/swish-payment', async (req, res) => {
         const response = await swishClient.put(
             `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             {
-            payeePaymentReference: 'hejpadig',
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352',
             currency: 'SEK',
             amount: amount,
-            message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: 'testtesttesttesttesttesttesttest'
+            callbackIdentifier: 'TESTTESTTESTTESTTESTTESTTESTTEST'
             }
         );
 
