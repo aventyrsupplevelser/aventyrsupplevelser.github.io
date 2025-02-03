@@ -7,6 +7,7 @@
     <title>Betalning Slutförd</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         body {
             font-family: "Josefin Sans", sans-serif;
@@ -53,6 +54,13 @@
     </div>
 
     <script>
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
         async function init() {
             const urlParams = new URLSearchParams(window.location.search);
             const bookingNumber = urlParams.get('order_id');
