@@ -4,7 +4,8 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import EmailService from './emailService.js';
-import crypto from 'crypto';
+
+
 
 dotenv.config();
 
@@ -37,9 +38,6 @@ const { cert, key } = getCertificates();
 // Create HTTPS agent
 const agent = new Agent({ cert, key });
 
-console.log('cert:', cert);
-console.log('key:', key);
-
 // Create an Axios instance with mTLS
 const swishClient = axios.create({
     httpsAgent: agent,
@@ -50,61 +48,48 @@ router.post('/swish-payment', async (req, res) => {
     try {
         const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
         console.log('Swish payment request:', req.body);
-        
-        const instructionId = crypto.randomBytes(16).toString('hex');
-        console.log('Generated instructionId:', instructionId);
+        console.log('Token:', access_token);
+        console.log('Booking number:', bookingNumber);
+        const instructionId = access_token
+        console.log('Instruction ID:', instructionId);
 
-        // Test data exactly as in their documentation
-        const testPayment = {
-            payeePaymentReference: '0123456789',
-            callbackUrl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback',
+        const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
+            p_access_token: access_token
+        });
+      if (error) throw error;
+
+      const amount = data / 100;
+
+        const paymentData = {
+            payeePaymentReference: bookingNumber,
+            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352',
             currency: 'SEK',
-            payerAlias: '46793403478',
-            amount: 100,
-            message: 'Kingston USB Flash Drive 8 GB'
+            amount: amount,
+            message: 'Sörsjöns Äventyrspark',
+            callbackIdentifier: access_token
         };
 
-        console.log('Sending test payment data:', testPayment);
-
-        try {
-            const response = await swishClient.put(
-                `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-                testPayment
-            );
-            
-            console.log('Swish response headers:', response.headers);
-            console.log('Swish response data:', response.data);
-            
-            res.json({
-                success: true,
-                paymentId: instructionId,
-                token: response.headers['paymentrequesttoken']
-            });
-            
-        } catch (axiosError) {
-            console.error('Detailed Swish error:', {
-                status: axiosError.response?.status,
-                statusText: axiosError.response?.statusText,
-                data: axiosError.response?.data,
-                headers: axiosError.response?.headers,
-                config: {
-                    url: axiosError.config?.url,
-                    method: axiosError.config?.method,
-                    data: axiosError.config?.data,
-                    headers: axiosError.config?.headers
-                }
-            });
-            throw axiosError;
+        if (payerAlias) {
+            paymentData.payerAlias = payerAlias;
         }
 
-    } catch (error) {
-        console.error('Full error object:', error);
-        res.status(400).json({ 
-            success: false, 
-            error: error.response?.data || error.message,
-            details: error.response?.data 
+        console.log('Making Swish request:', paymentData);
+
+        const response = await swishClient.put(
+            `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+            paymentData
+        );
+
+        res.json({
+            success: true,
+            paymentId: instructionId,
+            token: response.headers['paymentrequesttoken']
         });
+
+    } catch (error) {
+        console.error('Swish payment error:', error);
+        res.status(400).json({ success: false, error: error.message });
     }
 });
 
@@ -182,6 +167,33 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
     } catch (error) {
         console.error('Swish callback error:', error);
+    }
+});
+
+// Check payment status
+router.get('/payment-status/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const response = await swishClient.get(
+            `/swish-cpcapi/api/v2/paymentrequests/${id}`
+        );
+
+        if (response.data.status === 'PAID') {
+            res.json({
+                status: 'completed',
+                paymentDetails: {
+                    amount: parseFloat(response.data.amount),
+                    reference: response.data.payeePaymentReference
+                }
+            });
+        } else {
+            res.json({ status: response.data.status.toLowerCase() });
+        }
+
+    } catch (error) {
+        console.error('Error checking payment status:', error);
+        res.status(500).json({ error: 'Failed to check payment status' });
     }
 });
 
