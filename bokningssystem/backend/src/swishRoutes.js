@@ -85,14 +85,14 @@ router.post('/swish-payment', async (req, res) => {
         const response = await swishClient.put(
             `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             {
-                payeePaymentReference: "B128494",  // Use a simple test reference
-                callbackUrl: "https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback",
-                payeeAlias: "1231049352",
-                currency: "SEK",
-                amount: "100.00",  // Hardcode a test amount as string with 2 decimals
-                message: "Test köp",
-                payerAlias: "46793403478",
-                callbackIdentifier: 'testtesttesttesttesttesttesttest'
+                    payeePaymentReference: '0123456789',
+                    callbackUrl: 'https://example.com/swishcallback',
+                    payeeAlias: '1234679304',
+                    currency: 'SEK',
+                    payerAlias: '4671234768',
+                    amount: '100',
+                    message: 'Kingston USB Flash Drive 8 GB',
+                    callbackIdentifier: '11A86BE70EA346E4B1C39C874173F478'
             }
         );
 
