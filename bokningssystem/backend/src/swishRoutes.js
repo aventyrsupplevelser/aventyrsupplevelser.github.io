@@ -48,58 +48,67 @@ const swishClient = axios.create({
 router.post('/swish-payment', async (req, res) => {
     try {
         const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
-
         console.log('Swish payment request:', req.body);
-        console.log('Token:', access_token);
-        console.log('Booking number:', bookingNumber);
+        
         const instructionId = crypto.randomBytes(16).toString('hex');
+        console.log('Generated instructionId:', instructionId);
 
-        const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
-            p_access_token: access_token
-        });
-      if (error) throw error;
-
-      const amount = data / 100;
-
-        const paymentData = {
-            payeePaymentReference: `${bookingNumber}`,
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
-            payeeAlias: '1231049352',
+        // Test data exactly as in their documentation
+        const testPayment = {
+            payeePaymentReference: '0123456789',
+            callbackUrl: 'https://example.com/swishcallback',
+            payeeAlias: '1234679304',
             currency: 'SEK',
-            amount: amount,
-            message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: 'testtesttesttesttesttesttesttest'
+            payerAlias: '4671234768',
+            amount: '100',
+            message: 'Kingston USB Flash Drive 8 GB'
         };
 
-        if (payerAlias) {
-            paymentData.payerAlias = payerAlias;
+        console.log('Sending test payment data:', testPayment);
+
+        try {
+            const response = await swishClient.put(
+                `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+                testPayment,
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            console.log('Swish response headers:', response.headers);
+            console.log('Swish response data:', response.data);
+            
+            res.json({
+                success: true,
+                paymentId: instructionId,
+                token: response.headers['paymentrequesttoken']
+            });
+            
+        } catch (axiosError) {
+            console.error('Detailed Swish error:', {
+                status: axiosError.response?.status,
+                statusText: axiosError.response?.statusText,
+                data: axiosError.response?.data,
+                headers: axiosError.response?.headers,
+                config: {
+                    url: axiosError.config?.url,
+                    method: axiosError.config?.method,
+                    data: axiosError.config?.data,
+                    headers: axiosError.config?.headers
+                }
+            });
+            throw axiosError;
         }
 
-        console.log('instructionId:', instructionId);
-
-        const response = await swishClient.put(
-            `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-            {
-                    payeePaymentReference: '0123456789',
-                    callbackUrl: 'https://example.com/swishcallback',
-                    payeeAlias: '1234679304',
-                    currency: 'SEK',
-                    payerAlias: '4671234768',
-                    amount: '100',
-                    message: 'Kingston USB Flash Drive 8 GB',
-                    callbackIdentifier: '11A86BE70EA346E4B1C39C874173F478'
-            }
-        );
-
-        res.json({
-            success: true,
-            paymentId: instructionId,
-            token: response.headers['paymentrequesttoken']
-        });
-
     } catch (error) {
-        console.error('Swish payment error:', error);
-        res.status(400).json({ success: false, error: error.message });
+        console.error('Full error object:', error);
+        res.status(400).json({ 
+            success: false, 
+            error: error.response?.data || error.message,
+            details: error.response?.data 
+        });
     }
 });
 
