@@ -433,40 +433,43 @@
             }
         }
 
-        #paymentButtons {
-            display: flex;
-            flex-direction: column;
-        }
-
         button img {
-            height: 40px;
+            height: 23px;
         }
 
-        #paymentButtons button {
+        #swishSection {
+            width: 300px;
+        }
+
+        #swishbutton {
             display: flex;
             justify-content: space-between;
-            background: rgb(244, 244, 231);
+            background: rgb(243, 243, 236);
             align-items: center;
-            width: 300px;
-            font-size: 1.3em;
+            width: 100%;
+            font-size: 1.1em;
+            padding: 18px 20px;
             font-weight: 700;
             border: 1.5px solid rgb(97, 97, 97);
             margin-bottom: 20px;
             font-family: inherit;
-            transition: 0.5s;
+            transition: 0.3s;
         }
 
-        #paymentButtons button:hover {
-            background: rgb(243, 243, 176);
-            transition: 0.5s;
+        #swishbutton:hover {
+            background: rgb(240, 240, 240);
+            transition: 0.2s;
+            transition: filter 0.7s;
+            border: 1.5px solid rgb(0, 88, 6);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.218));
+            will-change: filter;
         }
 
-        #paymentButtons button:focus {
-            background: rgb(189, 237, 182);
-
+        #swishbutton:active {
+            background: rgb(206, 231, 198);
         }
 
-        #paymentButtons span {
+        #swishbutton span {
             padding-top: 4px;
         }
 
@@ -581,6 +584,23 @@
             border: solid #fff;
             border-width: 0 2.5px 2.5px 0;
             transform: rotate(45deg);
+        }
+
+        #kortbetalning {
+            background: none !important;
+            padding: 0 !important;
+            border: none !important;
+            text-decoration: underline;
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        #kortbetalning img {
+            height: 25px;
         }
     </style>
 </head>
@@ -710,14 +730,15 @@
                 <div id="customerbox">
                     <div class="form-group">
                         <label>Namn*</label>
-                        <input type="text" id="customerName" required data-required>
+                        <input type="text" name="firstName" autocomplete="given-name" for="firstName" id="customerName"
+                            required data-required>
                     </div>
                     <div class="form-group">
                         <label>Email*</label>
-                        <input type="email" id="customerEmail" required data-required>
+                        <input type="email" name="email" autocomplete="email" id="customerEmail" required data-required>
                     </div>
                     <div class="form-group">
-                        <label>Kommentar</label>
+                        <label>Kommentar (valfritt)</label>
                         <textarea style="height: 100px" type="comment" id="customerComment"></textarea>
                     </div>
                 </div>
@@ -738,22 +759,37 @@
                 <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</div>
 
                 <div id="paymentButtons" style="display: none;">
-                    <button type="button" class="payment-button" onclick="handleSwishPayment()">
-                        <span>Swish!</span>
-                        <img src="/images/swish.png">
-                    </button>
-                    <button type="button" class="payment-button" onclick="handlePayment('swish')">
-                        <span>Swish</span>
-                        <img src="/images/swish.png">
-                    </button>
-                    <button type="button" class="payment-button" onclick="handlePayment('card')">
-                        <span>Kontokort</span>
+                    <div id="swishSection">
+                        <div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
+                            <input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
+                                style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 1.5px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
+                            <div id="swishPhoneError" class="error" style="display: none; width: 300px;">
+                                Skriv ditt telefonnummer för Swish
+                            </div>
+                        </div>
+
+                        <button id="swishbutton" type="button" class="payment-button" onclick="handleSwishPayment()">
+                            <span>Betala med Swish</span>
+                            <img src="/images/swish2.png">
+                        </button>
+
+                        <div id="alternateDeviceSection" style="display: none; margin-top: 15px;">
+                            <a href="#" onclick="showSwishPhoneInput(event)"
+                                style="color: #4a4a4a; text-decoration: underline;">
+                                Betala med Swish på en annan enhet
+                            </a>
+                        </div>
+                    </div>
+                    <button type="button"
+                        style="font-family: inherit; margin-top: 40px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
+                        id="kortbetalning" onclick="handlePayment('card')">
+                        <span>Betala med kontokort <br> (öppnar nytt fönster)</span>
                         <img src="/images/creditcard.png">
                     </button>
                 </div>
+
             </div>
             <div id="payment-container" class="payment-section" style="display: none; padding-bottom: 100px;">
-                <!-- iframe will be created dynamically -->
             </div>
 
 
@@ -1492,6 +1528,21 @@
                 customerSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 showSection('paymentButtons', true);
 
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const swishPhoneSection = document.getElementById('swishPhoneSection');
+                const alternateDeviceSection = document.getElementById('alternateDeviceSection');
+
+                // Reset displays
+                swishPhoneSection.style.display = 'none';
+                alternateDeviceSection.style.display = 'none';
+
+                // Set initial state based on device
+                if (!isMobile) {
+                    swishPhoneSection.style.display = 'block';
+                } else {
+                    alternateDeviceSection.style.display = 'block';
+                }
+
                 const dateEl = document.querySelector('.calendar-day.selected');
                 const timeEl = document.querySelector('.time-slot.selected');
 
@@ -1588,6 +1639,14 @@
          * 9) Payment Handling
          ********************************************/
 
+
+        function showSwishPhoneInput(event) {
+            if (event) event.preventDefault();
+            document.getElementById('swishPhoneSection').style.display = 'block';
+            document.getElementById('alternateDeviceSection').style.display = 'none';
+            document.getElementById('swishPhone').focus();
+        }
+
         async function handleSwishPayment() {
             // Initial validations
             const termsCheckbox = document.getElementById('termsCheckbox');
@@ -1606,9 +1665,28 @@
                 return;
             }
 
-            /*
-            const totals = calculateTotal(ticketState);
-            const totalAmount = totals.total; */
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const swishPhoneSection = document.getElementById('swishPhoneSection');
+            const alternateDeviceSection = document.getElementById('alternateDeviceSection');
+            const swishPhoneError = document.getElementById('swishPhoneError');
+
+            // Show/hide relevant sections based on device type
+            if (!isMobile) {
+                swishPhoneSection.style.display = 'block';
+            } else {
+                alternateDeviceSection.style.display = 'block';
+            }
+
+            // Get phone number if input is visible
+            let phoneNumber = null;
+            if (swishPhoneSection.style.display === 'block') {
+                phoneNumber = document.getElementById('swishPhone').value.trim();
+                if (!phoneNumber) {
+                    swishPhoneError.style.display = 'block';
+                    return;
+                }
+                swishPhoneError.style.display = 'none';
+            }
 
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
@@ -1619,20 +1697,7 @@
         </div>
     `;
 
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
             try {
-                // For desktop users, get their phone number
-                let phoneNumber = null;
-                if (!isMobile) {
-                    phoneNumber = prompt('Ange ditt Swish-nummer:');
-                    if (!phoneNumber) {
-                        paymentContainer.style.display = 'none';
-                        return;
-                    }
-                }
-
-                // Create payment request
                 const response = await fetch(
                     'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-payment',
                     {
@@ -1641,7 +1706,7 @@
                         body: JSON.stringify({
                             bookingNumber: bookingData.booking_number,
                             isMobile,
-                            payerAlias: phoneNumber || null,
+                            payerAlias: phoneNumber,
                             access_token: bookingData.token
                         })
                     }
@@ -1652,7 +1717,7 @@
                     throw new Error(result.error || 'Payment failed');
                 }
 
-                if (isMobile && result.token) {
+                if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
@@ -1679,30 +1744,6 @@
 
             checkPaymentStatus();
             updateCustomer();
-        }
-
-        async function updateCustomer() {
-
-            // Get customer info
-            const customerName = document.getElementById('customerName').value.trim();
-            const customerEmail = document.getElementById('customerEmail').value.trim();
-            const customerComment = document.getElementById('customerComment').value.trim();
-
-            // Get session data
-            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            if (!sessionData?.bookingId) throw new Error('No active booking found');
-
-            // Update booking details
-            const { error: updateError } = await supabaseClient.rpc('manage_booking', {
-                p_booking_id: sessionData.bookingId,
-                p_access_token: sessionData.token,
-                p_customer_name: customerName,
-                p_customer_email: customerEmail,
-                p_comments: customerComment
-            });
-
-            if (updateError) throw updateError;
-
         }
 
         async function handlePayment(paymentMethod) {
