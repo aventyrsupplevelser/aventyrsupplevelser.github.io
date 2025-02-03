@@ -98,7 +98,6 @@
 
                 // The function returns an array with one object, so check the first element
                 if (data?.[0]?.status === 'confirmed') {
-                    clearInterval(checkStatus);
                     document.querySelector('.loading').style.display = 'none';
                     document.querySelector('h1').textContent = 'Betalning genomförd!';
                     document.getElementById('statusMessage').innerHTML = `
