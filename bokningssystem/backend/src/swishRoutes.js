@@ -67,7 +67,7 @@ router.post('/swish-payment', async (req, res) => {
             currency: 'SEK',
             amount: amount,
             message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: 'testtesttesttesttesttesttesttest'
+            callbackIdentifier: access_token
         };
 
         if (payerAlias) {
