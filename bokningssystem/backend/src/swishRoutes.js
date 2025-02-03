@@ -64,7 +64,7 @@ router.post('/swish-payment', async (req, res) => {
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1231049352',
             currency: 'SEK',
-            amount: amount.toString(),
+            amount: amount,
             message: 'Sörsjöns Äventyrspark',
             callbackIdentifier: access_token
         };
