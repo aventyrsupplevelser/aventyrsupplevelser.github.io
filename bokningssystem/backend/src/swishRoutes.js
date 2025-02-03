@@ -69,12 +69,7 @@ router.post('/swish-payment', async (req, res) => {
         try {
             const response = await swishClient.put(
                 `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-                testPayment,
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
+                testPayment
             );
             
             console.log('Swish response headers:', response.headers);
