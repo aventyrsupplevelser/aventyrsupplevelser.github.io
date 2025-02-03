@@ -4,6 +4,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import EmailService from './emailService.js';
+import crypto from 'crypto';
 
 
 
@@ -48,11 +49,10 @@ router.post('/swish-payment', async (req, res) => {
     try {
         const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
 
-
         console.log('Swish payment request:', req.body);
         console.log('Token:', access_token);
         console.log('Booking number:', bookingNumber);
-        const instructionId = access_token;
+        const instructionId = crypto.randomBytes(16).toString('hex');
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
             p_access_token: access_token
@@ -60,11 +60,6 @@ router.post('/swish-payment', async (req, res) => {
       if (error) throw error;
 
       const amount = data / 100;
-        console.log('Amount:', amount);
-        console.log('Data:', data);
-        console.log(typeof amount);
-        console.log(typeof access_token);
-        console.log(typeof bookingNumber);
 
         const paymentData = {
             payeePaymentReference: `${bookingNumber}`,
@@ -80,7 +75,7 @@ router.post('/swish-payment', async (req, res) => {
             paymentData.payerAlias = payerAlias;
         }
 
-        console.log('Making Swish request:', paymentData);
+        console.log('instructionId:', instructionId);
 
         const response = await swishClient.put(
             `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
