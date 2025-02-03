@@ -41,7 +41,6 @@ const agent = new Agent({ cert, key });
 // Create an Axios instance with mTLS
 const swishClient = axios.create({
     httpsAgent: agent,
-    baseURL: 'https://staging.getswish.pub.tds.tieto.com',
 });
 
 router.post('/swish-payment', async (req, res) => {
@@ -67,30 +66,35 @@ router.post('/swish-payment', async (req, res) => {
             currency: 'SEK',
             amount: amount,
             message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: 'TESTTESTTESTTESTTESTTESTTESTTEST'
+            callbackIdentifier: access_token
         };
 
         if (payerAlias) {
             paymentData.payerAlias = payerAlias;
         }
 
+        console.log(payerAlias)
+
+
         console.log('Making Swish request:', paymentData);
 
-        const response = await swishClient.put(
-            `/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+        const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             {
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
+            payeePaymentReference: bookingNumber,
+            callbackUrl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback',
             payeeAlias: '1231049352',
             currency: 'SEK',
             amount: amount,
-            callbackIdentifier: '780339D7A08C70755DB9BFC28F611A2C'
+            message: 'Sörsjöns Äventyrspark',
+            callbackIdentifier: access_token
             }
-        );
+        ).then((res) => {
+            console.log('Payment request created')
+         });
 
         res.json({
             success: true,
             paymentId: instructionId,
-            token: response.headers['paymentrequesttoken']
         });
 
     } catch (error) {
