@@ -83,7 +83,7 @@
         }
 
         async function checkPaymentStatus(bookingNumber) {
-            const sessionData = JSON.parse(localStorage.getItem('sessionData'));
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             try {
                 // Call the Postgres function instead of querying the table
                 const { data, error } = await supabaseClient
