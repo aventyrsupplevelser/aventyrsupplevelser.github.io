@@ -8,7 +8,6 @@ import crypto from 'crypto';
 import { console } from 'inspector';
 
 
-
 dotenv.config();
 
 // Initialize Supabase client
