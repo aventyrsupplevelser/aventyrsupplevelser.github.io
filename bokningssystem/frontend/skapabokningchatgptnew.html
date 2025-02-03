@@ -1841,7 +1841,6 @@
             // Optionally release spots on the server if needed
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             const hasReleasedSpots = localStorage.getItem('spotsReleased');
-            console.log('Has released spots:', hasReleasedSpots);
 
             if (sessionData?.bookingId && hasReleasedSpots !== true) {
                 // Call your Supabase RPC "manage_booking" function to update the booking
