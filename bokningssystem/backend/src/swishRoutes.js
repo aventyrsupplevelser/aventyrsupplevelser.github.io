@@ -64,6 +64,7 @@ router.post('/swish-payment', async (req, res) => {
         console.log('Data:', data);
         console.log(typeof amount);
         console.log(typeof access_token);
+        console.log(typeof bookingNumber);
 
         const paymentData = {
             payeePaymentReference: bookingNumber,
