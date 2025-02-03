@@ -1654,14 +1654,14 @@
 
                 if (isMobile && result.token) {
                     // Open Swish app
-                    const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.bookingId}`;
+                    const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
                 <div style="text-align: center; margin: 20px;">
                     <h3>Öppna Swish-appen på din telefon</h3>
-                    <p>Referensnummer: ${bookingData.bookingId}</p>
+                    <p>Referensnummer: ${bookingData.booking_number}</p>
                 </div>
             `;
                 }
