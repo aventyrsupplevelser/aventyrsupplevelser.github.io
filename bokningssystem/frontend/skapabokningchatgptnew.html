@@ -1606,7 +1606,7 @@
                     handleBookingUpdate
                 )
                 .subscribe();
-
+            console.log('Channel:', channel);
             return bookingData;
         }
 
@@ -1881,7 +1881,9 @@
             // Optionally release spots on the server if needed
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             const hasReleasedSpots = localStorage.getItem('spotsReleased');
-            if (sessionData?.bookingId && !hasReleasedSpots) {
+            console.log('Has released spots:', hasReleasedSpots);
+
+            if (sessionData?.bookingId && hasReleasedSpots !== true) {
                 // Call your Supabase RPC "manage_booking" function to update the booking
                 supabaseClient
                     .rpc('manage_booking', {
@@ -1892,8 +1894,7 @@
                         p_new_youth_quantity: 0,
                         p_new_kid_quantity: 0,
                         p_full_day: 0,
-                        p_is_rebookable: false,
-                        p_delete: false
+                        p_is_rebookable: false
                     })
                     .then(({ error }) => {
                         if (error) {
@@ -1910,6 +1911,7 @@
         // Clear local storage on page load
         function clearLocalStorageOnLoad() {
             localStorage.removeItem('bookingData');
+            localStorage.removeItem('spotsReleased');
         }
         window.addEventListener('load', clearLocalStorageOnLoad);
 
