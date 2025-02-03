@@ -1580,34 +1580,7 @@
                 localStorage.removeItem('spotsReleased');
             }
 
-            // Define the handler function
-            const handleBookingUpdate = (payload) => {
-                console.log('Booking update received:', payload);
-                if (payload.new.status === 'confirmed') {
-                    // Payment successful
-                    window.location.href = `tackfordinbokning.html?order_id=${payload.new.booking_number}`;
-                } else if (['cancelled', 'declined', 'error'].includes(payload.new.status)) {
-                    // Payment failed
-                    alert('Betalningen misslyckades. Försök igen.');
-                }
-            };
 
-            // Set up subscription using access token for security
-            const channel = supabaseClient
-                .channel('booking_updates')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: 'UPDATE',
-                        schema: 'public',
-                        table: 'bookings',
-                        filter: `access_token=eq.${bookingData.token}`
-                    },
-                    handleBookingUpdate
-                )
-                .subscribe();
-            console.log('Channel:', channel);
-            return bookingData;
         }
 
         /********************************************
@@ -1704,6 +1677,7 @@
         `;
             }
 
+            checkPaymentStatus();
             updateCustomer();
         }
 
@@ -1838,25 +1812,10 @@
                 const form = iframeDoc.querySelector('form');
                 if (form) form.submit();
 
-                // Check payment status
-                let attempts = 0;
-                const maxAttempts = 60;
-                const interval = setInterval(async () => {
-                    try {
-                        const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-status/${bookingNumber}`);
-                        const data = await response.json();
 
-                        if (data.status === 'completed') {
-                            clearInterval(interval);
-                            window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
-                        } else if (++attempts >= maxAttempts) {
-                            clearInterval(interval);
-                        }
-                    } catch (error) {
-                        console.error('Error checking payment status:', error);
-                        clearInterval(interval);
-                    }
-                }, 1000);
+                checkPaymentStatus();
+
+
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
@@ -1905,6 +1864,63 @@
 
                 localStorage.setItem('spotsReleased', 'true');
             }
+        }
+
+        function checkPaymentStatus() {
+            let attempts = 0;
+            const maxAttempts = 2100; // 35 minutes worth of attempts
+            let interval = 1000; // Start checking every second
+
+            const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            const bookingNumber = sessionData.bookingId;
+
+            const checkStatus = setInterval(async () => {
+                try {
+                    attempts++;
+
+                    // After 5 minutes (300 seconds), check every 2 seconds instead
+                    if (attempts === 300) {
+                        clearInterval(checkStatus);
+                        interval = 2000;
+                        checkPaymentStatus(); // Restart with new interval
+                        return;
+                    }
+
+                    // Check if we've exceeded max attempts (35 minutes)
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkStatus);
+                        console.log('Payment status check timed out after 35 minutes');
+                        return;
+                    }
+
+                    console.log('Checking payment status...');
+
+                    // Call the Postgres function instead of querying the table
+                    const { data, error } = await supabaseClient
+                        .rpc('get_booking_status', {
+                            p_access_token: sessionData.token
+                        });
+
+                    if (error) {
+                        console.error('Error fetching booking status:', error);
+                        return; // Continue checking even if there's an error
+                    }
+
+                    // The function returns an array with one object, so check the first element
+                    if (data?.[0]?.status === 'confirmed') {
+                        clearInterval(checkStatus);
+                        window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
+                        return;
+                    }
+
+                } catch (error) {
+                    console.error('Error in payment status check:', error);
+                    // Continue checking even if there's an error
+                }
+            }, interval);
+
+            // Clean up interval on page unload
+            window.addEventListener('unload', () => clearInterval(checkStatus));
         }
 
 
