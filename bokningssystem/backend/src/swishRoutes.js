@@ -218,12 +218,16 @@ router.post('/get-payment-form', async (req, res) => {
         const payment = JSON.parse(paymentResponseText);
         console.log('Payment created:', payment);
 
+        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/payment-callback');
+        callbackUrl.searchParams.set('token', access_token);
+
+
         // Step 2: Create payment link with detailed logging
         const linkRequestBody = {
             amount: amount,  // Make sure this is in smallest currency unit (öre)
             continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
-            callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback`,
+            callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
             language: 'sv'
