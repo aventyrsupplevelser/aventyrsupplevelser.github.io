@@ -1853,9 +1853,9 @@
             </div>
         `;
             }
-
-            checkPaymentStatus();
             updateCustomer();
+            checkPaymentStatus();
+
         }
 
         async function updateCustomer() {
@@ -1911,6 +1911,9 @@
             kortSpan.innerHTML = `Laddar betalning ..`;
 
             try {
+
+                updateCustomer();
+
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
 
                 const existingLink = sessionData.QuickPayLink;
