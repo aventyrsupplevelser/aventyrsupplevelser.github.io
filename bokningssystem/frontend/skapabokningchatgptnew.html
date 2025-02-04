@@ -1811,7 +1811,7 @@
 
             try {
                 const response = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-payment',
+                    'http://localhost:3000/api/swish/swish-payment',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1922,7 +1922,7 @@
 
                 // Get the payment link from the server
                 const response = await fetch(
-                    'http://localhost:3000/api/swish/get-payment-form',
+                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/get-payment-form',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
