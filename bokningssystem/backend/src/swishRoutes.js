@@ -165,13 +165,11 @@ router.post('/swish-callback', express.json(), async (req, res) => {
     }
 });
 
-router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
+router.post('/get-payment-form', async (req, res) => {
     try {
-        req.logCheckpoint('Starting payment link generation');
         const { order_id, access_token } = req.body;
 
         if (!order_id || !access_token) {
-            req.logCheckpoint('Missing required parameters');
             return res.status(400).json({ error: 'order_id and access_token are required.' });
         }
 
@@ -182,9 +180,11 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         if (error) throw error;
 
         // Get QuickPay credentials
-        const apiKey = process.env.QUICKPAY_API_KEY;
+        const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
+        const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
+        const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
+
         if (!apiKey) {
-            req.logCheckpoint('Missing QuickPay API key');
             throw new Error('Missing required QuickPay configuration');
         }
 
@@ -208,8 +208,10 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
 
         const payment = await createPaymentResponse.json();
 
+        console.log(payment)
+
         // Step 2: Create a payment link
-        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
+        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${order_id}/link`, {
             method: 'PUT',
             headers: {
                 'Accept-Version': 'v10',
@@ -218,6 +220,10 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             },
             body: JSON.stringify({
                 amount: amount,
+                version: 'v10',
+                order_id,
+                agreement_id,
+                merchant_id,
                 continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
                 cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
                 callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
@@ -240,7 +246,6 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
         });
 
     } catch (error) {
-        req.logCheckpoint('Error generating payment link');
         console.error('Error generating payment link:', error);
         res.status(500).json({
             error: 'Failed to generate payment link',

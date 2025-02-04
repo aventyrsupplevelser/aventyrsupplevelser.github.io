@@ -1816,7 +1816,7 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            order_id: bookingNumber,
+                            order_id: sessionData.booking_number,
                             access_token: sessionData.token
                         }),
                     }
@@ -1831,8 +1831,6 @@
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
-                paymentContainer.style.display = 'none';
-                document.getElementById('paymentButtons').style.display = 'block';
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
         }
