@@ -168,27 +168,28 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 router.post('/get-payment-form', async (req, res) => {
     try {
         const { order_id, access_token } = req.body;
+        
+        // Log incoming request
+        console.log('Received request:', { order_id, access_token: '***' });
 
         if (!order_id || !access_token) {
             return res.status(400).json({ error: 'order_id and access_token are required.' });
         }
 
-        // Calculate amount
+        // Calculate amount and log it
         const { data: amount, error } = await supabase.rpc('calculate_booking_amount', {
             p_access_token: access_token
         });
         if (error) throw error;
+        console.log('Calculated amount:', amount);
 
-        // Get QuickPay credentials
-        const merchant_id = process.env.QUICKPAY_MERCHANT_ID;
-        const agreement_id = process.env.QUICKPAY_AGREEMENT_ID;
-        const apiKey = process.env.QUICKPAY_PAYMENT_WINDOW_KEY;
+        // Log API credentials (mask sensitive data)
+        const apiKey = process.env.QUICKPAY_API_USER_KEY; // Note: Changed from QUICKPAY_PAYMENT_WINDOW_KEY
+        console.log('API configuration present:', {
+            apiKeyPresent: !!apiKey
+        });
 
-        if (!apiKey) {
-            throw new Error('Missing required QuickPay configuration');
-        }
-
-        // Step 1: Create a payment
+        // Step 1: Create payment with detailed logging
         const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
             method: 'POST',
             headers: {
@@ -202,51 +203,70 @@ router.post('/get-payment-form', async (req, res) => {
             })
         });
 
+        // Log full payment creation response
+        const paymentResponseText = await createPaymentResponse.text();
+        console.log('Payment creation response:', {
+            status: createPaymentResponse.status,
+            headers: Object.fromEntries(createPaymentResponse.headers.entries()),
+            body: paymentResponseText
+        });
+
         if (!createPaymentResponse.ok) {
-            throw new Error('Failed to create QuickPay payment');
+            throw new Error(`Failed to create QuickPay payment: ${paymentResponseText}`);
         }
 
-        const payment = await createPaymentResponse.json();
+        const payment = JSON.parse(paymentResponseText);
+        console.log('Payment created:', payment);
 
-        console.log(payment)
+        // Step 2: Create payment link with detailed logging
+        const linkRequestBody = {
+            amount: amount,  // Make sure this is in smallest currency unit (öre)
+            continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
+            auto_capture: true,
+            payment_methods: 'creditcard',
+            language: 'sv'
+        };
 
-        // Step 2: Create a payment link
-        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${order_id}/link`, {
+        console.log('Link request payload:', linkRequestBody);
+
+        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
             method: 'PUT',
             headers: {
                 'Accept-Version': 'v10',
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
             },
-            body: JSON.stringify({
-                amount: amount,
-                version: 'v10',
-                order_id,
-                agreement_id,
-                merchant_id,
-                continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
-                cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
-                callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
-                payment_methods: 'visa, visa-electron, mastercard, mastercard-debet',
-                auto_capture: true,
-                language: 'sv'
-            })
+            body: JSON.stringify(linkRequestBody)
+        });
+
+        // Log full link creation response
+        const linkResponseText = await createLinkResponse.text();
+        console.log('Link creation response:', {
+            status: createLinkResponse.status,
+            headers: Object.fromEntries(createLinkResponse.headers.entries()),
+            body: linkResponseText
         });
 
         if (!createLinkResponse.ok) {
-            throw new Error('Failed to create QuickPay payment link');
+            throw new Error(`Failed to create QuickPay payment link: ${linkResponseText}`);
         }
 
-        const link = await createLinkResponse.json();
+        const link = JSON.parse(linkResponseText);
         
-        // Return the payment link URL
-        res.json({ 
+        // Return success response
+        res.json({
             url: link.url,
             payment_id: payment.id
         });
 
     } catch (error) {
-        console.error('Error generating payment link:', error);
+        console.error('Detailed error:', {
+            message: error.message,
+            stack: error.stack
+        });
+        
         res.status(500).json({
             error: 'Failed to generate payment link',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined

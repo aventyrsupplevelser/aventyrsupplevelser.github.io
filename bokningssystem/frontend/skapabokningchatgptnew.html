@@ -185,7 +185,9 @@
         }
 
         .calendar-day.selected {
-            border: 2px solid #5a5a5a;
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
         }
 
         .calendar-legend {
@@ -241,11 +243,12 @@
         select {
             width: 100%;
             padding: 8px;
-            border: 1.5px solid #515151;
+            border: 2px solid #515151;
             border-radius: 4px;
             font-family: inherit;
             font-size: 16px;
             margin-top: 5px;
+            background: rgba(239, 239, 239, 0.411);
         }
 
         .time-slot {
@@ -257,7 +260,9 @@
         }
 
         .time-slot.selected {
-            border: 2px solid rgb(90, 90, 90);
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
         }
 
         .ticket-selector {
@@ -381,13 +386,15 @@
             font-size: 0.8em;
             font-weight: 500;
             padding: 8px 10px 3px;
-            border: 1.5px solid rgb(90, 90, 90);
+            border: 2px solid rgb(43, 43, 43);
             border-radius: 3px;
         }
 
         #continueToPaymentBtn.disabled {
-            background: rgb(210, 210, 210);
+            background: rgb(181, 181, 181);
             opacity: 0.5;
+            filter: drop-shadow(0px 0px 0px);
+            transition: 0.2s;
         }
 
         .btn-cancel {
@@ -396,7 +403,7 @@
 
         #customerbox {
             display: grid;
-            grid-template-columns: 250px 250px;
+            grid-template-areas: "a b" "c c";
             gap: 0px 40px;
         }
 
@@ -433,6 +440,26 @@
             }
         }
 
+        #continueToPaymentBtn {
+            background: linear-gradient(169deg, rgba(6, 107, 11, 1) 0%, rgb(20, 120, 25) 100%);
+            color: white;
+            min-width: 310px;
+            padding: 20px 20px 15px;
+            font-family: inherit;
+            transition: 0.2s;
+            font-size: 1.2em;
+            filter: drop-shadow(0px 0px 4px rgba(71, 71, 71, 0.32));
+            border-radius: 6px;
+        }
+
+        #continueToPaymentBtn:hover {
+            background: linear-gradient(169deg, rgb(21, 175, 29) 0%, rgb(57, 158, 62) 100%);
+            color: #e8e8e8;
+            transition: 0.2s;
+            filter: drop-shadow(0px 0px 4px rgba(71, 71, 71, 0.32));
+            will-change: filter;
+        }
+
         button img {
             height: 23px;
         }
@@ -450,7 +477,7 @@
             font-size: 1.1em;
             padding: 18px 20px;
             font-weight: 700;
-            border: 1.5px solid rgb(97, 97, 97);
+            border: 2px solid rgb(97, 97, 97);
             margin-bottom: 20px;
             font-family: inherit;
             transition: 0.3s;
@@ -460,7 +487,7 @@
             background: rgb(240, 240, 240);
             transition: 0.2s;
             transition: filter 0.7s;
-            border: 1.5px solid rgb(0, 88, 6);
+            border: 2px solid rgb(0, 88, 6);
             filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.218));
             will-change: filter;
         }
@@ -590,7 +617,6 @@
             background: none !important;
             padding: 0 !important;
             border: none !important;
-            text-decoration: underline;
             display: flex;
             justify-content: space-between;
             max-width: 300px;
@@ -599,8 +625,23 @@
             margin-top: 40px;
         }
 
+        #kortbetalning span {
+            border-bottom: 1.5px solid black;
+            transition: 0.2s;
+        }
+
+        #kortbetalning span:hover {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            border-bottom: 1.5px solid #0d5c7c;
+            text-decoration: none;
+            color: #0d5c7c;
+            transition: 0.2s;
+            filter: drop-shadow(0px 0px 4px rgba(113, 113, 113, 0.149));
+        }
+
         #kortbetalning img {
-            height: 25px;
+            height: 32px;
         }
     </style>
 </head>
@@ -612,20 +653,25 @@
         </div>
         <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
-                <div style="background: yellow; display: inline;"> Välj klätterdatum:</div>
+                <div style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%);
+; display: inline;"> Välj klätterdatum:</div>
                 <div class="form-group">
                 </div>
             </div>
 
             <div id="times">
-                <div style="background: yellow; display: inline;">Välj en klättertid:</div>
+                <div
+                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                    Välj en klättertid:</div>
                 <div class="time-slots" id="timeSlots">
                     <!-- Time slots will be populated here -->
                 </div>
                 <div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
             </div>
             <div id="tickets" style="margin-top: 80px;">
-                <div style="background: yellow; display: inline;">Välj antal äventyrare:</div>
+                <div
+                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                    Välj antal äventyrare:</div>
                 <div class="ticket-section">
                     <!-- Available spots display -->
 
@@ -664,14 +710,16 @@
                     </div>
 
 
-                    <br class="fulldaySection"><br class="fulldaySection">
-                    <div>
-                        <div style="background: yellow; display: inline;" class="fulldaySection">Välj antal som vill
+                    <div class="fulldaySection">
+                        <br><br>
+                        <div
+                            style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                            Välj antal som vill
                             förlänga tiden:</div>
-                        <br class="fulldaySection"><br class="fulldaySection">
+                        <br><br>
 
                         <!-- Full day extension -->
-                        <div class="ticket-selector fulldaySection" style="background-color: rgb(245, 245, 245);">
+                        <div class="ticket-selector" style="background-color: rgb(245, 245, 245);">
                             <label>Heldag (till 17.00)</label>
                             <div>100 kr</div>
                             <div class="quantity-selector">
@@ -684,7 +732,9 @@
                 </div>
                 <br><br>
                 <div id="rebooking">
-                    <div style="background: yellow; display: inline;">Vill ni ha ombokningsgaranti? </div>
+                    <div
+                        style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                        Vill ni ha ombokningsgaranti? </div>
                     <br>
                     <div style="color: #525252; margin-top: 20px;
                     margin-bottom: 10px;
@@ -704,7 +754,7 @@
                 <div class="button-container"
                     style="text-align: center; margin-top: 20px; float: right; margin-bottom: 50px;">
                     <button type="button" id="continueToPaymentBtn" style="display: none;" class="primary-button">
-                        Fortsätt till betalning
+                        Fortsätt till betalning: 0 kr
                     </button>
                 </div>
 
@@ -712,18 +762,12 @@
 
 
 
-            <div id="customerSection" class="booking-section" style="display: none; margin-top: 30px;">
-                <div class="form-group" style="margin-bottom: 30px;">
-                    <label>
-                        <input type="checkbox" id="kod">
-                        Jag har presentkort eller rabattkod
-                        <div id="codeInput" style="display: none;">
-                            <input type="text" id="kod">
-                            <button id="useCode">Använd kod</button>
-                        </div>
-                    </label>
-                </div>
-                <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Fyll i information:</div>
+            <div id="customerSection" class="booking-section" style="display: none; margin-top: 30px; scroll-margin-top: 60px;
+">
+
+                <div
+                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;">
+                    Fyll i information:</div>
                 <div id="requiredInfoMessage" class="error"
                     style="display: none; margin-bottom: 20px; width: fit-content;">Vänligen fyll i namn och
                     e-postadress.</div>
@@ -732,37 +776,63 @@
                         <label for="name">Namn*</label>
                         <input type="text" name="name" autocomplete="name" id="customerName" required data-required>
                     </div>
+
                     <div class="form-group">
                         <label>Email*</label>
                         <input type="email" name="email" autocomplete="email" id="customerEmail" required data-required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="grid-area: c;">
                         <label>Kommentar (valfritt)</label>
-                        <textarea style="height: 100px" type="comment" id="customerComment"></textarea>
+                        <textarea style="height: 80px" type="comment" id="customerComment"></textarea>
                     </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 30px; font-size: 1.2em;">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="kod">
+                        <span class="checkmark"></span>
+                        Jag har presentkort eller rabattkod
+                        <div id="codeInput" style="display: none;">
+                            <input type="text" id="kod">
+                            <button id="useCode">Använd kod</button>
+                        </div>
+                    </label>
                 </div>
 
                 <div id="bookingSummaryFinal" class="summary-box" style="width:380px; background: rgb(255, 255, 255); padding:
             10px; font-size: 1.3em; margin-bottom: 30px;">
                 </div>
-                <div class="form-group" style="margin-bottom: 30px; font-size: 1.3em;">
+                <div class="form-group" style="margin-bottom: 20px; font-size: 1.2em;">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="nyhetsbrev">
+                        <span class="checkmark"></span>
+                        <div style="padding-top: 18px;">Jaaa jag vill ha nyhetsbrev!<br><span
+                                style="font-size: 0.7em; margin-top: 2px; color: #6c6c6c;">(äventyrstips och
+                                hemliga
+                                rabatter)</span></div>
+                    </label>
+                </div>
+                <div class="form-group" style="margin-bottom: 40px; font-size: 1.2em;">
                     <label class="custom-checkbox">
                         <input type="checkbox" id="termsCheckbox">
                         <span class="checkmark"></span>
-                        Jag accepterar regler och villkor
+                        Jag accepterar&nbsp;<a style="color: rgb(45, 45, 45);"
+                            href="http://aventyrsupplevelser.com/reglerochvillkor"> bokningsvillkor</a>
                     </label>
                     <div id="termsError" class="error" style="display: none;">
                         Du måste acceptera regler och villkor innan du kan fortsätta.
                     </div>
                 </div>
-                <div style="background: yellow; display: inline-block; margin-bottom: 20px;">Välj betalsätt:</div>
+
+                <div
+                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;">
+                    Välj betalsätt:</div>
 
                 <div id="paymentButtons" style="display: none;">
                     <div id="swishSection">
                         <div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
                             <input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
                                 style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 1.5px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
-                            <div id="swishPhoneError" class="error" style="display: none; width: 300px;">
+                            <div id="swishPhoneError" class="error" style="display: none; width: auto;">
                                 Skriv ditt telefonnummer för Swish
                             </div>
                         </div>
@@ -771,7 +841,6 @@
                             <span>Betala med Swish</span>
                             <img src="/images/swish2.png">
                         </button>
-
                         <div id="alternateDeviceSection" style="display: none; margin-top: 15px;">
                             <a href="#" onclick="showSwishPhoneInput(event)"
                                 style="color: #4a4a4a; text-decoration: underline;">
@@ -779,17 +848,23 @@
                             </a>
                         </div>
                     </div>
+                    <div id="payment-container" class="payment-section" style="display: none;">
+                    </div>
+                    <div style=" margin: 40px 0px 30px;">eller:</div>
+
                     <button type="button"
-                        style="font-family: inherit; margin-top: 40px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
+                        style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
                         id="kortbetalning" onclick="handlePayment()">
-                        <span>Betala med kontokort <br> (öppnar nytt fönster)</span>
-                        <img src="/images/creditcard.png">
+                        <span>Betala
+                            med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
+                                nytt
+                                fönster)</span></span>
+                        <img src="/images/cards.png">
                     </button>
                 </div>
 
             </div>
-            <div id="payment-container" class="payment-section" style="display: none; padding-bottom: 100px;">
-            </div>
+
 
 
 
@@ -1216,6 +1291,27 @@
                 }
             }
 
+            const timeText = slotEl.textContent.trim(); // Gets the time like "14:30"
+            const dateEl = document.querySelector('.calendar-day.selected');
+            const dateStr = dateEl.dataset.date; // Gets the date like "2025-02-04"
+            const selectedSlotTime = new Date(`${dateStr}T${timeText}`);
+            const now = new Date();
+            console.log('Selected time:', selectedSlotTime);
+            const hoursDifference = (selectedSlotTime - now) / (1000 * 60 * 60);
+            console.log('Hours difference:', hoursDifference);
+
+            // Show/hide rebooking section based on time difference
+            const rebookingSection = document.getElementById('rebooking');
+            if (hoursDifference <= 1440) {  // 60 days × 24 hours = 1440 hours
+                rebookingSection.style.display = 'none';
+                // Make sure rebooking is disabled if it was previously enabled
+                ticketState.is_rebookable = false;
+                const rebookingCheckbox = document.getElementById('rebookingCheckbox');
+                if (rebookingCheckbox) rebookingCheckbox.checked = false;
+            } else {
+                rebookingSection.style.display = 'block';
+            }
+
             // Show ticket section
             const ticketSection = document.querySelector('#tickets');
             ticketSection.classList.add('visible');
@@ -1524,7 +1620,7 @@
                 // Show customer form section
                 document.getElementById('continueToPaymentBtn').style.display = 'none';
                 showSection('customerSection', true);
-                customerSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                customerSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 showSection('paymentButtons', true);
 
                 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -1647,6 +1743,19 @@
         }
 
         async function handleSwishPayment() {
+
+            // Get customer info
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerComment = document.getElementById('customerComment').value.trim();
+
+            // Validate required fields
+            if (!customerName || !customerEmail) {
+                requiredInfoMessage.style.display = 'block';
+                requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
             // Initial validations
             const termsCheckbox = document.getElementById('termsCheckbox');
             const termsError = document.getElementById('termsError');
@@ -2026,6 +2135,8 @@
             showSection('customerSection', false);
             showSection('paymentButtons', false);
             showSection('payment-container', false);
+            currentTimeSlot = null;
+
 
             // Reset the continue button
             const continueBtn = document.getElementById('continueToPaymentBtn');
