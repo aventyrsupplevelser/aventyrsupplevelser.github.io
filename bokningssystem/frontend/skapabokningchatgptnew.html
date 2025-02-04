@@ -1301,9 +1301,7 @@
             const dateStr = dateEl.dataset.date; // Gets the date like "2025-02-04"
             const selectedSlotTime = new Date(`${dateStr}T${timeText}`);
             const now = new Date();
-            console.log('Selected time:', selectedSlotTime);
             const hoursDifference = (selectedSlotTime - now) / (1000 * 60 * 60);
-            console.log('Hours difference:', hoursDifference);
 
             // Show/hide rebooking section based on time difference
             const rebookingSection = document.getElementById('rebooking');

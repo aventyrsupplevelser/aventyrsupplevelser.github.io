@@ -221,9 +221,9 @@ router.post('/get-payment-form', async (req, res) => {
         // Step 2: Create payment link with detailed logging
         const linkRequestBody = {
             amount: amount,  // Make sure this is in smallest currency unit (öre)
-            continue_url: `http://localhost:3000/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
+            continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
             cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
-            callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
+            callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback`,
             auto_capture: true,
             payment_methods: 'creditcard',
             language: 'sv'
@@ -271,6 +271,95 @@ router.post('/get-payment-form', async (req, res) => {
             error: 'Failed to generate payment link',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
+    }
+});
+
+router.post('/card-callback', express.json(), async (req, res) => {
+    try {
+        // 1. Always respond with 200 OK first to acknowledge receipt
+        res.status(200).send('OK');
+
+        // 2. Get the callback data
+        const callbackData = req.body;
+        
+        // 3. Get booking number from QuickPay's order_id
+        const bookingNumber = callbackData.order_id;
+        if (!bookingNumber) {
+            console.error('Missing booking number in callback');
+            return;
+        }
+
+        // 4. Get and validate access token from callback URL
+        const callbackUrl = new URL(callbackData.link.callback_url);
+        const accessToken = callbackUrl.searchParams.get('token');
+        if (!accessToken) {
+            console.error('Missing access token in callback URL');
+            return;
+        }
+
+        // 5. Get the booking using both booking number and access token
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('booking_number', bookingNumber)
+            .eq('access_token', accessToken)
+            .single();
+
+        if (bookingError || !booking) {
+            console.error('Booking not found or access token mismatch');
+            return;
+        }
+
+        // 6. Check if booking is still pending
+        if (booking.status !== 'pending') {
+            console.log('Booking already processed:', booking.status);
+            return;
+        }
+
+        // 7. Check for successful payment
+        const isSuccess = callbackData.accepted && callbackData.state === 'processed';
+        if (isSuccess) {
+            // Get amount in öre from the payment link data
+            const paidAmountOre = callbackData.link.amount;
+
+            // Update the booking
+            const { error: updateError } = await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    payment_method: 'card',
+                    payment_id: callbackData.id.toString(),
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: callbackData
+                })
+                .eq('id', booking.id)
+                .eq('status', 'pending')
+                .eq('access_token', accessToken);
+
+            if (updateError) {
+                console.error('Error updating booking:', updateError);
+                return;
+            }
+
+            console.log('Payment recorded successfully:', callbackData.id);
+
+            // Send confirmation email
+            try {
+                await EmailService.sendBookingConfirmation({
+                    ...booking,
+                    start_time: booking.time_slots.start_time,
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString()
+                });
+                console.log('Confirmation email sent successfully');
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
+            }
+        }
+
+    } catch (error) {
+        console.error('QuickPay callback error:', error);
     }
 });
 
