@@ -533,7 +533,7 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
     try {
         req.logCheckpoint('Starting payment form generation');
         
-        const { order_id, paymentMethod } = req.body;
+        const { order_id } = req.body;
 
         if (!order_id) {
             req.logCheckpoint('Missing order_id');
@@ -558,17 +558,9 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
 
         req.logCheckpoint('Validated configuration');
 
-        const ngrokUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
+        const railwayUrl = 'https://aventyrsupplevelsergithubio-testing.up.railway.app';
 
-        let payment_methods;
-        if (paymentMethod === 'card') {
-            payment_methods = 'visa, visa-electron, mastercard, mastercard-debet';
-        } else if (paymentMethod === 'swish') {
-            payment_methods = 'swish';
-        } else {
-            req.logCheckpoint('Invalid payment method');
-            return res.status(400).json({ error: 'Invalid payment method specified' });
-        }
+        payment_methods = 'visa, visa-electron, mastercard, mastercard-debet';
 
         const params = {
             version: 'v10',
@@ -578,12 +570,12 @@ router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
             currency: 'SEK',
             order_id,
             continueurl: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
-            cancelurl: `${ngrokUrl}/payment-cancelled.html`,
+            cancelurl: `${railwayUrl}/payment-cancelled.html`,
             callbackurl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
             language: 'sv',
             autocapture: '1',
             payment_methods,
-            branding_id: '14851'
+            /*branding_id: '14851' */
         };
 
         params.checksum = calculateChecksum(params, apiKey);

@@ -46,11 +46,7 @@ const swishClient = axios.create({
 router.post('/swish-payment', async (req, res) => {
     try {
         const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
-        console.log('Swish payment request:', req.body);
-        console.log('Token:', access_token);
-        console.log('Booking number:', bookingNumber);
         const instructionId = access_token
-        console.log('Instruction ID:', instructionId);
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
             p_access_token: access_token
@@ -73,21 +69,10 @@ router.post('/swish-payment', async (req, res) => {
             paymentData.payerAlias = payerAlias;
         }
 
-        console.log(payerAlias)
-
-
         console.log('Making Swish request:', paymentData);
 
         const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
-            {
-            payeePaymentReference: bookingNumber,
-            callbackUrl: 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback',
-            payeeAlias: '1231049352',
-            currency: 'SEK',
-            amount: amount,
-            message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: access_token
-            }
+            paymentData
         ).then((res) => {
             console.log('Payment request created')
          });
@@ -180,30 +165,87 @@ router.post('/swish-callback', express.json(), async (req, res) => {
     }
 });
 
-// Check payment status
-router.get('/payment-status/:id', async (req, res) => {
+router.post('/get-payment-form', paymentTimingMiddleware, async (req, res) => {
     try {
-        const { id } = req.params;
-        
-        const response = await swishClient.get(
-            `/swish-cpcapi/api/v2/paymentrequests/${id}`
-        );
+        req.logCheckpoint('Starting payment link generation');
+        const { order_id, access_token } = req.body;
 
-        if (response.data.status === 'PAID') {
-            res.json({
-                status: 'completed',
-                paymentDetails: {
-                    amount: parseFloat(response.data.amount),
-                    reference: response.data.payeePaymentReference
-                }
-            });
-        } else {
-            res.json({ status: response.data.status.toLowerCase() });
+        if (!order_id || !access_token) {
+            req.logCheckpoint('Missing required parameters');
+            return res.status(400).json({ error: 'order_id and access_token are required.' });
         }
 
+        // Calculate amount
+        const { data: amount, error } = await supabase.rpc('calculate_booking_amount', {
+            p_access_token: access_token
+        });
+        if (error) throw error;
+
+        // Get QuickPay credentials
+        const apiKey = process.env.QUICKPAY_API_KEY;
+        if (!apiKey) {
+            req.logCheckpoint('Missing QuickPay API key');
+            throw new Error('Missing required QuickPay configuration');
+        }
+
+        // Step 1: Create a payment
+        const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
+            method: 'POST',
+            headers: {
+                'Accept-Version': 'v10',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+            },
+            body: JSON.stringify({
+                order_id,
+                currency: 'SEK'
+            })
+        });
+
+        if (!createPaymentResponse.ok) {
+            throw new Error('Failed to create QuickPay payment');
+        }
+
+        const payment = await createPaymentResponse.json();
+
+        // Step 2: Create a payment link
+        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
+            method: 'PUT',
+            headers: {
+                'Accept-Version': 'v10',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+            },
+            body: JSON.stringify({
+                amount: amount,
+                continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
+                cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+                callback_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/payment-callback`,
+                payment_methods: 'visa, visa-electron, mastercard, mastercard-debet',
+                auto_capture: true,
+                language: 'sv'
+            })
+        });
+
+        if (!createLinkResponse.ok) {
+            throw new Error('Failed to create QuickPay payment link');
+        }
+
+        const link = await createLinkResponse.json();
+        
+        // Return the payment link URL
+        res.json({ 
+            url: link.url,
+            payment_id: payment.id
+        });
+
     } catch (error) {
-        console.error('Error checking payment status:', error);
-        res.status(500).json({ error: 'Failed to check payment status' });
+        req.logCheckpoint('Error generating payment link');
+        console.error('Error generating payment link:', error);
+        res.status(500).json({
+            error: 'Failed to generate payment link',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 

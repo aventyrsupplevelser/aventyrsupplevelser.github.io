@@ -781,7 +781,7 @@
                     </div>
                     <button type="button"
                         style="font-family: inherit; margin-top: 40px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
-                        id="kortbetalning" onclick="handlePayment('card')">
+                        id="kortbetalning" onclick="handlePayment()">
                         <span>Betala med kontokort <br> (öppnar nytt fönster)</span>
                         <img src="/images/creditcard.png">
                     </button>
@@ -1794,92 +1794,40 @@
             }
             termsError.style.display = 'none';
 
-            // Show loading spinner
-            const paymentContainer = document.getElementById('payment-container');
-            paymentContainer.style.display = 'block';
-            paymentContainer.innerHTML = `
-        <div class="loading-spinner">
-            <div>Laddar betalning...</div>
-            <div class="loading"></div>
-        </div>
-    `;
-            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
+            /*
+        // Show loading spinner
+        const paymentContainer = document.getElementById('payment-container');
+        paymentContainer.style.display = 'block';
+        paymentContainer.innerHTML = `
+    <div class="loading-spinner">
+        <div>Laddar betalning...</div>
+        <div class="loading"></div>
+    </div> 
+`;
+        paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+*/
             try {
-                // Generate booking number
-                const bookingNumberResponse = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/generate-booking-number',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }
-                    }
-                );
-                if (!bookingNumberResponse.ok) throw new Error('Failed to generate booking number');
-                const { bookingNumber } = await bookingNumberResponse.json();
-
-                // Get session data
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!sessionData?.bookingId) throw new Error('No active booking found');
 
-                // Update booking details
-                const { error: updateError } = await supabaseClient.rpc('manage_booking', {
-                    p_booking_id: sessionData.bookingId,
-                    p_access_token: sessionData.token,
-                    p_customer_name: customerName,
-                    p_customer_email: customerEmail,
-                    p_comments: customerComment,
-                    p_delete: false
-                });
-
-                if (updateError) throw updateError;
-
-                // Request the payment form from server
-                const formResponse = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/get-payment-form',
+                // Get the payment link from the server
+                const response = await fetch(
+                    'http://localhost:3000/api/swish/get-payment-form',
                     {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             order_id: bookingNumber,
-                            paymentMethod,
+                            access_token: sessionData.token
                         }),
                     }
                 );
-                if (!formResponse.ok) throw new Error('Failed to get payment form');
 
-                const formHtml = await formResponse.text();
+                if (!response.ok) throw new Error('Failed to get payment link');
 
-                // Insert an iframe to host the form
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '330px';
-                iframe.style.border = 'none';
-                iframe.style.display = 'none';
-                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
+                const { url } = await response.json();
 
-                paymentContainer.appendChild(iframe);
-
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(formHtml);
-                iframeDoc.close();
-
-                iframe.onload = () => {
-                    paymentContainer.querySelector('.loading-spinner')?.remove();
-                    iframe.style.display = 'block';
-                };
-
-                // Auto-submit the form inside the iframe if needed
-                const form = iframeDoc.querySelector('form');
-                if (form) form.submit();
-
-
-                checkPaymentStatus();
-
-
+                // Redirect to the payment link
+                window.location.href = url;
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
