@@ -854,8 +854,8 @@
 
                     <button type="button"
                         style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
-                        id="kortbetalning" onclick="handlePayment()">
-                        <span>Betala
+                        id="kortbetalning" onclick="payByCard()">
+                        <span id="kortSpan">Betala
                             med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
                                 nytt
                                 fönster)</span></span>
@@ -1884,7 +1884,7 @@
 
         }
 
-        async function handlePayment(paymentMethod) {
+        async function payByCard(paymentMethod) {
 
             // Get customer info
             const customerName = document.getElementById('customerName').value.trim();
@@ -1909,20 +1909,18 @@
             }
             termsError.style.display = 'none';
 
-            /*
-        // Show loading spinner
-        const paymentContainer = document.getElementById('payment-container');
-        paymentContainer.style.display = 'block';
-        paymentContainer.innerHTML = `
-    <div class="loading-spinner">
-        <div>Laddar betalning...</div>
-        <div class="loading"></div>
-    </div> 
-`;
-        paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-*/
+            const kortSpan = document.getElementById('kortSpan');
+            kortSpan.innerHTML = `Laddar betalning ..`;
+
             try {
                 const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+
+                const existingLink = sessionData.QuickPayLink;
+                if (existingLink) {
+                    console.log('Using existing payment link');
+                    window.location.href = existingLink;
+                    return;
+                }
 
                 // Get the payment link from the server
                 const response = await fetch(
@@ -1941,6 +1939,10 @@
 
                 const { url } = await response.json();
 
+                sessionData.QuickPayLink = url;
+                localStorage.setItem('bookingData', JSON.stringify(sessionData));
+
+
                 // Redirect to the payment link
                 window.location.href = url;
 
@@ -1948,7 +1950,9 @@
                 console.error('Error in handlePayment:', error);
                 alert('Ett fel uppstod vid betalningen. Försök igen.');
             }
+
         }
+
         /****************************************
          * 10) Misc Helpers (reset flow, etc.)
          ****************************************/
