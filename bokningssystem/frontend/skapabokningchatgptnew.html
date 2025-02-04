@@ -1103,6 +1103,11 @@
             }
 
             async changeMonth(direction, depth = 0) {
+                currentTimeSlot = null;
+                document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                updateTicketButtonStates();
+                clearTicketSelections();
+                loadTimeSlots();
                 const maxDepth = 7; // maximum number of months to skip in a row
                 // Calculate the new month based on the direction
                 const newMonth = new Date(this.currentMonth);
@@ -1302,7 +1307,7 @@
 
             // Show/hide rebooking section based on time difference
             const rebookingSection = document.getElementById('rebooking');
-            if (hoursDifference <= 1440) {  // 60 days × 24 hours = 1440 hours
+            if (hoursDifference <= 30) {  // 60 days × 24 hours = 1440 hours
                 rebookingSection.style.display = 'none';
                 // Make sure rebooking is disabled if it was previously enabled
                 ticketState.is_rebookable = false;
@@ -1352,6 +1357,7 @@
 
             // Spots left
             document.getElementById('spotsLeft').textContent = '';
+            updateTotalDisplay();
         }
 
         function updateTicketButtonStates() {
