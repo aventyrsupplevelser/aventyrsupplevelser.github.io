@@ -218,7 +218,7 @@ router.post('/get-payment-form', async (req, res) => {
         const payment = JSON.parse(paymentResponseText);
         console.log('Payment created:', payment);
 
-        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/payment-callback');
+        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback');
         callbackUrl.searchParams.set('token', access_token);
 
 
