@@ -290,7 +290,7 @@
                 </div>
             </div>
 
-            <button id="swishbutton" type="button" class="payment-button" onclick="handleSwishPayment()">
+            <button id="swishbutton" type="button" class="payment-button">
                 <span>Betala med Swish</span>
                 <img src="/images/swish2.png">
             </button>
@@ -306,7 +306,7 @@
 
         <button type="button"
             style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
-            id="kortbetalning" onclick="payByCard()">
+            id="kortbetalning">
             <span id="kortSpan">Betala
                 med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
                     nytt
@@ -347,8 +347,8 @@
 
 
         // Payment handlers
-        document.getElementById('swishBtn').addEventListener('click', () => handleSwish());
-        document.getElementById('cardBtn').addEventListener('click', () => handleCard());
+        document.getElementById('swishbutton').addEventListener('click', () => handleSwish());
+        document.getElementById('kortbetalning').addEventListener('click', () => handleCard());
 
         async function handleSwish() {
             if (!termsCheckbox.checked) {
@@ -445,7 +445,7 @@
             </div>
         `;
             }
-            checkPaymentStatus();
+            //checkPaymentStatus();
 
         }
 

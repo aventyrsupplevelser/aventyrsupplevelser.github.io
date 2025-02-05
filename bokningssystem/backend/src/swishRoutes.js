@@ -421,17 +421,22 @@ router.post('/gift-swish', async (req, res) => {
 
         console.log(req.body);
 
-        // Create giftcard
-        const { data: giftCardData, error: giftError } = await supabase.rpc('create_gift_card', {
+       // Create giftcard
+        const { data, error } = await supabase.rpc('create_gift_card', {
         p_gift_to: giftTo,
         p_gift_from: giftFrom,
         p_purchaser_email: purchaserEmail,
         p_amount: sumValue
-        });
-
-        const giftCardNumber = giftCardData.gift_card_number
-
-        if (statusError) throw statusError;
+      });
+  
+      if (error) throw error;
+  
+      // The data will contain what your PG function returned as jsonb
+      const giftCardNumber = data.gift_card_number;
+  
+      if (!giftCardNumber) {
+        throw new Error('Failed to generate gift card number');
+      }
 
         const callbackIdentifier = generateCallbackId(gift_card_number);
 
