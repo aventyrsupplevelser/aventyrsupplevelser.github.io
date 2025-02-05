@@ -4,6 +4,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import EmailService from './emailService.js';
+import crypto from 'crypto';
 
 
 
