@@ -136,6 +136,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
+        console.log('Callback identifier from header:', callbackIdentifier);
 
 
         if (!verifyCallbackId(callbackIdentifier, payment.booking_number)) {
