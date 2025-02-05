@@ -18,16 +18,16 @@ const supabase = createClient(
 
 const router = express.Router(); // <--- You forgot this line!
 
-function generateCallbackId(bookingId, accessToken) {
+function generateCallbackId(bookingId) {
     const serverSecret = process.env.CALLBACK_SECRET;
     const hmac = crypto.createHmac('sha256', serverSecret);
-    hmac.update(`${bookingId}:${accessToken}`);
+    hmac.update(`${bookingId}`);
     return hmac.digest('hex').slice(0, 32);  // Take first 32 chars to match Swish requirements
 }
 
-function verifyCallbackId(callbackId, bookingId, accessToken) {
+function verifyCallbackId(callbackId, bookingId) {
     try {
-        const expectedCallbackId = generateSwishCallbackId(bookingId, accessToken);
+        const expectedCallbackId = generateCallbackId(bookingId);
         return crypto.timingSafeEqual(
             Buffer.from(callbackId),
             Buffer.from(expectedCallbackId)
@@ -76,7 +76,7 @@ router.post('/swish-payment', async (req, res) => {
 
         if (statusError) throw statusError;
 
-        const callbackIdentifier = generateCallbackId(bookingNumber, access_token);
+        const callbackIdentifier = generateCallbackId(bookingNumber);
         const instructionId = access_token
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
@@ -131,7 +131,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         const callbackIdentifier = req.get('callbackIdentifier');
 
 
-        if (!verifyCallbackId(callbackIdentifier, payment.booking_number, payment.id)) {
+        if (!verifyCallbackId(callbackIdentifier, payment.booking_number)) {
             console.error('Invalid callback checksum');
         }
 
@@ -215,7 +215,7 @@ router.post('/get-payment-form', async (req, res) => {
             return res.status(400).json({ error: 'order_id and access_token are required.' });
         }
 
-        const callbackIdentifier = generateCallbackId(order_id, access_token);
+        const callbackIdentifier = generateCallbackId(order_id);
 
         // Calculate amount and log it
         const { data: amount, error } = await supabase.rpc('calculate_booking_amount', {
@@ -261,8 +261,8 @@ router.post('/get-payment-form', async (req, res) => {
 
         const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback');
         callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
-        callbackUrl.searchParams.set('access_token', access_token);
 
+        console.log('Constructed callback URL:', callbackUrl.toString());
 
 
         // Step 2: Create payment link with detailed logging
@@ -340,10 +340,8 @@ router.post('/card-callback', express.json(), async (req, res) => {
 
         const callbackUrl = new URL(callbackData.link.callback_url);
         const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
-        const access_token = callbackUrl.searchParams.get('access_token');
-        console.log('access_token:', access_token)
 
-        if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
+        if (!verifyCallbackId(callbackIdentifier, bookingNumber)) {
             console.error('Invalid callback checksum');
         }
 
@@ -352,7 +350,6 @@ router.post('/card-callback', express.json(), async (req, res) => {
             .from('bookings')
             .select('*, time_slots(*)')
             .eq('booking_number', bookingNumber)
-            .eq('access_token', access_token)
             .single();
 
         if (bookingError || !booking) {
@@ -385,7 +382,6 @@ router.post('/card-callback', express.json(), async (req, res) => {
                 })
                 .eq('id', booking.id)
                 .eq('status', 'requested')
-                .eq('access_token', access_token);
 
             if (updateError) {
                 console.error('Error updating booking:', updateError);
