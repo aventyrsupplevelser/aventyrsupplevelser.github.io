@@ -850,7 +850,7 @@
                     </div>
                     <div id="payment-container" class="payment-section" style="display: none;">
                     </div>
-                    <div style=" margin: 40px 0px 30px;">eller:</div>
+                    <div style="margin: 40px 0px 30px;">eller:</div>
 
                     <button type="button"
                         style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
@@ -1816,11 +1816,10 @@
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
             paymentContainer.innerHTML = `
-        <div class="loading-spinner">
-            <div>Laddar Swish...</div>
-            <div class="loading"></div>
-        </div>
-    `;
+                <div style="padding-left: 3px; font-size: 1.1em;">
+                    Laddar swishbetalning..
+                </div>
+            `;
 
             try {
                 const response = await fetch(
@@ -1850,8 +1849,8 @@
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <h3>Öppna Swish-appen på din telefon</h3>
+                <div style="padding: 5px 0px 0px 3px; font-size: 1.2em; font-weight: 700;">
+                    Öppna Swish-appen på din telefon
                 </div>
             `;
                 }

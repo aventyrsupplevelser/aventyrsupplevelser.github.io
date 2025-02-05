@@ -80,9 +80,6 @@ router.post('/swish-payment', async (req, res) => {
         const callbackIdentifier = generateCallbackId(bookingNumber);
         const instructionId = access_token
 
-        console.log('bookingNumber:', bookingNumber)
-        console.log('callbackIdentifier:', callbackIdentifier)
-
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
             p_access_token: access_token
         });
@@ -137,8 +134,6 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
-        console.log('Callback identifier from header:', callbackIdentifier);
-        console.log('booking_number:', payment.payeePaymentReference)
 
         if (!verifyCallbackId(callbackIdentifier, payment.payeePaymentReference)) {
             console.error('Invalid callback checksum');
