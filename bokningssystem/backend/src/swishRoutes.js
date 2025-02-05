@@ -130,7 +130,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         const callbackIdentifier = req.get('callbackIdentifier');
 
 
-        if (!verifyCallbackChecksum(callbackIdentifier, payment.booking_number, payment.id)) {
+        if (!verifyCallbackId(callbackIdentifier, payment.booking_number, payment.id)) {
             console.error('Invalid callback checksum');
         }
 
@@ -340,7 +340,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
         const callbackIdentifier = callbackData.callbackIdentifier; 
         const access_token = payment.variables.access_token;
 
-        if (!verifyCallbackChecksum(callbackIdentifier, bookingNumber, access_token)) {
+        if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
             console.error('Invalid callback checksum');
         }
 
