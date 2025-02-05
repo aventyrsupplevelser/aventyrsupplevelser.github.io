@@ -261,6 +261,8 @@ router.post('/get-payment-form', async (req, res) => {
 
         const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback');
         callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
+        callbackUrl.searchParams.set('access_token', access_token);
+
 
 
         // Step 2: Create payment link with detailed logging
@@ -272,7 +274,6 @@ router.post('/get-payment-form', async (req, res) => {
             auto_capture: true,
             payment_methods: 'creditcard',
             language: 'sv',
-            'variables[access_token]': access_token,
             deadline: 1800
         };
 
@@ -337,7 +338,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
         }
 
         const callbackIdentifier = callbackData.callbackIdentifier; 
-        const access_token = callbackData.variables.access_token;
+        const access_token = new URL(callbackData.link.callback_url).searchParams.get('access_token');
         console.log(access_token)
 
         if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
