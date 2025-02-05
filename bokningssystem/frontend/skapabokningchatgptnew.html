@@ -1877,6 +1877,8 @@
             const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
             const customerComment = document.getElementById('customerComment').value.trim();
+            const wantsNewsletter = document.getElementById('nyhetsbrev').checked;  // Get newsletter preference
+
 
             // Get session data
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
@@ -1888,7 +1890,8 @@
                 p_access_token: sessionData.token,
                 p_customer_name: customerName,
                 p_customer_email: customerEmail,
-                p_comments: customerComment
+                p_comments: customerComment,
+                p_wants_newsletter: wantsNewsletter  // Add newsletter preference
             });
 
             if (updateError) throw updateError;
