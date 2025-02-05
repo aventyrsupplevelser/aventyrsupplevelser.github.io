@@ -440,7 +440,7 @@ router.post('/gift-swish', async (req, res) => {
 
         const callbackIdentifier = generateCallbackId(giftCardNumber);
 
-        const instructionId = crypto.randomBytes(16).toString('hex');
+        const instructionId = crypto.randomBytes(16).toString('hex').toUpperCase();
 
         const paymentData = {
             payeePaymentReference: giftCardNumber,
@@ -448,7 +448,7 @@ router.post('/gift-swish', async (req, res) => {
             payeeAlias: '1231049352',
             currency: 'SEK',
             amount: sumValue,
-            message: 'Sörsjöns Äventyrspark – Presentkort',
+            message: 'Sörsjöns Äventyrspark - Presentkort',
             callbackIdentifier: callbackIdentifier
         };
         console.log('callbackIdentifier:', callbackIdentifier)
