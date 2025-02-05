@@ -339,7 +339,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
         }
 
         const callbackIdentifier = callbackData.callbackIdentifier; 
-        const access_token = payment.variables.access_token;
+        const access_token = callbackData.variables.access_token;
 
         if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
             console.error('Invalid callback checksum');
