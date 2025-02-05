@@ -438,7 +438,7 @@ router.post('/gift-swish', async (req, res) => {
         throw new Error('Failed to generate gift card number');
       }
 
-        const callbackIdentifier = generateCallbackId(gift_card_number);
+        const callbackIdentifier = generateCallbackId(giftCardNumber);
 
         const instructionId = crypto.randomBytes(16).toString('hex');
 
