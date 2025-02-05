@@ -413,4 +413,136 @@ router.post('/card-callback', express.json(), async (req, res) => {
     }
 });
 
+
+router.post('/gift-swish', async (req, res) => {
+    try {
+
+        const { isMobile, payerAlias, giftTo, giftFrom, purchaserEmail, sumValue } = req.body;
+
+        console.log(req.body);
+
+        // Create giftcard
+        const { data: giftCardData, error: giftError } = await supabase.rpc('create_gift_card', {
+        p_gift_to: giftTo,
+        p_gift_from: giftFrom,
+        p_purchaser_email: purchaserEmail,
+        p_amount: sumValue
+        });
+
+        const giftCardNumber = giftCardData.gift_card_number
+
+        if (statusError) throw statusError;
+
+        const callbackIdentifier = generateCallbackId(gift_card_number);
+
+        const instructionId = crypto.randomBytes(16).toString('hex');
+
+        const paymentData = {
+            payeePaymentReference: giftCardNumber,
+            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/gift-swish-callback`,
+            payeeAlias: '1231049352',
+            currency: 'SEK',
+            amount: sumValue,
+            message: 'Sörsjöns Äventyrspark – Presentkort',
+            callbackIdentifier: callbackIdentifier
+        };
+        console.log('callbackIdentifier:', callbackIdentifier)
+
+        if (payerAlias) {
+            paymentData.payerAlias = payerAlias;
+        }
+
+        console.log('Making Swish request:', paymentData);
+
+        const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+            paymentData
+        ).then((res) => {
+            console.log('Payment request created')
+         });
+
+        res.json({
+            success: true,
+            paymentId: instructionId,
+        });
+
+    } catch (error) {
+        console.error('Swish payment error:', error);
+        res.status(400).json({ success: false, error: error.message });
+    }
+});
+
+router.post('/gift-swish-callback', async (req, res) => {
+    try {
+        const payment = req.body;
+        console.log('Received Swish callback:', payment);
+
+        // Always send 200 OK first
+        res.status(200).send('OK');
+
+        // Get and validate callback identifier
+        const callbackIdentifier = req.get('callbackIdentifier');
+
+        if (!verifyCallbackId(callbackIdentifier, payment.payeePaymentReference)) {
+            console.error('Invalid callback checksum');
+            return; 
+        }
+
+        // First get the gift card
+        const { data: giftCard, error: giftError } = await supabase
+            .from('gift_cards')
+            .eq('gift_card_number', payment.payeePaymentReference)
+            .single();
+
+        if (giftError || !giftCard) {
+            console.error('Giftcard not found or card number mismatch');
+            return;
+        }
+
+        if (giftCard.status !== 'pending') {
+            console.log('Gift card already processed:', giftCard.status);
+            return;
+        }
+
+        if (payment.status === 'PAID') {
+            const paidAmountOre = Math.round(payment.amount * 100);
+
+            // Update the gift card
+            const { error: updateError } = await supabase
+                .from('gift_cards')
+                .update({
+                    status: 'completed',
+                    payment_method: 'swish',
+                    payment_id: payment.id,
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: payment
+                })
+                .eq('gift_card_number', payment.payeePaymentReference)
+                .eq('status', 'pending')
+
+            if (updateError) {
+                console.error('Error updating giftCard with payment info:', updateError);
+                return;
+            }
+
+            console.log('Payment recorded successfully:', payment.id);
+
+            // Send confirmation email using the original gift card data we already have
+            try {
+                await EmailService.sendGiftCardConfirmation({
+                    ...giftCard,
+                    paid_amount: paidAmountOre,
+                });
+                console.log('Confirmation email sent successfully');
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
+            }
+        }
+
+    } catch (error) {
+        console.error('Swish callback error:', error);
+    }
+
+});
+
 export default router;

@@ -78,35 +78,82 @@
         }
 
         #paymentButtons {
-            margin-top: 30px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        #paymentButtons button {
+        button img {
+            height: 23px;
+        }
+
+        #swishSection {
+            width: 300px;
+        }
+
+        #swishbutton {
             display: flex;
             justify-content: space-between;
-            background: rgb(244, 244, 231);
+            background: rgb(243, 243, 236);
             align-items: center;
-            width: 300px;
-            font-size: 1.3em;
+            width: 100%;
+            font-size: 1.1em;
+            padding: 18px 20px;
             font-weight: 700;
-            border: 1.5px solid rgb(97, 97, 97);
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
+            border: 2px solid rgb(97, 97, 97);
             font-family: inherit;
-            margin: 0 auto 20px;
+            transition: 0.3s;
+            border-radius: 3px;
         }
 
-        #paymentButtons button:hover {
-            background: rgb(243, 243, 176);
+        #swishbutton:hover {
+            background: rgb(240, 240, 240);
+            transition: 0.2s;
+            transition: filter 0.7s;
+            border: 2px solid rgb(0, 88, 6);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.218));
+            will-change: filter;
+            cursor: pointer;
         }
 
-        #paymentContainer {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
+        #swishbutton:active {
+            background: rgb(206, 231, 198);
+        }
+
+        #swishbutton span {
+            padding-top: 4px;
+        }
+
+        #kortbetalning {
+            background: none !important;
+            padding: 0 !important;
+            border: none !important;
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        #kortbetalning span {
+            border-bottom: 1.5px solid black;
+            transition: 0.2s;
+        }
+
+        #kortbetalning span:hover {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            border-bottom: 1.5px solid #0d5c7c;
+            text-decoration: none;
+            color: #0d5c7c;
+            transition: 0.2s;
+            filter: drop-shadow(0px 0px 4px rgba(113, 113, 113, 0.149));
+            cursor: hover;
+        }
+
+        #kortbetalning img {
+            height: 32px;
         }
 
         .loading-spinner {
@@ -190,10 +237,6 @@
             width: 300px;
             line-height: 1.4em;
         }
-
-        button img {
-            height: 40px;
-        }
     </style>
 </head>
 
@@ -206,7 +249,8 @@
     <h2>Köp presentkort</h2>-->
 
     <div class="sum-selector">
-        <label style="background:yellow;display:inline-block;margin-bottom: 20px; font-size: 1em;">Välj
+        <label
+            style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display:inline-block; margin-bottom: 20px; font-size: 1em;">Välj
             summa:</label>
         <br>
         <button id="minusBtn" class="quantity-btn" disabled>-</button>
@@ -232,22 +276,43 @@
         <div id="termsError" class="error">Du måste acceptera villkor innan du kan fortsätta.</div>
     </div>
 
-    <div id="paymentButtons">
-        <label style="background: yellow; display: inline-block; margin-bottom: 20px; font-size: 1em;">Välj
-            betalsätt:</label>
-        <button id="swishBtn">
-            <span>Swish</span>
-            <img src="/images/swish.png" alt="Swish">
-        </button>
-        <button id="cardBtn">
-            <span>Kontokort</span>
-            <img src="/images/creditcard.png" alt="Credit Card">
-        </button>
-    </div>
+    <div
+        style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); width: fit-content; margin: 40px auto 20px; text-align: center;">
+        Välj betalsätt:</div>
 
-    <div id="paymentContainer">
-        <div class="loading-spinner"></div>
-        <p>Laddar betalningsfönster...</p>
+    <div id="paymentButtons">
+        <div id="swishSection">
+            <div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
+                <input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
+                    style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 1.5px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
+                <div id="swishPhoneError" class="error" style="display: none; width: auto;">
+                    Skriv ditt telefonnummer för Swish
+                </div>
+            </div>
+
+            <button id="swishbutton" type="button" class="payment-button" onclick="handleSwishPayment()">
+                <span>Betala med Swish</span>
+                <img src="/images/swish2.png">
+            </button>
+            <div id="alternateDeviceSection" style="display: none; margin-top: 15px;">
+                <a href="#" onclick="showSwishPhoneInput(event)" style="color: #4a4a4a; text-decoration: underline;">
+                    Betala med Swish på en annan enhet
+                </a>
+            </div>
+        </div>
+        <div id="payment-container" class="payment-section" style="display: none;">
+        </div>
+        <div style="margin: 40px 0px 30px;">eller:</div>
+
+        <button type="button"
+            style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
+            id="kortbetalning" onclick="payByCard()">
+            <span id="kortSpan">Betala
+                med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
+                    nytt
+                    fönster)</span></span>
+            <img src="/images/cards.png">
+        </button>
     </div>
 
     <script>
@@ -282,10 +347,10 @@
 
 
         // Payment handlers
-        document.getElementById('swishBtn').addEventListener('click', () => handlePayment('swish'));
-        document.getElementById('cardBtn').addEventListener('click', () => handlePayment('card'));
+        document.getElementById('swishBtn').addEventListener('click', () => handleSwish());
+        document.getElementById('cardBtn').addEventListener('click', () => handleCard());
 
-        async function handlePayment(method) {
+        async function handleSwish() {
             if (!termsCheckbox.checked) {
                 termsError.style.display = 'block';
                 termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -296,92 +361,94 @@
                 alert('Vänligen välj en presentkortssumma större än 0');
                 return;
             }
-            paymentContainer.style.display = 'block';
-            paymentContainer.innerHTML = '<div class="loading-spinner"></div><p>Laddar betalningsfönster...</p>';
-            paymentContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+            //add if no email and names!! 
 
             const giftTo = document.getElementById('giftTo').value.trim();
             const giftFrom = document.getElementById('giftFrom').value.trim();
             const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
 
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const swishPhoneSection = document.getElementById('swishPhoneSection');
+            const alternateDeviceSection = document.getElementById('alternateDeviceSection');
+            const swishPhoneError = document.getElementById('swishPhoneError');
+
+            // Show/hide relevant sections based on device type
+            if (!isMobile) {
+                swishPhoneSection.style.display = 'block';
+            } else {
+                alternateDeviceSection.style.display = 'block';
+            }
+
+            // Get phone number if input is visible
+            let phoneNumber = null;
+            if (swishPhoneSection.style.display === 'block') {
+                phoneNumber = document.getElementById('swishPhone').value.trim();
+                if (!phoneNumber) {
+                    swishPhoneError.style.display = 'block';
+                    return;
+                }
+                swishPhoneError.style.display = 'none';
+            }
+
+            const paymentContainer = document.getElementById('payment-container');
+            paymentContainer.style.display = 'block';
+            paymentContainer.innerHTML = `
+                <div style="padding-left: 3px; font-size: 1.1em;">
+                    Laddar swishbetalning..
+                </div>
+            `;
+
             try {
-                // Get the payment form
-                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-form', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        gift_to: giftTo,
-                        gift_from: giftFrom,
-                        purchaser_email: purchaserEmail,
-                        sum_in_sek: sumValue,
-                        paymentMethod: method
-                    })
-                });
+                const response = await fetch(
+                    'http://localhost:3000/api/swish/gift-swish',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            isMobile,
+                            payerAlias: phoneNumber,
+                            giftTo: giftTo,
+                            giftFrom: giftFrom,
+                            purchaserEmail: purchaserEmail,
+                            sumValue: sumValue
+                        })
+                    }
+                );
 
-                if (!response.ok) throw new Error('Failed to get payment form');
-                const formHtml = await response.text();
-
-                // Extract the gift card number from the form HTML
-                const orderIdMatch = formHtml.match(/name="order_id" value="([^"]+)"/);
-                const giftCardNumber = orderIdMatch ? orderIdMatch[1] : null;
-
-                if (!giftCardNumber) {
-                    throw new Error('Failed to get gift card number from form');
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Payment failed');
                 }
 
-                // Create iframe and handle form as before
-                paymentContainer.innerHTML = '';
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '330px';
-                iframe.style.border = 'none';
-                iframe.style.display = 'none';
-                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-popups');
-                paymentContainer.appendChild(iframe);
+                if (isMobile && result.token && !phoneNumber) {
+                    // Open Swish app
+                    const returnUrl = `${window.location.origin}/tackfordittkop.html`;
+                    window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
+                } else {
+                    // Show instructions for desktop users
+                    paymentContainer.innerHTML = `
+                <div style="padding: 5px 0px 0px 3px; font-size: 1.2em; font-weight: 700;">
+                    Öppna Swish-appen på din telefon
+                </div>
+            `;
+                }
 
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(formHtml);
-                iframeDoc.close();
-
-                iframe.onload = () => {
-                    iframe.style.display = 'block';
-                };
-
-                // Auto-submit the form
-                const form = iframeDoc.querySelector('form');
-                if (form) form.submit();
-
-                // Start checking payment status with the extracted gift card number
-                let attempts = 0;
-                const maxAttempts = 60;
-                const interval = setInterval(async () => {
-                    try {
-                        const response = await fetch(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/giftcards/payment-status/${giftCardNumber}`);
-                        const data = await response.json();
-                        console.log('Payment status response:', data);
-
-                        // Check if paymentDetails exists and contains giftCardNumber
-                        if (data.paymentDetails?.giftCardNumber) {
-                            clearInterval(interval);
-                            console.log('Payment completed:', data);
-                            window.location.href = `/tackfordittkop?order_id=${giftCardNumber}`;
-                        } else if (++attempts >= maxAttempts) {
-                            clearInterval(interval);
-                        }
-                    } catch (error) {
-                        console.error('Error checking payment status:', error);
-                        clearInterval(interval);
-                    }
-                }, 1000);
-
-            } catch (err) {
-                console.error(err);
-                paymentContainer.innerHTML = 'Ett fel uppstod när betalningsformuläret laddades.';
-                paymentButtons.style.display = 'block';
+            } catch (error) {
+                console.error('Swish payment error:', error);
+                paymentContainer.innerHTML = `
+            <div class="error" style="text-align: center; margin: 20px;">
+                <p>Betalning misslyckades: ${error.message}</p>
+                <button onclick="handleSwishPayment()" style="margin-top: 10px;">
+                    Försök igen
+                </button>
+            </div>
+        `;
             }
+            checkPaymentStatus();
+
         }
+
     </script>
 </body>
 
