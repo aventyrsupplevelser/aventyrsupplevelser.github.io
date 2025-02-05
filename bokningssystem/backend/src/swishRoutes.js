@@ -272,9 +272,7 @@ router.post('/get-payment-form', async (req, res) => {
             auto_capture: true,
             payment_methods: 'creditcard',
             language: 'sv',
-            variables: {
-                access_token: access_token
-            },
+            'variables[access_token]': access_token,
             deadline: 1800
         };
 
