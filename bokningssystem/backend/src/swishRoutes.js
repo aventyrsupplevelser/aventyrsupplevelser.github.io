@@ -340,17 +340,10 @@ router.post('/card-callback', express.json(), async (req, res) => {
 
         const callbackIdentifier = callbackData.callbackIdentifier; 
         const access_token = callbackData.variables.access_token;
+        console.log(access_token)
 
         if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
             console.error('Invalid callback checksum');
-        }
-
-        // 4. Get and validate access token from callback URL
-        const callbackUrl = new URL(callbackData.link.callback_url);
-        const accessToken = callbackUrl.searchParams.get('token');
-        if (!accessToken) {
-            console.error('Missing access token in callback URL');
-            return;
         }
 
         // 5. Get the booking using both booking number and access token
@@ -358,7 +351,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
             .from('bookings')
             .select('*, time_slots(*)')
             .eq('booking_number', bookingNumber)
-            .eq('access_token', accessToken)
+            .eq('access_token', access_token)
             .single();
 
         if (bookingError || !booking) {
@@ -391,7 +384,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
                 })
                 .eq('id', booking.id)
                 .eq('status', 'pending')
-                .eq('access_token', accessToken);
+                .eq('access_token', access_token);
 
             if (updateError) {
                 console.error('Error updating booking:', updateError);
