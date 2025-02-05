@@ -326,6 +326,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
     try {
         // 1. Always respond with 200 OK first to acknowledge receipt
         res.status(200).send('OK');
+        console.log('starting')
 
         // 2. Get the callback data
         const callbackData = req.body;
@@ -337,9 +338,10 @@ router.post('/card-callback', express.json(), async (req, res) => {
             return;
         }
 
-        const callbackIdentifier = callbackData.callbackIdentifier; 
-        const access_token = new URL(callbackData.link.callback_url).searchParams.get('access_token');
-        console.log(access_token)
+        const callbackUrl = new URL(callbackData.link.callback_url);
+        const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
+        const access_token = callbackUrl.searchParams.get('access_token');
+        console.log('access_token:', access_token)
 
         if (!verifyCallbackId(callbackIdentifier, bookingNumber, access_token)) {
             console.error('Invalid callback checksum');
@@ -382,7 +384,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
                     payment_metadata: callbackData
                 })
                 .eq('id', booking.id)
-                .eq('status', 'pending')
+                .eq('status', 'requested')
                 .eq('access_token', access_token);
 
             if (updateError) {
