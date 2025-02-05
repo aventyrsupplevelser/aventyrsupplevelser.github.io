@@ -493,15 +493,18 @@ router.post('/gift-swish-callback', async (req, res) => {
         }
 
         // First get the gift card
-        const { data: giftCard, error: giftError } = await supabase
-            .from('gift_cards')
-            .eq('gift_card_number', payment.payeePaymentReference)
-            .single();
+        const { data: giftCards, error: giftError } = await supabase
+         .from('gift_cards')
+         .select('*')
+         .eq('gift_card_number', payment.payeePaymentReference)
+         .limit(1);
 
-        if (giftError || !giftCard) {
+         if (giftError || !giftCards || giftCards.length === 0) {
             console.error('Giftcard not found or card number mismatch');
             return;
         }
+        
+        const giftCard = giftCards[0];
 
         if (giftCard.status !== 'pending') {
             console.log('Gift card already processed:', giftCard.status);
@@ -522,8 +525,10 @@ router.post('/gift-swish-callback', async (req, res) => {
                     payment_completed_at: new Date().toISOString(),
                     payment_metadata: payment
                 })
-                .eq('gift_card_number', payment.payeePaymentReference)
-                .eq('status', 'pending')
+                .match({ 
+                    gift_card_number: payment.payeePaymentReference,
+                    status: 'pending'
+                });
 
             if (updateError) {
                 console.error('Error updating giftCard with payment info:', updateError);
