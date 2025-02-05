@@ -75,9 +75,12 @@ router.post('/swish-payment', async (req, res) => {
         });
 
         if (statusError) throw statusError;
+        console.log('bookingNumber:', bookingNumber)
 
         const callbackIdentifier = generateCallbackId(bookingNumber);
         const instructionId = access_token
+
+        console.log('callbackIdentifier:', callbackIdentifier)
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
             p_access_token: access_token
@@ -95,6 +98,9 @@ router.post('/swish-payment', async (req, res) => {
             message: 'Sörsjöns Äventyrspark',
             callbackIdentifier: callbackIdentifier
         };
+        console.log('callbackIdentifier:', callbackIdentifier)
+
+
 
         if (payerAlias) {
             paymentData.payerAlias = payerAlias;
@@ -127,6 +133,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         // Always send 200 OK first
         res.status(200).send('OK');
 
+
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
 
@@ -147,7 +154,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
             return;
         }
 
-        if (booking.status !== 'pending') {
+        if (booking.status !== 'requested') {
             console.log('Booking already processed:', booking.status);
             return;
         }
@@ -167,7 +174,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
                     payment_metadata: payment
                 })
                 .eq('id', booking.id)
-                .eq('status', 'pending')
+                .eq('status', 'requested')
                 .eq('access_token', callbackIdentifier);
 
             if (updateError) {
