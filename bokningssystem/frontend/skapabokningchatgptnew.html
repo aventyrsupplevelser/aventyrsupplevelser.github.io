@@ -1557,16 +1557,29 @@
             };
         }
 
+        function formatSwedishDate(dateStr) {
+            const date = new Date(dateStr);
+            const weekdays = ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'];
+            const months = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+
+            const weekday = weekdays[date.getDay()];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+
+            return `${weekday} ${day} ${month}`;
+        }
+
         function displayBookingSummary({ tickets, totals }) {
             try {
                 const summaryEl = document.getElementById('bookingSummaryFinal');
                 if (!summaryEl) return;
 
                 const totalRebook = (tickets.adult + tickets.youth + tickets.kid) * PRICES.rebooking;
+                const formattedDate = formatSwedishDate(tickets.date);
 
                 summaryEl.innerHTML = `
       <p id="selectedDateTime">
-        Datum: <span style="font-weight: bold;">${tickets.date || ''}</span>
+        Datum: <span style="font-weight: bold;">${formattedDate}</span>
         <p>Tid: <span style="font-weight: bold;">${tickets.time || ''}</span></p>
       </p>
       <hr>
@@ -1819,7 +1832,8 @@
                             bookingNumber: bookingData.booking_number,
                             isMobile,
                             payerAlias: phoneNumber,
-                            access_token: bookingData.token
+                            access_token: bookingData.token,
+                            bookingId: bookingData.bookingId
                         })
                     }
                 );
@@ -1870,7 +1884,7 @@
             if (!sessionData?.bookingId) throw new Error('No active booking found');
 
             // Update booking details
-            const { error: updateError } = await supabaseClient.rpc('manage_booking', {
+            const { error: updateError } = await supabaseClient.rpc('update_customer_details', {
                 p_booking_id: sessionData.bookingId,
                 p_access_token: sessionData.token,
                 p_customer_name: customerName,
@@ -1931,7 +1945,8 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             order_id: sessionData.booking_number,
-                            access_token: sessionData.token
+                            access_token: sessionData.token,
+                            bookingId: sessionData.bookingId
                         }),
                     }
                 );
@@ -1972,21 +1987,15 @@
             const hasReleasedSpots = localStorage.getItem('spotsReleased');
 
             if (sessionData?.bookingId && hasReleasedSpots !== true) {
-                // Call your Supabase RPC "manage_booking" function to update the booking
                 supabaseClient
-                    .rpc('manage_booking', {
+                    .rpc('reset_booking', {
                         p_booking_id: sessionData.bookingId,
                         p_access_token: sessionData.token,
-                        p_new_time_slot_id: currentTimeSlot,
-                        p_new_adult_quantity: 0,
-                        p_new_youth_quantity: 0,
-                        p_new_kid_quantity: 0,
-                        p_full_day: 0,
-                        p_is_rebookable: false
+                        p_new_time_slot_id: currentTimeSlot
                     })
                     .then(({ error }) => {
                         if (error) {
-                            console.error('Error releasing spots via rpc manage_booking:', error);
+                            console.error('Error resetting booking:', error);
                         }
                     })
                     .catch(console.error);

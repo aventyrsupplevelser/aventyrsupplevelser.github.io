@@ -17,6 +17,25 @@ const supabase = createClient(
 
 const router = express.Router(); // <--- You forgot this line!
 
+function generateCallbackId(bookingId, accessToken) {
+    const serverSecret = process.env.CALLBACK_SECRET;
+    const hmac = crypto.createHmac('sha256', serverSecret);
+    hmac.update(`${bookingId}:${accessToken}`);
+    return hmac.digest('hex').slice(0, 32);  // Take first 32 chars to match Swish requirements
+}
+
+function verifyCallbackId(callbackId, bookingId, accessToken) {
+    try {
+        const expectedCallbackId = generateSwishCallbackId(bookingId, accessToken);
+        return crypto.timingSafeEqual(
+            Buffer.from(callbackId),
+            Buffer.from(expectedCallbackId)
+        );
+    } catch {
+        return false;
+    }
+}
+
 // Decode from Base64
 function getCertificates() {
     const rawCert = process.env.SWISH_CERTIFICATE;
@@ -45,7 +64,18 @@ const swishClient = axios.create({
 
 router.post('/swish-payment', async (req, res) => {
     try {
-        const { bookingNumber, isMobile, payerAlias, access_token } = req.body;
+
+        const { bookingNumber, isMobile, payerAlias, access_token, bookingId } = req.body;
+
+        // Update booking status to requested
+        const { data: statusData, error: statusError } = await supabase.rpc('request_booking', {
+        p_booking_id: bookingId,
+         p_access_token: access_token
+        });
+
+        if (statusError) throw statusError;
+
+        const callbackIdentifier = generateCallbackId(bookingNumber, access_token);
         const instructionId = access_token
 
         const { data: data, error } = await supabase.rpc('calculate_booking_amount', { 
@@ -62,7 +92,7 @@ router.post('/swish-payment', async (req, res) => {
             currency: 'SEK',
             amount: amount,
             message: 'Sörsjöns Äventyrspark',
-            callbackIdentifier: access_token
+            callbackIdentifier: callbackIdentifier
         };
 
         if (payerAlias) {
@@ -98,9 +128,10 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
-        if (!callbackIdentifier) {
-            console.error('Missing callback identifier');
-            return;
+
+
+        if (!verifyCallbackChecksum(callbackIdentifier, payment.booking_number, payment.id)) {
+            console.error('Invalid callback checksum');
         }
 
         // First get the booking
@@ -108,7 +139,6 @@ router.post('/swish-callback', express.json(), async (req, res) => {
             .from('bookings')
             .select('*, time_slots(*)')
             .eq('booking_number', payment.payeePaymentReference)
-            .eq('access_token', callbackIdentifier)
             .single();
 
         if (bookingError || !booking) {
@@ -167,7 +197,15 @@ router.post('/swish-callback', express.json(), async (req, res) => {
 
 router.post('/get-payment-form', async (req, res) => {
     try {
-        const { order_id, access_token } = req.body;
+        const { order_id, access_token, bookingId } = req.body;
+
+         // Update booking status to requested
+         const { data: statusData, error: statusError } = await supabase.rpc('request_booking', {
+            p_booking_id: bookingId,
+            p_access_token: access_token
+        });
+
+        if (statusError) throw statusError;
         
         // Log incoming request
         console.log('Received request:', { order_id, access_token: '***' });
@@ -175,6 +213,8 @@ router.post('/get-payment-form', async (req, res) => {
         if (!order_id || !access_token) {
             return res.status(400).json({ error: 'order_id and access_token are required.' });
         }
+
+        const callbackIdentifier = generateCallbackId(order_id, access_token);
 
         // Calculate amount and log it
         const { data: amount, error } = await supabase.rpc('calculate_booking_amount', {
@@ -184,7 +224,7 @@ router.post('/get-payment-form', async (req, res) => {
         console.log('Calculated amount:', amount);
 
         // Log API credentials (mask sensitive data)
-        const apiKey = process.env.QUICKPAY_API_USER_KEY; // Note: Changed from QUICKPAY_PAYMENT_WINDOW_KEY
+        const apiKey = process.env.QUICKPAY_API_USER_KEY;
         console.log('API configuration present:', {
             apiKeyPresent: !!apiKey
         });
@@ -219,7 +259,7 @@ router.post('/get-payment-form', async (req, res) => {
         console.log('Payment created:', payment);
 
         const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback');
-        callbackUrl.searchParams.set('token', access_token);
+        callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
 
 
         // Step 2: Create payment link with detailed logging
@@ -230,7 +270,11 @@ router.post('/get-payment-form', async (req, res) => {
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
-            language: 'sv'
+            language: 'sv',
+            variables: {
+                access_token: access_token
+            },
+            deadline: 1800
         };
 
         console.log('Link request payload:', linkRequestBody);
@@ -293,6 +337,13 @@ router.post('/card-callback', express.json(), async (req, res) => {
             return;
         }
 
+        const callbackIdentifier = callbackData.callbackIdentifier; 
+        const access_token = payment.variables.access_token;
+
+        if (!verifyCallbackChecksum(callbackIdentifier, bookingNumber, access_token)) {
+            console.error('Invalid callback checksum');
+        }
+
         // 4. Get and validate access token from callback URL
         const callbackUrl = new URL(callbackData.link.callback_url);
         const accessToken = callbackUrl.searchParams.get('token');
@@ -314,8 +365,8 @@ router.post('/card-callback', express.json(), async (req, res) => {
             return;
         }
 
-        // 6. Check if booking is still pending
-        if (booking.status !== 'pending') {
+        // 6. Check if booking is still requesting
+        if (booking.status !== 'requested') {
             console.log('Booking already processed:', booking.status);
             return;
         }
