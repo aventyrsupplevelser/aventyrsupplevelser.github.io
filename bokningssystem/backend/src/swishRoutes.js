@@ -476,6 +476,128 @@ router.post('/gift-swish', async (req, res) => {
     }
 });
 
+router.post('/get-gift-form', async (req, res) => {
+    try {
+        const { giftTo, giftFrom, purchaserEmail, sumValue } = req.body;
+
+        console.log(req.body);
+
+        // Create giftcard
+         const { data, error } = await supabase.rpc('create_gift_card', {
+         p_gift_to: giftTo,
+         p_gift_from: giftFrom,
+         p_purchaser_email: purchaserEmail,
+         p_amount: sumValue
+       });
+   
+       if (error) throw error;
+   
+       // The data will contain what your PG function returned as jsonb
+       const giftCardNumber = data.gift_card_number;
+   
+       if (!giftCardNumber) {
+         throw new Error('Failed to generate gift card number');
+       }
+
+        const callbackIdentifier = generateCallbackId(giftCardNumber);
+
+        // Log API credentials (mask sensitive data)
+        const apiKey = process.env.QUICKPAY_API_USER_KEY;
+
+        const order_id = giftCardNumber;
+
+        // Step 1: Create payment with detailed logging
+        const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
+            method: 'POST',
+            headers: {
+                'Accept-Version': 'v10',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+            },
+            body: JSON.stringify({
+                order_id,
+                currency: 'SEK'
+            })
+        });
+
+        // Log full payment creation response
+        const paymentResponseText = await createPaymentResponse.text();
+        console.log('Payment creation response:', {
+            status: createPaymentResponse.status,
+            headers: Object.fromEntries(createPaymentResponse.headers.entries()),
+            body: paymentResponseText
+        });
+
+        if (!createPaymentResponse.ok) {
+            throw new Error(`Failed to create QuickPay payment: ${paymentResponseText}`);
+        }
+
+        const payment = JSON.parse(paymentResponseText);
+        console.log('Payment created:', payment);
+
+        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/gift-card-callback');
+        callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
+
+        console.log('Constructed callback URL:', callbackUrl.toString());
+
+        sumValue = sumValue * 100; 
+
+        // Step 2: Create payment link with detailed logging
+        const linkRequestBody = {
+            amount: sumValue,  // Make sure this is in smallest currency unit (öre)
+            continue_url: `https://aventyrsupplevelser.com/tackfordittkop`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            callback_url: callbackUrl.toString(),
+            auto_capture: true,
+            payment_methods: 'creditcard',
+            language: 'sv',
+        };
+
+        console.log('Link request payload:', linkRequestBody);
+
+        const createLinkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
+            method: 'PUT',
+            headers: {
+                'Accept-Version': 'v10',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+            },
+            body: JSON.stringify(linkRequestBody)
+        });
+
+        // Log full link creation response
+        const linkResponseText = await createLinkResponse.text();
+        console.log('Link creation response:', {
+            status: createLinkResponse.status,
+            headers: Object.fromEntries(createLinkResponse.headers.entries()),
+            body: linkResponseText
+        });
+
+        if (!createLinkResponse.ok) {
+            throw new Error(`Failed to create QuickPay payment link: ${linkResponseText}`);
+        }
+
+        const link = JSON.parse(linkResponseText);
+        
+        // Return success response
+        res.json({
+            url: link.url,
+            payment_id: payment.id
+        });
+
+    } catch (error) {
+        console.error('Detailed error:', {
+            message: error.message,
+            stack: error.stack
+        });
+        
+        res.status(500).json({
+            error: 'Failed to generate payment link',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
 router.post('/gift-swish-callback', async (req, res) => {
     try {
         const payment = req.body;
@@ -552,7 +674,91 @@ router.post('/gift-swish-callback', async (req, res) => {
     } catch (error) {
         console.error('Swish callback error:', error);
     }
+});
 
+
+
+
+router.post('/gift-card-callback', async (req, res) => {
+    try {
+        const payment = req.body;
+        console.log('Received Card callback:', payment);
+
+        // Always send 200 OK first
+        res.status(200).send('OK');
+
+        const callbackUrl = new URL(payment.link.callback_url);
+        const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
+        const giftCardNumber = payment.order_id;
+
+        if (!verifyCallbackId(callbackIdentifier, giftCardNumber)) {
+            console.error('Invalid callback checksum');
+            return;
+        }
+
+        // Get the gift card
+        const { data: giftCards, error: giftError } = await supabase
+            .from('gift_cards')
+            .select('*')
+            .eq('gift_card_number', giftCardNumber)
+            .limit(1);
+
+        if (giftError || !giftCards || giftCards.length === 0) {
+            console.error('Giftcard not found or card number mismatch');
+            return;
+        }
+
+        const giftCard = giftCards[0];
+
+        if (giftCard.status !== 'pending') {
+            console.log('Gift card already processed:', giftCard.status);
+            return;
+        }
+
+        // Check for successful payment
+        const isSuccess = payment.accepted && payment.state === 'processed';
+        if (isSuccess) {
+            // Get amount in öre from the payment link data
+            const paidAmountOre = payment.link.amount;
+
+            // Update the gift card
+            const { error: updateError } = await supabase
+                .from('gift_cards')
+                .update({
+                    status: 'completed',
+                    payment_method: 'card',
+                    payment_id: payment.id.toString(),
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: payment
+                })
+                .match({ 
+                    gift_card_number: giftCardNumber,
+                    status: 'pending'
+                });
+
+            if (updateError) {
+                console.error('Error updating giftCard with payment info:', updateError);
+                return;
+            }
+
+            console.log('Payment recorded successfully:', payment.id);
+
+            // Send confirmation email
+            try {
+                await EmailService.sendGiftCardConfirmation({
+                    ...giftCard,
+                    paid_amount: paidAmountOre,
+                });
+                console.log('Confirmation email sent successfully');
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
+            }
+        }
+
+    } catch (error) {
+        console.error('Card callback error:', error);
+    }
 });
 
 export default router;

@@ -1759,6 +1759,20 @@
             document.getElementById('swishPhone').focus();
         }
 
+        function formatSwishNumber(input) {
+            let number = input.replace(/\D/g, ''); // Remove all non-numeric characters
+
+            if (number.startsWith("46")) {
+                return number; // Already in correct format
+            } else if (number.startsWith("0")) {
+                return "46" + number.substring(1); // Remove leading zero and add country code
+            } else if (number.startsWith("+46")) {
+                return number.replace("+", ""); // Remove "+" if it exists
+            } else {
+                return null; // Invalid format
+            }
+        }
+
         async function handleSwishPayment() {
 
             // Get customer info
@@ -1802,14 +1816,23 @@
                 alternateDeviceSection.style.display = 'block';
             }
 
-            // Get phone number if input is visible
             let phoneNumber = null;
             if (swishPhoneSection.style.display === 'block') {
                 phoneNumber = document.getElementById('swishPhone').value.trim();
+
                 if (!phoneNumber) {
                     swishPhoneError.style.display = 'block';
                     return;
                 }
+
+                phoneNumber = formatSwishNumber(phoneNumber); // Ensure correct format
+
+                if (!phoneNumber) {
+                    swishPhoneError.style.display = 'block';
+                    swishPhoneError.textContent = "Ogiltigt telefonnummer. Ange ett svenskt mobilnummer.";
+                    return;
+                }
+
                 swishPhoneError.style.display = 'none';
             }
 

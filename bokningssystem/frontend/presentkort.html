@@ -247,7 +247,8 @@
     </header> 
 
     <h2>Köp presentkort</h2>-->
-
+    <div id="requiredSumMessage" class="error" style="display: none; width: fit-content; margin: 0px auto 20px;">
+        Vänligen välj en presentkortssumma större än 0.</div>
     <div class="sum-selector">
         <label
             style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display:inline-block; margin-bottom: 20px; font-size: 1em;">Välj
@@ -259,6 +260,9 @@
     </div>
 
     <div id="details">
+        <div id="requiredInfoMessage" class="error" style="display: none; margin-bottom: 20px; width: fit-content;">
+            Vänligen fyll i namn och
+            e-postadress.</div>
         <label>Presentkortet är till:</label>
         <input type="text" id="giftTo" placeholder="Mottagarens namn" />
 
@@ -350,23 +354,73 @@
         document.getElementById('swishbutton').addEventListener('click', () => handleSwish());
         document.getElementById('kortbetalning').addEventListener('click', () => handleCard());
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const swishPhoneSection = document.getElementById("swishPhoneSection");
+            const alternateDeviceSection = document.getElementById("alternateDeviceSection");
+
+            if (!isMobile) {
+                swishPhoneSection.style.display = "block";
+                alternateDeviceSection.style.display = "none";
+            } else {
+                alternateDeviceSection.style.display = "block";
+                swishPhoneSection.style.display = "none";
+            }
+        });
+
+        function formatSwishNumber(input) {
+            let number = input.replace(/\D/g, ''); // Remove all non-numeric characters
+
+            if (number.startsWith("46")) {
+                return number; // Already in correct format
+            } else if (number.startsWith("0")) {
+                return "46" + number.substring(1); // Remove leading zero and add country code
+            } else if (number.startsWith("+46")) {
+                return number.replace("+", ""); // Remove "+" if it exists
+            } else {
+                return null; // Invalid format
+            }
+        }
+
+
+
+        function showSwishPhoneInput(event) {
+            if (event) event.preventDefault();
+            document.getElementById('swishPhoneSection').style.display = 'block';
+            document.getElementById('alternateDeviceSection').style.display = 'none';
+            document.getElementById('swishPhone').focus();
+        }
+
+
         async function handleSwish() {
+
+            if (sumValue === 0) {
+                requiredSumMessage.style.display = 'block';
+                requiredSumMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            requiredSumMessage.style.display = 'none';
+
+
+            const giftTo = document.getElementById('giftTo').value.trim();
+            const giftFrom = document.getElementById('giftFrom').value.trim();
+            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
+
+            // Validate required fields
+            if (!giftTo || !giftFrom || !purchaserEmail) {
+                requiredInfoMessage.style.display = 'block';
+                requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            requiredInfoMessage.style.display = 'none';
+
             if (!termsCheckbox.checked) {
                 termsError.style.display = 'block';
                 termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
-
-            if (sumValue === 0) {
-                alert('Vänligen välj en presentkortssumma större än 0');
-                return;
-            }
-
-            //add if no email and names!! 
-
-            const giftTo = document.getElementById('giftTo').value.trim();
-            const giftFrom = document.getElementById('giftFrom').value.trim();
-            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
 
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             const swishPhoneSection = document.getElementById('swishPhoneSection');
@@ -380,21 +434,31 @@
                 alternateDeviceSection.style.display = 'block';
             }
 
-            // Get phone number if input is visible
             let phoneNumber = null;
             if (swishPhoneSection.style.display === 'block') {
                 phoneNumber = document.getElementById('swishPhone').value.trim();
+
                 if (!phoneNumber) {
                     swishPhoneError.style.display = 'block';
                     return;
                 }
+
+                phoneNumber = formatSwishNumber(phoneNumber); // Ensure correct format
+
+                if (!phoneNumber) {
+                    swishPhoneError.style.display = 'block';
+                    swishPhoneError.textContent = "Ogiltigt telefonnummer. Ange ett svenskt mobilnummer.";
+                    return;
+                }
+
                 swishPhoneError.style.display = 'none';
             }
+
 
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
             paymentContainer.innerHTML = `
-                <div style="padding-left: 3px; font-size: 1.1em;">
+                <div style="padding-left: 3px; padding-top: 20px; font-size: 1.1em;">
                     Laddar swishbetalning..
                 </div>
             `;
@@ -428,7 +492,7 @@
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
-                <div style="padding: 5px 0px 0px 3px; font-size: 1.2em; font-weight: 700;">
+                <div style="padding: 20px 0px 0px 3px; font-size: 1.2em; font-weight: 700;">
                     Öppna Swish-appen på din telefon
                 </div>
             `;
