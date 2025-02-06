@@ -195,6 +195,7 @@ class EmailService {
             const vatRate = 0.06;
             const amountExVat = Math.round(totalAmountInSEK / (1 + vatRate));
             const vatAmount = totalAmountInSEK - amountExVat;
+            const amountSEK = Math.round(totalAmountInSEK);
 
             // Generate URL for gift card generation
             const giftCardUrl = new URL('http://aventyrsupplevelser.com/bokningssystem/frontend/generategiftcard.html');
@@ -202,7 +203,7 @@ class EmailService {
             giftCardUrl.searchParams.set('gift_from', giftCard.gift_from);
             giftCardUrl.searchParams.set('gift_card_number', giftCard.gift_card_number);
             giftCardUrl.searchParams.set('valid_until', giftCard.valid_until);
-            giftCardUrl.searchParams.set('amount', totalAmountInSEK);
+            giftCardUrl.searchParams.set('amount', amountSEK);
 
             const msg = {
                 to: giftCard.purchaser_email,
@@ -214,6 +215,7 @@ class EmailService {
                     gift_to: giftCard.gift_to,
                     gift_from: giftCard.gift_from,
                     gift_card_url: giftCardUrl.toString(),
+                    amountSEK: amountSEK,
                     amount: totalAmountInSEK.toFixed(2),
                     amount_ex_vat: amountExVat.toFixed(2),
                     vat_amount: vatAmount.toFixed(2),
