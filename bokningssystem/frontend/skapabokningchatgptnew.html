@@ -242,7 +242,7 @@
         textarea[type="comment"],
         select {
             width: 100%;
-            padding: 8px;
+            padding: 11px 8px 8px;
             border: 2px solid #515151;
             border-radius: 4px;
             font-family: inherit;
@@ -787,15 +787,23 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 30px; font-size: 1.2em;">
-                    <label class="custom-checkbox">
-                        <input type="checkbox" id="kod">
-                        <span class="checkmark"></span>
-                        Jag har presentkort eller rabattkod
-                        <div id="codeInput" style="display: none;">
-                            <input type="text" id="kod">
-                            <button id="useCode">Använd kod</button>
+                    <label class="custom-checkbox" style="display: block;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="kod">
+                            <span class="checkmark"></span>
+                            Jag har presentkort eller rabattkod
                         </div>
                     </label>
+                    <div id="codeInput" style="display: none;">
+                        <input type="text" placeholder="skriv din kod här" id="kod"
+                            style="width: 200px; margin-right: 10px; margin-top: 0px !important;">
+                        <button style=" font-family: inherit; padding: 12px 10px 8px;" id="useCode">Använd
+                            kod</button>
+                    </div>
+                    <div id="codeMessage"
+                        style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
+                    </div>
+
                 </div>
 
                 <div id="bookingSummaryFinal" class="summary-box" style="width:380px; background: rgb(255, 255, 255); padding:
@@ -1547,13 +1555,35 @@
             const rebookingFee = tickets.is_rebookable ? (totalTix * PRICES.rebooking) : 0;
 
             const subtotal = base + rebookingFee;
+
+            // Get any applied discounts from localStorage
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+            let giftCardAmount = 0;
+            let promoDiscount = 0;
+
+            if (bookingData?.gift_card_applied) {
+                giftCardAmount = bookingData.gift_card_applied.value;
+            }
+
+            if (bookingData?.promo_applied) {
+                if (bookingData.promo_applied.is_percentage) {
+                    promoDiscount = subtotal * (bookingData.promo_applied.value / 100);
+                } else {
+                    promoDiscount = bookingData.promo_applied.value;
+                }
+            }
+
+            // Calculate final total
+            const totalAfterDiscounts = Math.max(0, subtotal - giftCardAmount - promoDiscount);
             const vatRate = 0.06;
-            const vat = (subtotal * vatRate) / (1 + vatRate);
+            const vat = (totalAfterDiscounts * vatRate) / (1 + vatRate);
 
             return {
                 subtotal,
+                giftCardAmount,
+                promoDiscount,
                 vat,
-                total: subtotal
+                total: totalAfterDiscounts
             };
         }
 
@@ -1577,31 +1607,35 @@
                 const totalRebook = (tickets.adult + tickets.youth + tickets.kid) * PRICES.rebooking;
                 const formattedDate = formatSwedishDate(tickets.date);
 
-                summaryEl.innerHTML = `
-      <p id="selectedDateTime">
-        Datum: <span style="font-weight: bold;">${formattedDate}</span>
-        <p>Tid: <span style="font-weight: bold;">${tickets.time || ''}</span></p>
-      </p>
-      <hr>
-      ${tickets.adult ? `<p>Vuxen: ${tickets.adult} st <span style="float: right;">${tickets.adult * PRICES.adult} kr</span></p>` : ''}
-      ${tickets.youth ? `<p>Ungdom: ${tickets.youth} st <span style="float: right;">${tickets.youth * PRICES.youth} kr</span></p>` : ''}
-      ${tickets.kid ? `<p>Barn: ${tickets.kid} st <span style="float: right;">${tickets.kid * PRICES.kid} kr</span></p>` : ''}
-      ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st <span style="float: right;">${tickets.fullday * PRICES.fullday} kr</span></p>` : ''}
-      ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
-      <hr>
-      <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
-      <hr>
-      <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
+                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+                const hasGiftCard = bookingData?.gift_card_applied;
+                const hasPromo = bookingData?.promo_applied;
 
-      <hr>
-      <!-- This is the timer we will update -->
-      <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: green;"></p>
-    `;
+                summaryEl.innerHTML = `
+            <p id="selectedDateTime">
+                Datum: <span style="font-weight: bold;">${formattedDate}</span>
+                <p>Tid: <span style="font-weight: bold;">${tickets.time || ''}</span></p>
+            </p>
+            <hr>
+            ${tickets.adult ? `<p>Vuxen: ${tickets.adult} st <span style="float: right;">${tickets.adult * PRICES.adult} kr</span></p>` : ''}
+            ${tickets.youth ? `<p>Ungdom: ${tickets.youth} st <span style="float: right;">${tickets.youth * PRICES.youth} kr</span></p>` : ''}
+            ${tickets.kid ? `<p>Barn: ${tickets.kid} st <span style="float: right;">${tickets.kid * PRICES.kid} kr</span></p>` : ''}
+            ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st <span style="float: right;">${tickets.fullday * PRICES.fullday} kr</span></p>` : ''}
+            ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
+            <hr>
+            ${hasGiftCard ? `<p style="color: #2d862d;">Presentkort: <span style="float: right;">-${totals.giftCardAmount} kr</span></p>` : ''}
+            ${hasPromo ? `<p style="color: #2d862d;">Rabatt: <span style="float: right;">-${Math.round(totals.promoDiscount)} kr</span></p>` : ''}
+            ${(hasGiftCard || hasPromo) ? '<hr>' : ''}
+            <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
+            <hr>
+            <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
+            <hr>
+            <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: green;"></p>
+        `;
             } catch (err) {
                 console.error('Error displaying summary:', err);
             }
         }
-
         function updateTimeRemaining() {
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             const timeRemainingEl = document.getElementById('timeRemaining');
@@ -2201,6 +2235,97 @@
             msgEl.innerHTML = msg;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        /****************************************
+         * 12) GIFT CARD stuFF
+         ****************************************/
+
+        const codeCheckbox = document.getElementById('kod');
+        const codeInputDiv = document.getElementById('codeInput');
+
+        codeCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                codeInputDiv.style.display = 'flex';
+                codeInputDiv.style.marginTop = '15px';
+            } else {
+                codeInputDiv.style.display = 'none';
+                // Clear the input when hiding
+                document.querySelector('#codeInput input[type="text"]').value = '';
+
+                // Also clear any applied codes from localStorage
+                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+                if (bookingData) {
+                    // delete bookingData.gift_card_applied;
+                    // delete bookingData.promo_applied;
+                    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                }
+
+            }
+        });
+
+        document.getElementById('useCode').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const codeInput = document.querySelector('#codeInput input[type="text"]');
+            const code = codeInput.value.trim();
+
+            if (!code) {
+                alert('Vänligen ange en kod');
+                return;
+            }
+
+            try {
+                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+                if (!bookingData?.bookingId || !bookingData?.token) {
+                    throw new Error('No active booking found');
+                }
+
+                const { data, error } = await supabaseClient.rpc('validate_and_apply_code', {
+                    p_code: code,
+                    p_booking_id: bookingData.bookingId,
+                    p_access_token: bookingData.token
+                });
+
+                if (error) throw error;
+
+                if (data.success) {
+                    // Store the applied code info based on type
+                    if (data.type === 'gift_card') {
+                        bookingData.gift_card_applied = {
+                            code: code,
+                            value: data.value_sek
+                        };
+                        //  delete bookingData.promo_applied; // Remove any existing promo
+                    } else if (data.type === 'promo') {
+                        bookingData.promo_applied = {
+                            code: code,
+                            is_percentage: data.is_percentage,
+                            value: data.discount_value
+                        };
+                        //  delete bookingData.gift_card_applied; // Remove any existing gift card
+                    }
+
+                    localStorage.setItem('bookingData', JSON.stringify(bookingData));
+                    const codeMessage = document.getElementById('codeMessage');
+                    codeMessage.style.display = 'block';
+                    codeMessage.innerHTML = data.message;
+                    document.querySelector('#codeInput input[type="text"]').value = '';
+
+
+                    // Disable input and button
+                    //  codeInput.disabled = true;
+                    //  document.getElementById('useCode').disabled = true;
+
+                    // Update the total price display
+
+                } else {
+                    alert(data.message);
+                }
+
+            } catch (error) {
+                console.error('Error validating code:', error);
+                alert('Ett fel uppstod vid validering av koden');
+            }
+        });
 
     </script>
 </body>

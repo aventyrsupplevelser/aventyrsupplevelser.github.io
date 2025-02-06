@@ -4,15 +4,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Gift Card</title>
+    <title>Ladda ner presentkort</title>
     <script src="https://unpkg.com/pdf-lib"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'josefin sans';
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            margin-top: 40px;
+        }
+
+        #downloadBtn {
+            display: flex;
+            justify-content: space-between;
+            background: rgb(243, 243, 236);
+            align-items: center;
+            width: fit-content;
+            font-size: 1.3em;
+            padding: 18px 20px 12px;
+            font-weight: 500;
+            border: 2px solid rgb(97, 97, 97);
+            margin-bottom: 20px;
+            font-family: inherit;
+            transition: 0.3s;
+            border-radius: 4px;
+
+        }
+
+        #downloadBtn:hover {
+            background: rgb(240, 240, 240);
+            transition: 0.2s;
+            transition: filter 0.7s;
+            border: 2px solid rgb(0, 88, 6);
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.218));
+            will-change: filter;
+            cursor: pointer;
+
+        }
+
+        #downloadBtn:active {
+            background: rgb(206, 231, 198);
+        }
+    </style>
 </head>
 
 <body>
 
-    <button onclick="generatePDF()">Download Gift Card</button>
+    <h2>Ditt presentkort:</h2>
+    <div id="content" style="">
+        <img id="pdfImage" style="display: none; max-width: 300px; margin-top: 20px;">
+        <div id="loading">Laddar pdf ..</div>
+        <br>
+        <button id="downloadBtn" onclick="downloadPDF()" style="display:none;">Ladda
+            ner ditt presentkort</button>
+    </div>
 
     <script>
+        let pdfBytes; // Store PDF bytes globally
 
         async function generatePDF() {
             try {
@@ -22,9 +81,9 @@
 
                 // Load the PDF into PDF-LIB
                 const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-
-                // Get the form fields in the PDF
                 const form = pdfDoc.getForm();
+
+                // Get form fields
                 const giftToField = form.getTextField('giftTo');
                 const giftFromField = form.getTextField('giftFrom');
                 const amountField = form.getTextField('Sum');
@@ -40,32 +99,68 @@
                 const amount = urlParams.get('amount') || "0";
 
                 // Set values in the PDF form fields
-                giftToField.setText(giftTo);
-                giftFromField.setText(giftFrom);
-                amountField.setText(`${amount} SEK`);
-                validUntilField.setText(validUntil);
-                orderNumberField.setText(giftCardNumber);
+                if (giftToField) giftToField.setText(giftTo);
+                if (giftFromField) giftFromField.setText(giftFrom);
+                if (amountField) amountField.setText(`${amount} SEK`);
+                if (validUntilField) validUntilField.setText(validUntil);
+                if (orderNumberField) orderNumberField.setText(giftCardNumber);
 
                 // Flatten form fields (makes them non-editable)
                 form.flatten();
 
-                // Save and download the filled PDF
-                const pdfBytes = await pdfDoc.save();
-                const blob = new Blob([pdfBytes], { type: "application/pdf" });
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = `Sörsjöns Äventyrspark – Presentkort: ${giftCardNumber}.pdf`;
-                link.click();
+                // Save PDF
+                pdfBytes = await pdfDoc.save();
 
-                console.log("✅ PDF generated successfully!");
+                // Convert PDF to PNG preview
+                await convertPDFToPNG(pdfBytes);
+
+                // Show download button
+                document.getElementById('downloadBtn').style.display = "block";
+
             } catch (error) {
                 console.error("❌ Error generating PDF:", error);
             }
         }
 
-        // Automatically generate the PDF when the page loads
-        window.onload = generatePDF;
+        async function convertPDFToPNG(pdfBytes) {
+            const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+            const pdfUrl = URL.createObjectURL(pdfBlob);
 
+            const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+            const page = await pdf.getPage(1);
+
+            const scale = 1.2; // Smaller size for preview
+            const viewport = page.getViewport({ scale });
+
+            // Create a hidden canvas to render the PDF page
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({ canvasContext: context, viewport }).promise;
+
+            // Convert canvas to PNG and display it
+            const img = document.getElementById("pdfImage");
+            const content = document.getElementById("content");
+            const loading = document.getElementById("loading");
+
+            img.src = canvas.toDataURL("image/png"); // Convert canvas to PNG
+            img.style.display = 'block';
+            loading.style.display = 'none';
+
+        }
+
+        function downloadPDF() {
+            const blob = new Blob([pdfBytes], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Sörsjöns Äventyrspark – Presentkort.pdf`;
+            link.click();
+        }
+
+        // Generate the PDF when the page loads (without downloading)
+        window.onload = generatePDF;
     </script>
 
 </body>
