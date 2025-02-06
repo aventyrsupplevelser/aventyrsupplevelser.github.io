@@ -34,6 +34,11 @@ if (!SENDGRID_BOOKING_TEMPLATE_ID) {
     throw new Error('SendGrid booking template ID is required');
 }
 
+if (!SENDGRID_PRESENKORT_ID) {
+    console.error('Missing SENDGRID_PRESENKORT_ID environment variable');
+    throw new Error('SENDGRID_PRESENKORT_ID is required');
+}
+
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 class EmailService {
@@ -164,13 +169,15 @@ class EmailService {
         }
     }
 
-    static async sendGiftCardConfirmation(initialGiftCardData) {
+    static async sendGiftCardConfirmation(initialData) {
         try {
+            console.log('Fetching gift card with number:', initialData.giftCardNumber);
+            
             // First fetch complete gift card data from Supabase
             const { data: giftCard, error } = await supabase
                 .from('gift_cards')
                 .select('*')
-                .eq('gift_card_number', initialGiftCardData.giftCardNumber)
+                .eq('gift_card_number', initialData.giftCardNumber)
                 .single();
 
             if (error) {
@@ -180,6 +187,8 @@ class EmailService {
             if (!giftCard) {
                 throw new Error('Gift card not found');
             }
+
+            console.log('Found gift card:', giftCard);
 
             // Calculate amount in SEK
             const totalAmountInSEK = giftCard.paid_amount / 100; // Convert from öre to SEK
