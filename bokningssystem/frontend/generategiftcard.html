@@ -13,41 +13,59 @@
     <button onclick="generatePDF()">Download Gift Card</button>
 
     <script>
+
         async function generatePDF() {
-            // Load the existing fillable PDF template
-            const existingPdfBytes = await fetch('http://aventyrsupplevelser.com/presentkortEdit.pdf').then(res => res.arrayBuffer());
+            try {
+                // Load the existing fillable PDF template
+                const existingPdfBytes = await fetch('https://aventyrsupplevelser.com/presentkortEdit.pdf')
+                    .then(res => res.arrayBuffer());
 
-            // Load the PDF into PDF-LIB
-            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+                // Load the PDF into PDF-LIB
+                const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
 
-            // Get the form fields in the PDF
-            const form = pdfDoc.getForm();
-            const giftToField = form.getTextField('giftTo');
-            const giftFromField = form.getTextField('giftFrom');
-            const amountField = form.getTextField('amount');
-            const validUntilField = form.getTextField('validUntil');
-            const orderNumberField = form.getTextField('orderNumber');
+                // Get the form fields in the PDF
+                const form = pdfDoc.getForm();
+                const giftToField = form.getTextField('giftTo');
+                const giftFromField = form.getTextField('giftFrom');
+                const amountField = form.getTextField('Sum');
+                const validUntilField = form.getTextField('validUntil');
+                const orderNumberField = form.getTextField('orderNumber');
 
-            // Get user data from URL parameters (or change this to fetch from a form)
-            const urlParams = new URLSearchParams(window.location.search);
-            const parGiftTo = urlParams.get('giftTo') || "Gift Recipient";
-            const giftAmount = urlParams.get('amount') || "50";
+                // Get user data from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const giftTo = urlParams.get('gift_to') || "Recipient";
+                const giftFrom = urlParams.get('gift_from') || "Sender";
+                const giftCardNumber = urlParams.get('gift_card_number') || "XXXX-XXXX-XXXX";
+                const validUntil = urlParams.get('valid_until') || "YYYY-MM-DD";
+                const amount = urlParams.get('amount') || "0";
 
-            // Set values in the PDF
-            nameField.setText(userName);
-            amountField.setText(`$${giftAmount}`);
+                // Set values in the PDF form fields
+                giftToField.setText(giftTo);
+                giftFromField.setText(giftFrom);
+                amountField.setText(`${amount} SEK`);
+                validUntilField.setText(validUntil);
+                orderNumberField.setText(giftCardNumber);
 
-            // Flatten form fields (optional: makes them non-editable)
-            form.flatten();
+                // Flatten form fields (makes them non-editable)
+                form.flatten();
 
-            // Save and download the filled PDF
-            const pdfBytes = await pdfDoc.save();
-            const blob = new Blob([pdfBytes], { type: "application/pdf" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Gift_Card_${userName}.pdf`;
-            link.click();
+                // Save and download the filled PDF
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: "application/pdf" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Sörsjöns Äventyrspark – Presentkort: ${giftCardNumber}.pdf`;
+                link.click();
+
+                console.log("✅ PDF generated successfully!");
+            } catch (error) {
+                console.error("❌ Error generating PDF:", error);
+            }
         }
+
+        // Automatically generate the PDF when the page loads
+        window.onload = generatePDF;
+
     </script>
 
 </body>
