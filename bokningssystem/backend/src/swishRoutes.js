@@ -662,7 +662,7 @@ router.post('/gift-swish-callback', async (req, res) => {
             // Send confirmation email using the original gift card data we already have
             try {
                 await EmailService.sendGiftCardConfirmation({
-                    ...giftCard,
+                    giftCardNumber: giftCardNumber,
                     paid_amount: paidAmountOre,
                 });
                 console.log('Confirmation email sent successfully');
