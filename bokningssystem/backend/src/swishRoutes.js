@@ -747,7 +747,7 @@ router.post('/gift-card-callback', async (req, res) => {
             // Send confirmation email
             try {
                 await EmailService.sendGiftCardConfirmation({
-                    ...giftCard,
+                    giftCardNumber: giftCardNumber,
                     paid_amount: paidAmountOre,
                 });
                 console.log('Confirmation email sent successfully');

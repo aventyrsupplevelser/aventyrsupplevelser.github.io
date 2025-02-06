@@ -1,13 +1,22 @@
 // In backend/src/emailService.js
 import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
+
+// Initialize Supabase client
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 // Initialize SendGrid with API key
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL;
 const SENDGRID_BOOKING_TEMPLATE_ID = process.env.SENDGRID_BOOKING_TEMPLATE_ID;
+const SENDGRID_PRESENKORT_ID = process.env.SENDGRID_PRESENKORT_ID;
+
 
 // Verify required environment variables
 if (!SENDGRID_API_KEY) {
@@ -152,6 +161,67 @@ class EmailService {
                 console.error('Error details:', error.response.body);
             }
             return null;
+        }
+    }
+
+    static async sendGiftCardConfirmation(initialGiftCardData) {
+        try {
+            // First fetch complete gift card data from Supabase
+            const { data: giftCard, error } = await supabase
+                .from('gift_cards')
+                .select('*')
+                .eq('gift_card_number', initialGiftCardData.giftCardNumber)
+                .single();
+
+            if (error) {
+                throw new Error(`Failed to fetch gift card data: ${error.message}`);
+            }
+
+            if (!giftCard) {
+                throw new Error('Gift card not found');
+            }
+
+            // Calculate amount in SEK
+            const totalAmountInSEK = giftCard.paid_amount / 100; // Convert from öre to SEK
+            const vatRate = 0.06;
+            const amountExVat = Math.round(totalAmountInSEK / (1 + vatRate));
+            const vatAmount = totalAmountInSEK - amountExVat;
+
+            // Generate URL for gift card generation
+            const giftCardUrl = new URL('http://aventyrsupplevelser.com/bokningssystem/frontend/generategiftcard.html');
+            giftCardUrl.searchParams.set('gift_to', giftCard.gift_to);
+            giftCardUrl.searchParams.set('gift_from', giftCard.gift_from);
+            giftCardUrl.searchParams.set('gift_card_number', giftCard.gift_card_number);
+            giftCardUrl.searchParams.set('valid_until', giftCard.valid_until);
+            giftCardUrl.searchParams.set('amount', totalAmountInSEK);
+
+            const msg = {
+                to: giftCard.purchaser_email,
+                from: process.env.SENDGRID_FROM_EMAIL,
+                templateId: process.env.SENDGRID_PRESENKORT_ID,
+                dynamic_template_data: {
+                    gift_card_number: giftCard.gift_card_number,
+                    purchaser_email: giftCard.purchaser_email,
+                    gift_to: giftCard.gift_to,
+                    gift_from: giftCard.gift_from,
+                    gift_card_url: giftCardUrl.toString(),
+                    amount: totalAmountInSEK.toFixed(2),
+                    amount_ex_vat: amountExVat.toFixed(2),
+                    vat_amount: vatAmount.toFixed(2),
+                    payment_date: new Date(giftCard.payment_completed_at).toLocaleDateString('sv-SE'),
+                    valid_until: new Date(giftCard.valid_until).toLocaleDateString('sv-SE')
+                }
+            };
+
+            const response = await sgMail.send(msg);
+            console.log('Gift card confirmation email sent successfully:', response[0].statusCode);
+            return response;
+        } catch (error) {
+            console.error('Error sending gift card confirmation email:', error);
+            if (error.response) {
+                console.error('Error details:', error.response.body);
+            }
+            throw error; // Re-throw to handle in calling code
         }
     }
 

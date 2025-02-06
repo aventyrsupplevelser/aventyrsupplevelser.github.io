@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Gift Card</title>
+    <script src="https://unpkg.com/pdf-lib"></script>
+</head>
+
+<body>
+
+    <button onclick="generatePDF()">Download Gift Card</button>
+
+    <script>
+        async function generatePDF() {
+            // Load the existing fillable PDF template
+            const existingPdfBytes = await fetch('http://aventyrsupplevelser.com/presentkortEdit.pdf').then(res => res.arrayBuffer());
+
+            // Load the PDF into PDF-LIB
+            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+
+            // Get the form fields in the PDF
+            const form = pdfDoc.getForm();
+            const giftToField = form.getTextField('giftTo');
+            const giftFromField = form.getTextField('giftFrom');
+            const amountField = form.getTextField('amount');
+            const validUntilField = form.getTextField('validUntil');
+            const orderNumberField = form.getTextField('orderNumber');
+
+            // Get user data from URL parameters (or change this to fetch from a form)
+            const urlParams = new URLSearchParams(window.location.search);
+            const parGiftTo = urlParams.get('giftTo') || "Gift Recipient";
+            const giftAmount = urlParams.get('amount') || "50";
+
+            // Set values in the PDF
+            nameField.setText(userName);
+            amountField.setText(`$${giftAmount}`);
+
+            // Flatten form fields (optional: makes them non-editable)
+            form.flatten();
+
+            // Save and download the filled PDF
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Gift_Card_${userName}.pdf`;
+            link.click();
+        }
+    </script>
+
+</body>
+
+</html>

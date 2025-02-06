@@ -7,6 +7,7 @@
     <title>Köp Presentkort - Sörsjön</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         body {
             font-family: 'Josefin Sans', sans-serif;
@@ -320,6 +321,14 @@
     </div>
 
     <script>
+
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
         let sumValue = 0;
 
         const sumEl = document.getElementById('sumValue');
@@ -509,8 +518,62 @@
             </div>
         `;
             }
-            //checkPaymentStatus();
+            checkPaymentStatus();
 
+        }
+
+        function checkPaymentStatus() {
+            let attempts = 0;
+            const maxAttempts = 2100; // 35 minutes worth of attempts
+            let interval = 3000; // Start checking every second
+
+            const checkStatus = setInterval(async () => {
+                try {
+                    attempts++;
+
+                    // After 5 minutes (300 seconds), check every 2 seconds instead
+                    if (attempts === 300) {
+                        clearInterval(checkStatus);
+                        interval = 2000;
+                        checkPaymentStatus(); // Restart with new interval
+                        return;
+                    }
+
+                    // Check if we've exceeded max attempts (35 minutes)
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkStatus);
+                        console.log('Payment status check timed out after 35 minutes');
+                        return;
+                    }
+
+                    console.log('Checking payment status...');
+                    const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
+
+                    // Call the Postgres function instead of querying the table
+                    const { data, error } = await supabaseClient
+                        .rpc('get_gift_status', {
+                            p_purchaser_email: purchaserEmail
+                        });
+
+                    if (error) {
+                        console.error('Error fetching booking status:', error);
+                        return; // Continue checking even if there's an error
+                    }
+
+                    if (data && data.length > 0 && data[0].status === 'completed') {
+                        clearInterval(checkStatus);
+                        window.location.href = `http://aventyrsupplevelser.com/tackfordittkop`;
+                        return;
+                    }
+
+                } catch (error) {
+                    console.error('Error in payment status check:', error);
+                    // Continue checking even if there's an error
+                }
+            }, interval);
+
+            // Clean up interval on page unload
+            window.addEventListener('unload', () => clearInterval(checkStatus));
         }
 
         async function payByCard(paymentMethod) {
