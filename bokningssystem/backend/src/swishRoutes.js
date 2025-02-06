@@ -540,11 +540,11 @@ router.post('/get-gift-form', async (req, res) => {
 
         console.log('Constructed callback URL:', callbackUrl.toString());
 
-        sumValue = sumValue * 100; 
+        const amountInOre = sumValue * 100;
 
         // Step 2: Create payment link with detailed logging
         const linkRequestBody = {
-            amount: sumValue,  // Make sure this is in smallest currency unit (öre)
+            amount: amountInOre,  // Make sure this is in smallest currency unit (öre)
             continue_url: `https://aventyrsupplevelser.com/tackfordittkop`,
             cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
             callback_url: callbackUrl.toString(),

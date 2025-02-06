@@ -351,8 +351,8 @@
 
 
         // Payment handlers
-        document.getElementById('swishbutton').addEventListener('click', () => handleSwish());
-        document.getElementById('kortbetalning').addEventListener('click', () => handleCard());
+        document.getElementById('swishbutton').addEventListener('click', () => payBySwish());
+        document.getElementById('kortbetalning').addEventListener('click', () => payByCard());
 
         document.addEventListener("DOMContentLoaded", function () {
             const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -392,7 +392,7 @@
         }
 
 
-        async function handleSwish() {
+        async function payBySwish() {
 
             if (sumValue === 0) {
                 requiredSumMessage.style.display = 'block';
@@ -510,6 +510,70 @@
         `;
             }
             //checkPaymentStatus();
+
+        }
+
+        async function payByCard(paymentMethod) {
+
+            if (sumValue === 0) {
+                requiredSumMessage.style.display = 'block';
+                requiredSumMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            requiredSumMessage.style.display = 'none';
+
+
+            const giftTo = document.getElementById('giftTo').value.trim();
+            const giftFrom = document.getElementById('giftFrom').value.trim();
+            const purchaserEmail = document.getElementById('purchaserEmail').value.trim();
+
+            // Validate required fields
+            if (!giftTo || !giftFrom || !purchaserEmail) {
+                requiredInfoMessage.style.display = 'block';
+                requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            requiredInfoMessage.style.display = 'none';
+
+            if (!termsCheckbox.checked) {
+                termsError.style.display = 'block';
+                termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const kortSpan = document.getElementById('kortSpan');
+            kortSpan.innerHTML = `Laddar betalning ..`;
+
+            try {
+
+                // Get the payment link from the server
+                const response = await fetch(
+                    'http://localhost:3000/api/swish/get-gift-form',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            giftTo: giftTo,
+                            giftFrom: giftFrom,
+                            purchaserEmail: purchaserEmail,
+                            sumValue: sumValue
+                        }),
+                    }
+                );
+
+                if (!response.ok) throw new Error('Failed to get payment link');
+
+                const { url } = await response.json();
+
+                // Redirect to the payment link
+                window.location.href = url;
+
+            } catch (error) {
+                console.error('Error in handlePayment:', error);
+                alert('Ett fel uppstod vid betalningen. Försök igen.');
+            }
 
         }
 
