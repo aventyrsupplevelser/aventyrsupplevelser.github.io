@@ -8,7 +8,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
 import swishRoutes from './swishRoutes.js';
-import swishRoutes from './swishRoutes.js';
 
 
 
