@@ -131,11 +131,13 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         // Always send 200 OK first
         res.status(200).send('OK');
 
+
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
+
         if (!verifyCallbackId(callbackIdentifier, payment.payeePaymentReference)) {
             console.error('Invalid callback checksum');
-            return;
+            return; 
         }
 
         // First get the booking
@@ -158,23 +160,30 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         if (payment.status === 'PAID') {
             const paidAmountOre = Math.round(payment.amount * 100);
 
-            // Use the Postgres function to update booking and related codes
-            const { error: confirmError } = await supabase.rpc('confirm_booking_payment', {
-                p_booking_id: booking.id,
-                p_payment_method: 'swish',
-                p_payment_id: payment.id,
-                p_paid_amount: paidAmountOre,
-                p_payment_metadata: payment
-            });
+            // Update the booking
+            const { error: updateError } = await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    payment_method: 'swish',
+                    payment_id: payment.id,
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: payment
+                })
+                .eq('id', booking.id)
+                .eq('status', 'requested')
 
-            if (confirmError) {
-                console.error('Error confirming payment:', confirmError);
+            if (updateError) {
+                console.error('Error updating booking with payment info:', updateError);
                 return;
             }
 
+            await updateAppliedCodes(booking);
+
             console.log('Payment recorded successfully:', payment.id);
 
-            // Send confirmation email
+            // Send confirmation email using the original booking data we already have
             try {
                 await EmailService.sendBookingConfirmation({
                     ...booking,
@@ -363,29 +372,43 @@ router.post('/card-callback', express.json(), async (req, res) => {
         // 7. Check for successful payment
         const isSuccess = callbackData.accepted && callbackData.state === 'processed';
         if (isSuccess) {
+            // Get amount in öre from the payment link data
+            const paidAmountOre = callbackData.link.amount;
+
+            // Update the booking
+            const { error: updateError } = await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    payment_method: 'card',
+                    payment_id: callbackData.id.toString(),
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: callbackData
+                })
+                .eq('id', booking.id)
+                .eq('status', 'requested')
+
+            if (updateError) {
+                console.error('Error updating booking:', updateError);
+                return;
+            }
+
+            await updateAppliedCodes(booking);
+
+            console.log('Payment recorded successfully:', callbackData.id);
+
+            // Send confirmation email
             try {
-                const { error } = await supabase.rpc('confirm_booking_payment', {
-                    p_booking_id: booking.id,
-                    p_payment_method: 'card',
-                    p_payment_id: callbackData.id.toString(),
-                    p_paid_amount: callbackData.link.amount,
-                    p_payment_metadata: callbackData
-                });
-        
-                if (error) throw error;
-        
-                console.log('Payment recorded successfully:', callbackData.id);
-        
-                // Send confirmation email
                 await EmailService.sendBookingConfirmation({
                     ...booking,
                     start_time: booking.time_slots.start_time,
-                    paid_amount: callbackData.link.amount,
+                    paid_amount: paidAmountOre,
                     payment_completed_at: new Date().toISOString()
                 });
                 console.log('Confirmation email sent successfully');
-            } catch (error) {
-                console.error('Error processing payment:', error);
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
             }
         }
 
@@ -393,6 +416,43 @@ router.post('/card-callback', express.json(), async (req, res) => {
         console.error('QuickPay callback error:', error);
     }
 });
+
+async function updateAppliedCodes(booking) {
+    try {
+        // Update gift card if one was used
+        if (booking.gift_card_number) {
+            const { error: giftCardError } = await supabase
+                .from('gift_cards')
+                .update({
+                    gift_card_used: true,
+                    used_at: new Date().toISOString(),
+                    used_in_booking: booking.id
+                })
+                .eq('gift_card_number', booking.gift_card_number);
+
+            if (giftCardError) {
+                console.error('Error updating gift card:', giftCardError);
+            }
+        }
+
+        // Update promo code usage if one was used
+        if (booking.promo_code) {
+            const { error: promoError } = await supabase
+                .from('promo_codes')
+                .update({
+                    current_uses: sql`current_uses + 1`,
+                    last_used_at: new Date().toISOString()
+                })
+                .eq('promo_code', booking.promo_code);
+
+            if (promoError) {
+                console.error('Error updating promo code:', promoError);
+            }
+        }
+    } catch (error) {
+        console.error('Error updating codes:', error);
+    }
+}
 
 router.post('/gift-swish', async (req, res) => {
     try {
