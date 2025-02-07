@@ -441,7 +441,7 @@
         }
 
         #continueToPaymentBtn,
-        #freeConfirmBtn button {
+        #freeConfirmBtn {
             background: linear-gradient(169deg, rgba(6, 107, 11, 1) 0%, rgb(20, 120, 25) 100%);
             color: white;
             min-width: 310px;
@@ -454,7 +454,7 @@
         }
 
         #continueToPaymentBtn:hover,
-        #freeConfirmBtn button:hover {
+        #freeConfirmBtn:hover {
             background: linear-gradient(169deg, rgb(21, 175, 29) 0%, rgb(57, 158, 62) 100%);
             color: #e8e8e8;
             transition: 0.2s;
@@ -872,9 +872,9 @@
                         <img src="/images/cards.png">
                     </button>
                 </div>
-                <div id="freeConfirmBtn" style="display: none;">
-                    <button> Bekräfta bokning (0 kr)</button>
-                </div>
+                <button type="button" id="freeConfirmBtn" style="display: none;" onclick="handleFreeBooking()"> Bekräfta
+                    bokning (0
+                    kr)</button>
                 <div id="freeMessage"
                     style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
                 </div>
@@ -1588,7 +1588,7 @@
             // Calculate final total
             const totalAfterDiscounts = Math.max(0, remainingAfterGiftCard - promoDiscount);
             const vatRate = 0.06;
-            const vat = (totalAfterDiscounts * vatRate) / (1 + vatRate);
+            const vat = ((totalAfterDiscounts - rebookingFee) * vatRate) / (1 + vatRate);
 
             return {
                 subtotal,
