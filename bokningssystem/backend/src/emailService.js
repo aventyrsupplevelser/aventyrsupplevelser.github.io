@@ -166,7 +166,7 @@ class EmailService {
                     ombokningsurl: rebookingUrl,
                     gift_card_amount: giftCardAmount || null,  // Only include if used
                     promo_discount: promoDiscount || null,     // Only include if used
-                    amount_ex_vat: amountExVat,
+                    amount_ex_vat: amountExVat.toFixed(2),
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
                     payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
