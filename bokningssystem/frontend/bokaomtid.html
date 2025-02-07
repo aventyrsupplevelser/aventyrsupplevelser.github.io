@@ -412,7 +412,7 @@
                     throw new Error(data.error || 'Misslyckades att uppdatera bokning');
                 }
 
-                const { data: newSlot, error: slotErr } = await supabase
+                const { data: newSlot, error: slotErr } = await supabaseClient
                     .from('time_slots')
                     .select('start_time')
                     .eq('id', selectedTimeSlot)
