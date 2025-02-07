@@ -1552,7 +1552,7 @@
         }
 
         function calculateTotal(tickets) {
-            // Calculate base total
+            // Calculate base total (without rebooking)
             const base = (
                 tickets.adult * PRICES.adult +
                 tickets.youth * PRICES.youth +
@@ -1562,20 +1562,19 @@
 
             const totalTix = tickets.adult + tickets.youth + tickets.kid;
             const rebookingFee = tickets.is_rebookable ? (totalTix * PRICES.rebooking) : 0;
-            const subtotal = base + rebookingFee;
 
             // Get any applied discounts from localStorage
             const bookingData = JSON.parse(localStorage.getItem('bookingData'));
             let giftCardAmount = 0;
             let promoDiscount = 0;
 
-            // First apply gift card
+            // First apply gift card to base amount
             if (bookingData?.gift_card_applied) {
                 giftCardAmount = bookingData.gift_card_applied.value;
             }
 
-            // Then apply promo to remaining amount after gift card
-            const remainingAfterGiftCard = Math.max(0, subtotal - giftCardAmount);
+            // Then apply promo to remaining base amount after gift card
+            const remainingAfterGiftCard = Math.max(0, base - giftCardAmount);
 
             if (bookingData?.promo_applied) {
                 if (bookingData.promo_applied.is_percentage) {
@@ -1585,17 +1584,23 @@
                 }
             }
 
-            // Calculate final total
-            const totalAfterDiscounts = Math.max(0, remainingAfterGiftCard - promoDiscount);
+            // Calculate discounted base amount
+            const discountedBase = Math.max(0, remainingAfterGiftCard - promoDiscount);
+
+            // Add rebooking fee after discounts
+            const totalAfterRebooking = discountedBase + rebookingFee;
+
+            // Calculate VAT (6%) only on the base amount (excluding rebooking)
             const vatRate = 0.06;
-            const vat = ((totalAfterDiscounts - rebookingFee) * vatRate) / (1 + vatRate);
+            const vat = (discountedBase * vatRate) / (1 + vatRate);
 
             return {
-                subtotal,
+                subtotal: base,
                 giftCardAmount,
                 promoDiscount,
                 vat,
-                total: totalAfterDiscounts
+                rebookingFee,
+                total: totalAfterRebooking
             };
         }
 

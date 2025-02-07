@@ -65,23 +65,28 @@ class EmailService {
         }
     }
 
-    static async sendBookingConfirmation(booking) {
-        try {
-
-            // Calculate individual sums
-            const adultSum = booking.adult_quantity * 400;
-            const youthSum = booking.youth_quantity * 300;
-            const kidSum = booking.kid_quantity * 200;
-            const fullDaySum = booking.full_day * 100;
-            const rebookingSum = booking.is_rebookable ? 
-                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+            static async sendBookingConfirmation(booking) {
+                try {
+                    // Calculate individual sums
+                    const adultSum = booking.adult_quantity * 400;
+                    const youthSum = booking.youth_quantity * 300;
+                    const kidSum = booking.kid_quantity * 200;
+                    const fullDaySum = booking.full_day * 100;
+                    
+                    // Calculate base total (without rebooking)
+                    const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
+                    
+                    // Calculate rebooking fee separately
+                    const rebookingSum = booking.is_rebookable ? 
+                        (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
             
-             // Calculate VAT (6%)
-             const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
-             const vatRate = 0.06;
-             const taxableAmount = Math.max(0, totalAmountInSEK - rebookingSum);
-             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
-             const amountExVat = totalAmountInSEK - vatAmount;
+                    const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
+                    
+                    // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
+                    const vatRate = 0.06;
+                    const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
+                    const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+                    const amountExVat = taxableAmount - vatAmount;
 
 
             const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
