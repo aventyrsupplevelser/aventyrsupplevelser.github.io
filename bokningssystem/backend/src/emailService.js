@@ -77,8 +77,45 @@ class EmailService {
             const fullDaySum = booking.full_day * 100;  // full_day is now a number
             const rebookingSum = booking.is_rebookable ? 
                 (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+            
     
             const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
+
+            // Get gift card info if used
+        let giftCardAmount = 0;
+        if (booking.gift_card_number) {
+            const { data: giftCard } = await supabase
+                .from('gift_cards')
+                .select('amount')
+                .eq('gift_card_number', booking.gift_card_number)
+                .single();
+            
+            if (giftCard) {
+                giftCardAmount = giftCard.amount;
+            }
+        }
+
+        // Get promo code info if used
+        let promoDiscount = 0;
+        let promoDisplay = '';
+        if (booking.promo_code) {
+            const { data: promo } = await supabase
+                .from('promo_codes')
+                .select('*')
+                .eq('promo_id', booking.promo_code)
+                .single();
+            
+            if (promo) {
+                const subtotal = adultSum + youthSum + kidSum + fullDaySum + rebookingSum - giftCardAmount;
+                if (promo.is_percentage) {
+                    promoDiscount = Math.round(subtotal * (promo.discount_value / 100));
+                    promoDisplay = `${promo.discount_value}%`;
+                } else {
+                    promoDiscount = promo.discount_value;
+                    promoDisplay = `${promo.discount_value} kr`;
+                }
+            }
+        }
 
             // Build rebooking URL with access token
         const rebookingUrl = booking.is_rebookable ? 
@@ -113,6 +150,9 @@ class EmailService {
                     is_rebookable: booking.is_rebookable,
                     rebooking_sum: rebookingSum,
                     ombokningsurl: rebookingUrl,
+                    gift_card_amount: giftCardAmount || null,  // Only include if used
+                    promo_discount: promoDiscount || null,     // Only include if used
+                    promo_display: promoDisplay || null,       // Only include if used
                     amount_ex_vat: amountExVat,
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),

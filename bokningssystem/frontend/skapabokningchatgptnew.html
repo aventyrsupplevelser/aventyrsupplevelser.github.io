@@ -1634,7 +1634,7 @@
             <hr>
             <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
             <hr>
-            <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: green;"></p>
+            <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: #2d862d;"></p>
         `;
             } catch (err) {
                 console.error('Error displaying summary:', err);
@@ -2272,8 +2272,14 @@
             const codeInput = document.querySelector('#codeInput input[type="text"]');
             const code = codeInput.value.trim();
 
+            const codeMessage = document.getElementById('codeMessage');
+
+
             if (!code) {
-                alert('Vänligen ange en kod');
+                codeMessage.style.display = 'block';
+                codeMessage.innerHTML = 'Vänligen ange en kod';
+                codeMessage.style.backgroundColor = '#ffe6e6';
+                codeMessage.style.color = 'red';
                 return;
             }
 
@@ -2327,8 +2333,9 @@
                     // Show success message
                     const codeMessage = document.getElementById('codeMessage');
                     codeMessage.style.display = 'block';
+                    codeMessage.style.backgroundColor = 'rgb(230, 241, 225)';
+                    codeMessage.style.color = 'black';
                     codeMessage.innerHTML = data.message;
-
                     // Clear input
                     codeInput.value = '';
 
@@ -2337,7 +2344,11 @@
                     updateTimeRemaining();
 
                 } else {
-                    alert(data.message);
+                    const codeMessage = document.getElementById('codeMessage');
+                    codeMessage.style.display = 'block';
+                    codeMessage.style.backgroundColor = '#ffe6e6';
+                    codeMessage.style.color = 'red';
+                    codeMessage.innerHTML = data.message;
                 }
 
             } catch (error) {
