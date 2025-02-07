@@ -270,47 +270,36 @@
         async function init() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                bookingId = urlParams.get('booking_id');
                 accessToken = urlParams.get('token');
 
-                if (!bookingId || !accessToken) {
+                if (!accessToken) {
                     showError("Ogiltig länk. Kontrollera att du använder länken från ditt mail.");
                     return;
                 }
 
-                // 1) Fetch the existing booking
-                const response = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook?token=${accessToken}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include'
-                    }
-                );
+                // Validate the booking using our new Postgres function
+                const { data, error } = await supabaseClient.rpc('validate_rebooking', {
+                    p_access_token: accessToken
+                });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Kunde inte hitta bokningen');
+                if (error) throw error;
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Kunde inte hitta bokningen');
                 }
 
-                currentBooking = await response.json();
+                // Save the current booking data
+                currentBooking = {
+                    ...data.booking,
+                    time_slots: data.time_slot
+                };
 
-                // 2) Calculate total required spots
+                // Calculate total required spots
                 const { adult_quantity, youth_quantity, kid_quantity, full_day } = currentBooking;
                 let totalSpots = (adult_quantity ?? 0) + (youth_quantity ?? 0) + (kid_quantity ?? 0);
                 totalRequired = totalSpots;
 
-                // 3) Check if rebooking is still allowed (24h rule)
-                const bookingTime = new Date(currentBooking.time_slots.start_time);
-                const now = new Date();
-                const hoursUntilBooking = (bookingTime - now) / (1000 * 60 * 60);
-                if (hoursUntilBooking < 24) {
-                    throw new Error('Ombokningar måste göras senast 24 timmar innan bokad tid');
-                }
-
-                // Show the form
+                // Show the form (the 24h check is now handled in the Postgres function)
                 showBookingForm();
 
             } catch (error) {
@@ -401,7 +390,6 @@
             document.getElementById('confirmSection').style.display = 'block';
         }
 
-        /* Confirm Rebooking PUT call */
         async function confirmRebooking() {
             if (!selectedTimeSlot) {
                 showError('Välj en ny tid först');
@@ -409,27 +397,37 @@
             }
 
             try {
-                const response = await fetch(
-                    `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/bookings/${bookingId}/rebook`,
-                    {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            time_slot_id: selectedTimeSlot,
-                            access_token: accessToken
-                        })
-                    }
-                );
+                // Update the booking using the Supabase function
+                const { data, error } = await supabaseClient.rpc('update_booking_time', {
+                    p_access_token: accessToken,
+                    p_new_time_slot_id: selectedTimeSlot
+                });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Misslyckades att uppdatera bokning');
+                if (error) throw error;
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Misslyckades att uppdatera bokning');
+                }
+
+                // Then trigger the confirmation email via the backend
+                try {
+                    await fetch(
+                        'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/rebooking-confirmation',
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                booking: data.booking
+                            })
+                        }
+                    );
+                } catch (emailError) {
+                    console.error('Error sending confirmation email:', emailError);
+                    // Don't throw here - we still want to show success message even if email fails
                 }
 
                 showMessage('Din bokning har ombokats! Ett bekräftelsemail skickas inom kort.');
                 setTimeout(() => {
-                    // Redirect or do something else
                     window.location.href = 'https://aventyrsupplevelser.com/sorsjon';
                 }, 3000);
 
@@ -438,7 +436,6 @@
                 console.error('Rebooking error:', error);
             }
         }
-
         /************************************************
          * BookingCalendar Class
          ************************************************/

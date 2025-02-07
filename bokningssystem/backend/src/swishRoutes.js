@@ -814,4 +814,34 @@ router.post('/gift-card-callback', async (req, res) => {
     }
 });
 
+router.post('/rebooking-confirmation', async (req, res) => {
+    try {
+        const { booking } = req.body;
+
+        if (!booking) {
+            return res.status(400).json({ 
+                error: 'Booking data is required' 
+            });
+        }
+
+        // Send the confirmation email
+        const emailResult = await EmailService.ombokningConfirmation(booking);
+
+        if (!emailResult) {
+            throw new Error('Failed to send confirmation email');
+        }
+
+        res.json({ 
+            success: true, 
+            message: 'Confirmation email sent successfully' 
+        });
+
+    } catch (error) {
+        console.error('Error sending rebooking confirmation email:', error);
+        res.status(500).json({ 
+            error: 'Failed to send confirmation email' 
+        });
+    }
+});
+
 export default router;
