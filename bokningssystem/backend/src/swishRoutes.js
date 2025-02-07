@@ -819,9 +819,9 @@ router.post('/rebooking-confirmation', async (req, res) => {
         const { booking, start_time } = req.body;
         console.log('start_time:', start_time )
 
-        if (!booking || start_time ) {
+        if (!booking || !start_time ) {
             return res.status(400).json({ 
-                error: 'Booking data is required' 
+                error: 'Booking data and start time is required' 
             });
         }
 
