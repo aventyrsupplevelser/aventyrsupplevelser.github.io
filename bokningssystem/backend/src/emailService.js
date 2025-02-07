@@ -97,7 +97,6 @@ class EmailService {
 
         // Get promo code info if used
         let promoDiscount = 0;
-        let promoDisplay = '';
         if (booking.promo_code) {
             const { data: promo } = await supabase
                 .from('promo_codes')
@@ -109,13 +108,13 @@ class EmailService {
                 const subtotal = adultSum + youthSum + kidSum + fullDaySum + rebookingSum - giftCardAmount;
                 if (promo.is_percentage) {
                     promoDiscount = Math.round(subtotal * (promo.discount_value / 100));
-                    promoDisplay = `${promo.discount_value}%`;
                 } else {
                     promoDiscount = promo.discount_value;
-                    promoDisplay = `${promo.discount_value} kr`;
                 }
             }
         }
+
+        console.log(promoDiscount);
 
             // Build rebooking URL with access token
         const rebookingUrl = booking.is_rebookable ? 
@@ -152,13 +151,11 @@ class EmailService {
                     ombokningsurl: rebookingUrl,
                     gift_card_amount: giftCardAmount || null,  // Only include if used
                     promo_discount: promoDiscount || null,     // Only include if used
-                    promo_display: promoDisplay || null,       // Only include if used
                     amount_ex_vat: amountExVat,
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
                     payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
                     payment_method: paymentMethodDisplay,
-                    special_instructions: booking.comments || ''
                 }
             };
     
