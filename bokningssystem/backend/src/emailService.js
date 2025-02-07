@@ -101,7 +101,7 @@ class EmailService {
             const { data: promo } = await supabase
                 .from('promo_codes')
                 .select('*')
-                .eq('promo_id', booking.promo_code)
+                .eq('promo_code', booking.promo_code)
                 .single();
             
             if (promo) {
@@ -114,7 +114,7 @@ class EmailService {
             }
         }
 
-        console.log(promoDiscount);
+        console.log('promoDiscount:', promoDiscount);
 
             // Build rebooking URL with access token
         const rebookingUrl = booking.is_rebookable ? 
