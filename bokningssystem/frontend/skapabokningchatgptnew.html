@@ -440,7 +440,8 @@
             }
         }
 
-        #continueToPaymentBtn {
+        #continueToPaymentBtn,
+        #freeConfirmBtn button {
             background: linear-gradient(169deg, rgba(6, 107, 11, 1) 0%, rgb(20, 120, 25) 100%);
             color: white;
             min-width: 310px;
@@ -452,7 +453,8 @@
             border-radius: 6px;
         }
 
-        #continueToPaymentBtn:hover {
+        #continueToPaymentBtn:hover,
+        #freeConfirmBtn button:hover {
             background: linear-gradient(169deg, rgb(21, 175, 29) 0%, rgb(57, 158, 62) 100%);
             color: #e8e8e8;
             transition: 0.2s;
@@ -831,15 +833,15 @@
                     </div>
                 </div>
 
-                <div
-                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;">
+                <div style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;"
+                    id="choosePayMethod">
                     Välj betalsätt:</div>
 
                 <div id="paymentButtons" style="display: none;">
                     <div id="swishSection">
                         <div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
                             <input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
-                                style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 1.5px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
+                                style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 2px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
                             <div id="swishPhoneError" class="error" style="display: none; width: auto;">
                                 Skriv ditt telefonnummer för Swish
                             </div>
@@ -869,6 +871,12 @@
                                 fönster)</span></span>
                         <img src="/images/cards.png">
                     </button>
+                </div>
+                <div id="freeConfirmBtn" style="display: none;">
+                    <button> Bekräfta bokning (0 kr)</button>
+                </div>
+                <div id="freeMessage"
+                    style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
                 </div>
 
             </div>
@@ -1710,7 +1718,11 @@
                 // Make or update the "pending" booking on the server
                 displayBookingSummary({ tickets: summaryTickets, totals });
 
+                updateFreeBookingUI(totals);
+
+
                 await createOrUpdatePendingBooking(summaryTickets);
+
 
                 updateTimeRemaining();
 
@@ -1718,7 +1730,6 @@
                 if (!window.timeRemainingInterval) {
                     window.timeRemainingInterval = setInterval(updateTimeRemaining, 60000);
                 }
-
 
             } catch (error) {
                 console.error('Error in handleContinueToPayment:', error);
@@ -2330,6 +2341,10 @@
                     const totals = calculateTotal(currentTickets);
                     displayBookingSummary({ tickets: currentTickets, totals });
 
+                    // Update the UI based on whether it's now free
+                    updateFreeBookingUI(totals);
+
+
                     // Show success message
                     const codeMessage = document.getElementById('codeMessage');
                     codeMessage.style.display = 'block';
@@ -2356,6 +2371,99 @@
                 alert('Ett fel uppstod vid validering av koden');
             }
         });
+
+        function updateFreeBookingUI(totals) {
+            const paymentButtons = document.getElementById('paymentButtons');
+            let confirmButton = document.getElementById('freeConfirmBtn');
+            const choosePayMethod = document.getElementById('choosePayMethod');
+
+            if (totals.total === 0) {
+                // Hide payment buttons
+                paymentButtons.style.display = 'none';
+                choosePayMethod.style.display = 'none';
+                confirmButton.style.display = 'block'
+
+                confirmButton.addEventListener('click', handleFreeBooking);
+
+            } else {
+                // Show payment buttons and remove confirm button if it exists
+                paymentButtons.style.display = 'block';
+                confirmButton.style.display = 'none'
+
+
+            }
+        }
+
+        async function handleFreeBooking() {
+            try {
+                // Get customer info
+                const customerName = document.getElementById('customerName').value.trim();
+                const customerEmail = document.getElementById('customerEmail').value.trim();
+                const customerComment = document.getElementById('customerComment').value.trim();
+                const wantsNewsletter = document.getElementById('nyhetsbrev').checked;
+
+                // Validate required fields
+                if (!customerName || !customerEmail) {
+                    requiredInfoMessage.style.display = 'block';
+                    requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                requiredInfoMessage.style.display = 'none';
+
+                // Validate terms acceptance
+                const termsCheckbox = document.getElementById('termsCheckbox');
+                const termsError = document.getElementById('termsError');
+                if (!termsCheckbox.checked) {
+                    termsError.style.display = 'block';
+                    termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                termsError.style.display = 'none';
+
+                // Get session data
+                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+                if (!sessionData?.bookingId || !sessionData?.token) {
+                    throw new Error('No active booking found');
+                }
+
+                // Update customer details first
+                await updateCustomer();
+
+                // Send request to process free booking
+                const response = await fetch('http://localhost:3000/api/swish/free-booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bookingId: sessionData.bookingId,
+                        access_token: sessionData.token,
+                        booking_number: sessionData.booking_number
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to process free booking');
+                }
+
+                // Show message while processing
+                const freeMessage = document.getElementById('freeMessage');
+                freeMessage.style.display = 'block';
+                freeMessage.innerHTML = 'Bekräftar din bokning...';
+                freeMessage.scrollIntoView({ behavior: 'smooth' });
+
+                // Start checking status
+                checkPaymentStatus();
+
+            } catch (error) {
+                console.error('Error processing free booking:', error);
+                const freeMessage = document.getElementById('freeMessage');
+                freeMessage.style.display = 'block';
+                freeMessage.innerHTML = 'Ett fel uppstod. Försök igen.';
+                freeMessage.style.backgroundColor = '#ffe6e6';
+                freeMessage.style.color = 'red';
+                freeMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
     </script>
 </body>

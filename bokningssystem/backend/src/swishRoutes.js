@@ -814,6 +814,87 @@ router.post('/gift-card-callback', async (req, res) => {
     }
 });
 
+// Add to swishRoutes.js
+
+router.post('/free-booking', async (req, res) => {
+    try {
+        const { bookingId, access_token, booking_number } = req.body;
+
+        // First get the booking with its time slot details
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('id', bookingId)
+            .eq('access_token', access_token)
+            .single();
+
+        if (bookingError || !booking) {
+            throw new Error('Booking not found or invalid access token');
+        }
+
+        // Verify booking is still pending
+        if (booking.status !== 'pending') {
+            throw new Error('Invalid booking status');
+        }
+
+        // Double check that the total amount is actually 0
+        const { data: amount, error: amountError } = await supabase.rpc('calculate_booking_amount', {
+            p_access_token: access_token
+        });
+
+        if (amountError) throw amountError;
+
+        if (amount !== 0) {
+            throw new Error('This booking requires payment');
+        }
+
+        // Update the booking status and add payment info
+        const { error: updateError } = await supabase
+            .from('bookings')
+            .update({
+                status: 'confirmed',
+                payment_method: 'free',
+                paid_amount: 0,
+                payment_completed_at: new Date().toISOString(),
+                payment_metadata: { 
+                    method: 'free',
+                    confirmed_at: new Date().toISOString()
+                }
+            })
+            .eq('id', bookingId)
+            .eq('status', 'pending');
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        // Update any applied gift cards or promo codes
+        await updateAppliedCodes(booking);
+
+        // Send confirmation email
+        try {
+            await EmailService.sendBookingConfirmation({
+                ...booking,
+                start_time: booking.time_slots.start_time,
+                paid_amount: 0,
+                payment_completed_at: new Date().toISOString()
+            });
+        } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
+            // Don't throw here - booking is still valid even if email fails
+        }
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.error('Free booking error:', error);
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
 router.post('/rebooking-confirmation', async (req, res) => {
     try {
         const { booking, start_time } = req.body;
