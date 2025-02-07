@@ -817,6 +817,7 @@ router.post('/gift-card-callback', async (req, res) => {
 router.post('/rebooking-confirmation', async (req, res) => {
     try {
         const { booking, start_time } = req.body;
+        console.log('start_time:', start_time )
 
         if (!booking || start_time ) {
             return res.status(400).json({ 
