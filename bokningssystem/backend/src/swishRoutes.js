@@ -131,13 +131,11 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         // Always send 200 OK first
         res.status(200).send('OK');
 
-
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
-
         if (!verifyCallbackId(callbackIdentifier, payment.payeePaymentReference)) {
             console.error('Invalid callback checksum');
-            return; 
+            return;
         }
 
         // First get the booking
@@ -160,28 +158,23 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         if (payment.status === 'PAID') {
             const paidAmountOre = Math.round(payment.amount * 100);
 
-            // Update the booking
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    payment_method: 'swish',
-                    payment_id: payment.id,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    payment_metadata: payment
-                })
-                .eq('id', booking.id)
-                .eq('status', 'requested')
+            // Use the Postgres function to update booking and related codes
+            const { error: confirmError } = await supabase.rpc('confirm_booking_payment', {
+                p_booking_id: booking.id,
+                p_payment_method: 'swish',
+                p_payment_id: payment.id,
+                p_paid_amount: paidAmountOre,
+                p_payment_metadata: payment
+            });
 
-            if (updateError) {
-                console.error('Error updating booking with payment info:', updateError);
+            if (confirmError) {
+                console.error('Error confirming payment:', confirmError);
                 return;
             }
 
             console.log('Payment recorded successfully:', payment.id);
 
-            // Send confirmation email using the original booking data we already have
+            // Send confirmation email
             try {
                 await EmailService.sendBookingConfirmation({
                     ...booking,
@@ -370,41 +363,29 @@ router.post('/card-callback', express.json(), async (req, res) => {
         // 7. Check for successful payment
         const isSuccess = callbackData.accepted && callbackData.state === 'processed';
         if (isSuccess) {
-            // Get amount in öre from the payment link data
-            const paidAmountOre = callbackData.link.amount;
-
-            // Update the booking
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    payment_method: 'card',
-                    payment_id: callbackData.id.toString(),
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    payment_metadata: callbackData
-                })
-                .eq('id', booking.id)
-                .eq('status', 'requested')
-
-            if (updateError) {
-                console.error('Error updating booking:', updateError);
-                return;
-            }
-
-            console.log('Payment recorded successfully:', callbackData.id);
-
-            // Send confirmation email
             try {
+                const { error } = await supabase.rpc('confirm_booking_payment', {
+                    p_booking_id: booking.id,
+                    p_payment_method: 'card',
+                    p_payment_id: callbackData.id.toString(),
+                    p_paid_amount: callbackData.link.amount,
+                    p_payment_metadata: callbackData
+                });
+        
+                if (error) throw error;
+        
+                console.log('Payment recorded successfully:', callbackData.id);
+        
+                // Send confirmation email
                 await EmailService.sendBookingConfirmation({
                     ...booking,
                     start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
+                    paid_amount: callbackData.link.amount,
                     payment_completed_at: new Date().toISOString()
                 });
                 console.log('Confirmation email sent successfully');
-            } catch (emailError) {
-                console.error('Error sending confirmation email:', emailError);
+            } catch (error) {
+                console.error('Error processing payment:', error);
             }
         }
 
@@ -412,7 +393,6 @@ router.post('/card-callback', express.json(), async (req, res) => {
         console.error('QuickPay callback error:', error);
     }
 });
-
 
 router.post('/gift-swish', async (req, res) => {
     try {

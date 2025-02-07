@@ -1543,17 +1543,17 @@
             }
         }
 
-        // Calculate total with VAT for summary
         function calculateTotal(tickets) {
+            // Calculate base total
             const base = (
                 tickets.adult * PRICES.adult +
                 tickets.youth * PRICES.youth +
                 tickets.kid * PRICES.kid +
                 tickets.fullday * PRICES.fullday
             );
+
             const totalTix = tickets.adult + tickets.youth + tickets.kid;
             const rebookingFee = tickets.is_rebookable ? (totalTix * PRICES.rebooking) : 0;
-
             const subtotal = base + rebookingFee;
 
             // Get any applied discounts from localStorage
@@ -1561,20 +1561,24 @@
             let giftCardAmount = 0;
             let promoDiscount = 0;
 
+            // First apply gift card
             if (bookingData?.gift_card_applied) {
                 giftCardAmount = bookingData.gift_card_applied.value;
             }
 
+            // Then apply promo to remaining amount after gift card
+            const remainingAfterGiftCard = Math.max(0, subtotal - giftCardAmount);
+
             if (bookingData?.promo_applied) {
                 if (bookingData.promo_applied.is_percentage) {
-                    promoDiscount = subtotal * (bookingData.promo_applied.value / 100);
+                    promoDiscount = remainingAfterGiftCard * (bookingData.promo_applied.value / 100);
                 } else {
                     promoDiscount = bookingData.promo_applied.value;
                 }
             }
 
             // Calculate final total
-            const totalAfterDiscounts = Math.max(0, subtotal - giftCardAmount - promoDiscount);
+            const totalAfterDiscounts = Math.max(0, remainingAfterGiftCard - promoDiscount);
             const vatRate = 0.06;
             const vat = (totalAfterDiscounts * vatRate) / (1 + vatRate);
 
@@ -1624,7 +1628,7 @@
             ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
             <hr>
             ${hasGiftCard ? `<p style="color: #2d862d;">Presentkort: <span style="float: right;">-${totals.giftCardAmount} kr</span></p>` : ''}
-            ${hasPromo ? `<p style="color: #2d862d;">Rabatt: <span style="float: right;">-${Math.round(totals.promoDiscount)} kr</span></p>` : ''}
+            ${hasPromo ? `<p style="color: #2d862d;">Rabatt: <span style="float: right;">-${totals.promoDiscount} kr</span></p>` : ''}
             ${(hasGiftCard || hasPromo) ? '<hr>' : ''}
             <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
             <hr>
@@ -2292,30 +2296,45 @@
                     if (data.type === 'gift_card') {
                         bookingData.gift_card_applied = {
                             code: code,
-                            value: data.value_sek
+                            value: data.amount
                         };
-                        //  delete bookingData.promo_applied; // Remove any existing promo
                     } else if (data.type === 'promo') {
                         bookingData.promo_applied = {
                             code: code,
                             is_percentage: data.is_percentage,
                             value: data.discount_value
                         };
-                        //  delete bookingData.gift_card_applied; // Remove any existing gift card
                     }
-
                     localStorage.setItem('bookingData', JSON.stringify(bookingData));
+
+                    // Get current selected date and time
+                    const dateEl = document.querySelector('.calendar-day.selected');
+                    const timeEl = document.querySelector('.time-slot.selected');
+                    const selectedDate = dateEl ? dateEl.dataset.date : '';
+                    const selectedTime = timeEl ? timeEl.textContent.trim() : '';
+
+                    // Create current tickets object
+                    const currentTickets = {
+                        ...ticketState,
+                        date: selectedDate,
+                        time: selectedTime
+                    };
+
+                    // Calculate totals and display summary
+                    const totals = calculateTotal(currentTickets);
+                    displayBookingSummary({ tickets: currentTickets, totals });
+
+                    // Show success message
                     const codeMessage = document.getElementById('codeMessage');
                     codeMessage.style.display = 'block';
                     codeMessage.innerHTML = data.message;
-                    document.querySelector('#codeInput input[type="text"]').value = '';
 
-
-                    // Disable input and button
-                    //  codeInput.disabled = true;
-                    //  document.getElementById('useCode').disabled = true;
+                    // Clear input
+                    codeInput.value = '';
 
                     // Update the total price display
+                    updateTotalDisplay();
+                    updateTimeRemaining();
 
                 } else {
                     alert(data.message);
