@@ -816,16 +816,16 @@ router.post('/gift-card-callback', async (req, res) => {
 
 router.post('/rebooking-confirmation', async (req, res) => {
     try {
-        const { booking } = req.body;
+        const { booking, start_time } = req.body;
 
-        if (!booking) {
+        if (!booking || start_time ) {
             return res.status(400).json({ 
                 error: 'Booking data is required' 
             });
         }
 
         // Send the confirmation email
-        const emailResult = await EmailService.ombokningConfirmation(booking);
+        const emailResult = await EmailService.ombokningConfirmation(booking, start_time);
 
         if (!emailResult) {
             throw new Error('Failed to send confirmation email');
