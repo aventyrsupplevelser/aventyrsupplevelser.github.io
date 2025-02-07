@@ -179,6 +179,7 @@ class EmailService {
 
 
     static async ombokningConfirmation(booking) {
+        console.log('sendingombokningsemail')
         try {
             const msg = {
                 to: booking.customer_email,
