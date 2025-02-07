@@ -68,6 +68,24 @@ class EmailService {
     static async sendBookingConfirmation(booking) {
         try {
 
+            // Calculate individual sums
+            const adultSum = booking.adult_quantity * 400;
+            const youthSum = booking.youth_quantity * 300;
+            const kidSum = booking.kid_quantity * 200;
+            const fullDaySum = booking.full_day * 100;
+            const rebookingSum = booking.is_rebookable ? 
+                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+            
+             // Calculate VAT (6%)
+             const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
+             const vatRate = 0.06;
+             const taxableAmount = Math.max(0, totalAmountInSEK - rebookingSum);
+             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+             const amountExVat = totalAmountInSEK - vatAmount;
+
+
+            const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
+
             // Get gift card info if used
         let giftCardAmount = 0;
         if (booking.gift_card_number) {
@@ -94,30 +112,14 @@ class EmailService {
             if (promo) {
                 const subtotal = adultSum + youthSum + kidSum + fullDaySum + rebookingSum - giftCardAmount;
                 if (promo.is_percentage) {
-                    promoDiscount = Math.round(subtotal * (promo.discount_value / 100));
+                    promoDiscount = subtotal * (promo.discount_value / 100);
                 } else {
                     promoDiscount = promo.discount_value;
                 }
             }
         }
 
-            // Calculate individual sums
-            const adultSum = booking.adult_quantity * 400;
-            const youthSum = booking.youth_quantity * 300;
-            const kidSum = booking.kid_quantity * 200;
-            const fullDaySum = booking.full_day * 100;
-            const rebookingSum = booking.is_rebookable ? 
-                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
             
-             // Calculate VAT (6%)
-             const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
-             const vatRate = 0.06;
-             const taxableAmount = Math.max(0, totalAmountInSEK - rebookingSum);
-             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
-             const amountExVat = totalAmountInSEK - vatAmount;
-
-
-            const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
 
         console.log('promoDiscount:', promoDiscount);
 
