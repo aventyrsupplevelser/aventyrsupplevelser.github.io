@@ -191,12 +191,12 @@ class EmailService {
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
                     customer_name: booking.customer_name,
-                    booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
+                    booking_date: new Date(start_time).toLocaleDateString('sv-SE', {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric'
                     }),
-                    booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', { 
+                    booking_time: new Date(start_time).toLocaleTimeString('sv-SE', { 
                         hour: '2-digit', 
                         minute: '2-digit',
                         hour12: false 

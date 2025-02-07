@@ -405,9 +405,20 @@
 
                 if (error) throw error;
 
+                console.log(data)
+                console.log(data.booking)
+
                 if (!data.success) {
                     throw new Error(data.error || 'Misslyckades att uppdatera bokning');
                 }
+
+                const { data: newSlot, error: slotErr } = await supabase
+                    .from('time_slots')
+                    .select('start_time')
+                    .eq('id', selectedTimeSlot)
+                    .single();
+
+
 
                 // Then trigger the confirmation email via the backend
                 try {
@@ -417,7 +428,8 @@
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                booking: data.booking
+                                booking: data.booking,
+                                start_time: newSlot.start_time
                             })
                         }
                     );
@@ -427,9 +439,9 @@
                 }
 
                 showMessage('Din bokning har ombokats! Ett bekräftelsemail skickas inom kort.');
-                setTimeout(() => {
-                    window.location.href = 'https://aventyrsupplevelser.com/sorsjon';
-                }, 3000);
+                /*    setTimeout(() => {
+                        window.location.href = 'https://aventyrsupplevelser.com/sorsjon';
+                    }, 3000); */
 
             } catch (error) {
                 showError(error.message || 'Ett fel uppstod vid ombokning');
