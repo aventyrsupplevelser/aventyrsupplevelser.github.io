@@ -426,7 +426,7 @@ async function updateAppliedCodes(booking) {
                 .update({
                     gift_card_used: true,
                     used_at: new Date().toISOString(),
-                    used_in_booking: booking.id
+                    used_in_booking: booking.booking_number
                 })
                 .eq('gift_card_number', booking.gift_card_number);
 
@@ -437,10 +437,23 @@ async function updateAppliedCodes(booking) {
 
         // Update promo code usage if one was used
         if (booking.promo_code) {
+            // First get the current promo code data
+            const { data: promoData, error: fetchError } = await supabase
+                .from('promo_codes')
+                .select('current_uses')
+                .eq('promo_code', booking.promo_code)
+                .single();
+
+            if (fetchError) {
+                console.error('Error fetching promo code:', fetchError);
+                return;
+            }
+
+            // Then update with incremented value
             const { error: promoError } = await supabase
                 .from('promo_codes')
                 .update({
-                    current_uses: sql`current_uses + 1`,
+                    current_uses: (promoData.current_uses || 0) + 1,
                     last_used_at: new Date().toISOString()
                 })
                 .eq('promo_code', booking.promo_code);
