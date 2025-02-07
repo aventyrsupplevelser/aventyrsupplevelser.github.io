@@ -47,7 +47,10 @@ class EmailService {
             // Test API key by making a simple API call
             const response = await sgMail.send({
                 to: SENDGRID_FROM_EMAIL,
-                from: SENDGRID_FROM_EMAIL,
+                from: {
+                    email: process.env.SENDGRID_FROM_EMAIL,
+                    name: 'Sörsjöns Äventyrspark'
+                },
                 subject: 'API Key Verification',
                 text: 'This is a test email to verify the SendGrid API key.',
             });
@@ -123,7 +126,10 @@ class EmailService {
     
             const msg = {
                 to: booking.customer_email,
-                from: process.env.SENDGRID_FROM_EMAIL,
+                from: {
+                    email: process.env.SENDGRID_FROM_EMAIL,
+                    name: 'Sörsjöns Äventyrspark'
+                },
                 templateId: process.env.SENDGRID_BOOKING_TEMPLATE_ID,
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
@@ -176,7 +182,10 @@ class EmailService {
         try {
             const msg = {
                 to: booking.customer_email,
-                from: process.env.SENDGRID_FROM_EMAIL,
+                from: {
+                    email: process.env.SENDGRID_FROM_EMAIL,
+                    name: 'Sörsjöns Äventyrspark'
+                },
                 templateId: process.env.SENDGRID_OMBOKNING_ID,
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
@@ -244,7 +253,10 @@ class EmailService {
 
             const msg = {
                 to: giftCard.purchaser_email,
-                from: process.env.SENDGRID_FROM_EMAIL,
+                from: {
+                    email: process.env.SENDGRID_FROM_EMAIL,
+                    name: 'Sörsjöns Äventyrspark'
+                },
                 templateId: process.env.SENDGRID_PRESENKORT_ID,
                 dynamic_template_data: {
                     gift_card_number: giftCard.gift_card_number,
