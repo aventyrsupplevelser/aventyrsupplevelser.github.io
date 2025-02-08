@@ -678,6 +678,13 @@
         #bookingSummaryFinal {
             width: 380px;
             margin-bottom: 30px;
+            padding: 10px;
+            font-size: 1.3em;
+        }
+
+        #paymentButtons {
+            align-items: start;
+            flex-direction: column;
         }
 
         #alternateDeviceSection {
@@ -819,7 +826,10 @@
                 width: clamp(290px, 70vw, 380px);
                 margin-left: 2vw;
                 margin-bottom: 20px;
+                font-size: 1.1em;
+                padding: 10px 0px;
             }
+
 
             .custom-checkbox,
             #codeInput {
@@ -828,7 +838,13 @@
             }
 
             #paymentButtons {
-                margin-left: 3vw;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #alternateDeviceSection {
+                text-align: center;
             }
 
 
@@ -985,10 +1001,9 @@
 
                 </div>
 
-                <div id="bookingSummaryFinal" class="summary-box" style="background: rgb(255, 255, 255); padding:
-            10px; font-size: 1.3em;">
+                <div id="bookingSummaryFinal" class="summary-box" style="background: rgb(255, 255, 255);>
                 </div>
-                <div class="form-group" style="margin-bottom: 20px; font-size: 1.2em;">
+                <div class=" form-group" style="margin-bottom: 20px; font-size: 1.2em;">
                     <label class="custom-checkbox">
                         <input type="checkbox" id="nyhetsbrev">
                         <span class="checkmark"></span>
@@ -2572,7 +2587,7 @@ arrow_right_alt
 
             } else {
                 // Show payment buttons and remove confirm button if it exists
-                paymentButtons.style.display = 'block';
+                paymentButtons.style.display = 'flex';
                 confirmButton.style.display = 'none'
 
 
