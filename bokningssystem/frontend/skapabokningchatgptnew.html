@@ -11,6 +11,9 @@
     <script src="https://assets.dintero.com/pkg/checkout-web-sdk/0.8.15/dintero-checkout-web-sdk.umd.min.js"
         integrity="sha-384-jB5KBMyYe7FCTxVcEhpmeb+LHN9tLbbU3zfgfyCJp6ca/pdWe7bkpfcZ8g2fyQEm" crossorigin="anonymous">
         </script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_left_alt,arrow_right_alt" />
+
 
     <style>
         body {
@@ -30,7 +33,7 @@
         .time-slots {
             display: none;
             max-width: 600px;
-            margin: 20px auto 0px;
+            margin: 0px auto 0px;
             grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
             font-size: 1.3em;
@@ -43,7 +46,7 @@
         .ticket-section {
             padding-top: 0px;
             max-width: 600px;
-            margin: 20px auto 0px;
+            margin: 0px auto 0px;
         }
 
         .ticket-section.visible {
@@ -123,6 +126,12 @@
             margin-top: 20px;
         }
 
+        #nextMonth,
+        #prevMonth {
+            padding: 13px 13px 8px;
+            background: rgba(246, 244, 221, 0.86);
+        }
+
         .hidden {
             display: none;
         }
@@ -132,7 +141,7 @@
             background: white;
             border-radius: 8px;
             padding: 20px;
-            margin: 20px auto;
+            margin: 0px auto 20px;
             max-width: 600px;
         }
 
@@ -372,7 +381,7 @@
         }
 
         .quantity-btn:hover {
-            background: #f0f0f0;
+            background: none;
         }
 
         .quantity-btn:disabled {
@@ -645,6 +654,185 @@
         #kortbetalning img {
             height: 32px;
         }
+
+        .yellowChooser {
+            background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%);
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        #heldaglabel span {
+            margin: 0px;
+            font-size: 0.8em;
+            display: inline;
+        }
+
+        .button-container {
+            float: right;
+        }
+
+        .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        #bookingSummaryFinal {
+            width: 380px;
+            margin-bottom: 30px;
+        }
+
+        #alternateDeviceSection {
+            margin-left: 3px;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 2vw;
+                font-size: 0.9em;
+            }
+
+            #bookingForm {
+                max-width: none;
+                margin: 0;
+            }
+
+            .calendar-container {
+                padding: 0px 0px;
+            }
+
+            .calendar-day {
+                padding: clamp(1px, 1.5vw, 8px) clamp(0px, 1vw, 3px) 3px;
+                font-size: clamp(16px, 4vw, 18px);
+                height: clamp(30px, 10vw, 40px);
+                border-radius: 2px;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, clamp(13vw, 13vw, 13vw));
+                gap: clamp(2px, 1vw, 5px);
+                width: 100%;
+            }
+
+            #nextMonth,
+            #prevMonth {
+                padding: 8px 13px 3px;
+            }
+
+            .yellowChooser {
+                margin: 30px auto;
+                display: block;
+                width: fit-content;
+            }
+
+            .calendar-legend {
+                justify-content: center;
+                margin-top: 25px;
+            }
+
+            .legend-item {
+                gap: 5px;
+                font-size: clamp(13px, 3vw, 1.1em);
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(5, minmax(50px, 1fr));
+                font-size: 1.2em;
+                gap: 4px;
+            }
+
+            .time-slot {
+                padding: 12px 6px 7px;
+            }
+
+            .ticket-selector {
+                font-size: clamp(1.3em, 4vw, 1.5em);
+                gap: 0px;
+                padding: 10px calc(8vw - 20px) 5px;
+            }
+
+            .ticket-selector div {
+                width: 100px;
+            }
+
+            .ticket-selector label {
+                max-width: 150px;
+                margin-right: 10px;
+                font-weight: 500;
+                font-size: 0.9em;
+            }
+
+
+
+
+            .ticket-selector label span {
+                margin-top: 7px;
+            }
+
+            .quantity-selector {
+                gap: 0px;
+                margin: 0px;
+            }
+
+            .quantity-btn {
+                padding: 5px;
+                margin-bottom: 0px;
+            }
+
+            .quantity {
+                padding: 8px 5px 3px;
+            }
+
+            #rebooking {
+                margin: 0px 20px;
+            }
+
+            #continueToPaymentBtn,
+            #freeConfirmBtn {
+                min-width: 0;
+                width: 300px;
+            }
+
+            .button-container {
+                float: none;
+            }
+
+            #continueToPaymentBtn {
+                margin: auto;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea[type="comment"] {
+                max-width: 84vw;
+            }
+
+            #customerbox {
+                display: flex;
+                flex-direction: column;
+                margin: 0 auto;
+                width: 90vw;
+            }
+
+
+            #bookingSummaryFinal {
+                width: clamp(290px, 70vw, 380px);
+                margin-left: 2vw;
+                margin-bottom: 20px;
+            }
+
+            .custom-checkbox,
+            #codeInput {
+                line-height: 1.3em;
+                margin-left: 3vw;
+            }
+
+            #paymentButtons {
+                margin-left: 3vw;
+            }
+
+
+        }
     </style>
 </head>
 
@@ -655,24 +843,21 @@
         </div>
         <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
-                <div style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%);
-; display: inline;"> Välj klätterdatum:</div>
+                <div class="yellowChooser"> Välj klätterdatum:</div>
                 <div class="form-group">
                 </div>
             </div>
 
             <div id="times">
-                <div
-                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
-                    Välj en klättertid:</div>
+                <div class="yellowChooser">
+                    Välj klättertid:</div>
                 <div class="time-slots" id="timeSlots">
                     <!-- Time slots will be populated here -->
                 </div>
                 <div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
             </div>
             <div id="tickets" style="margin-top: 80px;">
-                <div
-                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                <div class="yellowChooser" style="margin-bottom: 25px;">
                     Välj antal äventyrare:</div>
                 <div class="ticket-section">
                     <!-- Available spots display -->
@@ -713,16 +898,12 @@
 
 
                     <div class="fulldaySection">
-                        <br><br>
-                        <div
-                            style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                        <div class="yellowChooser" style="margin-top: 40px;">
                             Välj antal som vill
                             förlänga tiden:</div>
-                        <br><br>
-
                         <!-- Full day extension -->
                         <div class="ticket-selector" style="background-color: rgb(245, 245, 245);">
-                            <label>Heldag (till 17.00)</label>
+                            <label id="heldaglabel">Heldag <span>(till 17.00)</span></label>
                             <div>100 kr</div>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus" data-ticket-type="fullday">-</button>
@@ -732,13 +913,11 @@
                         </div>
                     </div>
                 </div>
-                <br><br>
                 <div id="rebooking">
-                    <div
-                        style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline;">
+                    <div class="yellowChooser" style="margin: 40px auto 20px;">
                         Vill ni ha ombokningsgaranti? </div>
                     <br>
-                    <div style="color: #525252; margin-top: 20px;
+                    <div style="color: #525252;
                     margin-bottom: 10px;
                     line-height: 1.4em;
                     font-style: italic;">
@@ -753,8 +932,7 @@
                 </div>
 
                 <br><br>
-                <div class="button-container"
-                    style="text-align: center; margin-top: 20px; float: right; margin-bottom: 50px;">
+                <div class="button-container" style="text-align: center; margin-top: 20px; margin-bottom: 50px;">
                     <button type="button" id="continueToPaymentBtn" style="display: none;" class="primary-button">
                         Fortsätt till betalning: 0 kr
                     </button>
@@ -767,8 +945,7 @@
             <div id="customerSection" class="booking-section" style="display: none; margin-top: 30px; scroll-margin-top: 60px;
 ">
 
-                <div
-                    style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;">
+                <div class="yellowChooser" style="margin-bottom: 20px;">
                     Fyll i information:</div>
                 <div id="requiredInfoMessage" class="error"
                     style="display: none; margin-bottom: 20px; width: fit-content;">Vänligen fyll i namn och
@@ -793,7 +970,7 @@
                         <div style="display: flex; align-items: center;">
                             <input type="checkbox" id="kod">
                             <span class="checkmark"></span>
-                            Jag har presentkort eller rabattkod
+                            Jag har presentkort eller&nbsp;rabattkod
                         </div>
                     </label>
                     <div id="codeInput" style="display: none;">
@@ -808,8 +985,8 @@
 
                 </div>
 
-                <div id="bookingSummaryFinal" class="summary-box" style="width:380px; background: rgb(255, 255, 255); padding:
-            10px; font-size: 1.3em; margin-bottom: 30px;">
+                <div id="bookingSummaryFinal" class="summary-box" style="background: rgb(255, 255, 255); padding:
+            10px; font-size: 1.3em;">
                 </div>
                 <div class="form-group" style="margin-bottom: 20px; font-size: 1.2em;">
                     <label class="custom-checkbox">
@@ -833,8 +1010,7 @@
                     </div>
                 </div>
 
-                <div style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display: inline-block; margin-bottom: 20px;"
-                    id="choosePayMethod">
+                <div class="yellowChooser" style="margin-bottom: 20px;" id="choosePayMethod">
                     Välj betalsätt:</div>
 
                 <div id="paymentButtons" style="display: none;">
@@ -1007,9 +1183,13 @@
                 this.container.innerHTML = `
               <div class="calendar-container">
                 <div class="calendar-header">
-                  <button id="prevMonth">&larr;</button>
+                  <button id="prevMonth"><span class="material-symbols-outlined">
+arrow_left_alt
+</span></button>
                   <h3>${this.getMonthDisplay()}</h3>
-                  <button id="nextMonth">&rarr;</button>
+                  <button id="nextMonth"><span class="material-symbols-outlined">
+arrow_right_alt
+</span></button>
                 </div>
                 <div class="calendar-grid">
                   ${this.renderWeekdays()}
@@ -1018,11 +1198,11 @@
                 <div class="calendar-legend">
                   <div class="legend-item">
                     <div class="legend-dot" style="background-color: ${available};"></div>
-                    <span>Tillgänglig</span>
+                    <span>Finns platser</span>
                   </div>
                   <div class="legend-item">
                     <div class="legend-dot" style="background-color: ${fewLeft};"></div>
-                    <span>Få platser kvar</span>
+                    <span>Få platser</span>
                   </div>
                   <div class="legend-item">
                     <div class="legend-dot" style="background-color: ${notAvailable};"></div>
