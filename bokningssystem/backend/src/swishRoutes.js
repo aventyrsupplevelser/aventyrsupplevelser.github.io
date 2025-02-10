@@ -1083,33 +1083,33 @@ router.post('/backend-book', async (req, res) => {
 
 
         // Apply codes if valid
-        if (giftCardValid) {
-            await supabase.rpc('admin_validate_apply_code', {
-                p_code: gift_card.code,
-                p_booking_id: booking.booking_id,
-                p_access_token: booking.access_token
-            });
+if (giftCardValid) {
+    const { data: giftResult, error: giftError } = await supabase.rpc('admin_validate_apply_code', {
+        p_code: gift_card.code,
+        p_booking_id: booking.booking_id,
+        p_access_token: booking.access_token
+    });
 
-            if (giftError) {
-                console.error('Error applying gift card:', giftError);
-            } else {
-                console.log('Gift card application result:', giftResult);
-            }
-        }
+    if (giftError) {
+        console.error('Error applying gift card:', giftError);
+    } else {
+        console.log('Gift card application result:', giftResult);
+    }
+}
 
-        if (promoCodeValid) {
-            await supabase.rpc('admin_validate_apply_code', {
-                p_code: promo_code.code,
-                p_booking_id: booking.booking_id,
-                p_access_token: booking.access_token
-            });
+if (promoCodeValid) {
+    const { data: promoResult, error: promoError } = await supabase.rpc('admin_validate_apply_code', {
+        p_code: promo_code.code,
+        p_booking_id: booking.booking_id,
+        p_access_token: booking.access_token
+    });
 
-            if (promoError) {
-                console.error('Error applying promo code:', promoError);
-            } else {
-                console.log('Promo code application result:', promoResult);
-            }
-        }
+    if (promoError) {
+        console.error('Error applying promo code:', promoError);
+    } else {
+        console.log('Promo code application result:', promoResult);
+    }
+}
 
         // Send confirmation email if requested
         if (payment_method !== 'invoice') {
