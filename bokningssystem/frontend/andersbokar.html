@@ -990,19 +990,12 @@
                     <label class="custom-checkbox">
                         <input type="checkbox" id="På faktura">
                         <span class="checkmark"></span>
-                        Betalar på faktura
-                    </label>
-                </div>
-                <div class="form-group" style="margin-bottom: 40px; font-size: 1.2em;">
-                    <label class="custom-checkbox">
-                        <input type="checkbox" id="sendEmail">
-                        <span class="checkmark"></span>
-                        Maila bekräftelse och betalningslänk
+                        Betalar på faktura (mailar inte)
                     </label>
                 </div>
 
                 <button type="button" id="freeConfirmBtn" onclick="confirmBooking()"> Bekräfta
-                    bokning</button>
+                    bokning och maila</button>
                 <div id="freeMessage"
                     style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
                 </div>
@@ -1468,6 +1461,19 @@ arrow_right_alt
             ticketSection.classList.add('visible');
             //  showSection('#tickets', true);
 
+            // Update booking summary if tickets are selected
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            if (totalTickets > 0) {
+                const dateEl = document.querySelector('.calendar-day.selected');
+                const currentTickets = {
+                    ...ticketState,
+                    date: dateEl.dataset.date,
+                    time: slotEl.textContent.trim()
+                };
+                const totals = calculateTotal(currentTickets);
+                displayBookingSummary({ tickets: currentTickets, totals });
+            }
+
             // Scroll to ticket section
             ticketSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
@@ -1609,6 +1615,19 @@ arrow_right_alt
             // Re-check after changes
             updateTicketButtonStates();
             updateSpotsLeftDisplay();
+
+            // Update booking summary
+            const dateEl = document.querySelector('.calendar-day.selected');
+            const timeEl = document.querySelector('.time-slot.selected');
+            if (dateEl && timeEl) {
+                const currentTickets = {
+                    ...ticketState,
+                    date: dateEl.dataset.date,
+                    time: timeEl.textContent.trim()
+                };
+                const totals = calculateTotal(currentTickets);
+                displayBookingSummary({ tickets: currentTickets, totals });
+            }
         }
 
         function updateSpotsLeftDisplay() {
@@ -1797,11 +1816,11 @@ arrow_right_alt
 
                 // Get checkbox states
                 const invoicePayment = document.getElementById('På faktura').checked;
-                const sendEmail = document.getElementById('sendEmail').checked;
 
-                // Get any applied gift card from localStorage
+                // Get both gift card and promo code data from localStorage
                 const bookingData = JSON.parse(localStorage.getItem('bookingData') || '{}');
                 const giftCardInfo = bookingData.gift_card_applied || null;
+                const promoCodeInfo = bookingData.promo_applied || null;
 
                 // Calculate totals for verification
                 const { total } = calculateTotal(ticketState);
@@ -1818,10 +1837,16 @@ arrow_right_alt
                     customer_name: customerName,
                     customer_email: customerEmail,
                     customer_comment: customerComment,
-                    gift_card: giftCardInfo,
-                    payment_method: 'faktura',
-                    send_email: sendEmail,
-                    total_amount: total
+                    gift_card: giftCardInfo ? {
+                        code: giftCardInfo.code,
+                        amount: giftCardInfo.value
+                    } : null,
+                    promo_code: promoCodeInfo ? {
+                        code: promoCodeInfo.code,
+                        is_percentage: promoCodeInfo.is_percentage,
+                        value: promoCodeInfo.value
+                    } : null,
+                    payment_method: invoicePayment ? 'invoice' : ''
                 };
 
                 console.log('Sending booking info:', bookingInfo); // For debugging
@@ -1852,7 +1877,6 @@ arrow_right_alt
 
                 // Clear localStorage
                 localStorage.removeItem('bookingData');
-                localStorage.removeItem('spotsReleased');
 
                 // Optional: Redirect after delay
                 setTimeout(() => {
@@ -1909,10 +1933,22 @@ arrow_right_alt
                 });
             });
 
-            // 5. “Rebooking guarantee” checkbox
             const rebookingCheckbox = document.getElementById('rebookingCheckbox');
             rebookingCheckbox.addEventListener('change', (e) => {
                 ticketState.is_rebookable = e.target.checked;
+
+                // Update booking summary when rebooking changes
+                const dateEl = document.querySelector('.calendar-day.selected');
+                const timeEl = document.querySelector('.time-slot.selected');
+                if (dateEl && timeEl) {
+                    const currentTickets = {
+                        ...ticketState,
+                        date: dateEl.dataset.date,
+                        time: timeEl.textContent.trim()
+                    };
+                    const totals = calculateTotal(currentTickets);
+                    displayBookingSummary({ tickets: currentTickets, totals });
+                }
             });
 
 
@@ -1969,15 +2005,15 @@ arrow_right_alt
             }
 
             try {
-                const bookingData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!bookingData?.bookingId || !bookingData?.token) {
-                    throw new Error('No active booking found');
+
+                const bookingData = JSON.parse(localStorage.getItem('bookingData') || '{}');
+                // Initialize bookingData if it doesn't exist
+                if (!bookingData) {
+                    bookingData = {};
                 }
 
-                const { data, error } = await supabaseClient.rpc('validate_and_apply_code', {
+                const { data, error } = await supabaseClient.rpc('validate_code', {
                     p_code: code,
-                    p_booking_id: bookingData.bookingId,
-                    p_access_token: bookingData.token
                 });
 
                 if (error) throw error;
@@ -2015,9 +2051,6 @@ arrow_right_alt
                     const totals = calculateTotal(currentTickets);
                     displayBookingSummary({ tickets: currentTickets, totals });
 
-                    // Update the UI based on whether it's now free
-                    updateFreeBookingUI(totals);
-
 
                     // Show success message
                     const codeMessage = document.getElementById('codeMessage');
@@ -2028,9 +2061,6 @@ arrow_right_alt
                     // Clear input
                     codeInput.value = '';
 
-                    // Update the total price display
-                    updateTotalDisplay();
-                    updateTimeRemaining();
 
                 } else {
                     const codeMessage = document.getElementById('codeMessage');
@@ -2046,98 +2076,6 @@ arrow_right_alt
             }
         });
 
-        function updateFreeBookingUI(totals) {
-            const paymentButtons = document.getElementById('paymentButtons');
-            let confirmButton = document.getElementById('freeConfirmBtn');
-            const choosePayMethod = document.getElementById('choosePayMethod');
-
-            if (totals.total === 0) {
-                // Hide payment buttons
-                paymentButtons.style.display = 'none';
-                choosePayMethod.style.display = 'none';
-                confirmButton.style.display = 'block'
-
-                confirmButton.addEventListener('click', handleFreeBooking);
-
-            } else {
-                // Show payment buttons and remove confirm button if it exists
-                paymentButtons.style.display = 'flex';
-                confirmButton.style.display = 'none'
-
-
-            }
-        }
-
-        async function handleFreeBooking() {
-            try {
-                // Get customer info
-                const customerName = document.getElementById('customerName').value.trim();
-                const customerEmail = document.getElementById('customerEmail').value.trim();
-                const customerComment = document.getElementById('customerComment').value.trim();
-                const wantsNewsletter = document.getElementById('nyhetsbrev').checked;
-
-                // Validate required fields
-                if (!customerName || !customerEmail) {
-                    requiredInfoMessage.style.display = 'block';
-                    requiredInfoMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
-                }
-                requiredInfoMessage.style.display = 'none';
-
-                // Validate terms acceptance
-                const termsCheckbox = document.getElementById('termsCheckbox');
-                const termsError = document.getElementById('termsError');
-                if (!termsCheckbox.checked) {
-                    termsError.style.display = 'block';
-                    termsError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
-                }
-                termsError.style.display = 'none';
-
-                // Get session data
-                const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-                if (!sessionData?.bookingId || !sessionData?.token) {
-                    throw new Error('No active booking found');
-                }
-
-                // Update customer details first
-                await updateCustomer();
-
-                // Send request to process free booking
-                const response = await fetch('http://localhost:3000/api/swish/free-booking', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        bookingId: sessionData.bookingId,
-                        access_token: sessionData.token,
-                        booking_number: sessionData.booking_number
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to process free booking');
-                }
-
-                // Show message while processing
-                const freeMessage = document.getElementById('freeMessage');
-                freeMessage.style.display = 'block';
-                freeMessage.innerHTML = 'Bekräftar din bokning...';
-                freeMessage.scrollIntoView({ behavior: 'smooth' });
-
-                // Start checking status
-                checkPaymentStatus();
-
-            } catch (error) {
-                console.error('Error processing free booking:', error);
-                const freeMessage = document.getElementById('freeMessage');
-                freeMessage.style.display = 'block';
-                freeMessage.innerHTML = 'Ett fel uppstod. Försök igen.';
-                freeMessage.style.backgroundColor = '#ffe6e6';
-                freeMessage.style.color = 'red';
-                freeMessage.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
 
     </script>
 </body>

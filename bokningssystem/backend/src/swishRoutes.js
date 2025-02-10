@@ -927,9 +927,203 @@ router.post('/rebooking-confirmation', async (req, res) => {
 });
 
 router.post('/backend-book', async (req, res) => {
-    console.log('hurray')
-    console.log(req.body)
-   
+    try {
+        const {
+            time_slot_id,
+            adult_quantity = 0,
+            youth_quantity = 0,
+            kid_quantity = 0,
+            full_day = 0,
+            is_rebookable,
+            customer_name,
+            customer_email,
+            customer_comment,
+            gift_card,
+            promo_code,
+            payment_method,
+        } = req.body;
+
+        // Validate no negative quantities
+        if (adult_quantity < 0 || youth_quantity < 0 || kid_quantity < 0 || full_day < 0) {
+            throw new Error('Quantities cannot be negative');
+        }
+
+        // Validate codes if provided
+        let giftCardValid = null;
+        let promoCodeValid = null;
+
+        if (gift_card) {
+            const { data: giftCardData, error: giftCardError } = await supabase.rpc('validate_code', {
+                p_code: gift_card.code
+            });
+            if (giftCardError) throw giftCardError;
+            if (giftCardData.success) giftCardValid = giftCardData;
+        }
+
+        if (promo_code) {
+            const { data: promoData, error: promoError } = await supabase.rpc('validate_code', {
+                p_code: promo_code.code
+            });
+            if (promoError) throw promoError;
+            if (promoData.success) promoCodeValid = promoData;
+        }
+
+        // Calculate base amount (without rebooking)
+        let baseAmount = (adult_quantity * 400) + (youth_quantity * 300) + (kid_quantity * 200);
+        if (full_day) baseAmount += (full_day * 100);
+
+        // Apply discounts to base amount only
+        if (giftCardValid) {
+            baseAmount -= giftCardValid.amount;
+        }
+        if (promoCodeValid) {
+            const discountAmount = promoCodeValid.is_percentage ? 
+                (baseAmount * (promoCodeValid.discount_value / 100)) : 
+                promoCodeValid.discount_value;
+            baseAmount -= discountAmount;
+        }
+
+        // Ensure base amount doesn't go below 0
+        baseAmount = Math.max(0, baseAmount);
+
+        // Add rebooking fee AFTER discounts
+        let totalAmount = baseAmount;
+        if (is_rebookable) {
+            totalAmount += ((adult_quantity + youth_quantity + kid_quantity) * 25);
+        }
+
+        let status;
+        let quickPayLink = null;
+
+        if (totalAmount === 0) {
+            status = 'confirmed';
+            payment_method = 'free';
+        } else if (payment_method === 'invoice') {
+            status = 'confirmed';
+        } else {
+            status = 'unpaid';
+        }
+
+        // Create booking first
+        const { data: booking, error: bookingError } = await supabase.rpc('create_admin_booking', {
+            p_time_slot_id: time_slot_id,
+            p_adult_quantity: adult_quantity,
+            p_youth_quantity: youth_quantity,
+            p_kid_quantity: kid_quantity,
+            p_full_day: full_day,
+            p_is_rebookable: is_rebookable,
+            p_customer_name: customer_name,
+            p_customer_email: customer_email,
+            p_customer_comment: customer_comment,
+            p_status: status,
+            p_payment_method: payment_method
+        });
+
+        if (bookingError) throw bookingError;
+
+        // Create QuickPay link if needed
+        if (status === 'unpaid') {
+            const apiKey = process.env.QUICKPAY_API_USER_KEY;
+            const callbackIdentifier = generateCallbackId(booking.booking_number);
+
+            const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/admin-callback');
+            callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
+            
+            // Create payment
+            const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
+                method: 'POST',
+                headers: {
+                    'Accept-Version': 'v10',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+                },
+                body: JSON.stringify({
+                    order_id: booking.booking_number,
+                    currency: 'SEK'
+                })
+            });
+
+            if (!createPaymentResponse.ok) {
+                throw new Error('Failed to create QuickPay payment');
+            }
+
+            const payment = await createPaymentResponse.json();
+
+            // Create payment link
+            const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
+                method: 'PUT',
+                headers: {
+                    'Accept-Version': 'v10',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+                },
+                body: JSON.stringify({
+                    amount: totalAmount * 100, // Convert to öre
+                    continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${booking.booking_number}`,
+                    cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+                    callback_url: callbackUrl.toString(),
+                    auto_capture: true,
+                    payment_methods: 'creditcard,swish',
+                    language: 'sv'
+                })
+            });
+
+            if (!linkResponse.ok) {
+                throw new Error('Failed to create QuickPay payment link');
+            }
+
+            const link = await linkResponse.json();
+            quickPayLink = link.url;
+        }
+
+        // Apply codes if valid
+        if (giftCardValid) {
+            await supabase.rpc('validate_and_apply_code', {
+                p_code: gift_card.code,
+                p_booking_id: booking.booking_id,
+                p_access_token: booking.access_token
+            });
+        }
+
+        if (promoCodeValid) {
+            await supabase.rpc('validate_and_apply_code', {
+                p_code: promo_code.code,
+                p_booking_id: booking.booking_id,
+                p_access_token: booking.access_token
+            });
+        }
+
+        // Send confirmation email if requested
+        if (payment_method !== 'invoice') {
+            await EmailService.sendBookingConfirmation({
+                ...booking,
+                customer_name,
+                customer_email,
+                adult_quantity,
+                youth_quantity,
+                kid_quantity,
+                full_day,
+                is_rebookable,
+                payment_method,
+                quickpay_link: quickPayLink,
+                status
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Booking created successfully',
+            booking: booking,
+            payment_link: quickPayLink
+        });
+
+    } catch (error) {
+        console.error('Error in backend-book:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 });
 
 
