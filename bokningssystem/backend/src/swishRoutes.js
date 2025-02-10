@@ -1078,7 +1078,7 @@ router.post('/backend-book', async (req, res) => {
 
         // Apply codes if valid
         if (giftCardValid) {
-            await supabase.rpc('validate_and_apply_code', {
+            await supabase.rpc('admin_validate_apply_code', {
                 p_code: gift_card.code,
                 p_booking_id: booking.booking_id,
                 p_access_token: booking.access_token
@@ -1086,7 +1086,7 @@ router.post('/backend-book', async (req, res) => {
         }
 
         if (promoCodeValid) {
-            await supabase.rpc('validate_and_apply_code', {
+            await supabase.rpc('admin_validate_apply_code', {
                 p_code: promo_code.code,
                 p_booking_id: booking.booking_id,
                 p_access_token: booking.access_token
