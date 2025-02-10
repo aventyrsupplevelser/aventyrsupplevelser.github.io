@@ -189,11 +189,11 @@ class EmailService {
         }
     }
 
-    static async sendAdminConfirmation(booking, paymentLink) {
+    static async sendAdminConfirmation(booking, quickPayLink) {
         try {
 
             console.log(booking)
-            console.log(paymentLink)
+            console.log(quickPayLink)
 
             // Calculate individual sums
             const adultSum = booking.adult_quantity * 400;
@@ -293,7 +293,7 @@ null;
             vat_amount: vatAmount.toFixed(2),
             total_amount: totalAmountInSEK.toFixed(2),
             payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
-            payment_link: paymentLink
+            payment_link: quickPayLink
         }
     };
 
