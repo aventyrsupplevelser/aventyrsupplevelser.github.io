@@ -189,11 +189,11 @@ class EmailService {
         }
     }
 
-    static async sendAdminConfirmation(booking, quickPayLink) {
+    static async sendAdminConfirmation(booking) {
         try {
 
-            console.log(booking)
-            console.log(quickPayLink)
+            console.log('emailbooking', booking);
+            console.log(booking.quickpay_link);
 
             // Calculate individual sums
             const adultSum = booking.adult_quantity * 400;
