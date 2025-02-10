@@ -293,7 +293,7 @@ null;
             vat_amount: vatAmount.toFixed(2),
             total_amount: totalAmountInSEK.toFixed(2),
             payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
-            payment_link: quickPayLink
+            payment_link: booking.quickpay_link
         }
     };
 

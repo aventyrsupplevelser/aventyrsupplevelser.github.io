@@ -1112,21 +1112,20 @@ if (promoCodeValid) {
     }
 }
 
-// Get updated booking info with applied codes
 const { data: updatedBookingData, error: fetchError } = await supabase
-.from('bookings')
-.select('*')
-.eq('id', booking.booking_id)
-.single();
+    .from('bookings')
+    .select('*, time_slots(*)')
+    .eq('id', booking.booking_id)
+    .single();
 
-console.log(updatedBookingData)
-
-        // Send confirmation email if requested
-        if (payment_method !== 'invoice') {
-            await EmailService.sendAdminConfirmation({
-                ...updatedBookingData,
-            });
-        }
+// Send confirmation email if requested
+if (payment_method !== 'invoice') {
+    await EmailService.sendAdminConfirmation({
+        ...updatedBookingData,
+        start_time: updatedBookingData.time_slots.start_time,
+        quickpay_link: quickPayLink
+    });
+}
 
         res.json({
             success: true,
