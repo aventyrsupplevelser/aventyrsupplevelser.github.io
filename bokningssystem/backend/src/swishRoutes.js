@@ -928,6 +928,7 @@ router.post('/rebooking-confirmation', async (req, res) => {
 
 router.post('/backend-book', async (req, res) => {
     try {
+console.log(req.body)
         const {
             time_slot_id,
             adult_quantity = 0,
