@@ -1113,7 +1113,7 @@ if (promoCodeValid) {
 
         // Send confirmation email if requested
         if (payment_method !== 'invoice') {
-            await EmailService.sendBookingConfirmation({
+            await EmailService.sendAdminConfirmation({
                 ...booking,
                 customer_name,
                 customer_email,
