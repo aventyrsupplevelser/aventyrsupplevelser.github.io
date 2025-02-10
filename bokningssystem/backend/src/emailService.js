@@ -223,6 +223,8 @@ if (booking.gift_card_number) {
     }
 }
 
+let subtotal = 0
+
 // Get promo code info if used
 let promoDiscount = 0;
 if (booking.promo_code) {
@@ -233,7 +235,7 @@ if (booking.promo_code) {
         .single();
     
     if (promo) {
-        const subtotal = baseTotal - giftCardAmount;
+        subtotal = baseTotal - giftCardAmount;
         if (promo.is_percentage) {
             promoDiscount = subtotal * (promo.discount_value / 100);
         } else {
