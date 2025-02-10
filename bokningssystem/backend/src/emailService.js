@@ -207,16 +207,9 @@ class EmailService {
             // Calculate rebooking fee separately
             const rebookingSum = booking.is_rebookable ? 
                 (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
-    
-            const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
-            
-            // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
-            const vatRate = 0.06;
-            const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
-            const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
-            const amountExVat = taxableAmount - vatAmount;
 
-    // Get gift card info if used
+
+                // Get gift card info if used
 let giftCardAmount = 0;
 if (booking.gift_card_number) {
     const { data: giftCard } = await supabase
@@ -240,7 +233,7 @@ if (booking.promo_code) {
         .single();
     
     if (promo) {
-        const subtotal = adultSum + youthSum + kidSum + fullDaySum - giftCardAmount;
+        const subtotal = baseTotal - giftCardAmount;
         if (promo.is_percentage) {
             promoDiscount = subtotal * (promo.discount_value / 100);
         } else {
@@ -248,6 +241,17 @@ if (booking.promo_code) {
         }
     }
 }
+
+
+
+            const totalAmountInSEK = subtotal - promoDiscount + rebookingSum; // Convert from öre to SEK
+            
+            // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
+            const vatRate = 0.06;
+            const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
+            const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+            const amountExVat = taxableAmount - vatAmount;
+
 
 console.log('promoDiscount:', promoDiscount);
 
