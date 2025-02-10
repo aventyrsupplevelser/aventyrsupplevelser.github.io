@@ -16,6 +16,7 @@ const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL;
 const SENDGRID_BOOKING_TEMPLATE_ID = process.env.SENDGRID_BOOKING_TEMPLATE_ID;
 const SENDGRID_PRESENKORT_ID = process.env.SENDGRID_PRESENKORT_ID;
+const SENDGRID_ADMIN_BOOKING_ID = process.env.SENDGRID_ADMIN_BOOKING_ID;
 
 
 // Verify required environment variables
@@ -67,6 +68,8 @@ class EmailService {
 
             static async sendBookingConfirmation(booking) {
                 try {
+
+                    console.log(booking)
                     // Calculate individual sums
                     const adultSum = booking.adult_quantity * 400;
                     const youthSum = booking.youth_quantity * 300;
@@ -185,6 +188,126 @@ class EmailService {
             return null;
         }
     }
+
+    static async sendAdminConfirmation(booking, paymentLink) {
+        try {
+
+            console.log(booking)
+            console.log(paymentLink)
+
+            // Calculate individual sums
+            const adultSum = booking.adult_quantity * 400;
+            const youthSum = booking.youth_quantity * 300;
+            const kidSum = booking.kid_quantity * 200;
+            const fullDaySum = booking.full_day * 100;
+            
+            // Calculate base total (without rebooking)
+            const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
+            
+            // Calculate rebooking fee separately
+            const rebookingSum = booking.is_rebookable ? 
+                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+    
+            const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
+            
+            // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
+            const vatRate = 0.06;
+            const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
+            const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+            const amountExVat = taxableAmount - vatAmount;
+
+    // Get gift card info if used
+let giftCardAmount = 0;
+if (booking.gift_card_number) {
+    const { data: giftCard } = await supabase
+        .from('gift_cards')
+        .select('amount')
+        .eq('gift_card_number', booking.gift_card_number)
+        .single();
+    
+    if (giftCard) {
+        giftCardAmount = giftCard.amount;
+    }
+}
+
+// Get promo code info if used
+let promoDiscount = 0;
+if (booking.promo_code) {
+    const { data: promo } = await supabase
+        .from('promo_codes')
+        .select('*')
+        .eq('promo_code', booking.promo_code)
+        .single();
+    
+    if (promo) {
+        const subtotal = adultSum + youthSum + kidSum + fullDaySum - giftCardAmount;
+        if (promo.is_percentage) {
+            promoDiscount = subtotal * (promo.discount_value / 100);
+        } else {
+            promoDiscount = promo.discount_value;
+        }
+    }
+}
+
+console.log('promoDiscount:', promoDiscount);
+
+    // Build rebooking URL with access token
+const rebookingUrl = booking.is_rebookable ? 
+`https://aventyrsupplevelser.com/bokningssystem/frontend/bokaomtid.html?booking_id=${booking.id}&token=${booking.access_token}` : 
+null;
+
+    const msg = {
+        to: booking.customer_email,
+        from: {
+            email: process.env.SENDGRID_FROM_EMAIL,
+            name: 'Sörsjöns Äventyrspark'
+        },
+        templateId: process.env.SENDGRID_ADMIN_BOOKING_ID,
+        dynamic_template_data: {
+            booking_number: booking.booking_number,
+            customer_name: booking.customer_name,
+            booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }),
+            booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            }),
+            adult_quantity: booking.adult_quantity,
+            youth_quantity: booking.youth_quantity,
+            kid_quantity: booking.kid_quantity,
+            adult_sum: adultSum,     
+            youth_sum: youthSum,     
+            kid_sum: kidSum,         
+            full_day: booking.full_day,
+            full_day_sum: fullDaySum,
+            is_rebookable: booking.is_rebookable,
+            rebooking_sum: rebookingSum,
+            ombokningsurl: rebookingUrl,
+            gift_card_amount: giftCardAmount || null,  // Only include if used
+            promo_discount: promoDiscount || null,     // Only include if used
+            amount_ex_vat: amountExVat.toFixed(2),
+            vat_amount: vatAmount.toFixed(2),
+            total_amount: totalAmountInSEK.toFixed(2),
+            payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
+            payment_link: paymentLink
+        }
+    };
+
+    const response = await sgMail.send(msg);
+    console.log('Confirmation email sent successfully:', response[0].statusCode);
+    return response;
+} catch (error) {
+    console.error('Error sending confirmation email:', error);
+    if (error.response) {
+        console.error('Error details:', error.response.body);
+    }
+    return null;
+}
+}
 
 
     static async ombokningConfirmation(booking, start_time) {
