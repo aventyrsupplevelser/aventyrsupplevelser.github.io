@@ -1089,6 +1089,12 @@ router.post('/backend-book', async (req, res) => {
                 p_booking_id: booking.booking_id,
                 p_access_token: booking.access_token
             });
+
+            if (giftError) {
+                console.error('Error applying gift card:', giftError);
+            } else {
+                console.log('Gift card application result:', giftResult);
+            }
         }
 
         if (promoCodeValid) {
@@ -1097,6 +1103,12 @@ router.post('/backend-book', async (req, res) => {
                 p_booking_id: booking.booking_id,
                 p_access_token: booking.access_token
             });
+
+            if (promoError) {
+                console.error('Error applying promo code:', promoError);
+            } else {
+                console.log('Promo code application result:', promoResult);
+            }
         }
 
         // Send confirmation email if requested
