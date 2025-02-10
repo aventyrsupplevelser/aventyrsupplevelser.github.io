@@ -1076,6 +1076,12 @@ router.post('/backend-book', async (req, res) => {
             quickPayLink = link.url;
         }
 
+        console.log('giftCardValid', giftCardValid)
+        console.log('promoCodeValid', promoCodeValid)
+        console.log('booking_id', booking.booking_id)
+        console.log('accessT', booking.access_token)
+
+
         // Apply codes if valid
         if (giftCardValid) {
             await supabase.rpc('admin_validate_apply_code', {
