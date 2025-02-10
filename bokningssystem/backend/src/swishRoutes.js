@@ -1112,20 +1112,19 @@ if (promoCodeValid) {
     }
 }
 
+// Get updated booking info with applied codes
+const { data: updatedBookingData, error: fetchError } = await supabase
+.from('bookings')
+.select('*')
+.eq('id', booking.booking_id)
+.single();
+
+console.log(updatedBookingData)
+
         // Send confirmation email if requested
         if (payment_method !== 'invoice') {
             await EmailService.sendAdminConfirmation({
-                ...booking,
-                customer_name,
-                customer_email,
-                adult_quantity,
-                youth_quantity,
-                kid_quantity,
-                full_day,
-                is_rebookable,
-                payment_method,
-                quickpay_link: quickPayLink,
-                status
+                ...updatedBookingData,
             });
         }
 
