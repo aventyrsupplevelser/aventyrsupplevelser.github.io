@@ -9,6 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
     <style>
         body {
@@ -19,9 +20,17 @@
             background: linear-gradient(90deg, rgb(247, 244, 247) 0%, rgb(236, 234, 238)6%, rgb(247, 247, 235) 100%);
         }
 
+        h1 {
+            font-size: 5em;
+            color: hotpink;
+            margin-top: 80px;
+            text-align: center;
+        }
+
         h2 {
             font-size: 3em;
             color: #001c82;
+            margin: 40px 10px 20px;
         }
 
         .form-group {
@@ -34,6 +43,125 @@
 
         .success {
             color: green;
+        }
+
+        #nextMonth,
+        #prevMonth {
+            padding: 13px 13px 8px;
+            background: rgba(246, 244, 221, 0.86);
+        }
+
+
+        .calendar-container {
+            font-family: "Josefin Sans", sans-serif;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0px auto 20px;
+            max-width: 600px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 81px);
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+            padding: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: auto;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f3f3;
+            /* All dates start as grey */
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-family: "josefin sans";
+            padding-top: 12px;
+            border-bottom: 2px solid black;
+            border-right: 2px solid black;
+            border-top: 2px solid rgb(230, 230, 230);
+            border-left: 2px solid rgb(236, 236, 236);
+        }
+
+        .calendar-day:disabled {
+            background-color: #f6f6f6;
+            color: #676767;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.available {
+            background-color: rgb(173, 240, 159);
+            color: #1a1a1a;
+        }
+
+        .calendar-day.selected {
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
+        }
+
+        .calendar-legend {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .legend-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+        .legend-item span {
+            padding: 3px 0px 0px 0px;
+        }
+
+        .time-slots-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .time-slots-container.visible {
+            display: block;
+        }
+
+        .time-slot {
+            display: grid;
+            grid-template-columns: 60px 120px 80px 130px 70px 70px;
+            gap: 43px;
+            justify-content: start;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
 
         table {
@@ -49,11 +177,6 @@
         th {
             background-color: #f4f9c7;
             font-weight: bold;
-        }
-
-        .date-header {
-            margin-bottom: 20px;
-            border-bottom: 4px solid rgb(132, 89, 89);
         }
 
         input[type="date"],
@@ -72,37 +195,8 @@
 
         /* Add this to your style section */
         .spots-select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-        }
-
-        .spots-select:hover {
-            border-color: #999;
-        }
-
-        .spots-select:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
-        }
-
-        .month-header td {
-            font-size: 1.4em;
-            padding: 25px 15px 13px;
-            background-color: #454545;
-            color: white;
-            border-bottom: 10px dotted rgb(98, 209, 255);
-            font-weight: 700;
-        }
-
-        .date-header td {
-            background-color: #f5f5f5;
-            padding: 25px 15px 10px;
-            font-weight: 500;
-            font-size: 1.4em;
+            width: 80px;
+            padding: 9px 6px 6px 9px;
         }
 
         .time-slot td {
@@ -113,57 +207,53 @@
             padding-left: 20px;
         }
 
+
+
         select {
-            padding: 15px 15px 10px !important;
+            padding: 15px 30px 10px 15px;
             font-family: inherit;
             background-color: rgb(251, 149, 200) !important;
             background: rgb(251, 149, 200) !important;
             border: 5px dashed yellow !important;
-            font-size: 1em !important;
+            font-size: 1em;
             appearance: none;
             width: fit-content;
             background-image: none;
+            position: relative;
+        }
+
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
         }
 
         .spots-select {
-            width: 80px;
-            padding: 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
+
+            /* Fixed width for spots select */
         }
 
         .fullday-select {
-            padding: 4px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            width: 130px;
+            padding: 15px 10px 10px 15px;
+            font-size: 1em;
+            /* Fixed width for fullday select */
         }
 
-        .fullday-select:hover {
-            border-color: #999;
+        .select-wrapper .material-symbols-outlined {
+            position: absolute;
+            right: 6px;
+            /* Adjusted right position */
+            top: 52%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #011080;
+            font-size: 2em !important;
         }
 
-        .fullday-select:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
-        }
+        .wholedayspan {
+            right: 5px !important;
+            font-size: 3em;
 
-        .time-checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            font-size: 1.2em;
-        }
-
-        .time-checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .time-checkbox-item input[type="checkbox"] {
-            margin-right: 5px;
         }
 
         input {
@@ -176,11 +266,6 @@
             padding: 15px 10px 10px;
             font-family: inherit;
             background: #7cff80;
-        }
-
-        td button {
-            font-size: 1em;
-            padding: 5px 5px 1px;
         }
 
         button:hover {
@@ -244,6 +329,7 @@
             right: 20px;
             border-radius: 4px;
             filter: drop-shadow(0px 0px 5px rgba(128, 128, 128, 0.489));
+            z-index: 9999;
         }
 
         /* Wrap everything in a label so we can click the text to toggle */
@@ -318,116 +404,49 @@
         .tbx:hover {
             background: rgb(132, 208, 0);
         }
+
+
+
+
+        .delete,
+        .block-btn {
+            padding: 5px 5px 1px;
+            font-family: inherit;
+            background: #7cff80;
+            width: fit-content;
+            font-size: 1em;
+        }
     </style>
 </head>
 
 <body>
-    <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax till 🏠</i></a>
-    <h1 style="font-size: 5em; color: hotpink;">Skapa starttider </h1>
-    <br> <br>
+    <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax 🏠</i></a>
     <div id="message"></div>
+    <h1>Hantera tider</h1>
 
+    <div id="calendar"></div>
 
-    <form id="singleSlotForm"
-        style="padding-bottom: 30px; border-bottom: 15px dashed rgb(255, 130, 63); border-top: 15px dashed rgb(255, 130, 63);">
-        <br><br>
-        <h2>En tid:</h2>
-        <div class="form-group">
-            <label>Datum:</label>
-            <input type="date" name="start_time" required>
-        </div>
-        <div class="form-group">
-            <label>Tid:</label>
-            <input type="time" name="time" step="1800" required>
-        </div>
-        <div class="form-group">
-            <label>Antal platser:</label>
-            <input style="width: 100px" type="number" name="total_spots" value="20" required>
-        </div>
-        <div class="form-group" style="margin-top: 30px;">
-            <label class="custom-checkbox">
-                <input type="checkbox" name="allow_full_day">
-                <span class="checkmark"></span>
-                Heldag tillåtet
-            </label>
-        </div>
+    <div id="time-slots-container" class="time-slots-container">
+        <h2 id="selected-date-header"></h2>
+        <div id="time-slots-list"></div>
+    </div>
 
-        <button type="submit">Skapa en starttid</button>
-    </form>
-    <br> <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
-    <form id="multipleSlotForm" style="padding-bottom: 30px; border-bottom: 15px dashed rgb(255, 130, 63);">
-        <div class="form-group">
-            <h2>Flera tider:</h2>
-            <label>Startdatum:</label>
-            <input type="date" name="start_date" required>
-        </div>
-        <div class="form-group">
-            <label>Slutdatum:</label>
-            <input type="date" name="end_date" required>
-        </div>
-        <br><br>
-        <div class="form-group">
-            <label>Tider:</label><br><br>
-            <div class="time-checkbox-grid">
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Antal platser:</label>
-            <input type="number" name="total_spots" value="20" required style="width: 100px;">
-        </div>
-        <br><br>
-        <div class="form-group">
-            <label class="custom-checkbox">
-                <input type="checkbox" name="allow_full_day">
-                <span class="checkmark"></span>
-                Heldag tillåtet
-            </label>
-        </div>
-        <div class="form-group" style="max-width: 650px;">
-            <br><br>
-            Vilka veckodagar:
-            <br><br>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="1" checked>
-                <span class="checkmark"></span> Måndag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="2" checked>
-                <span class="checkmark"></span> Tisdag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="3" checked>
-                <span class="checkmark"></span> Onsdag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="4" checked>
-                <span class="checkmark"></span> Torsdag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="5" checked>
-                <span class="checkmark"></span> Fredag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="6" checked>
-                <span class="checkmark"></span> Lördag
-            </label>
-            <label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="days" value="7" checked>
-                <span class="checkmark"></span> Söndag
-            </label>
-        </div>
-        <button type="submit">Skapa flera starttider</button>
-    </form>
-    <br> <br>
-    <h2>Existerande tider</h2>
-    <table id="timeSlotTable">
-        <thead>
-        <tbody></tbody>
-
-    </table>
-
-    <div id="message"></div>
 
 
     <script>
@@ -443,284 +462,429 @@
 
         const API_URL = 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api';
 
-        function isValidTime(timeString) {
-            const [hours, minutes] = timeString.split(':').map(Number);
-            return minutes === 0 || minutes === 30;
-        }
 
         // First, add this state management code near the top of your script:
-        let expandedMonths = new Set();
-        let expandedDates = new Set();
+        //  let expandedMonths = new Set();
+        // let expandedDates = new Set();
 
-        async function createSingleSlot(e) {
-            e.preventDefault();
-            try {
-                const formData = new FormData(e.target);
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded and DOM content ready.');
 
-                // Combine date and time
-                const date = formData.get('start_time'); // Gets the date
-                const time = formData.get('time');       // Gets the time
-                const dateTimeString = `${date}T${time}`; // Combines them
-
-                // Calculate end time (2 hours later)
-                const startDateTime = new Date(dateTimeString);
-                const endDateTime = new Date(startDateTime.getTime() + (2 * 60 * 60 * 1000));
-
-                const response = await supabaseClient.rpc('create_time_slot', {
-                    p_start_time: startDateTime.toISOString(),
-                    p_end_time: endDateTime.toISOString(),
-                    p_total_spots: parseInt(formData.get('total_spots')),
-                    p_allow_full_day: formData.get('allow_full_day') === 'on'
-                });
-
-                if (response.error) {
-                    throw new Error(response.error.message);
-                }
-
-                if (!response.data.success) {
-                    throw new Error(response.data.error);
-                }
-
-                showMessage('Time slot created successfully!', 'success');
-                loadTimeSlots();
-                e.target.reset();
-            } catch (error) {
-                showMessage(error.message, 'error');
+            // Initialize the calendar
+            const calendarContainer = document.getElementById('calendar');
+            if (calendarContainer) {
+                new BookingCalendar(calendarContainer);
+                console.log('BookingCalendar initialized successfully.');
+            } else {
+                console.error('Failed to find the calendar container.');
             }
-        }
+        });
 
-        async function createMultipleSlots(e) {
-            e.preventDefault();
-            try {
-                const formData = new FormData(e.target);
-                const selectedTimes = Array.from(e.target.querySelectorAll('input[name="times"]:checked'))
-                    .map(input => input.value);
 
-                const days = Array.from(e.target.querySelectorAll('input[name="days"]:checked'))
-                    .map(input => parseInt(input.value));
+        /***************************************
+                * 2) Constants & Global State
+                ***************************************/
+        const available = "rgb(173, 240, 159)";
+        const notAvailable = "rgb(255, 128, 124)";
+        const fewLeft = "rgb(255, 199, 5)";
 
-                // Get the duration value (2 hours = 120 minutes)
-                const duration = 120;
+        // Keep track of which time slot is selected
+        let currentTimeSlot = null;
 
-                const response = await supabaseClient.rpc('create_bulk_time_slots', {
-                    p_start_date: formData.get('start_date'),
-                    p_end_date: formData.get('end_date'),
-                    p_times: selectedTimes,
-                    p_duration: duration,
-                    p_total_spots: parseInt(formData.get('total_spots')),
-                    p_allow_full_day: formData.get('allow_full_day') === 'on',
-                    p_days_of_week: days
-                });
-
-                if (response.error) {
-                    throw new Error(response.error.message);
-                }
-
-                const result = response.data;
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                // Show success message with count of created slots
-                showMessage(result.message, 'success');
-
-                loadTimeSlots();
-
-                // Reset form but keep checkboxes checked
-                const daysCheckboxes = e.target.querySelectorAll('input[name="days"]');
-                const timeCheckboxes = e.target.querySelectorAll('input[name="times"]');
-                e.target.reset();
-                daysCheckboxes.forEach(checkbox => checkbox.checked = true);
-                timeCheckboxes.forEach(checkbox => checkbox.checked = false);
-
-            } catch (error) {
-                showMessage(error.message, 'error');
+        /****************************************
+         * 3) BookingCalendar Class
+         *    - Renders month days
+         *    - Fetches available dates
+         *    - Allows user to select a date
+         ****************************************/
+        class BookingCalendar {
+            constructor(container) {
+                this.container = container;
+                this.selectedDate = null;
+                this.availableDates = {};
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.init();
             }
-        }
 
-        async function loadTimeSlots() {
-            try {
-                const response = await fetch(`${API_URL}/time-slots`);
-                const slots = await response.json();
+            async init() {
+                // First, render the calendar for the current month.
+                this.render();
 
-                // Group slots by month and date
-                const groupedSlots = slots.reduce((acc, slot) => {
-                    const date = new Date(slot.start_time);
-                    const monthKey = date.toLocaleString('default', { month: 'long', year: 'numeric' });
-                    const dateKey = date.toISOString().split('T')[0];
+                // Then, fetch the available dates.
+                await this.fetchAvailableDates();
 
-                    if (!acc[monthKey]) {
-                        acc[monthKey] = {};
-                    }
-                    if (!acc[monthKey][dateKey]) {
-                        acc[monthKey][dateKey] = [];
-                    }
+                // If no available dates were found on the initial load, try moving forward.
+                if (Object.keys(this.availableDates).length === 0) {
+                    this.changeMonth(1);
+                }
+            }
 
-                    acc[monthKey][dateKey].push(slot);
-                    return acc;
-                }, {});
+            async fetchAvailableDates() {
+                try {
+                    const year = this.currentMonth.getFullYear();
+                    const month = this.currentMonth.getMonth() + 1;
 
-                const tbody = document.querySelector('#timeSlotTable tbody');
-                tbody.innerHTML = Object.entries(groupedSlots)
-                    .sort(([monthA], [monthB]) => {
-                        const dateA = new Date(slots.find(slot =>
-                            new Date(slot.start_time).toLocaleString('default', { month: 'long', year: 'numeric' }) === monthA
-                        ).start_time);
-                        const dateB = new Date(slots.find(slot =>
-                            new Date(slot.start_time).toLocaleString('default', { month: 'long', year: 'numeric' }) === monthB
-                        ).start_time);
-                        return dateA - dateB;
-                    })
-                    .map(([month, dates], monthIndex) => {
-                        return `
-                    <tr class="month-header" data-month="${monthIndex}">
-                        <td colspan="5">
-                            ${month}
-                            <span class="collapse-arrow">▶</span>
-                        </td>
-                    </tr>
-                    ${Object.entries(dates)
-                                .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
-                                .map(([dateStr, daySlots], dateIndex) => {
-                                    daySlots.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-                                    const date = new Date(dateStr);
+                    // Start & end of selected month
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
+                    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
-                                    return `
-                            <tr class="month-content" data-month="${monthIndex}">
-                                <td colspan="5">
-                                    <table style="width: 100%">
-                                        <tr class="date-header" data-date="${monthIndex}-${dateIndex}">
-                                            <td colspan="5">
-                                                ${date.toLocaleDateString('default', { weekday: 'long', day: 'numeric' })}
-                                                <span class="collapse-arrow">▶</span>
-                                            </td>
-                                        </tr>
-                                        ${daySlots.map(slot => `
-                                            <tr class="date-content time-slot" data-date="${monthIndex}-${dateIndex}">
-                                                <td style="padding-left: 40px;">Tid: 
-                                                    ${new Date(slot.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                </td>
-                                                <td>Totalt:
-                                                    <select 
-                                                        onchange="updateTotalSpots('${slot.id}', this.value)"
-                                                        class="spots-select"
-                                                    >
-                                                        ${Array.from({ length: 30 }, (_, i) => i + 1).map(num => `
-                                                            <option value="${num}" ${num === slot.total_spots ? 'selected' : ''}>
-                                                                ${num}
-                                                            </option>
-                                                        `).join('')}
-                                                    </select>
-                                                </td>
-                                                <td>Lediga: ${slot.available_spots}</td>
-                                                <td>
-                                                    <select 
-                                                        onchange="updateFullDay('${slot.id}', this.value)"
-                                                        class="fullday-select"
-                                                    >
-                                                        <option value="true" ${slot.allow_full_day ? 'selected' : ''}>Heldag</option>
-                                                        <option value="false" ${!slot.allow_full_day ? 'selected' : ''}>Inte heldag</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button onclick="deleteTimeSlot('${slot.id}')">Delete</button>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </table>
-                                </td>
-                            </tr>
-                        `;
-                                }).join('')}
-                `;
-                    }).join('');
+                    // If user is on the current month, skip any times < now+60 min
+                    const now = new Date();
+                    const cutoffTime = new Date();
+                    cutoffTime.setMinutes(cutoffTime.getMinutes() + 0);
 
-                // Modify the click handlers in loadTimeSlots():
-                document.querySelectorAll('.month-header').forEach(header => {
-                    header.addEventListener('click', function () {
-                        const monthIndex = this.dataset.month;
-                        const arrow = this.querySelector('.collapse-arrow');
-                        const monthContent = document.querySelectorAll(`.month-content[data-month="${monthIndex}"]`);
+                    const isCurrentMonth = (now.getMonth() === startOfMonth.getMonth()) &&
+                        (now.getFullYear() === startOfMonth.getFullYear());
+                    const queryStartTime = isCurrentMonth ? cutoffTime : startOfMonth;
 
-                        if (arrow.classList.contains('expanded')) {
-                            expandedMonths.delete(monthIndex);
-                        } else {
-                            expandedMonths.add(monthIndex);
+                    // Fetch from Supabase
+                    const { data: slots, error } = await supabaseClient
+                        .from('time_slots')
+                        .select('*, blocked')
+                        .select('start_time, total_spots, available_spots')
+                        .gte('start_time', queryStartTime.toISOString())
+                        .lt('start_time', endOfMonth.toISOString());
+
+                    if (error) throw error;
+
+                    // Tally totalSpots & availableSpots by date
+                    const dateAvailability = {};
+                    slots.forEach(slot => {
+                        const date = new Date(slot.start_time);
+                        const dateStr = date.toISOString().split('T')[0];
+
+                        if (!dateAvailability[dateStr]) {
+                            dateAvailability[dateStr] = { totalSpots: 0, availableSpots: 0 };
                         }
+                        dateAvailability[dateStr].totalSpots += slot.total_spots;
+                        dateAvailability[dateStr].availableSpots += slot.available_spots;
+                    });
 
-                        arrow.classList.toggle('expanded');
-                        monthContent.forEach(content => {
-                            content.classList.toggle('expanded');
-                        });
+                    this.availableDates = dateAvailability;
+                    this.updateAvailableDays();
+                } catch (error) {
+                    console.error('Error fetching available dates:', error);
+                }
+            }
+
+            render() {
+                // Build the calendar HTML
+                this.container.innerHTML = `
+              <div class="calendar-container">
+                <div class="calendar-header">
+                  <button id="prevMonth"><span class="material-symbols-outlined">
+arrow_left_alt
+</span></button>
+                  <h3>${this.getMonthDisplay()}</h3>
+                  <button id="nextMonth"><span class="material-symbols-outlined">
+arrow_right_alt
+</span></button>
+                </div>
+                <div class="calendar-grid">
+                  ${this.renderWeekdays()}
+                  ${this.renderDays()}
+                </div>
+                <div class="calendar-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background-color: ${available};"></div>
+                    <span>Finns platser</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background-color: ${fewLeft};"></div>
+                    <span>Få platser</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background-color: ${notAvailable};"></div>
+                    <span>Fullbokat</span>
+                  </div>
+                </div>
+              </div>
+            `;
+
+                // Next / Prev month & day clicks
+                this.attachEventListeners();
+            }
+
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            renderWeekdays() {
+                const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+                return weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+            }
+
+            renderDays() {
+                const days = [];
+                const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                const offset = (firstDay === 0) ? 6 : firstDay - 1; // Monday-based offset
+                const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
+
+                // Empty cells before first day
+                for (let i = 0; i < offset; i++) {
+                    days.push('<div></div>');
+                }
+
+                // Render each day
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${this.currentMonth.getFullYear()}-${String(this.currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isPast = new Date(dateStr) < new Date(new Date().toDateString());
+
+                    days.push(`
+                <button 
+                  type="button"
+                  class="calendar-day" 
+                  data-date="${dateStr}"
+                  ${isPast ? 'disabled' : ''}
+                >
+                  ${day}
+                </button>
+              `);
+                }
+                return days.join('');
+            }
+
+            attachEventListeners() {
+                // Next / Prev month
+                const prevMonthButton = this.container.querySelector('#prevMonth');
+                const nextMonthButton = this.container.querySelector('#nextMonth');
+
+                // If in current month, disable prev
+                const now = new Date();
+                const isCurrentMonth = this.currentMonth.getMonth() === now.getMonth() &&
+                    this.currentMonth.getFullYear() === now.getFullYear();
+                if (isCurrentMonth) {
+                    prevMonthButton.disabled = true;
+                    prevMonthButton.style.opacity = '0.5';
+                    prevMonthButton.style.cursor = 'not-allowed';
+                } else {
+                    prevMonthButton.disabled = false;
+                    prevMonthButton.style.opacity = '1';
+                    prevMonthButton.style.cursor = 'pointer';
+                }
+
+                prevMonthButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    this.changeMonth(-1);
+                });
+
+                nextMonthButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    this.changeMonth(+1);
+                });
+
+                // Day clicks
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    day.addEventListener('click', (e) => {
+                        if (!e.target.disabled) {
+                            const dateStr = e.target.dataset.date;
+                            this.selectDate(dateStr);
+                        }
                     });
                 });
+            }
 
-                document.querySelectorAll('.date-header').forEach(header => {
-                    header.addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        const dateIndex = this.dataset.date;
-                        const arrow = this.querySelector('.collapse-arrow');
-                        const dateContent = document.querySelectorAll(`.date-content[data-date="${dateIndex}"]`);
+            async changeMonth(direction, depth = 0) {
+                currentTimeSlot = null;
+                document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                loadTimeSlots();
+                const maxDepth = 7; // maximum number of months to skip in a row
+                // Calculate the new month based on the direction
+                const newMonth = new Date(this.currentMonth);
+                newMonth.setMonth(this.currentMonth.getMonth() + direction);
 
-                        if (arrow.classList.contains('expanded')) {
-                            expandedDates.delete(dateIndex);
+                // Prevent going backwards before the current month if that's desired
+                const now = new Date();
+                const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
+                if (direction < 0 && newMonth < currentMonthYear) {
+                    return; // do nothing if trying to go back too far
+                }
+
+                // Set and render the new month
+                this.currentMonth = newMonth;
+                this.render();
+
+                // Refresh available dates for the current month
+                await this.fetchAvailableDates();
+
+                // Check if any available dates were found for this month.
+                // (Assuming fetchAvailableDates() updates this.availableDates.)
+                if (Object.keys(this.availableDates).length === 0 && depth < maxDepth) {
+                    // No available dates were found in this month—skip to the next/previous month.
+                    return this.changeMonth(direction, depth + 1);
+                }
+
+                // Finally, update the days in the calendar (which colors them based on availability, etc.)
+                this.updateAvailableDays();
+            }
+
+
+            updateAvailableDays() {
+                // Color each day according to availability
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    const dateStr = day.dataset.date;
+                    const availability = this.availableDates[dateStr];
+
+                    if (availability) {
+                        const ratio = availability.availableSpots / availability.totalSpots;
+
+                        if (ratio === 0) {
+                            day.style.backgroundColor = notAvailable;
+                            day.disabled = true;
+                        } else if (ratio <= 0.5) {
+                            day.style.backgroundColor = fewLeft;
+                            day.classList.add('available');
                         } else {
-                            expandedDates.add(dateIndex);
+                            day.style.backgroundColor = available;
+                            day.classList.add('available');
                         }
-
-                        arrow.classList.toggle('expanded');
-                        dateContent.forEach(content => {
-                            content.classList.toggle('expanded');
-                        });
-                    });
-                });
-
-                // Then after setting up the click handlers, restore the expanded states:
-                expandedMonths.forEach(monthIndex => {
-                    const header = document.querySelector(`.month-header[data-month="${monthIndex}"]`);
-                    if (header) {
-                        const arrow = header.querySelector('.collapse-arrow');
-                        const monthContent = document.querySelectorAll(`.month-content[data-month="${monthIndex}"]`);
-
-                        arrow.classList.add('expanded');
-                        monthContent.forEach(content => content.classList.add('expanded'));
+                    } else {
+                        // Not available at all
+                        day.style.backgroundColor = 'rgb(240, 240, 240)';
+                        day.disabled = true;
                     }
                 });
+            }
 
-                expandedDates.forEach(dateIndex => {
-                    const header = document.querySelector(`.date-header[data-date="${dateIndex}"]`);
-                    if (header) {
-                        const arrow = header.querySelector('.collapse-arrow');
-                        const dateContent = document.querySelectorAll(`.date-content[data-date="${dateIndex}"]`);
+            selectDate(dateStr) {
+                // Remove any previously selected
+                this.container.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
 
-                        arrow.classList.add('expanded');
-                        dateContent.forEach(content => content.classList.add('expanded'));
-                    }
-                });
+                // Mark this day as selected
+                const selectedBtn = this.container.querySelector(`[data-date="${dateStr}"]`);
+                selectedBtn?.classList.add('selected');
 
-            } catch (error) {
-                showMessage(error.message, 'error');
+                this.selectedDate = dateStr;
+
+                // Show time slots container and load slots
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                timeSlotsContainer.style.display = 'block';
+
+                // Load the time slots
+                loadTimeSlots(dateStr);
+
+                // Scroll to time slots container
+                timeSlotsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
 
-        function generateTimeCheckboxes() {
-            const times = [];
-            for (let hour = 10; hour <= 15; hour++) {
-                times.push(
-                    `<label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
-                <input type="checkbox" name="times" value="${hour}:00"><span class="checkmark"></span>
-                ${hour}:00</label>`
+        /****************************************
+         * 4) Load Time Slots for a Given Date
+         ****************************************/
+        async function loadTimeSlots(dateStr) {
+            if (!dateStr) return;
 
-                );
-                if (hour < 15) {
-                    times.push(
-                        `<label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;" >
-                <input type="checkbox" name="times" value="${hour}:30"><span class="checkmark"></span>
-                    ${hour}:30</label>`
-                    );
+            try {
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select('*')
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
+                    .order('start_time');
+
+                if (error) throw error;
+
+                // Get the container and update the header
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                const header = document.getElementById('selected-date-header');
+                const timeSlotsList = document.getElementById('time-slots-list');
+
+                // Format the date for the header
+                const formattedDate = new Date(dateStr).toLocaleDateString('sv-SE', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long'
+                });
+                header.textContent = formattedDate;
+
+                // Show the container
+                timeSlotsContainer.classList.add('visible');
+
+                if (!slots || slots.length === 0) {
+                    timeSlotsList.innerHTML = `
+                <p>Inga tider tillgängliga för detta datum.</p>
+            `;
+                    return;
                 }
+
+                // Generate the time slots HTML
+                timeSlotsList.innerHTML = slots.map(slot => `
+            <div class="time-slot">
+                <div class="time-label" style="font-weight: 500; font-size: 1.9em; padding-top: 9px;">
+                    ${new Date(slot.start_time).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })}
+                </div>
+                
+                <div class="select-wrapper" style="font-size: 1.3em; padding-top: 4px;">
+                    Tot:
+ <select
+            onchange="updateTotalSpots('${slot.id}', this.value)"
+            class="spots-select"
+        >
+            ${Array.from({ length: 30 }, (_, i) => i + 1).map(num => `
+                <option value="${num}" ${num === slot.total_spots ? 'selected' : ''}>
+                    ${num}
+                </option>
+            `).join('')}
+        </select>
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+
+                <div style="font-size: 1.3em; padding-top: 4px;">Free:
+                    ${slot.available_spots} 
+                </div>
+
+                <div class="select-wrapper">
+                    <select 
+                        onchange="updateFullDay('${slot.id}', this.value)"
+                        class="fullday-select"
+                    >
+                        <option value="true" ${slot.allow_full_day ? 'selected' : ''}>Heldag</option>
+                        <option value="false" ${!slot.allow_full_day ? 'selected' : ''}>Ej heldag</option>
+                    </select>
+                    <span class="material-symbols-outlined wholedayspan">arrow_drop_down</span>
+                </div>
+
+                
+
+                ${slot.available_spots === slot.total_spots ?
+                        `<button 
+        onclick="toggleBlockStatus('${slot.id}', ${!slot.blocked})"
+        class="block-btn"
+        style="background-color: ${slot.blocked ? '#82c7ff' : '#ff8a8a'}"
+    >
+        ${slot.blocked ? 'Unblock' : 'Block'}
+    </button>` :
+                        `<div class="booked-label" style="background: rgb(255, 227, 111); width: fit-content; text-align: center;">Bokad</div>`
+                    }
+
+                <button 
+                    onclick="deleteTimeSlot('${slot.id}')" 
+                    class="delete"
+                    ${slot.available_spots < slot.total_spots ? 'disabled' : ''}
+                >
+                    Delete
+                </button>
+            </div>
+        `).join('');
+
+                // Scroll the time slots into view
+                //  timeSlotsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (err) {
+                console.error('Error loading time slots:', err);
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                timeSlotsContainer.innerHTML = '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
             }
-            return times.join('');
         }
 
         async function updateTotalSpots(slotId, newTotal) {
@@ -735,14 +899,28 @@
                 if (!response.data.success) throw new Error(response.data.error);
 
                 showMessage(response.data.message, 'success');
-                loadTimeSlots();
+
+                // Get the currently selected date and reload slots
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
             } catch (error) {
                 showMessage(error.message, 'error');
-                loadTimeSlots();
+
+                // Also reload on error to ensure UI is in sync
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
             }
         }
-
         async function updateFullDay(slotId, value) {
+            // Store the select element for later use
+            const selectElement = document.querySelector(`select[onchange*="${slotId}"]`);
+            // Store the original value in case we need to revert
+            const originalValue = selectElement.value;
+
             try {
                 const response = await supabaseClient.rpc('manage_time_slot', {
                     p_slot_id: slotId,
@@ -754,10 +932,26 @@
                 if (!response.data.success) throw new Error(response.data.error);
 
                 showMessage(response.data.message, 'success');
-                loadTimeSlots();
+
+                // Get the currently selected date and reload slots
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
+
             } catch (error) {
+                // If there was an error, revert the select element to its original value
+                if (selectElement) {
+                    selectElement.value = originalValue;
+                }
+
                 showMessage(error.message, 'error');
-                loadTimeSlots();
+
+                // Reload the time slots to ensure UI is in sync with database
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
             }
         }
 
@@ -774,7 +968,48 @@
                 if (!response.data.success) throw new Error(response.data.error);
 
                 showMessage(response.data.message, 'success');
-                loadTimeSlots();
+
+                // Get the currently selected date and reload slots
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    // Reload the time slots
+                    loadTimeSlots(selectedDay.dataset.date);
+
+                    // Also refresh the calendar display since available spots have changed
+                    const calendarContainer = document.getElementById('calendar');
+                    if (calendarContainer) {
+                        const calendar = new BookingCalendar(calendarContainer);
+                        calendar.init();
+                    }
+                }
+            } catch (error) {
+                showMessage(error.message, 'error');
+
+                // Reload on error to ensure UI is in sync
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
+            }
+        }
+
+        async function toggleBlockStatus(slotId, blocked) {
+            try {
+                const response = await supabaseClient.rpc('toggle_time_slot_block', {
+                    p_slot_id: slotId,
+                    p_blocked: blocked
+                });
+
+                if (response.error) throw new Error(response.error.message);
+                if (!response.data.success) throw new Error(response.data.error);
+
+                showMessage(response.data.message, 'success');
+
+                // Get the currently selected date from the calendar
+                const selectedDay = document.querySelector('.calendar-day.selected');
+                if (selectedDay) {
+                    loadTimeSlots(selectedDay.dataset.date);
+                }
             } catch (error) {
                 showMessage(error.message, 'error');
             }
@@ -788,13 +1023,6 @@
             setTimeout(() => messageDiv.textContent = '', 20000);
         }
 
-        // Add event listeners
-        document.getElementById('singleSlotForm').addEventListener('submit', createSingleSlot);
-        document.getElementById('multipleSlotForm').addEventListener('submit', createMultipleSlots);
-
-        // Load time slots on page load
-        // Initialize time checkboxes
-        document.querySelector('.time-checkbox-grid').innerHTML = generateTimeCheckboxes();
         loadTimeSlots();
     </script>
 </body>

@@ -9,53 +9,78 @@
         rel="stylesheet">
     <style>
         body {
-            margin: 0;
+            width: 900px;
+            margin: auto;
             padding: 0;
             font-family: "Josefin Sans", sans-serif;
-            background: rgb(243, 231, 213);
+            background: linear-gradient(90deg, rgb(247, 244, 247) 0%, rgb(236, 234, 238)6%, rgb(247, 247, 235) 100%);
         }
 
-        .header {
-            background-color: #f8f8f8;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .header h1 {
-            margin: 40px 0px;
-            font-size: 50px;
-            text-align: center;
-            font-weight: 500;
+        h1 {
+            font-size: 2em;
+            margin: 10px 0px 0px 0px;
             font-weight: 700;
-            line-height: 1.4em;
+            text-align: right;
+            color: #001c82;
+
         }
+
+        h2 {
+            margin: 20px 0px 30px;
+            color: rgb(237, 23, 130);
+            font-size: 7em;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .header {}
 
         .nav {
-            background-color: white;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .nav-list {
+            margin: 0 auto;
+            font-size: 3em;
+            font-weight: 400;
             list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
 
-        .nav-item a {
-            text-decoration: none;
-            color: #333;
-            font-size: 18px;
-            font-weight: 400;
-            padding: 5px 0;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.2s;
+        .nav-item:nth-child(1) {
+            background-color: rgb(220, 230, 120);
         }
 
-        .nav-item a:hover {
-            border-bottom-color: #333;
+        .nav-item:nth-child(2) {
+            background-color: rgb(143, 227, 242);
+        }
+
+        .nav-item:nth-child(3) {
+            background-color: rgb(244, 180, 132);
+        }
+
+        .nav-item:nth-child(4) {
+            background-color: rgb(197, 193, 237);
+        }
+
+        .nav-item:nth-child(6) {
+            background-color: rgb(204, 244, 186);
+        }
+
+        .nav-item:nth-child(5) {
+            background-color: rgb(178, 224, 196);
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            padding: 50px 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: lightcyan;
         }
 
         .content {
@@ -68,20 +93,35 @@
 
 <body>
     <div class="header">
-        <h1>Sörsjöns Äventyrspark – Bokningssystemet</h1>
+        <h1>Sörsjöns Äventyrspark</h1>
+        <h2>Bokningssystemet</h2>
     </div>
 
-    <nav class="nav">
-        <ul class="nav-list">
-            <li class="nav-item"><a href="/bokningssystem/frontend/hanteratider.html">Hantera tider</a></li>
-            <li class="nav-item"><a href="/bokningssystem/frontend/skapabokning.html">Skapa bokning</a></li>
-            <li class="nav-item"><a href="/bokningssystem/frontend/bokningar.html">Bokningar</a></li>
-        </ul>
-    </nav>
+    <div class="nav">
 
-    <div class="content">
-        <!-- Content will be loaded here -->
+        <a class="nav-item" href="/bokningssystem/frontend/hanteratider.html">
+            Hantera tider
+        </a>
+        <a class="nav-item" href="/bokningssystem/frontend/andersbokar.html">
+            Skapa bokning
+
+        </a>
+        <a class="nav-item" href="/bokningssystem/frontend/hanterabokningar.html">
+            Hantera bokning
+        </a>
+        <a class="nav-item" href="/bokningssystem/frontend/bokningar.html">
+            Reception
+        </a>
+        <a class="nav-item" href="/bokningssystem/frontend/skapatider.html">
+            Skapa tider
+        </a>
+        <a class="nav-item" href="/bokningssystem/frontend/stats.html">
+            Stats
+        </a>
     </div>
+    <footer style="position: absolute; bottom: 20px; right: 40px;">
+        <i>ett konstverk av Petter Rylén </i>
+    </footer>
 </body>
 
 </html>
