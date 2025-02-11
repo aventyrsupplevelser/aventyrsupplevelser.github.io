@@ -941,8 +941,9 @@ console.log(req.body)
             customer_comment,
             gift_card,
             promo_code,
-            payment_method,
         } = req.body;
+
+        let { payment_method } = req.body;
 
         // Validate no negative quantities
         if (adult_quantity < 0 || youth_quantity < 0 || kid_quantity < 0 || full_day < 0) {
