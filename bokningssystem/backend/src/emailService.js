@@ -221,6 +221,12 @@ if (booking.gift_card_number) {
     if (giftCard) {
         giftCardAmount = giftCard.amount;
     }
+
+    if (giftCardAmount > baseTotal) {
+        giftCardAmount = baseTotal;
+        console.log('equalized gift card to base Total')
+    }
+
 }
 
 let subtotal = 0
@@ -234,23 +240,34 @@ if (booking.promo_code) {
         .eq('promo_code', booking.promo_code)
         .single();
     
-    if (promo) {
+    if (promo ) {
         subtotal = baseTotal - giftCardAmount;
         if (promo.is_percentage) {
             promoDiscount = subtotal * (promo.discount_value / 100);
         } else {
             promoDiscount = promo.discount_value;
-        }
+        } 
     }
 }
 
 
 
-            const totalAmountInSEK = subtotal - promoDiscount + rebookingSum; // Convert from öre to SEK
+if (promoDiscount > subtotal) {
+    promoDiscount = subtotal;
+}
+
+
+
+            let totalAmountInSEK = subtotal - promoDiscount + rebookingSum; // Convert from öre to SEK
+
+            if (totalAmountInSEK < 0) {
+                totalAmountInSEK = 0; 
+            }
+
             
             // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
             const vatRate = 0.06;
-            const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
+            const taxableAmount = Math.max(totalAmountInSEK - rebookingSum, 0);
             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
             const amountExVat = taxableAmount - vatAmount;
 
