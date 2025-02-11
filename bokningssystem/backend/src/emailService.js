@@ -279,46 +279,50 @@ const rebookingUrl = booking.is_rebookable ?
 `https://aventyrsupplevelser.com/bokningssystem/frontend/bokaomtid.html?booking_id=${booking.id}&token=${booking.access_token}` : 
 null;
 
-    const msg = {
-        to: booking.customer_email,
-        from: {
-            email: process.env.SENDGRID_FROM_EMAIL,
-            name: 'Sörsjöns Äventyrspark'
-        },
-        templateId: process.env.SENDGRID_ADMIN_BOOKING_ID,
-        dynamic_template_data: {
-            booking_number: booking.booking_number,
-            customer_name: booking.customer_name,
-            booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            }),
-            booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: false 
-            }),
-            adult_quantity: booking.adult_quantity,
-            youth_quantity: booking.youth_quantity,
-            kid_quantity: booking.kid_quantity,
-            adult_sum: adultSum,     
-            youth_sum: youthSum,     
-            kid_sum: kidSum,         
-            full_day: booking.full_day,
-            full_day_sum: fullDaySum,
-            is_rebookable: booking.is_rebookable,
-            rebooking_sum: rebookingSum,
-            ombokningsurl: rebookingUrl,
-            gift_card_amount: giftCardAmount || null,  // Only include if used
-            promo_discount: promoDiscount || null,     // Only include if used
-            amount_ex_vat: amountExVat.toFixed(2),
-            vat_amount: vatAmount.toFixed(2),
-            total_amount: totalAmountInSEK.toFixed(2),
-            payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
-            payment_link: booking.quickpay_link
-        }
-    };
+const msg = {
+    to: booking.customer_email,
+    from: {
+        email: process.env.SENDGRID_FROM_EMAIL,
+        name: 'Sörsjöns Äventyrspark'
+    },
+    // Choose template based on whether there's a payment link
+    templateId: booking.quickpay_link ? 
+        process.env.SENDGRID_ADMIN_BOOKING_ID : 
+        process.env.SENDGRID_ADMIN_FREE_BOOKING_ID,
+    dynamic_template_data: {
+        booking_number: booking.booking_number,
+        customer_name: booking.customer_name,
+        booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }),
+        booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }),
+        adult_quantity: booking.adult_quantity,
+        youth_quantity: booking.youth_quantity,
+        kid_quantity: booking.kid_quantity,
+        adult_sum: adultSum,
+        youth_sum: youthSum,
+        kid_sum: kidSum,
+        full_day: booking.full_day,
+        full_day_sum: fullDaySum,
+        is_rebookable: booking.is_rebookable,
+        rebooking_sum: rebookingSum,
+        ombokningsurl: rebookingUrl,
+        gift_card_amount: giftCardAmount || null,
+        promo_discount: promoDiscount || null,
+        amount_ex_vat: amountExVat.toFixed(2),
+        vat_amount: vatAmount.toFixed(2),
+        total_amount: totalAmountInSEK.toFixed(2),
+        payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
+        // Only include payment link if it exists
+        ...(booking.quickpay_link && { payment_link: booking.quickpay_link })
+    }
+};
 
     const response = await sgMail.send(msg);
     console.log('Confirmation email sent successfully:', response[0].statusCode);
