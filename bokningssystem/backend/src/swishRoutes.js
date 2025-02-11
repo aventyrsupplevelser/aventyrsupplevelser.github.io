@@ -1061,7 +1061,7 @@ console.log(req.body)
                 },
                 body: JSON.stringify({
                     amount: totalAmount * 100, // Convert to öre
-                    continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${booking.booking_number}`,
+                    continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${booking.booking_number}?access_token=${booking.access_token}`,
                     cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
                     callback_url: callbackUrl.toString(),
                     auto_capture: true,

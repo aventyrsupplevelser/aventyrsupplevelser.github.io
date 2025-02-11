@@ -84,11 +84,18 @@
 
         async function checkPaymentStatus(bookingNumber) {
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
+            if (!sessionData) {
+                const access_token = urlParams.get('access_token');
+            } else {
+                const access_token = sessionData.token;
+            }
+
+
             try {
                 // Call the Postgres function instead of querying the table
                 const { data, error } = await supabaseClient
                     .rpc('get_booking_status', {
-                        p_access_token: sessionData.token
+                        p_access_token: access_token
                     });
 
                 if (error) {
