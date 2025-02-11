@@ -83,10 +83,10 @@
         }
 
         async function checkPaymentStatus(bookingNumber) {
+            const params = new URLSearchParams(window.location.search);
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
-            if (!sessionData) {
-                const access_token = urlParams.get('access_token');
-            } else {
+            let access_token = params.get('access_token');
+            if (sessionData) {
                 const access_token = sessionData.token;
             }
 
@@ -117,7 +117,6 @@
                     console.log('Clearing localStorage for new bookings...');
                     localStorage.removeItem('bookingData');
                     localStorage.removeItem('spotsReleased');
-                    console.log('localStorage after clearing:', localStorage);
                     return true;
                 }
                 return false;

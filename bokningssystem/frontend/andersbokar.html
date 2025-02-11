@@ -1778,13 +1778,14 @@ arrow_right_alt
             ${tickets.youth ? `<p>Ungdom: ${tickets.youth} st <span style="float: right;">${tickets.youth * PRICES.youth} kr</span></p>` : ''}
             ${tickets.kid ? `<p>Barn: ${tickets.kid} st <span style="float: right;">${tickets.kid * PRICES.kid} kr</span></p>` : ''}
             ${tickets.fullday ? `<p>Förlängning till heldag: ${tickets.fullday} st <span style="float: right;">${tickets.fullday * PRICES.fullday} kr</span></p>` : ''}
-            ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p>` : ''}
             <hr>
             ${hasGiftCard ? `<p style="color: #2d862d;">Presentkort: <span style="float: right;">-${totals.giftCardAmount} kr</span></p>` : ''}
             ${hasPromo ? `<p style="color: #2d862d;">Rabatt: <span style="float: right;">-${totals.promoDiscount} kr</span></p>` : ''}
             ${(hasGiftCard || hasPromo) ? '<hr>' : ''}
             <p id="totalvat">Varav moms (6%): <span style="float: right;">${totals.vat.toFixed(2)} kr</span></p>
             <hr>
+            ${tickets.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${totalRebook} kr</span></p> <hr>` : ''}
+
             <p id="totalCost" style="font-weight: bold;">Totalt att betala: <span style="float: right;">${totals.total} kr</span></p>
             <hr>
             <p id="timeRemaining" style="margin-top: 20px; opacity: 0.7; font-size: 0.8em; color: #2d862d;"></p>
