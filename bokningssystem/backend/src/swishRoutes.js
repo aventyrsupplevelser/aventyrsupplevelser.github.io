@@ -1119,13 +1119,15 @@ const { data: updatedBookingData, error: fetchError } = await supabase
     .eq('id', booking.booking_id)
     .single();
 
-// Send confirmation email if requested
-if (payment_method !== 'invoice') {
-    await EmailService.sendAdminConfirmation({
+    const bookingWithPaymentLink = {
         ...updatedBookingData,
         start_time: updatedBookingData.time_slots.start_time,
-        quickpay_link: quickPayLink
-    });
+        quickpay_link: quickPayLink      // This adds quickpay_link property
+    };
+
+// Then send it to the email service
+if (payment_method !== 'invoice') {
+    await EmailService.sendAdminConfirmation(bookingWithPaymentLink);
 }
 
         res.json({
