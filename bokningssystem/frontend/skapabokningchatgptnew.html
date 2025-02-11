@@ -2234,6 +2234,7 @@ arrow_right_alt
 
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             const bookingNumber = sessionData.booking_number;
+            const access_token = sessionData.access_token;
 
             const checkStatus = setInterval(async () => {
                 try {
@@ -2270,7 +2271,7 @@ arrow_right_alt
                     // The function returns an array with one object, so check the first element
                     if (data?.[0]?.status === 'confirmed') {
                         clearInterval(checkStatus);
-                        window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}`;
+                        window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}&access_token=${access_token}`;
                         return;
                     }
 

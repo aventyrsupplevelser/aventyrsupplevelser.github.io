@@ -274,7 +274,7 @@ router.post('/get-payment-form', async (req, res) => {
         // Step 2: Create payment link with detailed logging
         const linkRequestBody = {
             amount: amount,  // Make sure this is in smallest currency unit (öre)
-            continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}`,
+            continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}&access_token=${access_token}`,
             cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
