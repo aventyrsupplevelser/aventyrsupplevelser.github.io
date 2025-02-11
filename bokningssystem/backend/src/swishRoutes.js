@@ -1082,6 +1082,7 @@ console.log(req.body)
         console.log('promoCodeValid', promoCodeValid)
         console.log('booking_id', booking.booking_id)
         console.log('accessT', booking.access_token)
+        console.log('quickPayLink', quickPayLink)
 
 
         // Apply codes if valid
