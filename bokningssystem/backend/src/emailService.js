@@ -120,7 +120,7 @@ class EmailService {
             if (promo) {
                 const subtotal = adultSum + youthSum + kidSum + fullDaySum - giftCardAmount;
                 if (promo.is_percentage) {
-                    promoDiscount = subtotal * (promo.discount_value / 100);
+                    promoDiscount = Math.max(subtotal * (promo.discount_value / 100), 0);
                 } else {
                     promoDiscount = promo.discount_value;
                 }

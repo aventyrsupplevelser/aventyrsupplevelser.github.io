@@ -1147,5 +1147,94 @@ if (payment_method !== 'invoice') {
     }
 });
 
+router.post('/admin-callback', async (req, res) => {
+    try {
+        // 1. Always respond with 200 OK first to acknowledge receipt
+        res.status(200).send('OK');
+        console.log('starting')
+
+        // 2. Get the callback data
+        const callbackData = req.body;
+        
+        // 3. Get booking number from QuickPay's order_id
+        const bookingNumber = callbackData.order_id;
+        if (!bookingNumber) {
+            console.error('Missing booking number in callback');
+            return;
+        }
+
+        const callbackUrl = new URL(callbackData.link.callback_url);
+        const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
+
+        if (!verifyCallbackId(callbackIdentifier, bookingNumber)) {
+            console.error('Invalid callback checksum');
+        }
+
+        // 5. Get the booking using both booking number
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('booking_number', bookingNumber)
+            .single();
+
+        if (bookingError || !booking) {
+            console.error('Booking not found or access token mismatch');
+            return;
+        }
+
+        // 6. Check if booking is still requesting
+        if (booking.status !== 'unpaid') {
+            console.log('Booking already processed:', booking.status);
+            return;
+        }
+
+        // 7. Check for successful payment
+        const isSuccess = callbackData.accepted && callbackData.state === 'processed';
+        if (isSuccess) {
+            // Get amount in öre from the payment link data
+            const paidAmountOre = callbackData.link.amount;
+
+            // Update the booking
+            const { error: updateError } = await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    payment_method: 'card',
+                    payment_id: callbackData.id.toString(),
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString(),
+                    payment_metadata: callbackData
+                })
+                .eq('id', booking.id)
+                .eq('status', 'unpaid')
+
+            if (updateError) {
+                console.error('Error updating booking:', updateError);
+                return;
+            }
+
+            console.log('Payment recorded successfully:', callbackData.id);
+
+            // Send confirmation email
+            try {
+                await EmailService.sendBookingConfirmation({
+                    ...booking,
+                    start_time: booking.time_slots.start_time,
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString()
+                });
+                console.log('Confirmation email sent successfully');
+            } catch (emailError) {
+                console.error('Error sending confirmation email:', emailError);
+            }
+        }
+
+    } catch (error) {
+        console.error('QuickPay callback error:', error);
+    }
+
+
+});
+
 
 export default router;
