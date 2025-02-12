@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hantera Bokningar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <style>
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: "Josefin Sans", sans-serif;
+            background: linear-gradient(90deg, rgb(247, 244, 247) 0%, rgb(236, 234, 238)6%, rgb(247, 247, 235) 100%);
+        }
+
+        h1 {
+            font-size: 5em;
+            color: hotpink;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 3em;
+            color: #001c82;
+            margin: 40px 10px 20px;
+        }
+
+        #nextMonth,
+        #prevMonth {
+            padding: 13px 13px 8px;
+            background: rgba(246, 244, 221, 0.86);
+        }
+
+        .calendar-container {
+            font-family: "Josefin Sans", sans-serif;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0px auto 20px;
+            max-width: 600px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 81px);
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+            padding: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: auto;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f3f3;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-family: "josefin sans";
+            padding-top: 12px;
+            border-bottom: 2px solid black;
+            border-right: 2px solid black;
+            border-top: 2px solid rgb(230, 230, 230);
+            border-left: 2px solid rgb(236, 236, 236);
+        }
+
+        .calendar-day:disabled {
+            background-color: #f6f6f6;
+            color: #676767;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.has-bookings {
+            background-color: rgb(173, 240, 159);
+            color: #1a1a1a;
+        }
+
+        .calendar-day.selected {
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
+        }
+
+        .time-slots-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .time-slots-container.visible {
+            display: block;
+        }
+
+        .time-slot {
+            background: white;
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .time-slot:hover {
+            background-color: #f5f5f5;
+        }
+
+        .time-slot.selected {
+            background-color: #e0e0e0;
+        }
+
+        .time-slot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+            padding: 10px;
+        }
+
+        .bookings-list {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .bookings-list.visible {
+            display: block;
+        }
+
+        .booking-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .booking-details {
+            font-size: 1em;
+            color: #424242;
+            line-height: 1.3em;
+            position: relative;
+        }
+
+        .booking-details>div {
+            margin: 10px 0px;
+        }
+
+        .status-Bekräftad {
+            color: #037407;
+        }
+
+        .status-Obetald {
+            color: #a5635f;
+        }
+
+        .status-Faktura {
+            color: rgb(185, 139, 0);
+        }
+
+        .time-slot .material-symbols-outlined {
+            margin-top: -3px;
+        }
+
+        .booking-details .material-symbols-outlined {
+            font-size: 2em;
+            margin-bottom: 3px;
+            margin-right: 3px;
+        }
+
+        .tbx {
+            color: rgb(255, 217, 186);
+            background: rgb(255, 91, 91);
+            padding: 10px 10px 10px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.3em;
+            text-decoration: none;
+        }
+
+        .tbx:hover {
+            background: rgb(132, 208, 0);
+        }
+
+        .itemdiv {
+            display: flex;
+            align-items: center;
+            background: rgb(255, 207, 249);
+            margin-right: 10px;
+        }
+
+        .changeButton {
+            margin: 20px;
+            padding: 12px 12px 7px;
+            font-family: inherit;
+            color: black;
+            background: rgb(154, 255, 255);
+            border-bottom: 2px solid black;
+            border-right: 2px solid black;
+            border-top: 2px solid rgb(230, 230, 230);
+            border-left: 2px solid rgb(236, 236, 236);
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax 🏠</i></a>
+    <h1>Hantera Bokningar</h1>
+
+    <div id="calendar"></div>
+
+    <div id="time-slots-container" class="time-slots-container">
+        <h2 id="selected-date-header"></h2>
+        <div id="time-slots-list"></div>
+    </div>
+
+    <div id="bookings-list" class="bookings-list"></div>
+
+    <script>
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
+        async function checkAuth() {
+            console.log('huh?')
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = '/bokningssystem/frontend/login.html';
+                return;
+            }
+        }
+
+        class BookingCalendar {
+            constructor(container) {
+                this.container = container;
+                this.selectedDate = null;
+                this.datesWithBookings = new Set();
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.init();
+            }
+
+            async init() {
+                this.render();
+                await this.fetchDatesWithBookings();
+            }
+
+            async fetchDatesWithBookings() {
+                try {
+                    const year = this.currentMonth.getFullYear();
+                    const month = this.currentMonth.getMonth() + 1;
+
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
+                    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+
+                    // Fetch bookings for the month
+                    const { data: bookings, error } = await supabaseClient
+                        .from('bookings')
+                        .select('time_slots(start_time)')
+                        .in('status', ['confirmed', 'unpaid'])
+                        .gte('time_slots.start_time', startOfMonth.toISOString())
+                        .lte('time_slots.start_time', endOfMonth.toISOString());
+
+                    if (error) throw error;
+
+                    // Clear existing dates
+                    this.datesWithBookings.clear();
+
+                    // Add dates with bookings to the set
+                    bookings.forEach(booking => {
+                        if (booking.time_slots?.start_time) {
+                            const dateStr = booking.time_slots.start_time.split('T')[0];
+                            this.datesWithBookings.add(dateStr);
+                        }
+                    });
+
+                    this.updateCalendarDays();
+                } catch (error) {
+                    console.error('Error fetching dates with bookings:', error);
+                }
+            }
+
+            render() {
+                this.container.innerHTML = `
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prevMonth"><span class="material-symbols-outlined">arrow_left_alt</span></button>
+                            <h3>${this.getMonthDisplay()}</h3>
+                            <button id="nextMonth"><span class="material-symbols-outlined">arrow_right_alt</span></button>
+                        </div>
+                        <div class="calendar-grid">
+                            ${this.renderWeekdays()}
+                            ${this.renderDays()}
+                        </div>
+                    </div>
+                `;
+
+                this.attachEventListeners();
+            }
+
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            renderWeekdays() {
+                const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+                return weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+            }
+
+            renderDays() {
+                const days = [];
+                const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                const offset = (firstDay === 0) ? 6 : firstDay - 1;
+                const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
+
+                for (let i = 0; i < offset; i++) {
+                    days.push('<div></div>');
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${this.currentMonth.getFullYear()}-${String(this.currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    days.push(`
+                        <button 
+                            type="button"
+                            class="calendar-day" 
+                            data-date="${dateStr}"
+                        >
+                            ${day}
+                        </button>
+                    `);
+                }
+                return days.join('');
+            }
+
+            attachEventListeners() {
+                const prevMonthButton = this.container.querySelector('#prevMonth');
+                const nextMonthButton = this.container.querySelector('#nextMonth');
+
+                prevMonthButton.addEventListener('click', () => this.changeMonth(-1));
+                nextMonthButton.addEventListener('click', () => this.changeMonth(1));
+
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    day.addEventListener('click', (e) => {
+                        const dateStr = e.target.dataset.date;
+                        if (dateStr) {
+                            this.selectDate(dateStr);
+                        }
+                    });
+                });
+            }
+
+            async changeMonth(direction) {
+                this.currentMonth.setMonth(this.currentMonth.getMonth() + direction);
+                this.render();
+                await this.fetchDatesWithBookings();
+            }
+
+            updateCalendarDays() {
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    const dateStr = day.dataset.date;
+                    if (this.datesWithBookings.has(dateStr)) {
+                        day.classList.add('has-bookings');
+                    } else {
+                        day.classList.remove('has-bookings');
+                    }
+                });
+            }
+
+            selectDate(dateStr) {
+                this.container.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                const selectedBtn = this.container.querySelector(`[data-date="${dateStr}"]`);
+                selectedBtn?.classList.add('selected');
+
+                this.selectedDate = dateStr;
+                loadTimeSlots(dateStr);
+
+                // Hide bookings list when selecting a new date
+                document.getElementById('bookings-list').classList.remove('visible');
+            }
+        }
+
+        async function loadTimeSlots(dateStr) {
+            if (!dateStr) return;
+
+            try {
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                // Fetch time slots with bookings
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select(`
+                        id,
+                        start_time,
+                        allow_full_day,
+                        bookings!inner (
+                            id,
+                            status,
+                            customer_name,
+                            customer_email,
+                            adult_quantity,
+                            youth_quantity,
+                            kid_quantity,
+                            full_day,
+                            payment_method
+                        )
+                    `)
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
+                    .in('bookings.status', ['confirmed', 'unpaid'])
+                    .order('start_time');
+
+                if (error) throw error;
+
+                const timeSlotsContainer = document.getElementById('time-slots-container');
+                const header = document.getElementById('selected-date-header');
+                const timeSlotsList = document.getElementById('time-slots-list');
+
+                const formattedDate = new Date(dateStr).toLocaleDateString('sv-SE', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long'
+                });
+                header.textContent = formattedDate;
+
+                timeSlotsContainer.classList.add('visible');
+
+                if (!slots || slots.length === 0) {
+                    timeSlotsList.innerHTML = `<p>Inga bokningar för detta datum.</p>`;
+                    return;
+                }
+
+                // Clear any previously displayed bookings
+                document.getElementById('bookings-list').classList.remove('visible');
+
+                timeSlotsList.innerHTML = slots.map(slot => {
+                    const time = new Date(slot.start_time).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const bookingCount = slot.bookings.length;
+                    console.log('Slot bookings:', slot.bookings); // Add this line
+                    console.log('Invoice bookings:', slot.bookings.filter(b => b.payment_method === 'invoice')); // Add this line
+
+                    const fakturaCount = slot.bookings.filter(b => b.payment_method === 'invoice').length;
+                    const unpaidCount = slot.bookings.filter(b => b.status === 'unpaid').length;
+
+                    return `
+                        <div class="time-slot" data-slot-id="${slot.id}" onclick="selectTimeSlot('${slot.id}')">
+                            <div class="time-slot-header">
+                                <span style="font-size: 1.4em; font-weight: 500; padding-top: 5px;">${time}</span>
+                                <span style="color: #666; display: flex;
+gap: 10px;"> <span style="display: flex;
+flex-wrap: wrap;
+align-items: center; gap: 1px;">
+                                    <span style="padding-top: 3px;">${bookingCount}</span> <span class="material-symbols-outlined">
+hiking
+</span></span>
+                                    ${fakturaCount > 0 ? `<span class="status-Faktura" style="font-size: 0.8em; display: flex;
+flex-wrap: wrap;
+align-items: center; gap: 1px; padding-top: 6px;">${fakturaCount} <span class="material-symbols-outlined">
+history_edu
+</span></span>` : ''}
+                                    ${unpaidCount > 0 ? `<span class="status-Obetald" style="font-size: 0.8em; display: flex;
+flex-wrap: wrap;
+align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="material-symbols-outlined">credit_card</span></span>` : ''}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Error loading time slots:', err);
+                const timeSlotsList = document.getElementById('time-slots-list');
+                timeSlotsList.innerHTML = '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
+            }
+        }
+
+        async function selectTimeSlot(slotId) {
+            // Update visual selection
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.toggle('selected', slot.dataset.slotId === slotId);
+            });
+
+            try {
+                const { data: bookings, error } = await supabaseClient
+                    .from('bookings')
+                    .select(`
+        *,
+        time_slots (
+            start_time,
+            allow_full_day
+        ),
+        gift_cards!bookings_gift_card_number_fkey (
+            amount
+        ),
+        promo_codes!bookings_promo_code_fkey (
+            discount_value,
+            is_percentage
+        )
+    `)
+                    .eq('time_slot_id', slotId)
+                    .in('status', ['confirmed', 'unpaid'])
+                    .order('created_at');
+
+                if (error) throw error;
+
+                const bookingsList = document.getElementById('bookings-list');
+                bookingsList.classList.add('visible');
+
+                if (!bookings || bookings.length === 0) {
+                    bookingsList.innerHTML = '<p>Inga bokningar för denna tid.</p>';
+                    return;
+                }
+
+                bookingsList.innerHTML = bookings.map(booking => {
+                    const totalParticipants = (booking.adult_quantity || 0) +
+                        (booking.youth_quantity || 0) +
+                        (booking.kid_quantity || 0);
+
+                    // Calculate total cost
+                    const adultCost = (booking.adult_quantity || 0) * 400;
+                    const youthCost = (booking.youth_quantity || 0) * 300;
+                    const kidCost = (booking.kid_quantity || 0) * 200;
+                    const fullDayCost = (booking.full_day || 0) * 100;
+                    const rebookingCost = booking.is_rebookable ? totalParticipants * 25 : 0;
+                    const baseTotal = adultCost + youthCost + kidCost + fullDayCost;
+
+                    // Get gift card amount if used
+                    let giftCardAmount = 0;
+                    if (booking.gift_cards && booking.gift_cards.amount) {
+                        giftCardAmount = Math.min(booking.gift_cards.amount, baseTotal);
+                    }
+
+                    // Calculate promo discount
+                    let promoAmount = 0;
+                    if (booking.promo_codes) {
+                        const subtotalAfterGiftCard = baseTotal - giftCardAmount;
+                        if (booking.promo_codes.is_percentage) {
+                            promoAmount = subtotalAfterGiftCard * (booking.promo_codes.discount_value / 100);
+                        } else {
+                            promoAmount = Math.min(booking.promo_codes.discount_value, subtotalAfterGiftCard);
+                        }
+                    }
+
+                    const totalPaid = booking.paid_amount / 100;
+                    const totalCost = baseTotal - giftCardAmount - promoAmount + rebookingCost;
+
+                    let paymentMethod = booking.payment_method;
+                    if (paymentMethod === 'card') {
+                        paymentMethod = 'kort';
+                    } else if (paymentMethod === 'invoice') {
+                        paymentMethod = null;
+                    }
+
+                    let status = booking.status;
+
+
+                    if (booking.payment_method === 'invoice') {
+                        status = 'Faktura'
+                    } else if (status === 'confirmed') {
+                        status = 'Bekräftad'
+                    } else if (status === 'unpaid') {
+                        status = 'Obetald'
+                    }
+
+
+
+                    return `
+                        <div class="booking-item">
+                            <div class="booking-header">
+                                <div style="font-size: 1.3em;"><span>${booking.customer_name || 'Namnlös bokning'}</span><span> – ${booking.booking_number}</span<span> – ${booking.customer_email || 'Ingen email'} </span></div>
+                                
+                               <div> <span class="status-${status}" style="font-size: 1.1em;">
+                                    ${status}
+                                </span>
+                                </div>
+                            </div>
+                            <div class="booking-details">
+<div style="display: flex; gap: 0px;">
+<div class="itemdiv">${booking.adult_quantity ? `<span class="material-symbols-outlined">elderly_woman</span> ${booking.adult_quantity}` : ''}</div>
+<div class="itemdiv">${booking.youth_quantity ? `<span class="material-symbols-outlined">directions_run</span>${booking.youth_quantity}` : ''}</div>
+<div class="itemdiv">${booking.kid_quantity ? `<span class="material-symbols-outlined">stroller</span> ${booking.kid_quantity}` : ''}</div>
+<div class="itemdiv">${booking.full_day ? `<span class="material-symbols-outlined">update</span> ${booking.full_day}` : ''}</div>
+<div class="itemdiv">${booking.is_rebookable ? `<span class="material-symbols-outlined">sync</span> Ja` : ''}     </div>
+${(giftCardAmount > 0 || promoAmount > 0) ? `
+<div style="color: green; display: flex; gap: 15px;">
+    <div class="itemdiv"> ${giftCardAmount > 0 ? `<span class="material-symbols-outlined">redeem</span>${giftCardAmount}` : ''}</div>
+    <div class="itemdiv"> ${promoAmount > 0 ? `<span class="material-symbols-outlined">sell</span>${promoAmount}` : ''}</div>
+` : ''}
+</div>
+    <div style="font-weight: 500; display: flex; gap: 15px;"">
+         <div class="itemdiv"><span class="material-symbols-outlined">equal</span> ${totalCost}</div>
+        <div class="itemdiv"> <span class="material-symbols-outlined">price_check</span>${totalPaid}</div>
+       <div class="itemdiv">  ${paymentMethod ? `<span class="material-symbols-outlined">credit_card_gear</span> ${paymentMethod}` : ''}</div>
+    </div> 
+</div>
+<div style="display: flex; justify-content: space-between;"> 
+         <div class="itemdiv" style="background: none;">${booking.comments ? `<span class="material-symbols-outlined">comment</span>
+             <div style="margin-top: 15px; background: rgb(255, 255, 180); display: inline-block;"> ${booking.comments}</div>` : ' '}
+         </div> 
+        <div style="display: none;"> <span class="material-symbols-outlined">add</span> ${new Date(booking.created_at).toLocaleString('sv-SE')}</div>
+    </div> 
+
+</div>
+    <button class="changeButton">ändra</button>
+
+</div>
+                    `;
+                }).join('');
+
+                // Scroll bookings list into view
+                bookingsList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (err) {
+                console.error('Error loading bookings:', err);
+                const bookingsList = document.getElementById('bookings-list');
+                bookingsList.innerHTML = '<p class="error">Kunde inte ladda bokningar. Försök igen.</p>';
+            }
+        }
+
+        // Initialize calendar when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+
+            const calendarContainer = document.getElementById('calendar');
+            if (calendarContainer) {
+                new BookingCalendar(calendarContainer);
+            }
+        });
+    </script>
+</body>
+
+</html>
