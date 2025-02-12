@@ -20,7 +20,7 @@
         }
 
         h1 {
-            font-size: 5em;
+            font-size: 4.5em;
             color: hotpink;
             margin-top: 80px;
             text-align: center;
@@ -127,7 +127,9 @@
         }
 
         .time-slot.selected {
-            background-color: #e0e0e0;
+            background-color: #f7f4bb;
+            border: 6px dashed pink;
+
         }
 
         .time-slot-header {
@@ -169,10 +171,6 @@
             position: relative;
         }
 
-        .booking-details>div {
-            margin: 10px 0px;
-        }
-
         .status-Bekräftad {
             color: #037407;
         }
@@ -190,8 +188,8 @@
         }
 
         .booking-details .material-symbols-outlined {
-            font-size: 2em;
-            margin-bottom: 3px;
+            font-size: 0.9em;
+            margin-bottom: 5px;
             margin-right: 3px;
         }
 
@@ -213,28 +211,72 @@
         .itemdiv {
             display: flex;
             align-items: center;
-            background: rgb(255, 207, 249);
-            margin-right: 10px;
+            margin-right: 20px;
+            font-size: 2em;
         }
 
         .changeButton {
-            margin: 20px;
             padding: 12px 12px 7px;
             font-family: inherit;
             color: black;
-            background: rgb(154, 255, 255);
+            background: rgb(161, 255, 255);
             border-bottom: 2px solid black;
             border-right: 2px solid black;
             border-top: 2px solid rgb(230, 230, 230);
             border-left: 2px solid rgb(236, 236, 236);
             font-size: 1.2em;
+            transition: 0.3s;
+        }
+
+        .changeButton:hover {
+            background: rgb(255, 185, 254) !important;
+            transition: 0.3s;
+            cursor: pointer;
+            color: rgb(0, 10, 32);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 1200px;
+            position: relative;
+            height: 95vh;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 55px;
+            cursor: pointer;
+            position: absolute;
+            right: 17px;
+            top: 0px;
+            z-index: 1001;
+        }
+
+        .close:hover {
+            color: black;
         }
     </style>
 </head>
 
 <body>
     <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax 🏠</i></a>
-    <h1>Hantera Bokningar</h1>
+    <h1>Hantera bokningar</h1>
 
     <div id="calendar"></div>
 
@@ -244,6 +286,9 @@
     </div>
 
     <div id="bookings-list" class="bookings-list"></div>
+
+
+
 
     <script>
         const { createClient } = supabase;
@@ -603,46 +648,44 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
 
 
                     return `
-                        <div class="booking-item">
-                            <div class="booking-header">
-                                <div style="font-size: 1.3em;"><span>${booking.customer_name || 'Namnlös bokning'}</span><span> – ${booking.booking_number}</span<span> – ${booking.customer_email || 'Ingen email'} </span></div>
-                                
-                               <div> <span class="status-${status}" style="font-size: 1.1em;">
-                                    ${status}
-                                </span>
-                                </div>
-                            </div>
-                            <div class="booking-details">
-<div style="display: flex; gap: 0px;">
-<div class="itemdiv">${booking.adult_quantity ? `<span class="material-symbols-outlined">elderly_woman</span> ${booking.adult_quantity}` : ''}</div>
-<div class="itemdiv">${booking.youth_quantity ? `<span class="material-symbols-outlined">directions_run</span>${booking.youth_quantity}` : ''}</div>
-<div class="itemdiv">${booking.kid_quantity ? `<span class="material-symbols-outlined">stroller</span> ${booking.kid_quantity}` : ''}</div>
-<div class="itemdiv">${booking.full_day ? `<span class="material-symbols-outlined">update</span> ${booking.full_day}` : ''}</div>
-<div class="itemdiv">${booking.is_rebookable ? `<span class="material-symbols-outlined">sync</span> Ja` : ''}     </div>
-${(giftCardAmount > 0 || promoAmount > 0) ? `
-<div style="color: green; display: flex; gap: 15px;">
-    <div class="itemdiv"> ${giftCardAmount > 0 ? `<span class="material-symbols-outlined">redeem</span>${giftCardAmount}` : ''}</div>
-    <div class="itemdiv"> ${promoAmount > 0 ? `<span class="material-symbols-outlined">sell</span>${promoAmount}` : ''}</div>
-` : ''}
-</div>
-    <div style="font-weight: 500; display: flex; gap: 15px;"">
-         <div class="itemdiv"><span class="material-symbols-outlined">equal</span> ${totalCost}</div>
-        <div class="itemdiv"> <span class="material-symbols-outlined">price_check</span>${totalPaid}</div>
-       <div class="itemdiv">  ${paymentMethod ? `<span class="material-symbols-outlined">credit_card_gear</span> ${paymentMethod}` : ''}</div>
-    </div> 
-</div>
-<div style="display: flex; justify-content: space-between;"> 
-         <div class="itemdiv" style="background: none;">${booking.comments ? `<span class="material-symbols-outlined">comment</span>
-             <div style="margin-top: 15px; background: rgb(255, 255, 180); display: inline-block;"> ${booking.comments}</div>` : ' '}
-         </div> 
-        <div style="display: none;"> <span class="material-symbols-outlined">add</span> ${new Date(booking.created_at).toLocaleString('sv-SE')}</div>
-    </div> 
-
-</div>
-    <button class="changeButton">ändra</button>
-
-</div>
-                    `;
+    <div class="booking-item">
+        <div class="booking-header">
+            <div style="font-size: 1.3em;">
+                <span>${booking.customer_name || 'Namnlös bokning'}</span>
+                <span> – ${booking.booking_number}</span>
+                <span> – ${booking.customer_email || 'Ingen email'} </span>
+            </div>
+            <div>
+                <span class="status-${status}" style="font-size: 1.1em;">
+                    ${status}
+                </span>
+            </div>
+        </div>
+        <div class="booking-details">
+            <div style="display: flex; gap: 0px; margin: 10px 0px 15px;">
+                <div class="itemdiv">${booking.adult_quantity ? `<span class="material-symbols-outlined">elderly_woman</span> ${booking.adult_quantity}` : ''}</div>
+                <div class="itemdiv">${booking.youth_quantity ? `<span class="material-symbols-outlined">directions_run</span>${booking.youth_quantity}` : ''}</div>
+                <div class="itemdiv">${booking.kid_quantity ? `<span class="material-symbols-outlined">stroller</span> ${booking.kid_quantity}` : ''}</div>
+                <div class="itemdiv">${booking.full_day ? `<span class="material-symbols-outlined">update</span> ${booking.full_day}` : ''}</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: end;">
+            ${booking.comments ? `
+                <div class="itemdiv" style="background: none; margin-top: 0px; font-size: 1.2em;">
+                    <div style="max-width: 390px; width: fit-content; line-height: 1.2em; font-size: 1em; color: rgb(29, 52, 124); background: rgb(255, 255, 200); display: inline-block; padding: 5px 5px 2px;"> 
+                        ${booking.comments}
+                    </div>
+                </div>` : '&nbsp;'}
+                <div>
+             <button onclick="checkIn('${booking.id}', this)" style="background: ${booking.checked_in ? 'rgb(255, 238, 0)' : 'rgb(143, 231, 126)'}" class="changeButton checkInButton">
+                  ${booking.checked_in ? 'Incheckad' : 'checka in'}</button>
+             <button onclick="checkOut('${booking.id}', this)" style="background: ${booking.checked_out ? 'rgb(255, 238, 0)' : 'rgb(255, 130, 101)'}" class="changeButton checkOutButton">
+                  ${booking.checked_out ? 'Utcheckad' : 'checka ut'}</button>
+             <button onclick="openUpdateBooking('${booking.id}')" class="changeButton">Ändra</button>
+             </div>
+            </div>
+        </div>
+    </div>
+`;
                 }).join('');
 
                 // Scroll bookings list into view
@@ -652,6 +695,107 @@ ${(giftCardAmount > 0 || promoAmount > 0) ? `
                 console.error('Error loading bookings:', err);
                 const bookingsList = document.getElementById('bookings-list');
                 bookingsList.innerHTML = '<p class="error">Kunde inte ladda bokningar. Försök igen.</p>';
+            }
+        }
+
+        function openUpdateBooking(bookingId) {
+            // Create modal container if it doesn't exist
+            let modal = document.getElementById('updateBookingModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'updateBookingModal';
+                modal.className = 'modal';
+                modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe id="updateBookingFrame" 
+                    style="width: 100%; height: 90vh; border: none;" 
+                    src="updatebooking.html">
+                </iframe>
+            </div>
+        `;
+                document.body.appendChild(modal);
+
+                // Add close handlers
+                const closeBtn = modal.querySelector('.close');
+                closeBtn.onclick = () => {
+                    modal.style.display = 'none';
+                    // Reload the booking list to show any changes
+                    const selectedDay = document.querySelector('.calendar-day.selected');
+                    if (selectedDay) {
+                        loadTimeSlots(selectedDay.dataset.date);
+                    }
+                };
+                window.onclick = (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                        // Reload booking list
+                        const selectedDay = document.querySelector('.calendar-day.selected');
+                        if (selectedDay) {
+                            loadTimeSlots(selectedDay.dataset.date);
+                        }
+                    }
+                };
+            }
+
+            // Show modal
+            modal.style.display = 'block';
+
+            // Wait for iframe to load then send booking ID
+            const iframe = document.getElementById('updateBookingFrame');
+            iframe.onload = () => {
+                iframe.contentWindow.postMessage({
+                    type: 'INIT_UPDATE_BOOKING',
+                    bookingId: bookingId
+                }, '*');
+            };
+        }
+
+        async function checkIn(bookingId, button) {
+            try {
+                const { data, error } = await supabaseClient.rpc('toggle_booking_check_status', {
+                    p_booking_id: bookingId,
+                    p_action: 'in'
+                });
+
+                if (error) throw error;
+
+                // Update button appearance based on new status
+                if (data.status) {
+                    button.textContent = 'Incheckad';
+                    button.style.background = 'rgb(255, 238, 0)';
+                } else {
+                    button.textContent = 'checka in';
+                    button.style.background = 'rgb(143, 231, 126)';
+                }
+
+            } catch (error) {
+                console.error('Error toggling check-in status:', error);
+                alert('Ett fel uppstod vid in/utcheckning');
+            }
+        }
+
+        async function checkOut(bookingId, button) {
+            try {
+                const { data, error } = await supabaseClient.rpc('toggle_booking_check_status', {
+                    p_booking_id: bookingId,
+                    p_action: 'out'
+                });
+
+                if (error) throw error;
+
+                // Update button appearance based on new status
+                if (data.status) {
+                    button.textContent = 'Utcheckad';
+                    button.style.background = 'rgb(255, 238, 0)';
+                } else {
+                    button.textContent = 'checka ut';
+                    button.style.background = 'rgb(255, 130, 101)';
+                }
+
+            } catch (error) {
+                console.error('Error toggling check-out status:', error);
+                alert('Ett fel uppstod vid in/utcheckning');
             }
         }
 
