@@ -1171,13 +1171,13 @@ router.post('/admin-callback', async (req, res) => {
             console.error('Invalid callback checksum');
         }
 
-        bookingNumber = bookingNumber.replace(/re$/, '');
+        bookingNumberDeciphered = bookingNumber.replace(/re$/, '');
 
         // 5. Get the booking using both booking number
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
             .select('*, time_slots(*)')
-            .eq('booking_number', bookingNumber)
+            .eq('booking_number', bookingNumberDeciphered)
             .single();
 
         if (bookingError || !booking) {
