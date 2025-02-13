@@ -903,6 +903,14 @@
                 // Update booking summary
                 updateBookingSummary();
 
+                // Hide save buttons if payment method is invoice
+                const saveButtons = document.getElementById('saveButtons');
+                if (booking.payment_method === 'invoice') {
+                    saveButtons.style.display = 'none';
+                } else {
+                    saveButtons.style.display = 'block';
+                }
+
 
 
             } catch (error) {
