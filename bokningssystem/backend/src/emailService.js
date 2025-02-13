@@ -318,6 +318,18 @@ const msg = {
     }
 };
 
+    const response = await sgMail.send(msg);
+    console.log('Confirmation email sent successfully:', response[0].statusCode);
+    return response;
+} catch (error) {
+    console.error('Error sending confirmation email:', error);
+    if (error.response) {
+        console.error('Error details:', error.response.body);
+    }
+    return null;
+}
+}
+
 static async sendAddOnEmail(booking) {
     try {
         console.log('Sending add-on email for booking:', booking);
@@ -386,18 +398,6 @@ static async sendAddOnEmail(booking) {
         }
         throw error;
     }
-}
-
-    const response = await sgMail.send(msg);
-    console.log('Confirmation email sent successfully:', response[0].statusCode);
-    return response;
-} catch (error) {
-    console.error('Error sending confirmation email:', error);
-    if (error.response) {
-        console.error('Error details:', error.response.body);
-    }
-    return null;
-}
 }
 
 
