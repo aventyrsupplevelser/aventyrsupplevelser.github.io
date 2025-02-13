@@ -307,7 +307,6 @@
         );
 
         async function checkAuth() {
-            console.log('huh?')
             const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
                 window.location.href = '/bokningssystem/frontend/login.html';
@@ -530,9 +529,6 @@
                     });
 
                     const bookingCount = slot.bookings.length;
-                    console.log('Slot bookings:', slot.bookings); // Add this line
-                    console.log('Invoice bookings:', slot.bookings.filter(b => b.payment_method === 'invoice')); // Add this line
-
                     const fakturaCount = slot.bookings.filter(b => b.payment_method === 'invoice').length;
                     const unpaidCount = slot.bookings.filter(b => b.status === 'unpaid').length;
 

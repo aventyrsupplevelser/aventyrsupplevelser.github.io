@@ -492,10 +492,9 @@
         }
 
         #saveButtons {
-            display: block;
+            display: flex;
         }
 
-        /* New styles for update page */
         #saveChanges,
         #sendEmail {
             color: white;
@@ -806,7 +805,7 @@
     <!-- Save Button -->
     <div id="saveButtons">
         <button onclick="saveChanges();" id="saveChanges">Spara ändringar</button>
-        <button onclick="saveChanges(true);" id="sendEmail">Spara och maila<span id="differens"></span></button>
+        <button onclick="saveChanges(true);" id="sendEmail">Spara och maila&nbsp;<span id="differens"></span></button>
     </div>
     <script>
         // Initialize Supabase
@@ -908,7 +907,7 @@
                 if (booking.payment_method === 'invoice') {
                     emailButton.style.display = 'none';
                 } else {
-                    emailButton.style.display = 'block';
+                    emailButton.style.display = 'flex';
                 }
 
 
@@ -1388,8 +1387,9 @@ arrow_right_alt
             // Update difference span if positive
             const differenceSpan = document.getElementById('differens');
             if (differenceSpan) {
-                differenceSpan.textContent = priceDifference > 0 ? ` (${priceDifference.toFixed(2)} kr)` : '';
+                differenceSpan.textContent = priceDifference > 0 ? ` ${priceDifference.toFixed(2)} kr` : '';
             }
+
 
             // Build HTML
             let summaryHtml = `
@@ -1463,11 +1463,8 @@ arrow_right_alt
         }
 
         function updateTicketButtonStates() {
-            console.log('Current time slot:', currentTimeSlot);
-            console.log('Selected slot element:', document.querySelector(`.time-slot[data-slot-id="${currentTimeSlot}"]`));
 
             if (!currentTimeSlot) {
-                console.log('No current time slot, disabling buttons');
                 document.querySelectorAll('.quantity-btn').forEach(btn => {
                     btn.disabled = true;
                     btn.style.opacity = '0.5';
@@ -1477,15 +1474,12 @@ arrow_right_alt
 
             const selectedSlot = document.querySelector(`.time-slot[data-slot-id="${currentTimeSlot}"]`);
             if (!selectedSlot) {
-                console.log('Could not find slot element for currentTimeSlot:', currentTimeSlot);
                 return;
             }
 
             const availableSpots = parseInt(selectedSlot.dataset.availableSpots);
             const totalChosen = ticketState.adult + ticketState.youth + ticketState.kid;
 
-            console.log('Available spots:', availableSpots);
-            console.log('Total chosen:', totalChosen);
 
             // Update each type of ticket
             handleButtonState('adult', availableSpots, totalChosen);
@@ -1620,6 +1614,7 @@ arrow_right_alt
 
                 if (sendEmail) {
                     const difference = parseInt(document.getElementById('differens').textContent);
+                    console.log(difference)
 
                     // Call the email route with the booking info and difference
                     const response = await fetch('http://localhost:3000/api/swish/re-confirmation', {
