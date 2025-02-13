@@ -1236,7 +1236,7 @@ router.post('/admin-callback', async (req, res) => {
 
 });
 
-router.post('/rebooking-confirmation', async (req, res) => {
+router.post('/re-confirmation', async (req, res) => {
     try {
         const { booking_id, difference } = req.body;
 
