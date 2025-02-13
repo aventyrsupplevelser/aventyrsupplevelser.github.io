@@ -1328,7 +1328,8 @@ router.post('/re-confirmation', async (req, res) => {
             await EmailService.sendAddOnEmail({
                 ...booking,
                 ...latestChange,
-                quickpay_link: quickPayLink
+                quickpay_link: quickPayLink,
+                start_time: booking.time_slots.start_time
             });
 
         } else if ((!booking.paid_amount || booking.paid_amount === 0) && difference > 0) {
@@ -1357,6 +1358,7 @@ router.post('/re-confirmation', async (req, res) => {
 
             await EmailService.sendAdminConfirmation({
                 ...booking,
+                start_time: booking.time_slots.start_time,
                 quickpay_link: quickPayLink
             });
 
