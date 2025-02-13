@@ -250,21 +250,15 @@ if (booking.promo_code) {
     }
 }
 
-
-
 if (promoDiscount > subtotal) {
     promoDiscount = subtotal;
 }
-
-
-
             let totalAmountInSEK = subtotal - promoDiscount + rebookingSum; // Convert from öre to SEK
 
             if (totalAmountInSEK < 0) {
                 totalAmountInSEK = 0; 
             }
 
-            
             // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
             const vatRate = 0.06;
             const taxableAmount = Math.max(totalAmountInSEK - rebookingSum, 0);
@@ -323,6 +317,76 @@ const msg = {
         ...(booking.quickpay_link && { payment_link: booking.quickpay_link })
     }
 };
+
+static async sendAddOnEmail(booking) {
+    try {
+        console.log('Sending add-on email for booking:', booking);
+
+        // Calculate sums for added spots only
+        const adultSum = booking.adult_added * 400;
+        const youthSum = booking.youth_added * 300;
+        const kidSum = booking.kid_added * 200;
+        const fullDaySum = booking.full_day_added * 100;
+
+        // Calculate total (no gift cards or promos for add-ons)
+        const totalAmount = adultSum + youthSum + kidSum + fullDaySum;
+
+        // Calculate VAT (6%) on the total amount
+        const vatRate = 0.06;
+        const vatAmount = (totalAmount * vatRate) / (1 + vatRate);
+        const amountExVat = totalAmount - vatAmount;
+
+        const msg = {
+            to: booking.customer_email,
+            from: {
+                email: process.env.SENDGRID_FROM_EMAIL,
+                name: 'Sörsjöns Äventyrspark'
+            },
+            templateId: process.env.SENDGRID_ADD_ON_ID,
+            dynamic_template_data: {
+                booking_number: booking.booking_number,
+                customer_name: booking.customer_name,
+                booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }),
+                booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                }),
+                // Only include quantities that were added
+                ...(booking.adult_added && { adult_quantity: booking.adult_added, adult_sum: adultSum }),
+                ...(booking.youth_added && { youth_quantity: booking.youth_added, youth_sum: youthSum }),
+                ...(booking.kid_added && { kid_quantity: booking.kid_added, kid_sum: kidSum }),
+                ...(booking.full_day_added && { full_day: booking.full_day_added, full_day_sum: fullDaySum }),
+                // VAT and total
+                amount_ex_vat: amountExVat.toFixed(2),
+                vat_amount: vatAmount.toFixed(2),
+                total_amount: totalAmount.toFixed(2),
+                // Include the payment link
+                payment_link: booking.quickpay_link,
+                // Include the current total spots after the addition
+                total_adult_quantity: booking.adult_quantity,
+                total_youth_quantity: booking.youth_quantity,
+                total_kid_quantity: booking.kid_quantity,
+                total_full_day: booking.full_day
+            }
+        };
+
+        const response = await sgMail.send(msg);
+        console.log('Add-on confirmation email sent successfully:', response[0].statusCode);
+        return response;
+
+    } catch (error) {
+        console.error('Error sending add-on confirmation email:', error);
+        if (error.response) {
+            console.error('Error details:', error.response.body);
+        }
+        throw error;
+    }
+}
 
     const response = await sgMail.send(msg);
     console.log('Confirmation email sent successfully:', response[0].statusCode);
