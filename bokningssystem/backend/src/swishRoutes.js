@@ -1335,12 +1335,14 @@ router.post('/re-confirmation', async (req, res) => {
 
         } else if ((!booking.paid_amount || booking.paid_amount === 0) && difference > 0) {
             // Scenario 2: First payment for updated booking
-            const totalAmount = calculateBookingAmount({
+            const totalAmount = await calculateBookingAmount({
                 adult_quantity: booking.adult_quantity,
                 youth_quantity: booking.youth_quantity,
                 kid_quantity: booking.kid_quantity,
                 full_day: booking.full_day,
-                is_rebookable: booking.is_rebookable
+                is_rebookable: booking.is_rebookable,
+                gift_card_number: booking.gift_card_number, // Pass the gift card identifier
+                promo_code: booking.promo_code              // Pass the promo code identifier
             });
 
             const quickPayLink = await createQuickPayLink({
@@ -1450,42 +1452,72 @@ async function createQuickPayLink({
     return link.url;
 }
 
-function calculateBookingAmount({
+// Updated calculateBookingAmount function
+async function calculateBookingAmount({
     adult_quantity = 0,
     youth_quantity = 0,
     kid_quantity = 0,
     full_day = 0,
     is_rebookable = false,
-    gift_card = null,
+    gift_card_number = null,
     promo_code = null
-}) {
-    // Base amount calculation
-    let baseAmount = (adult_quantity * 400) + (youth_quantity * 300) + (kid_quantity * 200);
-    if (full_day) baseAmount += (full_day * 100);
-
-    // Apply discounts if any
-    if (gift_card?.amount) {
-        baseAmount -= gift_card.amount;
+  }) {
+    // Base sums
+    const adultSum = adult_quantity * 400;
+    const youthSum = youth_quantity * 300;
+    const kidSum = kid_quantity * 200;
+    const fullDaySum = full_day * 100;
+    const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
+  
+    // Look up gift card amount if provided
+    let giftCardAmount = 0;
+    if (gift_card_number) {
+      const { data: giftCard, error } = await supabase
+        .from('gift_cards')
+        .select('amount')
+        .eq('gift_card_number', gift_card_number)
+        .single();
+      if (!error && giftCard) {
+        giftCardAmount = giftCard.amount;
+      }
+      // Ensure the gift card doesn't exceed the base total
+      if (giftCardAmount > baseTotal) {
+        giftCardAmount = baseTotal;
+        console.log('Equalized gift card amount to base total');
+      }
     }
-    
+  
+    // Subtotal after gift card deduction
+    const subtotal = baseTotal - giftCardAmount;
+  
+    // Look up promo code details if provided
+    let promoDiscount = 0;
     if (promo_code) {
-        const discountAmount = promo_code.is_percentage ? 
-            (baseAmount * (promo_code.discount_value / 100)) : 
-            promo_code.discount_value;
-        baseAmount -= discountAmount;
+      const { data: promo, error } = await supabase
+        .from('promo_codes')
+        .select('*')
+        .eq('promo_code', promo_code)
+        .single();
+      if (!error && promo) {
+        if (promo.is_percentage) {
+          promoDiscount = subtotal * (promo.discount_value / 100);
+        } else {
+          promoDiscount = promo.discount_value;
+        }
+      }
     }
-
-    // Ensure non-negative
-    baseAmount = Math.max(0, baseAmount);
-
+  
+    // Calculate final amount ensuring it doesn't go negative
+    let finalAmount = baseTotal - giftCardAmount - promoDiscount;
+    finalAmount = Math.max(0, finalAmount);
+  
     // Add rebooking fee if applicable
-    let totalAmount = baseAmount;
     if (is_rebookable) {
-        totalAmount += ((adult_quantity + youth_quantity + kid_quantity) * 25);
+      finalAmount += (adult_quantity + youth_quantity + kid_quantity) * 25;
     }
-
-    return totalAmount;
-}
-
+  
+    return finalAmount;
+  }
+  
 
 export default router;
