@@ -1171,7 +1171,7 @@ router.post('/admin-callback', async (req, res) => {
             console.error('Invalid callback checksum');
         }
 
-        bookingNumberDeciphered = bookingNumber.replace(/re$/, '');
+        const bookingNumberDeciphered = bookingNumber.replace(/re$/, '');
 
         // 5. Get the booking using both booking number
         const { data: booking, error: bookingError } = await supabase
