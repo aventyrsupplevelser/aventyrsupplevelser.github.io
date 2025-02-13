@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppdatera Bokning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_left_alt,arrow_right_alt" />
+
+    <style>
+        body {
+            font-family: "Josefin Sans", sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .booking-header {
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .booking-header h2 {
+            margin: 0 0 10px 0;
+            color: rgb(0, 0, 0);
+            font-size: 1.8em;
+        }
+
+        .booking-header p {
+            margin: 5px 0;
+            font-size: 1.2em;
+            color: rgb(51, 51, 51);
+        }
+
+        .mainFlex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        #customerInfo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            background: linear-gradient(169deg, rgb(252, 192, 255), rgb(255, 209, 209));
+            width: fit-content;
+            margin: 0 auto;
+            padding: 20px 20px 15px;
+            border-radius: 4px;
+        }
+
+        /* Copy all styles from andersbokar.html EXCEPT fixed positioning styles */
+
+        /* Calendar styles */
+        .calendar-container {
+            font-family: "Josefin Sans", sans-serif;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0px auto 20px;
+            max-width: 456px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 50px;
+        }
+
+        #times {
+            max-width: 456px;
+            margin: 0px auto 30px;
+        }
+
+
+        .time-slots {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 10px;
+            font-size: 1.3em;
+        }
+
+        .time-slots.visible {
+            display: grid;
+        }
+
+        .ticket-section {
+            padding-top: 0px;
+            padding-right: 20px;
+            max-width: 340px;
+            margin: 20px auto 30px;
+        }
+
+        .ticket-section.visible {
+            display: block;
+        }
+
+        #nextMonth,
+        #prevMonth {
+            padding: 13px 13px 8px;
+            background: rgba(246, 244, 221, 0.86);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 61px);
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+            padding: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: auto;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            /* All dates start as grey */
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            font-family: "josefin sans";
+            padding-top: 12px;
+            border-bottom: 2px solid black;
+            border-right: 2px solid black;
+            border-top: 2px solid rgb(230, 230, 230);
+            border-left: 2px solid rgb(236, 236, 236);
+        }
+
+        .calendar-day:disabled {
+            background-color: #f0f0f0;
+            color: #676767;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.available {
+            background-color: rgb(173, 240, 159);
+            color: #1a1a1a;
+        }
+
+        .calendar-day.selected {
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
+        }
+
+        .booking-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+        }
+
+        label span {
+            font-size: 0.6em;
+            color: #666;
+            line-height: 1.3em !important;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="date"],
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea[type="comment"],
+        select {
+            width: 100%;
+            padding: 11px 8px 8px;
+            border: 2px solid #515151;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+            margin-top: 5px;
+            background: rgba(239, 239, 239, 0.411);
+        }
+
+        .time-slot {
+            padding: 12px 12px 7px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .time-slot.selected {
+            border: 2.5px solid black;
+            filter: drop-shadow(0px 0px 5px rgba(91, 91, 91, 0.32));
+            will-change: filter;
+        }
+
+        .ticket-selector {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            padding: 14px 10px 9px;
+        }
+
+        .ticket-selector label {
+            width: 235px;
+        }
+
+        .ticket-selector div {
+            font-weight: 700;
+        }
+
+        .ticket-selector select {
+            width: 80px;
+        }
+
+        button {
+            color: rgb(50, 50, 50);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            background: rgb(246, 244, 221);
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            background-color: #ffe6e6;
+            /* light red background */
+            border: 1px solid red;
+            padding: 14px 14px 9px;
+            margin-top: 10px;
+            font-size: 1.0em;
+            display: none;
+            border-radius: 3px;
+            width: 300px;
+            line-height: 1.4em;
+        }
+
+        .success {
+            color: green;
+            margin-top: 5px;
+        }
+
+        #bookingForm {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 20px;
+            width: 129px;
+            margin-top: -5px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .quantity-btn:hover {
+            background: none;
+        }
+
+        .quantity-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .quantity {
+            min-width: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: 500;
+            padding: 8px 10px 3px;
+            border: 2px solid rgb(43, 43, 43);
+            border-radius: 3px;
+        }
+
+
+        #customerbox {
+            display: grid;
+            grid-template-areas: "a b" "c c";
+            gap: 0px 40px;
+        }
+
+        #continueToPaymentBtn,
+        #freeConfirmBtn {
+            background: linear-gradient(169deg, rgba(6, 107, 11, 1) 0%, rgb(20, 120, 25) 100%);
+            color: white;
+            min-width: 310px;
+            padding: 20px 20px 15px;
+            font-family: inherit;
+            transition: 0.2s;
+            font-size: 1.2em;
+            filter: drop-shadow(0px 0px 4px rgba(71, 71, 71, 0.32));
+            border-radius: 6px;
+        }
+
+        #continueToPaymentBtn:hover,
+        #freeConfirmBtn:hover {
+            background: linear-gradient(169deg, rgb(21, 175, 29) 0%, rgb(57, 158, 62) 100%);
+            color: #e8e8e8;
+            transition: 0.2s;
+            filter: drop-shadow(0px 0px 4px rgba(71, 71, 71, 0.32));
+            will-change: filter;
+        }
+
+        button img {
+            height: 23px;
+        }
+
+        #bookingSummaryFinal {
+            margin: 0px auto 0px;
+        }
+
+        #bookingSummaryFinal p {
+            margin-block-start: 12px;
+            margin-block-end: 12px;
+        }
+
+        .rebooking-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-right: 37px;
+        }
+
+        /* Hide the checkbox input */
+        .rebooking-switch input {
+            display: none;
+        }
+
+        /* The slider background */
+        .rebooking-switch .slider {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Slider circle */
+        .rebooking-switch .slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* When the input is checked, turn the slider green and move the circle */
+        .rebooking-switch input:checked+.slider {
+            background: #4CAF50;
+        }
+
+        .rebooking-switch input:checked+.slider::before {
+            transform: translateX(25px);
+        }
+
+        /* Wrap everything in a label so we can click the text to toggle */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        /* Hide the native checkbox */
+        .custom-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        .custom-checkbox .checkmark {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #888;
+            border-radius: 4px;
+            margin-right: 15px;
+            margin-top: -2px !important;
+            background-color: #fff;
+            transition: background-color 0.2s, border-color 0.2s;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .custom-checkbox:hover .checkmark {
+            border-color: #555;
+        }
+
+        /* Focus ring if the checkbox is tabbed to */
+        .custom-checkbox input[type="checkbox"]:focus+.checkmark {
+            box-shadow: 0 0 3px 2px rgba(100, 150, 250, 0.5);
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked+.checkmark::after {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid #fff;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg);
+        }
+
+
+        #heldaglabel span {
+            margin: 0px;
+            font-size: 0.8em;
+            display: inline;
+        }
+
+        .button-container {
+            float: right;
+        }
+
+        .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        #bookingSummaryFinal {
+            width: 380px;
+            margin-bottom: 30px;
+            padding: 10px;
+            font-size: 1.3em;
+        }
+
+        #saveButtons {
+            display: block;
+        }
+
+        /* New styles for update page */
+        #saveChanges,
+        #sendEmail {
+            color: white;
+            width: fit-content;
+            padding: 20px 20px 15px;
+            font-size: 1.5em;
+            font-family: inherit;
+            border: none;
+            border-radius: 6px;
+            margin: 10px 5px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #saveChanges {
+            background: linear-gradient(169deg, rgba(6, 107, 11, 1) 0%, rgb(20, 120, 25) 100%);
+        }
+
+        #saveChanges:hover {
+            background: linear-gradient(169deg, rgb(21, 175, 29) 0%, rgb(57, 158, 62) 100%);
+        }
+
+        #sendEmail {
+            background: linear-gradient(169deg, rgba(255, 154, 0, 1), rgb(255, 98, 0));
+        }
+
+        #sendEmail:hover {
+            background: linear-gradient(169deg, rgb(255, 166, 121), rgb(255, 42, 0));
+        }
+
+        .paid-info {
+            background: rgb(247, 246, 230);
+            padding: 10px 10px 5px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+
+        #rebooking label {
+            font-size: 1.5em;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        #customerbox {
+            max-width: 430px;
+        }
+
+        #message {
+            display: none;
+            max-width: 300px;
+            width: fit-content;
+            line-height: 1.3em;
+            color: rgb(0, 0, 0);
+            background: linear-gradient(109deg, rgb(255, 244, 147) 0%, rgb(142, 255, 253) 100%);
+            border: 5px solid rgb(0, 0, 0);
+            padding: 20px 20px 15px;
+            font-size: 1.3em;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            border-radius: 4px;
+            filter: drop-shadow(0px 0px 5px rgba(128, 128, 128, 0.489));
+            z-index: 9999;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 2vw;
+                font-size: 0.9em;
+            }
+
+            #bookingForm {
+                max-width: none;
+                margin: 0;
+            }
+
+            .calendar-container {
+                padding: 0px 0px;
+            }
+
+            .calendar-day {
+                padding: clamp(1px, 1.5vw, 8px) clamp(0px, 1vw, 3px) 3px;
+                font-size: clamp(16px, 4vw, 18px);
+                height: clamp(30px, 10vw, 40px);
+                border-radius: 2px;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, clamp(13vw, 13vw, 13vw));
+                gap: clamp(2px, 1vw, 5px);
+                width: 100%;
+            }
+
+            #nextMonth,
+            #prevMonth {
+                padding: 8px 13px 3px;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(5, minmax(50px, 1fr));
+                font-size: 1.2em;
+                gap: 4px;
+            }
+
+            .time-slot {
+                padding: 12px 6px 7px;
+            }
+
+            .ticket-selector {
+                font-size: clamp(1.3em, 4vw, 1.5em);
+                gap: 0px;
+                padding: 10px calc(8vw - 20px) 5px;
+            }
+
+            .ticket-selector div {
+                width: 100px;
+            }
+
+            .ticket-selector label {
+                max-width: 150px;
+                margin-right: 10px;
+                font-weight: 500;
+                font-size: 0.9em;
+            }
+
+
+
+
+            .ticket-selector label span {
+                margin-top: 7px;
+            }
+
+            .quantity-selector {
+                gap: 0px;
+                margin: 0px;
+            }
+
+            .quantity-btn {
+                padding: 5px;
+                margin-bottom: 0px;
+            }
+
+            .quantity {
+                padding: 8px 5px 3px;
+            }
+
+            #rebooking {
+                margin: 0px 20px;
+            }
+
+            #continueToPaymentBtn,
+            #freeConfirmBtn {
+                min-width: 0;
+                width: 300px;
+            }
+
+            .button-container {
+                float: none;
+            }
+
+            #continueToPaymentBtn {
+                margin: auto;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea[type="comment"] {
+                max-width: 84vw;
+            }
+
+            #customerbox {
+                display: flex;
+                flex-direction: column;
+                margin: 0 auto;
+                width: 90vw;
+            }
+
+
+            #bookingSummaryFinal {
+                width: clamp(290px, 70vw, 380px);
+                margin-left: 2vw;
+                margin-bottom: 20px;
+                font-size: 1.1em;
+                padding: 10px 0px;
+            }
+
+
+            .custom-checkbox,
+            #codeInput {
+                line-height: 1.3em;
+                margin-left: 3vw;
+            }
+
+            #paymentButtons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #alternateDeviceSection {
+                text-align: center;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Booking Header -->
+    <div class="booking-header">
+        <h2 style="text-align: center;" id="customerInfo"></h2>
+    </div>
+    <div id="message"></div>
+    <div class="mainFlex">
+        <div>
+            <!-- Calendar Section -->
+            <div id="calendar"></div>
+
+            <!-- Time Slots -->
+            <div id="times">
+                <div class="time-slots" id="timeSlots"></div>
+                <div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
+            </div>
+        </div>
+
+        <!-- Ticket Section -->
+        <div id="tickets">
+            <div class="ticket-section">
+                <!-- Adult tickets -->
+                <div class="ticket-selector">
+                    <label>Vuxen:</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn minus" data-ticket-type="adult">-</button>
+                        <span class="quantity" id="adultQuantity">0</span>
+                        <button type="button" class="quantity-btn plus" data-ticket-type="adult">+</button>
+                    </div>
+                </div>
+
+                <!-- Youth tickets -->
+                <div class="ticket-selector" style="background: rgb(241, 241, 241)">
+                    <label>Ungdom:</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn minus" data-ticket-type="youth">-</button>
+                        <span class="quantity" id="youthQuantity">0</span>
+                        <button type="button" class="quantity-btn plus" data-ticket-type="youth">+</button>
+                    </div>
+                </div>
+
+                <!-- Kid tickets -->
+                <div class="ticket-selector">
+                    <label>Barn:</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn minus" data-ticket-type="kid">-</button>
+                        <span class="quantity" id="kidQuantity">0</span>
+                        <button type="button" class="quantity-btn plus" data-ticket-type="kid">+</button>
+                    </div>
+                </div>
+
+                <!-- Full day -->
+                <div class="fulldaySection" style="background: rgb(241, 241, 241)">
+                    <div class="ticket-selector">
+                        <label>Heldag:</label>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus" data-ticket-type="fullday">-</button>
+                            <span class="quantity" id="fulldayQuantity">0</span>
+                            <button type="button" class="quantity-btn plus" data-ticket-type="fullday">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="rebooking">
+                    <label class="rebooking-switch">
+                        <div>Ombokning:</div>
+                        <input type="checkbox" id="rebookingCheckbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mainFlex">
+        <!-- Customer Details -->
+        <div id="customerSection">
+            <div id="customerbox">
+                <div class="form-group">
+                    <label>Namn*</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email*</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                <div class="form-group" style="grid-area: c;">
+                    <label>Kommentar (valfritt)</label>
+                    <textarea style="height: 150px" type="comment" id="customerComment"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Summary -->
+        <div id="bookingSummaryFinal" class="summary-box"></div>
+    </div>
+
+    <!-- Save Button -->
+    <div id="saveButtons">
+        <button onclick="saveChanges();" id="saveChanges">Spara ändringar</button>
+        <button onclick="saveChanges(email);" id="sendEmail">Spara och
+            maila<span id="differens"></span></button>
+    </div>
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://czbvtmrqzvovytzqokko.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
+        );
+
+        // After Supabase initialization and before the global state
+        const available = "rgb(173, 240, 159)";
+        const notAvailable = "rgb(255, 128, 124)";
+        const fewLeft = "rgb(255, 199, 5)";
+
+        // Global state
+        let currentBooking = null;
+        let currentTimeSlot = null;
+        let ticketState = {
+            adult: 0,
+            youth: 0,
+            kid: 0,
+            fullday: 0,
+            is_rebookable: false
+        };
+
+        // Listen for booking ID from parent window
+        window.addEventListener('message', async (event) => {
+            if (event.data.type === 'INIT_UPDATE_BOOKING') {
+                await initializeBooking(event.data.bookingId);
+            }
+        });
+
+        async function initializeBooking(bookingId) {
+            try {
+                // Fetch booking details with related data
+                const { data: booking, error } = await supabaseClient
+                    .from('bookings')
+                    .select(`
+                        *,
+                        time_slots (
+                            start_time,
+                            allow_full_day
+                        ),
+                        gift_cards (
+                            gift_card_number,
+                            amount
+                        ),
+                        promo_codes (
+                            promo_code,
+                            discount_value,
+                            is_percentage
+                        )
+                    `)
+                    .eq('id', bookingId)
+                    .single();
+
+                if (error) throw error;
+
+                // Store current booking
+                currentBooking = booking;
+
+                // Update header
+                document.getElementById('customerInfo').innerHTML = `<span>${booking.customer_name}</span><span> ${booking.booking_number}</span><span> ${booking.customer_email}</span>`;
+
+                // Initialize ticket state
+                ticketState = {
+                    adult: booking.adult_quantity || 0,
+                    youth: booking.youth_quantity || 0,
+                    kid: booking.kid_quantity || 0,
+                    fullday: booking.full_day || 0,
+                    is_rebookable: booking.is_rebookable
+                };
+
+                // Update displays
+                updateTicketDisplays();
+                document.getElementById('rebookingCheckbox').checked = ticketState.is_rebookable;
+
+                // Fill customer details
+                document.getElementById('customerName').value = booking.customer_name || '';
+                document.getElementById('customerEmail').value = booking.customer_email || '';
+                document.getElementById('customerComment').value = booking.comments || '';
+
+                const calendar = new BookingCalendar(document.getElementById('calendar'));
+                await calendar.init();
+
+                // Explicitly select the current booking's date
+                if (booking.time_slots) {
+                    const date = new Date(booking.time_slots.start_time);
+                    const dateStr = date.toISOString().split('T')[0];
+                    calendar.selectDate(dateStr);
+                }
+
+
+                // Update booking summary
+                updateBookingSummary();
+
+
+
+            } catch (error) {
+                console.error('Error initializing booking:', error);
+                alert('Ett fel uppstod vid laddning av bokningen');
+            }
+        }
+
+        // Constants
+        const PRICES = {
+            adult: 400,
+            youth: 300,
+            kid: 200,
+            fullday: 100,
+            rebooking: 25
+        };
+
+        class BookingCalendar {
+            constructor(container) {
+                this.container = container;
+                this.selectedDate = null;
+                this.availableDates = {};
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.init();
+            }
+
+            async init() {
+                this.render();
+                await this.fetchAvailableDates();
+
+                // Remove the automatic date selection from here since we'll do it in initializeBooking
+                return this; // So we can await it
+            }
+
+            async fetchAvailableDates() {
+                try {
+                    const year = this.currentMonth.getFullYear();
+                    const month = this.currentMonth.getMonth() + 1;
+
+                    const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0);
+                    const endOfMonth = new Date(year, month, 0, 23, 59, 59);
+
+                    // Get requirements from current booking
+                    const requiredSpots = currentBooking ?
+                        (currentBooking.adult_quantity + currentBooking.youth_quantity + currentBooking.kid_quantity) : 0;
+                    const needsFullDay = currentBooking && currentBooking.full_day > 0;
+
+                    const { data: slots, error } = await supabaseClient
+                        .from('time_slots')
+                        .select('*')
+                        .gte('start_time', startOfMonth.toISOString())
+                        .lte('start_time', endOfMonth.toISOString())
+                        .order('start_time');
+
+                    if (error) throw error;
+
+                    // Group slots by date and check availability
+                    const dateAvailability = {};
+                    slots.forEach(slot => {
+                        const date = new Date(slot.start_time);
+                        const dateStr = date.toISOString().split('T')[0];
+
+                        // For current booking's time slot, don't count its own spots
+                        let availableSpots = slot.available_spots;
+                        if (currentBooking && slot.id === currentBooking.time_slot_id) {
+                            availableSpots += requiredSpots;
+                        }
+
+                        // Check if this slot meets requirements
+                        const hasEnoughSpots = availableSpots >= requiredSpots;
+                        const hasFullDay = !needsFullDay || slot.allow_full_day;
+
+                        // Only count this slot if it meets all requirements
+                        if (hasEnoughSpots && hasFullDay) {
+                            if (!dateAvailability[dateStr]) {
+                                dateAvailability[dateStr] = {
+                                    validSlots: 0
+                                };
+                            }
+                            dateAvailability[dateStr].validSlots++;
+                        }
+                    });
+
+                    this.availableDates = dateAvailability;
+                    this.updateAvailableDays();
+
+                } catch (error) {
+                    console.error('Error fetching available dates:', error);
+                }
+            }
+
+            render() {
+                // Build the calendar HTML
+                this.container.innerHTML = `
+              <div class="calendar-container">
+                <div class="calendar-header">
+                  <button id="prevMonth"><span class="material-symbols-outlined">
+arrow_left_alt
+</span></button>
+                  <h3>${this.getMonthDisplay()}</h3>
+                  <button id="nextMonth"><span class="material-symbols-outlined">
+arrow_right_alt
+</span></button>
+                </div>
+                <div class="calendar-grid">
+                  ${this.renderWeekdays()}
+                  ${this.renderDays()}
+                </div>
+              </div>
+            `;
+
+                // Next / Prev month & day clicks
+                this.attachEventListeners();
+            }
+
+            getMonthDisplay() {
+                return this.currentMonth.toLocaleDateString('sv-SE', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            renderWeekdays() {
+                const weekdays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+                return weekdays.map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+            }
+
+            renderDays() {
+                const days = [];
+                const firstDay = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), 1).getDay();
+                const offset = (firstDay === 0) ? 6 : firstDay - 1; // Monday-based offset
+                const daysInMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 0).getDate();
+
+                // Empty cells before first day
+                for (let i = 0; i < offset; i++) {
+                    days.push('<div></div>');
+                }
+
+                // Render each day
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${this.currentMonth.getFullYear()}-${String(this.currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isPast = new Date(dateStr) < new Date(new Date().toDateString());
+
+                    days.push(`
+                <button 
+                  type="button"
+                  class="calendar-day" 
+                  data-date="${dateStr}"
+                  ${isPast ? 'disabled' : ''}
+                >
+                  ${day}
+                </button>
+              `);
+                }
+                return days.join('');
+            }
+
+            attachEventListeners() {
+                // Next / Prev month
+                const prevMonthButton = this.container.querySelector('#prevMonth');
+                const nextMonthButton = this.container.querySelector('#nextMonth');
+
+                // If in current month, disable prev
+                const now = new Date();
+                const isCurrentMonth = this.currentMonth.getMonth() === now.getMonth() &&
+                    this.currentMonth.getFullYear() === now.getFullYear();
+                if (isCurrentMonth) {
+                    prevMonthButton.disabled = true;
+                    prevMonthButton.style.opacity = '0.5';
+                    prevMonthButton.style.cursor = 'not-allowed';
+                } else {
+                    prevMonthButton.disabled = false;
+                    prevMonthButton.style.opacity = '1';
+                    prevMonthButton.style.cursor = 'pointer';
+                }
+
+                prevMonthButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    this.changeMonth(-1);
+                });
+
+                nextMonthButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    this.changeMonth(+1);
+                });
+
+                // Day clicks
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    day.addEventListener('click', (e) => {
+                        if (!e.target.disabled) {
+                            const dateStr = e.target.dataset.date;
+                            this.selectDate(dateStr);
+                        }
+                    });
+                });
+            }
+
+            async changeMonth(direction, depth = 0) {
+                currentTimeSlot = null;
+                document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                updateTicketButtonStates();
+                loadTimeSlots();
+                const maxDepth = 7; // maximum number of months to skip in a row
+                // Calculate the new month based on the direction
+                const newMonth = new Date(this.currentMonth);
+                newMonth.setMonth(this.currentMonth.getMonth() + direction);
+
+                // Prevent going backwards before the current month if that's desired
+                const now = new Date();
+                const currentMonthYear = new Date(now.getFullYear(), now.getMonth());
+                if (direction < 0 && newMonth < currentMonthYear) {
+                    return; // do nothing if trying to go back too far
+                }
+
+                // Set and render the new month
+                this.currentMonth = newMonth;
+                this.render();
+
+                // Refresh available dates for the current month
+                await this.fetchAvailableDates();
+
+                // Check if any available dates were found for this month.
+                // (Assuming fetchAvailableDates() updates this.availableDates.)
+                if (Object.keys(this.availableDates).length === 0 && depth < maxDepth) {
+                    // No available dates were found in this month—skip to the next/previous month.
+                    return this.changeMonth(direction, depth + 1);
+                }
+
+                // Finally, update the days in the calendar (which colors them based on availability, etc.)
+                this.updateAvailableDays();
+            }
+
+
+            updateAvailableDays() {
+                this.container.querySelectorAll('.calendar-day').forEach(day => {
+                    const dateStr = day.dataset.date;
+                    const availability = this.availableDates[dateStr];
+
+                    if (availability && availability.validSlots > 0) {
+                        day.style.backgroundColor = available;
+                        day.classList.add('available');
+                    } else {
+                        day.style.backgroundColor = 'rgb(240, 240, 240)';
+                        day.disabled = true;
+                    }
+                });
+            }
+
+            selectDate(dateStr) {
+                // Remove any previously selected
+                this.container.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+
+                // Mark this day as selected
+                const selectedBtn = this.container.querySelector(`[data-date="${dateStr}"]`);
+                selectedBtn?.classList.add('selected');
+
+                // Clear any previously selected time slot
+                document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                currentTimeSlot = null;
+
+                this.selectedDate = dateStr;
+
+                // Show the times section
+                const timesSection = document.getElementById('times');
+                const timeSlotsContainer = document.getElementById('timeSlots');
+                timesSection.classList.add('visible');
+                timeSlotsContainer.classList.add('visible');
+
+                // Scroll to times
+                timeSlotsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Actually load the time slots for this date
+                loadTimeSlots(dateStr);
+            }
+        }
+
+        async function loadTimeSlots(dateStr) {
+            if (!dateStr) return;
+
+            try {
+                const startOfDay = new Date(`${dateStr}T00:00:00`);
+                const endOfDay = new Date(`${dateStr}T23:59:59`);
+
+                // Get requirements
+                const requiredSpots = currentBooking ?
+                    (currentBooking.adult_quantity + currentBooking.youth_quantity + currentBooking.kid_quantity) : 0;
+                const needsFullDay = currentBooking && currentBooking.full_day > 0;
+
+                const { data: slots, error } = await supabaseClient
+                    .from('time_slots')
+                    .select('*')
+                    .gte('start_time', startOfDay.toISOString())
+                    .lte('start_time', endOfDay.toISOString())
+                    .order('start_time');
+
+                if (error) throw error;
+
+                const timeSlotsEl = document.getElementById('timeSlots');
+                timeSlotsEl.innerHTML = '';
+
+                if (!slots || slots.length === 0) {
+                    timeSlotsEl.innerHTML = `<p>Inga tider här.</p>`;
+                    return;
+                }
+
+                // Filter slots to only show valid ones
+                const validSlots = slots.filter(slot => {
+                    let availableSpots = slot.available_spots;
+                    if (currentBooking && slot.id === currentBooking.time_slot_id) {
+                        availableSpots += requiredSpots;
+                    }
+
+                    const hasEnoughSpots = availableSpots >= requiredSpots;
+                    const hasFullDay = !needsFullDay || slot.allow_full_day;
+
+                    return hasEnoughSpots && hasFullDay;
+                });
+
+                if (validSlots.length === 0) {
+                    timeSlotsEl.innerHTML = `<p>Inga tider tillgängliga detta datum.</p>`;
+                    return;
+                }
+
+                validSlots.forEach(slot => {
+                    const timeStr = new Date(slot.start_time).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'time-slot';
+                    timeSlot.dataset.slotId = slot.id;
+                    timeSlot.dataset.allowsFullday = slot.allow_full_day;
+                    timeSlot.dataset.availableSpots = slot.available_spots +
+                        (currentBooking && slot.id === currentBooking.time_slot_id ? requiredSpots : 0);
+                    timeSlot.style.backgroundColor = available;
+
+                    if (currentBooking && slot.id === currentBooking.time_slot_id) {
+                        timeSlot.classList.add('selected');
+                        currentTimeSlot = slot.id;
+                    }
+
+                    timeSlot.textContent = timeStr;
+                    timeSlot.addEventListener('click', () => selectTimeSlot(timeSlot));
+                    timeSlotsEl.appendChild(timeSlot);
+                });
+
+                updateTicketButtonStates();
+
+            } catch (err) {
+                console.error('Error loading time slots:', err);
+                document.getElementById('timeSlots').innerHTML =
+                    '<p class="error">Kunde inte ladda tider. Försök igen.</p>';
+            }
+        }
+
+        function selectTimeSlot(slotEl) {
+            if (slotEl.classList.contains('disabled')) return;
+
+            // Clear previous selection
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            slotEl.classList.add('selected');
+
+            currentTimeSlot = slotEl.dataset.slotId;
+
+            // Show/hide full day section based on slot
+            const allowsFullDay = slotEl.dataset.allowsFullday === 'true';
+            const fulldaySection = document.querySelector('.fulldaySection');
+            if (fulldaySection) {
+                fulldaySection.style.display = allowsFullDay ? 'block' : 'none';
+                if (!allowsFullDay) {
+                    ticketState.fullday = 0;
+                    document.getElementById('fulldayQuantity').textContent = '0';
+                }
+            }
+
+            updateBookingSummary();
+            updateTicketButtonStates();
+            updateSpotsLeftDisplay();
+        }
+
+        function updateTicketDisplays() {
+            document.getElementById('adultQuantity').textContent = ticketState.adult;
+            document.getElementById('youthQuantity').textContent = ticketState.youth;
+            document.getElementById('kidQuantity').textContent = ticketState.kid;
+            document.getElementById('fulldayQuantity').textContent = ticketState.fullday;
+            document.getElementById('rebookingCheckbox').checked = ticketState.is_rebookable;
+        }
+
+        function handleQuantityChange(type, change) {
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            if (!selectedSlot && type !== 'fullday') return;
+
+            const currentValue = ticketState[type];
+            const availableSpots = selectedSlot ? parseInt(selectedSlot.dataset.availableSpots) : 0;
+            const totalChosen = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            if (type === 'fullday') {
+                const newValue = currentValue + change;
+                const totalTix = ticketState.adult + ticketState.youth + ticketState.kid;
+                if (newValue >= 0 && newValue <= totalTix) {
+                    ticketState.fullday = newValue;
+                    document.getElementById('fulldayQuantity').textContent = newValue.toString();
+                }
+            } else {
+                const newValue = currentValue + change;
+                if (newValue >= 0 && (totalChosen + change) <= availableSpots) {
+                    if (type === 'kid' && ticketState.adult === 0 && change > 0) return;
+                    ticketState[type] = newValue;
+                    document.getElementById(`${type}Quantity`).textContent = newValue.toString();
+                }
+            }
+
+            if (type === 'adult' && ticketState.adult === 0 && ticketState.kid > 0) {
+                ticketState.kid = 0;
+                document.getElementById('kidQuantity').textContent = '0';
+            }
+
+            updateBookingSummary();
+            updateTicketButtonStates();
+            updateSpotsLeftDisplay();
+        }
+
+        function updateBookingSummary() {
+            const summaryEl = document.getElementById('bookingSummaryFinal');
+            if (!summaryEl || !currentBooking) return;
+
+            // Get selected date and time if changed
+            const selectedDateEl = document.querySelector('.calendar-day.selected');
+            const selectedTimeEl = document.querySelector('.time-slot.selected');
+            const newDate = selectedDateEl ? formatSwedishDate(selectedDateEl.dataset.date) : null;
+            const newTime = selectedTimeEl ? selectedTimeEl.textContent.trim() : null;
+
+            // Get original booking date and time
+            const originalDate = formatSwedishDate(currentBooking.time_slots.start_time);
+            const originalTime = new Date(currentBooking.time_slots.start_time)
+                .toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+
+            // Calculate totals
+            const baseTotal = (
+                ticketState.adult * PRICES.adult +
+                ticketState.youth * PRICES.youth +
+                ticketState.kid * PRICES.kid +
+                ticketState.fullday * PRICES.fullday
+            );
+
+            // Apply gift card discount
+            let remainingAfterGiftCard = baseTotal;
+            if (currentBooking.gift_cards) {
+                remainingAfterGiftCard = Math.max(0, baseTotal - currentBooking.gift_cards.amount);
+            }
+
+            // Apply promo code discount
+            let remainingAfterPromo = remainingAfterGiftCard;
+            if (currentBooking.promo_codes) {
+                const promoDiscount = currentBooking.promo_codes.is_percentage ?
+                    (remainingAfterGiftCard * (currentBooking.promo_codes.discount_value / 100)) :
+                    currentBooking.promo_codes.discount_value;
+                remainingAfterPromo = Math.max(0, remainingAfterGiftCard - promoDiscount);
+            }
+
+            // Add rebooking fee
+            const rebookingFee = ticketState.is_rebookable ?
+                (ticketState.adult + ticketState.youth + ticketState.kid) * PRICES.rebooking : 0;
+
+            // Calculate VAT (6%) on the discounted amount (excluding rebooking fee)
+            const vatRate = 0.06;
+            const vatAmount = (remainingAfterPromo * vatRate) / (1 + vatRate);
+            const total = remainingAfterPromo + rebookingFee;
+
+            const previousTotal = currentBooking.paid_amount / 100;
+            const priceDifference = total - previousTotal;
+
+            // Update difference span if positive
+            const differenceSpan = document.getElementById('differens');
+            if (differenceSpan) {
+                differenceSpan.textContent = priceDifference > 0 ? ` (${priceDifference.toFixed(2)} kr)` : '';
+            }
+
+            // Build HTML
+            let summaryHtml = `
+        <div class="summary-section">
+            ${(newDate && newTime && (newDate !== originalDate || newTime !== originalTime)) ? `
+                <p style="color: #2d862d;">Ny tid:</p>
+                <p>Datum: <span style="font-weight: bold;">${newDate}</span></p>
+                <p>Tid: <span style="font-weight: bold;">${newTime}</span></p>
+            ` : `
+                <p>Datum: <span style="font-weight: bold;">${originalDate}</span></p>
+                <p>Tid: <span style="font-weight: bold;">${originalTime}</span></p>
+            `}
+            <hr>
+            ${ticketState.adult ? `<p>Vuxen: ${ticketState.adult} st <span style="float: right;">${ticketState.adult * PRICES.adult} kr</span></p>` : ''}
+            ${ticketState.youth ? `<p>Ungdom: ${ticketState.youth} st <span style="float: right;">${ticketState.youth * PRICES.youth} kr</span></p>` : ''}
+            ${ticketState.kid ? `<p>Barn: ${ticketState.kid} st <span style="float: right;">${ticketState.kid * PRICES.kid} kr</span></p>` : ''}
+            ${ticketState.fullday ? `<p>Heldag: ${ticketState.fullday} st <span style="float: right;">${ticketState.fullday * PRICES.fullday} kr</span></p>` : ''}
+    `;
+
+            // Add discounts if any
+            if (currentBooking.gift_cards) {
+                summaryHtml += `
+            <p style="color: #2d862d;">Presentkort ${currentBooking.gift_cards.gift_card_number}: <span style="float: right;">-${currentBooking.gift_cards.amount} kr</span></p>
+        `;
+            }
+
+            if (currentBooking.promo_codes) {
+                const promoAmount = currentBooking.promo_codes.is_percentage ?
+                    `${(remainingAfterGiftCard * currentBooking.promo_codes.discount_value / 100).toFixed(0)}` :
+                    `${currentBooking.promo_codes.discount_value}`;
+                summaryHtml += `
+            <p style="color: #2d862d;">Rabattkod (${currentBooking.promo_codes.promo_code}): <span style="float: right;">-${promoAmount} kr</span></p>
+        `;
+            }
+
+            // Add VAT, rebooking fee, and total
+            summaryHtml += `
+        <hr>
+        <p>Varav moms (6%): <span style="float: right;">${vatAmount.toFixed(2)} kr</span></p>
+        ${ticketState.is_rebookable ? `<p>Ombokningsgaranti: <span style="float: right;">${rebookingFee} kr</span></p>` : ''}
+        <hr>
+        <p style="font-weight: bold;">Totalt: <span style="float: right;">${total.toFixed(2)} kr</span></p>
+        <div class="paid-info">
+            <p>Tidigare betalt: <span style="float: right;"> ${(currentBooking.paid_amount / 100).toFixed(2)} kr</span></p>
+            <p>Betalningsmetod: <span style="float: right;">${formatPaymentMethod(currentBooking.payment_method)}</span></p>
+            <p>Skapad: <span style="float: right;">${new Date(currentBooking.created_at).toLocaleDateString('sv-SE')}</span></p>
+        </div>
+    `;
+
+            summaryEl.innerHTML = summaryHtml;
+        }
+
+        // Helper function to format dates in Swedish
+        function formatSwedishDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('sv-SE', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long'
+            });
+        }
+
+        function formatPaymentMethod(method) {
+            switch (method) {
+                case 'card': return 'Kortbetalning';
+                case 'swish': return 'Swish';
+                case 'invoice': return 'Faktura';
+                case 'free': return 'Ingen';
+                default: return method;
+            }
+        }
+
+        function updateTicketButtonStates() {
+            console.log('Current time slot:', currentTimeSlot);
+            console.log('Selected slot element:', document.querySelector(`.time-slot[data-slot-id="${currentTimeSlot}"]`));
+
+            if (!currentTimeSlot) {
+                console.log('No current time slot, disabling buttons');
+                document.querySelectorAll('.quantity-btn').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                });
+                return;
+            }
+
+            const selectedSlot = document.querySelector(`.time-slot[data-slot-id="${currentTimeSlot}"]`);
+            if (!selectedSlot) {
+                console.log('Could not find slot element for currentTimeSlot:', currentTimeSlot);
+                return;
+            }
+
+            const availableSpots = parseInt(selectedSlot.dataset.availableSpots);
+            const totalChosen = ticketState.adult + ticketState.youth + ticketState.kid;
+
+            console.log('Available spots:', availableSpots);
+            console.log('Total chosen:', totalChosen);
+
+            // Update each type of ticket
+            handleButtonState('adult', availableSpots, totalChosen);
+            handleButtonState('youth', availableSpots, totalChosen);
+            handleButtonState('kid', availableSpots, totalChosen);
+            updateFulldayButtonStates();
+        }
+
+        function handleButtonState(type, availableSpots, totalChosen) {
+            const plusBtn = document.querySelector(`[data-ticket-type="${type}"].plus`);
+            const minusBtn = document.querySelector(`[data-ticket-type="${type}"].minus`);
+
+            if (!plusBtn || !minusBtn) return;
+
+            // For the plus button
+            plusBtn.disabled = (!currentTimeSlot || totalChosen >= availableSpots);
+            if (type === 'kid' && ticketState.adult === 0) {
+                plusBtn.disabled = true;
+            }
+            plusBtn.style.opacity = plusBtn.disabled ? '0.5' : '1';
+
+            // For the minus button
+            minusBtn.disabled = (ticketState[type] === 0);
+            minusBtn.style.opacity = minusBtn.disabled ? '0.5' : '1';
+        }
+
+        function updateFulldayButtonStates() {
+            const totalTickets = ticketState.adult + ticketState.youth + ticketState.kid;
+            const plusBtn = document.querySelector('[data-ticket-type="fullday"].plus');
+            const minusBtn = document.querySelector('[data-ticket-type="fullday"].minus');
+
+            if (!plusBtn || !minusBtn) return;
+
+            plusBtn.disabled = (ticketState.fullday >= totalTickets);
+            minusBtn.disabled = (ticketState.fullday === 0);
+
+            plusBtn.style.opacity = plusBtn.disabled ? '0.5' : '1';
+            minusBtn.style.opacity = minusBtn.disabled ? '0.5' : '1';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add ticket button listeners
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const type = btn.dataset.ticketType;
+                    const change = btn.classList.contains('plus') ? 1 : -1;
+                    handleQuantityChange(type, change);
+                });
+            });
+
+            // Rebooking checkbox listener
+            document.getElementById('rebookingCheckbox').addEventListener('change', (e) => {
+                ticketState.is_rebookable = e.target.checked;
+                updateBookingSummary();
+            });
+        });
+
+        function updateSpotsLeftDisplay() {
+            const spotsLeftEl = document.getElementById('spotsLeft');
+            const selectedSlot = document.querySelector('.time-slot.selected');
+            if (!selectedSlot) {
+                spotsLeftEl.textContent = '';
+                return;
+            }
+
+            const availableSpots = parseInt(selectedSlot.dataset.availableSpots);
+            const totalChosen = ticketState.adult + ticketState.youth + ticketState.kid;
+            const spotsLeft = availableSpots - totalChosen;
+
+            spotsLeftEl.style.color = 'rgb(123, 190, 109)';
+            spotsLeftEl.style.fontWeight = '600';
+            spotsLeftEl.textContent = `${spotsLeft} platser kvar`;
+        }
+
+        async function saveChanges(sendEmail = false) {
+            try {
+                // Get selected date and time slot
+                const selectedTimeEl = document.querySelector('.time-slot.selected');
+                const timeSlotId = selectedTimeEl ? selectedTimeEl.dataset.slotId : null;
+
+                // Get customer details
+                const customerName = document.getElementById('customerName').value.trim();
+                const customerEmail = document.getElementById('customerEmail').value.trim();
+                const customerComment = document.getElementById('customerComment').value.trim();
+
+                // Validate required fields
+                if (!customerName || !customerEmail) {
+                    alert('Namn och email är obligatoriska fält');
+                    return;
+                }
+
+                // Call the Postgres function via Supabase
+                const { data, error } = await supabaseClient.rpc('update_admin_booking', {
+                    p_booking_id: currentBooking.id,
+                    p_new_time_slot_id: timeSlotId || currentBooking.time_slot_id, // Keep current if not changed
+                    p_adult_quantity: ticketState.adult,
+                    p_youth_quantity: ticketState.youth,
+                    p_kid_quantity: ticketState.kid,
+                    p_full_day: ticketState.fullday,
+                    p_is_rebookable: ticketState.is_rebookable,
+                    p_customer_name: customerName,
+                    p_customer_email: customerEmail,
+                    p_customer_comment: customerComment
+                });
+
+                if (error) throw error;
+
+                if (!data.success) {
+                    throw new Error(data.message);
+                }
+
+                // Show success message
+                showMessage(data.message, 'success');
+
+                // Update local state
+                currentBooking = {
+                    ...currentBooking,
+                    time_slot_id: timeSlotId || currentBooking.time_slot_id,
+                    adult_quantity: ticketState.adult,
+                    youth_quantity: ticketState.youth,
+                    kid_quantity: ticketState.kid,
+                    full_day: ticketState.fullday,
+                    is_rebookable: ticketState.is_rebookable,
+                    customer_name: customerName,
+                    customer_email: customerEmail,
+                    comments: customerComment
+                };
+
+                // Refresh the booking summary
+                updateBookingSummary();
+
+                if (sendEmail) {
+                    const difference = parseInt(document.getElementById('differens').textContent);
+
+                    // Call the email route with the booking info and difference
+                    const response = await fetch('http://localhost:3000/api/swish/re-confirmation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            booking_id: currentBooking.id,
+                            difference: difference
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to send confirmation email');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Ett fel uppstod: ${error.message}`);
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'block'
+            messageDiv.textContent = message;
+            messageDiv.className = type;
+            setTimeout(() => messageDiv.textContent = '', 10000);
+        }
+    </script>
+</body>
+
+</html>

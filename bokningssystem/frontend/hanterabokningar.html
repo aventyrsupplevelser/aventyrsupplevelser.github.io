@@ -80,7 +80,7 @@
             transition: all 0.2s;
             border: 2px solid transparent;
             font-family: "josefin sans";
-            padding-top: 12px;
+            padding-top: 6px;
             border-bottom: 2px solid black;
             border-right: 2px solid black;
             border-top: 2px solid rgb(230, 230, 230);
@@ -187,6 +187,10 @@
             margin-top: -3px;
         }
 
+        #tebax .material-symbols-outlined {
+            margin-top: 5px;
+        }
+
         .booking-details .material-symbols-outlined {
             font-size: 0.9em;
             margin-bottom: 5px;
@@ -202,6 +206,9 @@
             left: 20px;
             font-size: 1.3em;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .tbx:hover {
@@ -275,7 +282,9 @@
 </head>
 
 <body>
-    <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax 🏠</i></a>
+    <a class="tbx" href="/bokningssystem/frontend/skrivbord.html"><i>tebax</i><span class="material-symbols-outlined">
+            door_back
+        </span></a>
     <h1>Hantera bokningar</h1>
 
     <div id="calendar"></div>
@@ -305,6 +314,8 @@
                 return;
             }
         }
+
+        let currentSelectedSlotId = null;  // Add this at the top level
 
         class BookingCalendar {
             constructor(container) {
@@ -558,6 +569,7 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
         }
 
         async function selectTimeSlot(slotId) {
+            currentSelectedSlotId = slotId;  // Store the current slot ID
             // Update visual selection
             document.querySelectorAll('.time-slot').forEach(slot => {
                 slot.classList.toggle('selected', slot.dataset.slotId === slotId);
@@ -699,7 +711,6 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
         }
 
         function openUpdateBooking(bookingId) {
-            // Create modal container if it doesn't exist
             let modal = document.getElementById('updateBookingModal');
             if (!modal) {
                 modal = document.createElement('div');
@@ -716,26 +727,50 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
         `;
                 document.body.appendChild(modal);
 
-                // Add close handlers
+                // Update close button handler
                 const closeBtn = modal.querySelector('.close');
                 closeBtn.onclick = () => {
                     modal.style.display = 'none';
-                    // Reload the booking list to show any changes
-                    const selectedDay = document.querySelector('.calendar-day.selected');
-                    if (selectedDay) {
-                        loadTimeSlots(selectedDay.dataset.date);
+                    const iframe = document.getElementById('updateBookingFrame');
+                    iframe.src = iframe.src;  // Reset iframe
+
+                    // Refresh the bookings display
+                    if (currentSelectedSlotId) {
+                        selectTimeSlot(currentSelectedSlotId);
+                    }
+
+                    // Also refresh the calendar to update any date indicators
+                    const calendarContainer = document.getElementById('calendar');
+                    if (calendarContainer) {
+                        const calendar = new BookingCalendar(calendarContainer);
+                        calendar.init();
                     }
                 };
+
+                // Update window click handler
                 window.onclick = (event) => {
                     if (event.target === modal) {
                         modal.style.display = 'none';
-                        // Reload booking list
-                        const selectedDay = document.querySelector('.calendar-day.selected');
-                        if (selectedDay) {
-                            loadTimeSlots(selectedDay.dataset.date);
+                        const iframe = document.getElementById('updateBookingFrame');
+                        iframe.src = iframe.src;  // Reset iframe
+
+                        // Refresh the bookings display
+                        if (currentSelectedSlotId) {
+                            selectTimeSlot(currentSelectedSlotId);
+                        }
+
+                        // Also refresh the calendar to update any date indicators
+                        const calendarContainer = document.getElementById('calendar');
+                        if (calendarContainer) {
+                            const calendar = new BookingCalendar(calendarContainer);
+                            calendar.init();
                         }
                     }
                 };
+            } else {
+                // If modal exists, refresh the iframe
+                const iframe = document.getElementById('updateBookingFrame');
+                iframe.src = iframe.src;
             }
 
             // Show modal
@@ -750,7 +785,6 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                 }, '*');
             };
         }
-
         async function checkIn(bookingId, button) {
             try {
                 const { data, error } = await supabaseClient.rpc('toggle_booking_check_status', {
