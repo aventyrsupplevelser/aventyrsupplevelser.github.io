@@ -1364,7 +1364,10 @@ router.post('/re-confirmation', async (req, res) => {
 
         } else {
             // Scenario 3: No payment needed
-            await EmailService.sendAdminConfirmation(booking);
+            await EmailService.sendAdminConfirmation({
+                ...booking,
+                start_time: booking.time_slots.start_time
+            });
         }
 
         res.json({ success: true });
