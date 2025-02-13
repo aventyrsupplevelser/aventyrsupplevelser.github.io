@@ -1307,7 +1307,8 @@ router.post('/re-confirmation', async (req, res) => {
                 adult_quantity: latestChange.adult_added,
                 youth_quantity: latestChange.youth_added,
                 kid_quantity: latestChange.kid_added,
-                full_day: latestChange.full_day_added
+                full_day: latestChange.full_day_added,
+                is_rebookable: booking.is_rebookable
             });
 
             const quickPayLink = await createQuickPayLink({
