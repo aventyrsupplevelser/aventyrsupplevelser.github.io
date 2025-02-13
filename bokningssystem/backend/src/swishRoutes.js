@@ -1338,7 +1338,7 @@ router.post('/re-confirmation', async (req, res) => {
 
             // Send confirmation email
             await EmailService.sendAdminConfirmation(bookingWithPaymentLink);
-        } else {
+        } else if (booking.payment_method !== 'invoice') {
             // If no price difference, just send confirmation without payment link
             const bookingWithStartTime = {
                 ...booking,
