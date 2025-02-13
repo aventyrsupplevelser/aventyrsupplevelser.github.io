@@ -6,17 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         body {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            font-family: Arial, sans-serif;
+            width: 900px;
+            margin: auto;
+            padding: 0;
+            font-family: "Josefin Sans", sans-serif;
+            background: linear-gradient(90deg, rgb(247, 244, 247) 0%, rgb(236, 234, 238)6%, rgb(247, 247, 235) 100%);
+
+        }
+
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 10px 0px 0px 0px;
+            font-weight: 700;
+            text-align: right;
+            color: #001c82;
+
+        }
+
+        h2 {
+            margin: 20px 0px 30px;
+            color: rgb(237, 23, 130);
+            font-size: 4em;
+            text-align: center;
+            font-style: italic;
         }
 
         .form-group {
             margin-bottom: 15px;
+            margin: 5px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
         }
+
 
         .error {
             color: red;
@@ -27,35 +59,56 @@
         }
 
         input {
-            width: 100%;
-            padding: 8px;
+            box-sizing: border-box;
+            width: 300px;
+            padding: 15px 15px 10px;
             margin-top: 4px;
+            font-family: inherit;
+            margin: auto;
+            border-radius: 4px;
+            font-size: 1.3em;
         }
 
         button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
+            background: linear-gradient(96deg, rgb(255, 115, 250) 0%, rgb(255, 172, 220) 100%);
+            color: rgb(0, 0, 0);
+            padding: 15px 15px 10px;
             cursor: pointer;
+            font-family: inherit;
+            font-size: 1.6em;
+            width: 300px;
+            margin: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-bottom: 2px solid black;
+            border-right: 2px solid black;
+            border-top: 2px solid rgb(230, 230, 230);
+            border-left: 2px solid rgb(236, 236, 236);
+        }
+
+        button:hover {
+            background: linear-gradient(96deg, rgb(184, 227, 255) 0%, rgb(202, 255, 246) 100%);
         }
     </style>
 </head>
 
 <body>
-    <h1>Admin Login</h1>
+    <div class="header">
+        <h1>Sörsjöns Äventyrspark</h1>
+        <h2>Bokningssystemet</h2>
+    </div>
     <div id="message"></div>
 
     <form id="loginForm">
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">email:</label>
             <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
+            <label for="password">password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">välkommen</button>
     </form>
 
     <script>

@@ -1171,13 +1171,13 @@ router.post('/admin-callback', async (req, res) => {
             console.error('Invalid callback checksum');
         }
 
-        const bookingNumberDeciphered = bookingNumber.replace(/re$/, '');
+       // const bookingNumberDeciphered = bookingNumber.replace(/re$/, '');
 
         // 5. Get the booking using both booking number
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
             .select('*, time_slots(*)')
-            .eq('booking_number', bookingNumberDeciphered)
+            .eq('booking_number', bookingNumber)
             .single();
 
         if (bookingError || !booking) {
@@ -1241,134 +1241,199 @@ router.post('/admin-callback', async (req, res) => {
 
 router.post('/re-confirmation', async (req, res) => {
     try {
-        const { booking_id, difference } = req.body;
-        console.log('Difference:', difference);
+        const { booking_id, difference } = req.body;  // difference from frontend
 
-        // Get the booking
-        const { data: booking, error: bookingError } = await supabase
+        // Get the booking with latest change
+        const { data: booking, error } = await supabase
             .from('bookings')
-            .select(`
-                *,
-                time_slots (
-                    start_time
-                )
-            `)
+            .select('*, time_slots(*)')
             .eq('id', booking_id)
             .single();
 
-        if (bookingError) throw bookingError;
-        
-        if (booking.paid_amount === null) {
-            booking.paid_amount = 0;
-        }
+        if (error) throw error;
 
-        // If there's a positive difference and it's not an invoice payment
-        if (difference > 0) {
-            // If not invoice payment, create QuickPay link
-            let quickPayLink = null;
-            if (booking.payment_method !== 'invoice') {
-                const apiKey = process.env.QUICKPAY_API_USER_KEY;
-                if (!apiKey) {
-                    throw new Error('QuickPay API key not configured');
-                }
+        const latestChange = booking.changes?.[booking.changes.length - 1];
 
-                const callbackIdentifier = generateCallbackId(booking.booking_number + 're');
-                const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/admin-callback');
-                callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
+        // Handle the three scenarios
+        if (booking.paid_amount > 0 && difference > 0) {
+            // Scenario 1: Add-on payment needed for existing paid booking
+            const addOnAmount = calculateBookingAmount({
+                adult_quantity: latestChange.adult_added,
+                youth_quantity: latestChange.youth_added,
+                kid_quantity: latestChange.kid_added,
+                full_day: latestChange.full_day_added
+            });
 
-                try {
-                    // Create payment
-                    const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
-                        method: 'POST',
-                        headers: {
-                            'Accept-Version': 'v10',
-                            'Content-Type': 'application/json',
-                            'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
-                        },
-                        body: JSON.stringify({
-                            order_id: booking.booking_number + 're',
-                            currency: 'SEK'
-                        })
-                    });
+            const quickPayLink = await createQuickPayLink({
+                orderNumber: booking.booking_number,
+                amount: addOnAmount,
+                callbackRoute: 'add-on-callback',
+                accessToken: booking.access_token,
+                rebookingToken: latestChange.rebooking_token
+            });
 
-                    if (!createPaymentResponse.ok) {
-                        const errorText = await createPaymentResponse.text();
-                        throw new Error(`Failed to create QuickPay payment: ${errorText}`);
-                    }
+            // Update booking status to unpaid
+            await supabase
+                .from('bookings')
+                .update({ status: 'unpaid' })
+                .eq('id', booking_id);
 
-                    const payment = await createPaymentResponse.json();
-
-                    // Create payment link
-                    const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
-                        method: 'PUT',
-                        headers: {
-                            'Accept-Version': 'v10',
-                            'Content-Type': 'application/json',
-                            'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
-                        },
-                        body: JSON.stringify({
-                            amount: difference * 100, // Convert to öre
-                            continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${booking.booking_number}&access_token=${booking.access_token}`,
-                            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
-                            callback_url: callbackUrl.toString(),
-                            auto_capture: true,
-                            payment_methods: 'creditcard,swish',
-                            language: 'sv'
-                        })
-                    });
-
-                    if (!linkResponse.ok) {
-                        const errorText = await linkResponse.text();
-                        throw new Error(`Failed to create QuickPay payment link: ${errorText}`);
-                    }
-
-                    const link = await linkResponse.json();
-                    quickPayLink = link.url;
-
-                    // After successfully creating payment link, update booking status if needed
-                    if (booking.status === 'confirmed' && booking.payment_method !== 'invoice') {
-                        const { error: updateError } = await supabase
-                            .from('bookings')
-                            .update({ status: 'unpaid' })
-                            .eq('id', booking_id);
-
-                        if (updateError) throw updateError;
-                    }
-
-                } catch (error) {
-                    console.error('QuickPay API error:', error);
-                    throw error;
-                }
-            }
-
-            // Prepare booking data for email service
-            const bookingWithPaymentLink = {
+            // Send add-on email
+            await EmailService.sendAddOnEmail({
                 ...booking,
-                start_time: booking.time_slots.start_time,
+                ...latestChange,
                 quickpay_link: quickPayLink
-            };
+            });
 
-            // Send confirmation email
-            await EmailService.sendAdminConfirmation(bookingWithPaymentLink);
-        } else if (booking.payment_method !== 'invoice') {
-            // If no price difference, just send confirmation without payment link
-            const bookingWithStartTime = {
+        } else if ((!booking.paid_amount || booking.paid_amount === 0) && difference > 0) {
+            // Scenario 2: First payment for updated booking
+            const totalAmount = calculateBookingAmount({
+                adult_quantity: booking.adult_quantity,
+                youth_quantity: booking.youth_quantity,
+                kid_quantity: booking.kid_quantity,
+                full_day: booking.full_day,
+                is_rebookable: booking.is_rebookable
+            });
+
+            const quickPayLink = await createQuickPayLink({
+                orderNumber: booking.booking_number,
+                amount: totalAmount,
+                callbackRoute: 'admin-callback',
+                accessToken: booking.access_token,
+                rebookingToken: latestChange.rebooking_token
+            });
+
+            // Update booking status to unpaid
+            await supabase
+                .from('bookings')
+                .update({ status: 'unpaid' })
+                .eq('id', booking_id);
+
+            await EmailService.sendAdminConfirmation({
                 ...booking,
-                start_time: booking.time_slots.start_time
-            };
-            await EmailService.sendAdminConfirmation(bookingWithStartTime);
+                quickpay_link: quickPayLink
+            });
+
+        } else {
+            // Scenario 3: No payment needed
+            await EmailService.sendAdminConfirmation(booking);
         }
 
         res.json({ success: true });
 
     } catch (error) {
-        console.error('Error processing rebooking confirmation:', error);
+        console.error('Error:', error);
         res.status(500).json({ 
             success: false, 
             error: error.message 
         });
     }
 });
+
+async function createQuickPayLink({
+    orderNumber,
+    amount,
+    callbackRoute,
+    accessToken,
+    rebookingToken = null
+}) {
+    const apiKey = process.env.QUICKPAY_API_USER_KEY;
+    if (!apiKey) throw new Error('QuickPay API key not configured');
+
+    // Use rebooking token if provided
+    const orderId = rebookingToken ? 
+        `${orderNumber}_${rebookingToken}` : 
+        orderNumber;
+
+    const callbackIdentifier = generateCallbackId(orderNumber);
+    const callbackUrl = new URL(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/${callbackRoute}`);
+    callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
+
+    // Create payment
+    const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
+        method: 'POST',
+        headers: {
+            'Accept-Version': 'v10',
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+        },
+        body: JSON.stringify({
+            order_id: orderId,
+            currency: 'SEK'
+        })
+    });
+
+    if (!createPaymentResponse.ok) {
+        const errorText = await createPaymentResponse.text();
+        throw new Error(`Failed to create QuickPay payment: ${errorText}`);
+    }
+
+    const payment = await createPaymentResponse.json();
+
+    // Create payment link
+    const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
+        method: 'PUT',
+        headers: {
+            'Accept-Version': 'v10',
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
+        },
+        body: JSON.stringify({
+            amount: amount * 100, // Convert to öre
+            continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${orderNumber}&access_token=${accessToken}`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            callback_url: callbackUrl.toString(),
+            auto_capture: true,
+            payment_methods: 'creditcard,swish',
+            language: 'sv'
+        })
+    });
+
+    if (!linkResponse.ok) {
+        const errorText = await linkResponse.text();
+        throw new Error(`Failed to create QuickPay payment link: ${errorText}`);
+    }
+
+    const link = await linkResponse.json();
+    return link.url;
+}
+
+function calculateBookingAmount({
+    adult_quantity = 0,
+    youth_quantity = 0,
+    kid_quantity = 0,
+    full_day = 0,
+    is_rebookable = false,
+    gift_card = null,
+    promo_code = null
+}) {
+    // Base amount calculation
+    let baseAmount = (adult_quantity * 400) + (youth_quantity * 300) + (kid_quantity * 200);
+    if (full_day) baseAmount += (full_day * 100);
+
+    // Apply discounts if any
+    if (gift_card?.amount) {
+        baseAmount -= gift_card.amount;
+    }
+    
+    if (promo_code) {
+        const discountAmount = promo_code.is_percentage ? 
+            (baseAmount * (promo_code.discount_value / 100)) : 
+            promo_code.discount_value;
+        baseAmount -= discountAmount;
+    }
+
+    // Ensure non-negative
+    baseAmount = Math.max(0, baseAmount);
+
+    // Add rebooking fee if applicable
+    let totalAmount = baseAmount;
+    if (is_rebookable) {
+        totalAmount += ((adult_quantity + youth_quantity + kid_quantity) * 25);
+    }
+
+    return totalAmount;
+}
 
 
 export default router;
