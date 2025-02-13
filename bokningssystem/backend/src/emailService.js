@@ -229,7 +229,7 @@ if (booking.gift_card_number) {
 
 }
 
-let subtotal = 0
+let subtotal = baseTotal
 
 // Get promo code info if used
 let promoDiscount = 0;
