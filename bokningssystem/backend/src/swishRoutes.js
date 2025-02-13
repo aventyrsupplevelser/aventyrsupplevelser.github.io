@@ -1311,6 +1311,7 @@ router.post('/re-confirmation', async (req, res) => {
                 is_rebookable: booking.is_rebookable
             });
 
+            console.log('Total amount to charge:', addOnAmount);
             const quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
                 amount: addOnAmount,
@@ -1344,7 +1345,8 @@ router.post('/re-confirmation', async (req, res) => {
                 gift_card_number: booking.gift_card_number, // Pass the gift card identifier
                 promo_code: booking.promo_code              // Pass the promo code identifier
             });
-
+            
+            console.log('Total amount to charge:', totalAmount);
             const quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
                 amount: totalAmount,
@@ -1462,13 +1464,16 @@ async function calculateBookingAmount({
     gift_card_number = null,
     promo_code = null
   }) {
-    // Base sums
+    console.log('adult_quantity:', adult_quantity);
+    console.log('youth_quantity:', youth_quantity);
+    
     const adultSum = adult_quantity * 400;
     const youthSum = youth_quantity * 300;
     const kidSum = kid_quantity * 200;
     const fullDaySum = full_day * 100;
     const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
-  
+    console.log('baseTotal:', baseTotal);
+    
     // Look up gift card amount if provided
     let giftCardAmount = 0;
     if (gift_card_number) {
@@ -1486,10 +1491,12 @@ async function calculateBookingAmount({
         console.log('Equalized gift card amount to base total');
       }
     }
-  
+    console.log('giftCardAmount:', giftCardAmount);
+    
     // Subtotal after gift card deduction
     const subtotal = baseTotal - giftCardAmount;
-  
+    console.log('subtotal after gift card:', subtotal);
+    
     // Look up promo code details if provided
     let promoDiscount = 0;
     if (promo_code) {
@@ -1506,18 +1513,22 @@ async function calculateBookingAmount({
         }
       }
     }
-  
+    console.log('promoDiscount:', promoDiscount);
+    
     // Calculate final amount ensuring it doesn't go negative
     let finalAmount = baseTotal - giftCardAmount - promoDiscount;
     finalAmount = Math.max(0, finalAmount);
-  
+    console.log('finalAmount before rebooking fee:', finalAmount);
+    
     // Add rebooking fee if applicable
     if (is_rebookable) {
       finalAmount += (adult_quantity + youth_quantity + kid_quantity) * 25;
+      console.log('finalAmount after rebooking fee:', finalAmount);
     }
-  
+    
     return finalAmount;
   }
+  
   
 
 export default router;
