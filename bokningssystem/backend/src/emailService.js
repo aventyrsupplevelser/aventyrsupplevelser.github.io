@@ -400,6 +400,76 @@ static async sendAddOnEmail(booking) {
     }
 }
 
+static async sendAddOnConfirmation(data) {
+    try {
+        // Get only the added quantities from the change record
+        const adultSum = data.adult_added * 400;
+        const youthSum = data.youth_added * 300;
+        const kidSum = data.kid_added * 200;
+        const fullDaySum = data.full_day_added * 100;
+
+        // Calculate total for the addition only
+        const totalAmount = adultSum + youthSum + kidSum + fullDaySum;
+
+        // Calculate VAT (6%) on the total amount
+        const vatRate = 0.06;
+        const taxableAmount = totalAmount;
+        const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+        const amountExVat = taxableAmount - vatAmount;
+
+        const msg = {
+            to: data.customer_email,
+            from: {
+                email: process.env.SENDGRID_FROM_EMAIL,
+                name: 'Sörsjöns Äventyrspark'
+            },
+            templateId: process.env.SENDGRID_ADDON_CONFIRMATION_ID,
+            dynamic_template_data: {
+                booking_number: data.booking_number,
+                customer_name: data.customer_name,
+                booking_date: new Date(data.start_time).toLocaleDateString('sv-SE', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }),
+                booking_time: new Date(data.start_time).toLocaleTimeString('sv-SE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                }),
+                // Only include quantities that were added
+                ...(data.adult_added && { adult_added: data.adult_added, adult_sum: adultSum }),
+                ...(data.youth_added && { youth_added: data.youth_added, youth_sum: youthSum }),
+                ...(data.kid_added && { kid_added: data.kid_added, kid_sum: kidSum }),
+                ...(data.full_day_added && { full_day_added: data.full_day_added, full_day_sum: fullDaySum }),
+                
+                // Original booking totals for reference
+                total_adult: data.adult_quantity,
+                total_youth: data.youth_quantity,
+                total_kid: data.kid_quantity,
+                total_full_day: data.full_day,
+
+                // Payment details
+                amount_ex_vat: amountExVat.toFixed(2),
+                vat_amount: vatAmount.toFixed(2),
+                total_amount: (data.paid_amount / 100).toFixed(2),
+                payment_date: new Date(data.payment_completed_at).toLocaleDateString('sv-SE')
+            }
+        };
+
+        const response = await sgMail.send(msg);
+        console.log('Add-on confirmation email sent successfully:', response[0].statusCode);
+        return response;
+
+    } catch (error) {
+        console.error('Error sending add-on confirmation email:', error);
+        if (error.response) {
+            console.error('Error details:', error.response.body);
+        }
+        throw error;
+    }
+}
+
 
     static async ombokningConfirmation(booking, start_time) {
         console.log('sending ombokningsemail')

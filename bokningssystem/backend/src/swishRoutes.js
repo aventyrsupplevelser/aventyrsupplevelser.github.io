@@ -1236,13 +1236,12 @@ router.post('/admin-callback', async (req, res) => {
 
             // Send add-on confirmation email
             try {
-                await EmailService.sendAdminConfirmation({
-                    ...booking,
-                    ...relevantChange,
+                await EmailService.sendAddOnConfirmation({
+                    ...booking,                    // Base booking info
+                    ...relevantChange,            // Added quantities
                     start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    is_addon: true
+                    paid_amount: paidAmountOre,   // Just the add-on payment amount
+                    payment_completed_at: new Date().toISOString()
                 });
             } catch (emailError) {
                 console.error('Error sending add-on confirmation email:', emailError);
