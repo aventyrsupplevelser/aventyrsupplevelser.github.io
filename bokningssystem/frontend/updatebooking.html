@@ -904,11 +904,11 @@
                 updateBookingSummary();
 
                 // Hide save buttons if payment method is invoice
-                const saveButtons = document.getElementById('saveButtons');
+                const emailButton = document.getElementById('sendEmail');
                 if (booking.payment_method === 'invoice') {
-                    saveButtons.style.display = 'none';
+                    emailButton.style.display = 'none';
                 } else {
-                    saveButtons.style.display = 'block';
+                    emailButton.style.display = 'block';
                 }
 
 
