@@ -131,19 +131,17 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         // Always send 200 OK first
         res.status(200).send('OK');
 
-
         // Get and validate callback identifier
         const callbackIdentifier = req.get('callbackIdentifier');
-
         if (!verifyCallbackId(callbackIdentifier, payment.payeePaymentReference)) {
             console.error('Invalid callback checksum');
-            return; 
+            return;
         }
 
-        // First get the booking
+        // Get the booking with existing payments array
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
-            .select('*, time_slots(*)')
+            .select('*, time_slots(*), payments')
             .eq('booking_number', payment.payeePaymentReference)
             .single();
 
@@ -160,19 +158,28 @@ router.post('/swish-callback', express.json(), async (req, res) => {
         if (payment.status === 'PAID') {
             const paidAmountOre = Math.round(payment.amount * 100);
 
+            // Create new payment record
+            const newPayment = {
+                amount: paidAmountOre,
+                payment_id: payment.id,
+                payment_method: 'swish',
+                date_paid: new Date().toISOString(),
+                is_paid: true,
+                payment_metadata: payment
+            };
+
+            // Create updated payments array
+            const updatedPayments = [...(booking.payments || []), newPayment];
+
             // Update the booking
             const { error: updateError } = await supabase
                 .from('bookings')
                 .update({
                     status: 'confirmed',
-                    payment_method: 'swish',
-                    payment_id: payment.id,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    payment_metadata: payment
+                    payments: updatedPayments
                 })
                 .eq('id', booking.id)
-                .eq('status', 'requested')
+                .eq('status', 'requested');
 
             if (updateError) {
                 console.error('Error updating booking with payment info:', updateError);
@@ -180,17 +187,17 @@ router.post('/swish-callback', express.json(), async (req, res) => {
             }
 
             await updateAppliedCodes(booking);
-
             console.log('Payment recorded successfully:', payment.id);
 
-            // Send confirmation email using the original booking data we already have
+            // Send confirmation email with updated booking data including payments
             try {
-                await EmailService.sendBookingConfirmation({
+                const updatedBooking = {
                     ...booking,
-                    start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString()
-                });
+                    payments: updatedPayments,  // Include the updated payments array
+                    start_time: booking.time_slots.start_time
+                };
+
+                await EmailService.sendBookingConfirmation(updatedBooking);
                 console.log('Confirmation email sent successfully');
             } catch (emailError) {
                 console.error('Error sending confirmation email:', emailError);
