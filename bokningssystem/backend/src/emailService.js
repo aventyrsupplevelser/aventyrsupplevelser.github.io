@@ -332,27 +332,26 @@ const msg = {
 
 static async sendAddOnEmail(booking) {
     try {
-        console.log('Sending add-on email for booking:nolog', );
-
         // Calculate sums for added spots only
         const adultSum = booking.adult_added * 400;
         const youthSum = booking.youth_added * 300;
         const kidSum = booking.kid_added * 200;
         const fullDaySum = booking.full_day_added * 100;
 
+        // Calculate base total before any fees
         const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
 
-        const rebookingSum = booking.is_rebookable ? 
-                (adultSum + youthSum + kidSum) * 25 : 0;
+        // Calculate rebooking fee if applicable
+        const totalAddedParticipants = booking.adult_added + booking.youth_added + booking.kid_added;
+        const rebookingFee = booking.is_rebookable ? totalAddedParticipants * 25 : 0;
 
+        // Calculate total including rebooking fee
+        const totalAmount = baseTotal + rebookingFee;
 
-        // Calculate total (no gift cards or promos for add-ons)
-        const totalAmount = baseTotal + rebookingSum;
-
-        // Calculate VAT (6%) on the total amount
+        // Calculate VAT (6%) on base amount only (excluding rebooking fee)
         const vatRate = 0.06;
         const vatAmount = (baseTotal * vatRate) / (1 + vatRate);
-        const amountExVat = totalAmount - vatAmount;
+        const amountExVat = baseTotal - vatAmount;
 
         const msg = {
             to: booking.customer_email,
@@ -374,18 +373,36 @@ static async sendAddOnEmail(booking) {
                     minute: '2-digit',
                     hour12: false
                 }),
-                // Only include quantities that were added
-                ...(booking.adult_added && { adult_quantity: booking.adult_added, adult_sum: adultSum }),
-                ...(booking.youth_added && { youth_quantity: booking.youth_added, youth_sum: youthSum }),
-                ...(booking.kid_added && { kid_quantity: booking.kid_added, kid_sum: kidSum }),
-                ...(booking.full_day_added && { full_day: booking.full_day_added, full_day_sum: fullDaySum }),
-                // VAT and total
+                // Only include quantities and sums if they were added
+                ...(booking.adult_added > 0 && { 
+                    adult_quantity: booking.adult_added, 
+                    adult_sum: adultSum 
+                }),
+                ...(booking.youth_added > 0 && { 
+                    youth_quantity: booking.youth_added, 
+                    youth_sum: youthSum 
+                }),
+                ...(booking.kid_added > 0 && { 
+                    kid_quantity: booking.kid_added, 
+                    kid_sum: kidSum 
+                }),
+                ...(booking.full_day_added > 0 && { 
+                    full_day: booking.full_day_added, 
+                    full_day_sum: fullDaySum 
+                }),
+
+                // Include rebooking fee if applicable
+                ...(rebookingFee > 0 && {
+                    rebooking_fee: rebookingFee
+                }),
+
+                // Payment and total details
                 amount_ex_vat: amountExVat.toFixed(2),
                 vat_amount: vatAmount.toFixed(2),
                 total_amount: totalAmount.toFixed(2),
-                // Include the payment link
                 payment_link: booking.quickpay_link,
-                // Include the current total spots after the addition
+
+                // Current total spots after addition
                 total_adult_quantity: booking.adult_quantity,
                 total_youth_quantity: booking.youth_quantity,
                 total_kid_quantity: booking.kid_quantity,
@@ -394,11 +411,11 @@ static async sendAddOnEmail(booking) {
         };
 
         const response = await sgMail.send(msg);
-        console.log('Add-on confirmation email sent successfully:', response[0].statusCode);
+        console.log('Add-on payment request email sent successfully:', response[0].statusCode);
         return response;
 
     } catch (error) {
-        console.error('Error sending add-on confirmation email:', error);
+        console.error('Error sending add-on payment request email:', error);
         if (error.response) {
             console.error('Error details:', error.response.body);
         }
