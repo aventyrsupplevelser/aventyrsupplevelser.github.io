@@ -1303,7 +1303,7 @@ router.post('/re-confirmation', async (req, res) => {
         // Handle the three scenarios
         if (booking.paid_amount > 0 && difference > 0) {
             // Scenario 1: Add-on payment needed for existing paid booking
-            const addOnAmount = calculateBookingAmount({
+            const addOnAmount = await calculateBookingAmount({
                 adult_quantity: latestChange.adult_added,
                 youth_quantity: latestChange.youth_added,
                 kid_quantity: latestChange.kid_added,
