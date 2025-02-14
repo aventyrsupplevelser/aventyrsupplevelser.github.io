@@ -1192,64 +1192,66 @@ router.post('/admin-callback', async (req, res) => {
 
         const paidAmountOre = callbackData.link.amount;
 
-        // In the add-on payment section of admin-callback:
-if (booking.paid_amount) {
-    // This is an add-on payment
-    // Get all changes that were included in this payment
-    const unpaidChanges = booking.changes.filter(c => !c.payment_completed);
-    
-    // Calculate totals from all unpaid changes
-    const totalAdultAdded = unpaidChanges.reduce((acc, change) => acc + (change.adult_added || 0), 0);
-    const totalYouthAdded = unpaidChanges.reduce((acc, change) => acc + (change.youth_added || 0), 0);
-    const totalKidAdded = unpaidChanges.reduce((acc, change) => acc + (change.kid_added || 0), 0);
-    const totalFullDayAdded = unpaidChanges.reduce((acc, change) => acc + (change.full_day_added || 0), 0);
-
-    // Update changes array to mark all changes as paid
-    const updatedChanges = booking.changes.map(change => 
-        !change.payment_completed ? 
-            { ...change, payment_completed: true, payment_id: callbackData.id } : 
-            change
-    );
-
-    // Update booking
-    const { error: updateError } = await supabase
-        .from('bookings')
-        .update({
-            status: 'confirmed',
-            changes: updatedChanges,
-            paid_amount: booking.paid_amount + paidAmountOre,
-            payment_metadata: {
-                ...booking.payment_metadata,
-                add_on_payments: [
-                    ...(booking.payment_metadata?.add_on_payments || []),
-                    callbackData
-                ]
+        if (booking.paid_amount) {
+            // This is an add-on payment
+            // Get all unpaid changes that were included in this payment
+            const unpaidChanges = booking.changes.filter(c => !c.payment_completed);
+            
+            // Aggregate all the changes
+            const totalAdded = unpaidChanges.reduce((acc, change) => ({
+                adult: acc.adult + (change.adult_added || 0),
+                youth: acc.youth + (change.youth_added || 0),
+                kid: acc.kid + (change.kid_added || 0),
+                fullDay: acc.fullDay + (change.full_day_added || 0)
+            }), { adult: 0, youth: 0, kid: 0, fullDay: 0 });
+        
+            // Update changes array to mark all these changes as paid
+            const updatedChanges = booking.changes.map(change => 
+                !change.payment_completed ? 
+                    { ...change, payment_completed: true, payment_id: callbackData.id } : 
+                    change
+            );
+        
+            // Update booking
+            const { error: updateError } = await supabase
+                .from('bookings')
+                .update({
+                    status: 'confirmed',
+                    changes: updatedChanges,
+                    paid_amount: booking.paid_amount + paidAmountOre,
+                    payment_metadata: {
+                        ...booking.payment_metadata,
+                        add_on_payments: [
+                            ...(booking.payment_metadata?.add_on_payments || []),
+                            callbackData
+                        ]
+                    }
+                })
+                .eq('id', booking.id)
+                .eq('status', 'unpaid');
+        
+            if (updateError) {
+                console.error('Error updating booking:', updateError);
+                return;
             }
-        })
-        .eq('id', booking.id)
-        .eq('status', 'unpaid');
-
-    if (updateError) {
-        console.error('Error updating booking:', updateError);
-        return;
-    }
-
-    // Send add-on confirmation email with totals from all paid changes
-    try {
-        await EmailService.sendAddOnConfirmation({
-            ...booking,
-            adult_added: totalAdultAdded,
-            youth_added: totalYouthAdded,
-            kid_added: totalKidAdded,
-            full_day_added: totalFullDayAdded,
-            start_time: booking.time_slots.start_time,
-            paid_amount: paidAmountOre,
-            payment_completed_at: new Date().toISOString()
-        });
-    } catch (emailError) {
-        console.error('Error sending add-on confirmation email:', emailError);
-    }
-} else {
+        
+            // Send add-on confirmation email with aggregated totals
+            try {
+                await EmailService.sendAddOnConfirmation({
+                    ...booking,
+                    changes: booking.changes, // Pass all changes
+                    adult_added: totalAdded.adult,
+                    youth_added: totalAdded.youth,
+                    kid_added: totalAdded.kid,
+                    full_day_added: totalAdded.fullDay,
+                    start_time: booking.time_slots.start_time,
+                    paid_amount: paidAmountOre,
+                    payment_completed_at: new Date().toISOString()
+                });
+            } catch (emailError) {
+                console.error('Error sending add-on confirmation email:', emailError);
+            }
+        } else {
             // This is the initial payment
             const { error: updateError } = await supabase
                 .from('bookings')
