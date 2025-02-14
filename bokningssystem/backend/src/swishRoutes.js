@@ -1300,36 +1300,52 @@ router.post('/re-confirmation', async (req, res) => {
 
         const latestChange = booking.changes?.[booking.changes.length - 1];
 
-        // Handle the three scenarios
         if (booking.paid_amount > 0 && difference > 0) {
             // Scenario 1: Add-on payment needed for existing paid booking
+            
+            // Get all unpaid changes
+            const unpaidChanges = booking.changes.filter(change => !change.payment_completed);
+            
+            // Sum up all added quantities
+            const totalAdultAdded = unpaidChanges.reduce((acc, change) => acc + (change.adult_added || 0), 0);
+            const totalYouthAdded = unpaidChanges.reduce((acc, change) => acc + (change.youth_added || 0), 0);
+            const totalKidAdded = unpaidChanges.reduce((acc, change) => acc + (change.kid_added || 0), 0);
+            const totalFullDayAdded = unpaidChanges.reduce((acc, change) => acc + (change.full_day_added || 0), 0);
+        
             const addOnAmount = await calculateBookingAmount({
-                adult_quantity: latestChange.adult_added,
-                youth_quantity: latestChange.youth_added,
-                kid_quantity: latestChange.kid_added,
-                full_day: latestChange.full_day_added,
+                adult_quantity: totalAdultAdded,
+                youth_quantity: totalYouthAdded,
+                kid_quantity: totalKidAdded,
+                full_day: totalFullDayAdded,
                 is_rebookable: booking.is_rebookable
             });
-
+        
             console.log('Total amount to charge:', addOnAmount);
+        
+            // Get the latest change for the rebooking token
+            const latestChange = booking.changes[booking.changes.length - 1];
+        
             const quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
-                amount: difference,
+                amount: addOnAmount,
                 callbackRoute: 'admin-callback',
                 accessToken: booking.access_token,
                 rebookingToken: latestChange.rebooking_token
             });
-
+        
             // Update booking status to unpaid
             await supabase
                 .from('bookings')
                 .update({ status: 'unpaid' })
                 .eq('id', booking_id);
-
-            // Send add-on email
+        
+            // Send add-on email with total of all unpaid changes
             await EmailService.sendAddOnEmail({
                 ...booking,
-                ...latestChange,
+                adult_added: totalAdultAdded,
+                youth_added: totalYouthAdded,
+                kid_added: totalKidAdded,
+                full_day_added: totalFullDayAdded,
                 quickpay_link: quickPayLink,
                 start_time: booking.time_slots.start_time
             });
