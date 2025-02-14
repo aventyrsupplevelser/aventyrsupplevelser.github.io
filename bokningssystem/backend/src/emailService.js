@@ -408,11 +408,15 @@ static async sendAddOnEmail(booking) {
 
 static async sendAddOnConfirmation(data) {
     try {
+        console.log('addondata recieved', data)
         // Get only the added quantities from the change record
         const adultSum = booking.adult_added * 400;
         const youthSum = booking.youth_added * 300;
         const kidSum = booking.kid_added * 200;
         const fullDaySum = booking.full_day_added * 100;
+
+        console.log('basetotal add on:', baseTotal)
+
 
         const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
 
