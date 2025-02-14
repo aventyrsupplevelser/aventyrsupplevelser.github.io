@@ -834,10 +834,10 @@ router.post('/free-booking', async (req, res) => {
     try {
         const { bookingId, access_token, booking_number } = req.body;
 
-        // First get the booking with its time slot details
+        // First get the booking with its time slot details and existing payments
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
-            .select('*, time_slots(*)')
+            .select('*, time_slots(*), payments')
             .eq('id', bookingId)
             .eq('access_token', access_token)
             .single();
@@ -862,18 +862,28 @@ router.post('/free-booking', async (req, res) => {
             throw new Error('This booking requires payment');
         }
 
+        // Create new payment record for free booking
+        const newPayment = {
+            amount: 0,
+            payment_id: `FREE-${Date.now()}`, // Generate unique ID for free payment
+            payment_method: 'free',
+            date_paid: new Date().toISOString(),
+            is_paid: true,
+            payment_metadata: {
+                method: 'free',
+                confirmed_at: new Date().toISOString()
+            }
+        };
+
+        // Create updated payments array
+        const updatedPayments = [...(booking.payments || []), newPayment];
+
         // Update the booking status and add payment info
         const { error: updateError } = await supabase
             .from('bookings')
             .update({
                 status: 'confirmed',
-                payment_method: 'free',
-                paid_amount: 0,
-                payment_completed_at: new Date().toISOString(),
-                payment_metadata: { 
-                    method: 'free',
-                    confirmed_at: new Date().toISOString()
-                }
+                payments: updatedPayments
             })
             .eq('id', bookingId)
             .eq('status', 'pending');
@@ -885,14 +895,15 @@ router.post('/free-booking', async (req, res) => {
         // Update any applied gift cards or promo codes
         await updateAppliedCodes(booking);
 
-        // Send confirmation email
+        // Send confirmation email with updated booking data including payments
         try {
-            await EmailService.sendBookingConfirmation({
+            const updatedBooking = {
                 ...booking,
-                start_time: booking.time_slots.start_time,
-                paid_amount: 0,
-                payment_completed_at: new Date().toISOString()
-            });
+                payments: updatedPayments,
+                start_time: booking.time_slots.start_time
+            };
+
+            await EmailService.sendBookingConfirmation(updatedBooking);
         } catch (emailError) {
             console.error('Error sending confirmation email:', emailError);
             // Don't throw here - booking is still valid even if email fails
@@ -902,9 +913,9 @@ router.post('/free-booking', async (req, res) => {
 
     } catch (error) {
         console.error('Free booking error:', error);
-        res.status(400).json({ 
-            success: false, 
-            error: error.message 
+        res.status(400).json({
+            success: false,
+            error: error.message
         });
     }
 });
