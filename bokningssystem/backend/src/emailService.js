@@ -66,76 +66,81 @@ class EmailService {
         }
     }
 
-            static async sendBookingConfirmation(booking) {
-                try {
-
-                    console.log(booking)
-                    // Calculate individual sums
-                    const adultSum = booking.adult_quantity * 400;
-                    const youthSum = booking.youth_quantity * 300;
-                    const kidSum = booking.kid_quantity * 200;
-                    const fullDaySum = booking.full_day * 100;
-                    
-                    // Calculate base total (without rebooking)
-                    const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
-                    
-                    // Calculate rebooking fee separately
-                    const rebookingSum = booking.is_rebookable ? 
-                        (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+    static async sendBookingConfirmation(booking) {
+        try {
+            console.log(booking);
             
-                    const totalAmountInSEK = booking.paid_amount / 100; // Convert from öre to SEK
-                    
-                    // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
-                    const vatRate = 0.06;
-                    const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
-                    const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
-                    const amountExVat = taxableAmount - vatAmount;
-
-
-            const paymentMethodDisplay = booking.payment_method === 'swish' ? 'Swish' : 'Kontokort';
-
-            // Get gift card info if used
-        let giftCardAmount = 0;
-        if (booking.gift_card_number) {
-            const { data: giftCard } = await supabase
-                .from('gift_cards')
-                .select('amount')
-                .eq('gift_card_number', booking.gift_card_number)
-                .single();
+            // Calculate individual sums
+            const adultSum = booking.adult_quantity * 400;
+            const youthSum = booking.youth_quantity * 300;
+            const kidSum = booking.kid_quantity * 200;
+            const fullDaySum = booking.full_day * 100;
             
-            if (giftCard) {
-                giftCardAmount = giftCard.amount;
+            // Calculate base total (without rebooking)
+            const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
+            
+            // Calculate rebooking fee separately
+            const rebookingSum = booking.is_rebookable ? 
+                (booking.adult_quantity + booking.youth_quantity + booking.kid_quantity) * 25 : 0;
+    
+            // Get the latest payment from the payments array
+            const latestPayment = booking.payments?.[booking.payments.length - 1];
+            
+            if (!latestPayment) {
+                throw new Error('No payment information found');
             }
-        }
-
-        // Get promo code info if used
-        let promoDiscount = 0;
-        if (booking.promo_code) {
-            const { data: promo } = await supabase
-                .from('promo_codes')
-                .select('*')
-                .eq('promo_code', booking.promo_code)
-                .single();
+    
+            const totalAmountInSEK = latestPayment.amount / 100; // Convert from öre to SEK
             
-            if (promo) {
-                const subtotal = adultSum + youthSum + kidSum + fullDaySum - giftCardAmount;
-                if (promo.is_percentage) {
-                    promoDiscount = Math.max(subtotal * (promo.discount_value / 100), 0);
-                } else {
-                    promoDiscount = promo.discount_value;
+            // Calculate VAT (6%) only on the taxable amount (excluding rebooking fee)
+            const vatRate = 0.06;
+            const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
+            const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
+            const amountExVat = taxableAmount - vatAmount;
+    
+            // Determine payment method display text
+            const paymentMethodDisplay = latestPayment.payment_method === 'swish' ? 'Swish' : 'Kontokort';
+    
+            // Get gift card info if used
+            let giftCardAmount = 0;
+            if (booking.gift_card_number) {
+                const { data: giftCard } = await supabase
+                    .from('gift_cards')
+                    .select('amount')
+                    .eq('gift_card_number', booking.gift_card_number)
+                    .single();
+                
+                if (giftCard) {
+                    giftCardAmount = giftCard.amount;
                 }
             }
-        }
-
-            
-
-        console.log('promoDiscount:', promoDiscount);
-
-            // Build rebooking URL with access token
-        const rebookingUrl = booking.is_rebookable ? 
-        `https://aventyrsupplevelser.com/bokningssystem/frontend/bokaomtid.html?booking_id=${booking.id}&token=${booking.access_token}` : 
-        null;
     
+            // Get promo code info if used
+            let promoDiscount = 0;
+            if (booking.promo_code) {
+                const { data: promo } = await supabase
+                    .from('promo_codes')
+                    .select('*')
+                    .eq('promo_code', booking.promo_code)
+                    .single();
+                
+                if (promo) {
+                    const subtotal = adultSum + youthSum + kidSum + fullDaySum - giftCardAmount;
+                    if (promo.is_percentage) {
+                        promoDiscount = Math.max(subtotal * (promo.discount_value / 100), 0);
+                    } else {
+                        promoDiscount = promo.discount_value;
+                    }
+                }
+            }
+    
+            console.log('promoDiscount:', promoDiscount);
+    
+            // Build rebooking URL with access token
+            const rebookingUrl = booking.is_rebookable ? 
+                `https://aventyrsupplevelser.com/bokningssystem/frontend/bokaomtid.html?booking_id=${booking.id}&token=${booking.access_token}` : 
+                null;
+        
             const msg = {
                 to: booking.customer_email,
                 from: {
@@ -167,12 +172,12 @@ class EmailService {
                     is_rebookable: booking.is_rebookable,
                     rebooking_sum: rebookingSum,
                     ombokningsurl: rebookingUrl,
-                    gift_card_amount: giftCardAmount || null,  // Only include if used
-                    promo_discount: promoDiscount || null,     // Only include if used
+                    gift_card_amount: giftCardAmount || null,  
+                    promo_discount: promoDiscount || null,     
                     amount_ex_vat: amountExVat.toFixed(2),
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
-                    payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
+                    payment_date: new Date(latestPayment.date_paid).toLocaleDateString('sv-SE'),
                     payment_method: paymentMethodDisplay,
                 }
             };
