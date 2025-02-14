@@ -1314,8 +1314,8 @@ router.post('/re-confirmation', async (req, res) => {
             console.log('Total amount to charge:', addOnAmount);
             const quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
-                amount: addOnAmount,
-                callbackRoute: 'add-on-callback',
+                amount: difference,
+                callbackRoute: 'admin-callback',
                 accessToken: booking.access_token,
                 rebookingToken: latestChange.rebooking_token
             });
