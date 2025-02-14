@@ -1192,62 +1192,64 @@ router.post('/admin-callback', async (req, res) => {
 
         const paidAmountOre = callbackData.link.amount;
 
-        if (booking.paid_amount) {
-            // This is an add-on payment
-            // Find the relevant change in the changes array
-            const relevantChange = booking.changes.find(c => 
-                c.rebooking_token === rebookingToken
-            );
+        // In the add-on payment section of admin-callback:
+if (booking.paid_amount) {
+    // This is an add-on payment
+    // Get all changes that were included in this payment
+    const unpaidChanges = booking.changes.filter(c => !c.payment_completed);
+    
+    // Calculate totals from all unpaid changes
+    const totalAdultAdded = unpaidChanges.reduce((acc, change) => acc + (change.adult_added || 0), 0);
+    const totalYouthAdded = unpaidChanges.reduce((acc, change) => acc + (change.youth_added || 0), 0);
+    const totalKidAdded = unpaidChanges.reduce((acc, change) => acc + (change.kid_added || 0), 0);
+    const totalFullDayAdded = unpaidChanges.reduce((acc, change) => acc + (change.full_day_added || 0), 0);
 
-            if (!relevantChange) {
-                console.error('Could not find matching change record');
-                return;
+    // Update changes array to mark all changes as paid
+    const updatedChanges = booking.changes.map(change => 
+        !change.payment_completed ? 
+            { ...change, payment_completed: true, payment_id: callbackData.id } : 
+            change
+    );
+
+    // Update booking
+    const { error: updateError } = await supabase
+        .from('bookings')
+        .update({
+            status: 'confirmed',
+            changes: updatedChanges,
+            paid_amount: booking.paid_amount + paidAmountOre,
+            payment_metadata: {
+                ...booking.payment_metadata,
+                add_on_payments: [
+                    ...(booking.payment_metadata?.add_on_payments || []),
+                    callbackData
+                ]
             }
+        })
+        .eq('id', booking.id)
+        .eq('status', 'unpaid');
 
-            // Update changes array to mark this change as paid
-            const updatedChanges = booking.changes.map(change => 
-                change.rebooking_token === rebookingToken
-                    ? { ...change, payment_completed: true, payment_id: callbackData.id }
-                    : change
-            );
+    if (updateError) {
+        console.error('Error updating booking:', updateError);
+        return;
+    }
 
-            // Update booking
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    changes: updatedChanges,
-                    paid_amount: booking.paid_amount + paidAmountOre,
-                    payment_metadata: {
-                        ...booking.payment_metadata,
-                        add_on_payments: [
-                            ...(booking.payment_metadata?.add_on_payments || []),
-                            callbackData
-                        ]
-                    }
-                })
-                .eq('id', booking.id)
-                .eq('status', 'unpaid');
-
-            if (updateError) {
-                console.error('Error updating booking:', updateError);
-                return;
-            }
-
-            // Send add-on confirmation email
-            try {
-                await EmailService.sendAddOnConfirmation({
-                    ...booking,                    // Base booking info
-                    ...relevantChange,            // Added quantities
-                    start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,   // Just the add-on payment amount
-                    payment_completed_at: new Date().toISOString()
-                });
-            } catch (emailError) {
-                console.error('Error sending add-on confirmation email:', emailError);
-            }
-
-        } else {
+    // Send add-on confirmation email with totals from all paid changes
+    try {
+        await EmailService.sendAddOnConfirmation({
+            ...booking,
+            adult_added: totalAdultAdded,
+            youth_added: totalYouthAdded,
+            kid_added: totalKidAdded,
+            full_day_added: totalFullDayAdded,
+            start_time: booking.time_slots.start_time,
+            paid_amount: paidAmountOre,
+            payment_completed_at: new Date().toISOString()
+        });
+    } catch (emailError) {
+        console.error('Error sending add-on confirmation email:', emailError);
+    }
+} else {
             // This is the initial payment
             const { error: updateError } = await supabase
                 .from('bookings')
