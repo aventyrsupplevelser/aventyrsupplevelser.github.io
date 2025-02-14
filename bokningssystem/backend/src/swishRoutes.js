@@ -332,7 +332,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
     try {
         // 1. Always respond with 200 OK first to acknowledge receipt
         res.status(200).send('OK');
-        console.log('starting')
+        console.log('starting');
 
         // 2. Get the callback data
         const callbackData = req.body;
@@ -349,67 +349,70 @@ router.post('/card-callback', express.json(), async (req, res) => {
 
         if (!verifyCallbackId(callbackIdentifier, bookingNumber)) {
             console.error('Invalid callback checksum');
+            return;
         }
 
-        // 5. Get the booking using both booking number and access token
+        // 4. Get the booking with existing payments array
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
-            .select('*, time_slots(*)')
+            .select('*, time_slots(*), payments')
             .eq('booking_number', bookingNumber)
             .single();
 
         if (bookingError || !booking) {
-            console.error('Booking not found or access token mismatch');
+            console.error('Booking not found');
             return;
         }
 
-        // 6. Check if booking is still requesting
+        // 5. Check if booking is still requesting
         if (booking.status !== 'requested') {
             console.log('Booking already processed:', booking.status);
             return;
         }
 
-        // 7. Check for successful payment
+        // 6. Check for successful payment
         const isSuccess = callbackData.accepted && callbackData.state === 'processed';
-        if (isSuccess) {
-            // Get amount in öre from the payment link data
-            const paidAmountOre = callbackData.link.amount;
+        if (!isSuccess) return;
 
-            // Update the booking
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    payment_method: 'card',
-                    payment_id: callbackData.id.toString(),
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    payment_metadata: callbackData
-                })
-                .eq('id', booking.id)
-                .eq('status', 'requested')
+        // 7. Create new payment record
+        const newPayment = {
+            amount: callbackData.link.amount,
+            payment_id: callbackData.id.toString(),
+            payment_method: 'card',
+            date_paid: new Date().toISOString(),
+            is_paid: true,
+            payment_metadata: callbackData
+        };
 
-            if (updateError) {
-                console.error('Error updating booking:', updateError);
-                return;
-            }
+        // 8. Update the booking with new payment and status
+        const { error: updateError } = await supabase
+            .from('bookings')
+            .update({
+                status: 'confirmed',
+                payments: [...(booking.payments || []), newPayment]
+            })
+            .eq('id', booking.id)
+            .eq('status', 'requested');
 
-            await updateAppliedCodes(booking);
+        if (updateError) {
+            console.error('Error updating booking:', updateError);
+            return;
+        }
 
-            console.log('Payment recorded successfully:', callbackData.id);
+        await updateAppliedCodes(booking);
+        console.log('Payment recorded successfully:', callbackData.id);
 
-            // Send confirmation email
-            try {
-                await EmailService.sendBookingConfirmation({
-                    ...booking,
-                    start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString()
-                });
-                console.log('Confirmation email sent successfully');
-            } catch (emailError) {
-                console.error('Error sending confirmation email:', emailError);
-            }
+        // 9. Send confirmation email
+        try {
+            await EmailService.sendBookingConfirmation({
+                ...booking,
+                start_time: booking.time_slots.start_time,
+                paid_amount: callbackData.link.amount,
+                payment_completed_at: new Date().toISOString()
+            });
+            console.log('Confirmation email sent successfully');
+        } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
         }
 
     } catch (error) {
