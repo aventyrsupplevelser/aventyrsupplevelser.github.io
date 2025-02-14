@@ -805,7 +805,14 @@
     <!-- Save Button -->
     <div id="saveButtons">
         <button onclick="saveChanges();" id="saveChanges">Spara ändringar</button>
-        <button onclick="saveChanges(true);" id="sendEmail">Spara och maila&nbsp;<span id="differens"></span></button>
+        <button onclick="saveChanges(true);" id="sendEmail">Maila</button>
+        <button onclick="newPayment()" id="newPaymentButton">Ny betalning&nbsp;<span id="differens"></span></button>
+    </div>
+    <div id="createPayment">
+        <button onclick="saveChanges();" id="saveChanges">Manuell</button>
+        <button onclick="saveChanges();" id="saveChanges">Länk</button>
+    </div>
+    <div id="paymenthistory">
     </div>
     <script>
         const { createClient } = supabase;
