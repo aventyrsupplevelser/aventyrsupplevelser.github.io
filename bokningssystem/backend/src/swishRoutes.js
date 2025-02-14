@@ -332,7 +332,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
     try {
         // 1. Always respond with 200 OK first to acknowledge receipt
         res.status(200).send('OK');
-        console.log('starting');
+        console.log('starting')
 
         // 2. Get the callback data
         const callbackData = req.body;
@@ -384,12 +384,15 @@ router.post('/card-callback', express.json(), async (req, res) => {
             payment_metadata: callbackData
         };
 
-        // 8. Update the booking with new payment and status
+        // 8. Create updated payments array
+        const updatedPayments = [...(booking.payments || []), newPayment];
+
+        // 9. Update the booking with new payment and status
         const { error: updateError } = await supabase
             .from('bookings')
             .update({
                 status: 'confirmed',
-                payments: [...(booking.payments || []), newPayment]
+                payments: updatedPayments
             })
             .eq('id', booking.id)
             .eq('status', 'requested');
@@ -402,14 +405,15 @@ router.post('/card-callback', express.json(), async (req, res) => {
         await updateAppliedCodes(booking);
         console.log('Payment recorded successfully:', callbackData.id);
 
-        // 9. Send confirmation email
+        // 10. Send confirmation email with the updated booking data including payments
         try {
-            await EmailService.sendBookingConfirmation({
+            const updatedBooking = {
                 ...booking,
-                start_time: booking.time_slots.start_time,
-                paid_amount: callbackData.link.amount,
-                payment_completed_at: new Date().toISOString()
-            });
+                payments: updatedPayments,  // Include the updated payments array
+                start_time: booking.time_slots.start_time
+            };
+            
+            await EmailService.sendBookingConfirmation(updatedBooking);
             console.log('Confirmation email sent successfully');
         } catch (emailError) {
             console.error('Error sending confirmation email:', emailError);
