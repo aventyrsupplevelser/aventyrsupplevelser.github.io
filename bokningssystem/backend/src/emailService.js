@@ -332,7 +332,7 @@ const msg = {
 
 static async sendAddOnEmail(booking) {
     try {
-        console.log('Sending add-on email for booking:', booking);
+        console.log('Sending add-on email for booking:nolog', );
 
         // Calculate sums for added spots only
         const adultSum = booking.adult_added * 400;
