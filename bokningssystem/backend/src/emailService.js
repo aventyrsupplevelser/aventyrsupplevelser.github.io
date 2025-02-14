@@ -425,27 +425,39 @@ static async sendAddOnEmail(booking) {
 
 static async sendAddOnConfirmation(data) {
     try {
-        console.log('addondata received', data);
+        console.log('Processing add-on confirmation for booking:', data.booking_number);
 
-        // Use data instead of booking
-        const adultSum = data.adult_added * 400;
-        const youthSum = data.youth_added * 300;
-        const kidSum = data.kid_added * 200;
-        const fullDaySum = data.full_day_added * 100;
+        // Get all unpaid changes from the changes array
+        const unpaidChanges = data.changes?.filter(change => !change.payment_completed) || [];
+        
+        // Sum up all quantities from unpaid changes
+        const totalAdded = unpaidChanges.reduce((acc, change) => ({
+            adult: acc.adult + (change.adult_added || 0),
+            youth: acc.youth + (change.youth_added || 0),
+            kid: acc.kid + (change.kid_added || 0),
+            fullDay: acc.fullDay + (change.full_day_added || 0)
+        }), { adult: 0, youth: 0, kid: 0, fullDay: 0 });
 
+        // Calculate sums for all added spots
+        const adultSum = totalAdded.adult * 400;
+        const youthSum = totalAdded.youth * 300;
+        const kidSum = totalAdded.kid * 200;
+        const fullDaySum = totalAdded.fullDay * 100;
+
+        // Calculate base total before rebooking fee
         const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
-        console.log('basetotal add on:', baseTotal);
 
-        const rebookingSum = data.is_rebookable ? 
-            (adultSum + youthSum + kidSum) * 25 : 0;
+        // Calculate rebooking fee
+        const totalParticipants = totalAdded.adult + totalAdded.youth + totalAdded.kid;
+        const rebookingFee = data.is_rebookable ? (totalParticipants * 25) : 0;
 
-        // Calculate total (no gift cards or promos for add-ons)
-        const totalAmount = baseTotal + rebookingSum;
-
-        // Calculate VAT (6%) on the total amount
+        // Calculate VAT (6%) on base amount only (excluding rebooking fee)
         const vatRate = 0.06;
         const vatAmount = (baseTotal * vatRate) / (1 + vatRate);
-        const amountExVat = totalAmount - vatAmount;
+        const amountExVat = baseTotal - vatAmount;
+
+        // Final total including rebooking fee
+        const totalAmount = baseTotal + rebookingFee;
 
         const msg = {
             to: data.customer_email,
@@ -467,13 +479,30 @@ static async sendAddOnConfirmation(data) {
                     minute: '2-digit',
                     hour12: false
                 }),
-                // Only include quantities that were added
-                ...(data.adult_added && { adult_added: data.adult_added, adult_sum: adultSum }),
-                ...(data.youth_added && { youth_added: data.youth_added, youth_sum: youthSum }),
-                ...(data.kid_added && { kid_added: data.kid_added, kid_sum: kidSum }),
-                ...(data.full_day_added && { full_day_added: data.full_day_added, full_day_sum: fullDaySum }),
+                // Only include quantities and sums if they were added
+                ...(totalAdded.adult > 0 && { 
+                    adult_added: totalAdded.adult, 
+                    adult_sum: adultSum 
+                }),
+                ...(totalAdded.youth > 0 && { 
+                    youth_added: totalAdded.youth, 
+                    youth_sum: youthSum 
+                }),
+                ...(totalAdded.kid > 0 && { 
+                    kid_added: totalAdded.kid, 
+                    kid_sum: kidSum 
+                }),
+                ...(totalAdded.fullDay > 0 && { 
+                    full_day_added: totalAdded.fullDay, 
+                    full_day_sum: fullDaySum 
+                }),
                 
-                // Original booking totals for reference
+                // Include rebooking fee if applicable
+                ...(rebookingFee > 0 && {
+                    rebooking_fee: rebookingFee
+                }),
+
+                // Current totals for reference
                 total_adult: data.adult_quantity,
                 total_youth: data.youth_quantity,
                 total_kid: data.kid_quantity,
