@@ -345,6 +345,8 @@ static async sendAddOnEmail(booking) {
         const totalAddedParticipants = booking.adult_added + booking.youth_added + booking.kid_added;
         const rebookingFee = booking.is_rebookable ? totalAddedParticipants * 25 : 0;
 
+        console.log('booking.is_rebookable', booking.is_rebookable)
+
         // Calculate total including rebooking fee
         const totalAmount = baseTotal + rebookingFee;
 
@@ -393,7 +395,7 @@ static async sendAddOnEmail(booking) {
 
                 // Include rebooking fee if applicable
                 ...(rebookingFee > 0 && {
-                    rebooking_fee: rebookingFee
+                    rebooking_sum: rebookingFee
                 }),
 
                 // Payment and total details
