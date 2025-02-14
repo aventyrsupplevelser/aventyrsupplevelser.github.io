@@ -408,20 +408,19 @@ static async sendAddOnEmail(booking) {
 
 static async sendAddOnConfirmation(data) {
     try {
-        console.log('addondata recieved', data)
-        // Get only the added quantities from the change record
-        const adultSum = booking.adult_added * 400;
-        const youthSum = booking.youth_added * 300;
-        const kidSum = booking.kid_added * 200;
-        const fullDaySum = booking.full_day_added * 100;
+        console.log('addondata received', data);
 
-        console.log('basetotal add on:', baseTotal)
-
+        // Use data instead of booking
+        const adultSum = data.adult_added * 400;
+        const youthSum = data.youth_added * 300;
+        const kidSum = data.kid_added * 200;
+        const fullDaySum = data.full_day_added * 100;
 
         const baseTotal = adultSum + youthSum + kidSum + fullDaySum;
+        console.log('basetotal add on:', baseTotal);
 
-        const rebookingSum = booking.is_rebookable ? 
-                (adultSum + youthSum + kidSum) * 25 : 0;
+        const rebookingSum = data.is_rebookable ? 
+            (adultSum + youthSum + kidSum) * 25 : 0;
 
         // Calculate total (no gift cards or promos for add-ons)
         const totalAmount = baseTotal + rebookingSum;
