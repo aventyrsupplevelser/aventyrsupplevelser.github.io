@@ -1232,7 +1232,7 @@ router.post('/admin-callback', async (req, res) => {
 
 router.post('/re-confirmation', async (req, res) => {
     try {
-        const { booking_id, email_type, difference, total_paid } = req.body;
+        const { booking_id, email_type, difference, total_paid, rebooking_token } = req.body;
 
         console.log('total_paid', total_paid)
         // Get the booking with complete details
@@ -1253,7 +1253,7 @@ router.post('/re-confirmation', async (req, res) => {
         if (email_type === 'payment' && difference > 0) {
             // Create payment link
             const quickPayLink = await createQuickPayLink({
-                orderNumber: booking.booking_number,
+                orderNumber: rebooking_token,
                 amount: difference,
                 callbackRoute: 'admin-callback',
                 accessToken: booking.access_token
@@ -1264,10 +1264,6 @@ router.post('/re-confirmation', async (req, res) => {
                 .from('bookings')
                 .update({ status: 'unpaid' })
                 .eq('id', booking_id);
-
-                console.log('swishroute: total_paid', total_paid)
-
-                console.log('swishroute: booking.paid_amount', booking.paid_amount)
 
             // Send email with payment link
             await EmailService.sendBookingEmail({

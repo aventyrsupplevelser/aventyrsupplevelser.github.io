@@ -1650,6 +1650,8 @@ arrow_right_alt
                     throw new Error(data.message);
                 }
 
+                const rebookingToken = data.rebooking_token;
+
                 // Show success message
                 showMessage(data.message, 'success');
 
@@ -1680,7 +1682,8 @@ arrow_right_alt
                     is_rebookable: ticketState.is_rebookable,
                     customer_name: customerName,
                     customer_email: customerEmail,
-                    comments: customerComment
+                    comments: customerComment,
+                    rebooking_token: rebookingToken  // Store token in current booking
                 };
 
                 // Refresh the booking summary
@@ -1694,7 +1697,7 @@ arrow_right_alt
         async function sendEmail(type = 'confirmation') {
             try {
                 // First save any changes
-                await saveChanges();
+                const saveResponse = await saveChanges();
 
                 // Calculate totals
                 const total = calculateTotal(ticketState);
@@ -1709,7 +1712,8 @@ arrow_right_alt
                         booking_id: currentBooking.id,
                         email_type: type,
                         difference: difference,
-                        total_paid: totalPaid / 100  // Pass the already calculated total
+                        total_paid: totalPaid / 100,
+                        rebooking_token: saveResponse.rebooking_token
                     })
                 });
 
