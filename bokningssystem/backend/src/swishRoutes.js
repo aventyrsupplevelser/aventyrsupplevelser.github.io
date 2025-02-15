@@ -1143,22 +1143,25 @@ router.post('/admin-callback', async (req, res) => {
         res.status(200).send('OK');
         
         const callbackData = req.body;
-        const bookingNumber = callbackData.order_id;
+        const orderId = callbackData.order_id;
         
-        if (!bookingNumber) {
-            console.error('Missing booking number in callback');
+        if (!orderId) {
+            console.error('Missing order ID in callback');
             return;
         }
 
-        const [baseBookingNumber, rebookingToken] = bookingNumber.split('_');
-
+        // Get the callback identifier
         const callbackUrl = new URL(callbackData.link.callback_url);
         const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
 
-        if (!verifyCallbackId(callbackIdentifier, baseBookingNumber)) {
+        // Verify against the full order ID (which includes rebooking token if present)
+        if (!verifyCallbackId(callbackIdentifier, orderId)) {
             console.error('Invalid callback checksum');
             return;
         }
+
+        // After verification, split for database lookup
+        const [baseBookingNumber, rebookingToken] = orderId.split('_');
 
         // Get booking with time slots
         const { data: booking, error: bookingError } = await supabase

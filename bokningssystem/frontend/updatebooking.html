@@ -1688,9 +1688,13 @@ arrow_right_alt
 
                 // Refresh the booking summary
                 updateBookingSummary();
+
+                return data;
+
             } catch (error) {
                 console.error('Error:', error);
                 alert(`Ett fel uppstod: ${error.message}`);
+                throw error; // Re-throw so sendEmail can catch it
             }
         }
 
