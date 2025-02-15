@@ -1254,14 +1254,15 @@ router.post('/re-confirmation', async (req, res) => {
         // If this is a payment request and there's a difference to pay
         if (email_type === 'payment' && difference > 0) {
 
-            const orderId = `${booking.booking_number}_${rebooking_token}`;
+            // const orderId = `${booking.booking_number}_${rebooking_token}`;
 
             // Create payment link
             const quickPayLink = await createQuickPayLink({
-                orderNumber: orderId,
+                orderNumber: booking.booking_number,
                 amount: difference,
                 callbackRoute: 'admin-callback',
-                accessToken: booking.access_token
+                accessToken: booking.access_token,
+                rebookingToken: rebooking_token
             });
 
             // Update booking status
