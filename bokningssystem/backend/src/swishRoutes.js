@@ -1063,11 +1063,11 @@ router.post('/backend-book', async (req, res) => {
             quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
                 accessToken: booking.access_token,
-                totalAmount,
+                amount: totalAmount,
                 callbackRoute: 'admin-callback'
             });
         }
-        
+
  // Apply codes if valid
  if (giftCardValid) {
     const { data: giftResult, error: giftError } = await supabase.rpc('admin_validate_apply_code', {
