@@ -143,10 +143,13 @@ class EmailService {
                     email: process.env.SENDGRID_FROM_EMAIL,
                     name: 'Sörsjöns Äventyrspark'
                 },
-                // Choose template based on whether there's a payment link
+                subject: booking.quickpay_link
+                 ? `Reservation och betalning: ${booking.booking_number}`
+                 : `Tack för din bokning: ${booking.booking_number}`,
                 templateId: booking.quickpay_link ? 
                     process.env.SENDGRID_ADMIN_BOOKING_ID : 
                     process.env.SENDGRID_BOOKING_TEMPLATE_ID,
+                    
                 dynamic_template_data: {
                     booking_number: booking.booking_number,
                     customer_name: booking.customer_name,

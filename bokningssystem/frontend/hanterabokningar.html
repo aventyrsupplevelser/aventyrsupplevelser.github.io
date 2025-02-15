@@ -94,7 +94,7 @@
         }
 
         .calendar-day.has-bookings {
-            background-color: rgb(173, 240, 159);
+            background-color: rgb(255, 181, 103);
             color: #1a1a1a;
         }
 
@@ -278,6 +278,50 @@
         .close:hover {
             color: black;
         }
+
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            /* Adjust as needed */
+        }
+
+        .selectSpots {
+            width: 100%;
+            appearance: none;
+            /* Your existing styles */
+            font-size: 1em;
+            padding: 5px 17px 2px 5px;
+            /* Increase right padding so text doesn't overlap the icon */
+            font-family: inherit;
+            border: 3px dashed rgb(141, 140, 224);
+            background: rgb(241, 241, 241);
+            margin: 0 14px 0px 3px;
+            color: rgb(0, 57, 5);
+
+            width: 100%;
+            appearance: none;
+            font-size: 1em;
+            padding: 5px 7px 2px 0px;
+            font-family: inherit;
+            border: none;
+            background: inherit;
+            margin: 0 14px 0px 0px;
+            color: rgb(83, 83, 83);
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            top: 60%;
+            right: 0px;
+            /* Adjust based on your design */
+            pointer-events: none;
+            /* So clicks go to the select element */
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            /* Adjust size if needed */
+            color: rgb(99, 99, 99);
+        }
     </style>
 </head>
 
@@ -287,8 +331,8 @@
         </span></a>
     <h1>Hantera bokningar</h1>
 
-    <input type="text" id="bookingSearch" placeholder="Search here"
-        style="width: 590px; display: block; padding: 20px 20px 15px; font-size: 1.3em; margin: 0px auto 20px; background: #262626; font-family: inherit; border-radius: 9px; color: rgb(255, 255, 255);">
+    <input type="text" id="bookingSearch" placeholder="kurragömma"
+        style="width: 590px; display: block; padding: 20px 20px 15px; font-size: 1.3em; margin: 0px auto 20px; background: #efefef; font-family: inherit; border-radius: 9px; color: rgb(49, 46, 46);">
 
 
     <div id="calendar"></div>
@@ -489,6 +533,8 @@
                         id,
                         start_time,
                         allow_full_day,
+                        total_spots,
+                        available_spots,
                         bookings!inner (
                             id,
                             status,
@@ -526,31 +572,47 @@
                     return;
                 }
 
+                const maxSpots = 30;
+
                 // Clear any previously displayed bookings
                 document.getElementById('bookings-list').classList.remove('visible');
 
                 timeSlotsList.innerHTML = slots.map(slot => {
+                    // Format the time as before
                     const time = new Date(slot.start_time).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit'
                     });
 
-                    const bookingCount = slot.bookings.length;
+                    // Calculate booked people using available_spots from the time_slots table
+                    const bookedPeople = slot.total_spots - slot.available_spots;
+
+                    // Build the dropdown options starting from bookedPeople to maxSpots
+                    let optionsHTML = '';
+                    for (let i = bookedPeople; i <= maxSpots; i++) {
+                        optionsHTML += `<option value="${i}" ${i === slot.total_spots ? 'selected' : ''}>${i}</option>`;
+                    }
+
                     const fakturaCount = slot.bookings.filter(b => b.status === 'invoice').length;
                     const unpaidCount = slot.bookings.filter(b => b.status === 'unpaid').length;
 
                     return `
-                        <div class="time-slot" data-slot-id="${slot.id}" onclick="selectTimeSlot('${slot.id}')">
-                            <div class="time-slot-header">
-                                <span style="font-size: 1.4em; font-weight: 500; padding-top: 5px;">${time}</span>
-                                <span style="color: #666; display: flex;
-gap: 10px;"> <span style="display: flex;
-flex-wrap: wrap;
-align-items: center; gap: 1px;">
-                                    <span style="padding-top: 3px;">${bookingCount}</span> <span class="material-symbols-outlined">
-hiking
-</span></span>
-                                    ${fakturaCount > 0 ? `<span class="status-Faktura" style="font-size: 0.8em; display: flex;
+    <div class="time-slot" data-slot-id="${slot.id}" onclick="selectTimeSlot('${slot.id}')">
+      <div class="time-slot-header">
+        <span style="font-size: 1.4em; font-weight: 500; padding-top: 5px;">${time}</span>
+        <span style="color: #666; display: flex; gap: 10px;">
+          <span style="display: flex; align-items: center; gap: 1px;">
+            <span style="padding-top: 3px; style="font-size: 1.4em;">${bookedPeople}</span> /
+            <div class="custom-select">
+  <select class="selectSpots" id="totalSpots-${slot.id}" onchange="updateTimeSlotSpots('${slot.id}', this.value)">
+    ${optionsHTML}
+  </select>
+  <span class="material-symbols-outlined dropdown-icon">
+    arrow_drop_down
+  </span>
+</div>
+          </span>
+           ${fakturaCount > 0 ? `<span class="status-Faktura" style="font-size: 0.8em; display: flex;
 flex-wrap: wrap;
 align-items: center; gap: 1px; padding-top: 6px;">${fakturaCount} <span class="material-symbols-outlined">
 history_edu
@@ -558,11 +620,15 @@ history_edu
                                     ${unpaidCount > 0 ? `<span class="status-Obetald" style="font-size: 0.8em; display: flex;
 flex-wrap: wrap;
 align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="material-symbols-outlined">credit_card</span></span>` : ''}
-                                </span>
-                            </div>
-                        </div>
-                    `;
+        </span>
+      </div>
+    </div>
+  `;
                 }).join('');
+
+                if (slots.length > 0) {
+                    selectTimeSlot(slots[0].id, false);
+                }
 
             } catch (err) {
                 console.error('Error loading time slots:', err);
@@ -571,9 +637,8 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
             }
         }
 
-        async function selectTimeSlot(slotId) {
-            currentSelectedSlotId = slotId;  // Store the current slot ID
-            // Update visual selection
+        async function selectTimeSlot(slotId, shouldScroll = true) {
+            currentSelectedSlotId = slotId;
             document.querySelectorAll('.time-slot').forEach(slot => {
                 slot.classList.toggle('selected', slot.dataset.slotId === slotId);
             });
@@ -584,17 +649,17 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                     .select(`
         *,
         time_slots (
-            start_time,
-            allow_full_day
+          start_time,
+          allow_full_day
         ),
         gift_cards!bookings_gift_card_number_fkey (
-            amount
+          amount
         ),
         promo_codes!bookings_promo_code_fkey (
-            discount_value,
-            is_percentage
+          discount_value,
+          is_percentage
         )
-    `)
+      `)
                     .eq('time_slot_id', slotId)
                     .in('status', ['confirmed', 'unpaid', 'invoice'])
                     .order('created_at');
@@ -609,81 +674,17 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                     return;
                 }
 
-                bookingsList.innerHTML = bookings.map(booking => {
-                    const totalParticipants = (booking.adult_quantity || 0) +
-                        (booking.youth_quantity || 0) +
-                        (booking.kid_quantity || 0);
+                bookingsList.innerHTML = bookings.map(renderBookingItem).join('');
 
-                    let paymentMethod = booking.payment_method;
-                    if (paymentMethod === 'card') {
-                        paymentMethod = 'kort';
-                    } else if (paymentMethod === 'invoice') {
-                        paymentMethod = null;
-                    }
-
-                    let status = booking.status;
-
-
-                    if (booking.status === 'invoice') {
-                        status = 'Faktura'
-                    } else if (status === 'confirmed') {
-                        status = 'Bekräftad'
-                    } else if (status === 'unpaid') {
-                        status = 'Obetald'
-                    }
-
-
-
-                    return `
-    <div class="booking-item">
-        <div class="booking-header">
-            <div style="font-size: 1.3em;">
-                <span>${booking.customer_name || 'Namnlös bokning'}</span>
-                <span> – ${booking.booking_number}</span>
-                <span> – ${booking.customer_email || 'Ingen email'} </span>
-            </div>
-            <div>
-                <span class="status-${status}" style="font-size: 1.1em;">
-                    ${status}
-                </span>
-            </div>
-        </div>
-        <div class="booking-details">
-            <div style="display: flex; gap: 0px; margin: 10px 0px 15px;">
-                <div class="itemdiv">${booking.adult_quantity ? `<span class="material-symbols-outlined">elderly_woman</span> ${booking.adult_quantity}` : ''}</div>
-                <div class="itemdiv">${booking.youth_quantity ? `<span class="material-symbols-outlined">directions_run</span>${booking.youth_quantity}` : ''}</div>
-                <div class="itemdiv">${booking.kid_quantity ? `<span class="material-symbols-outlined">stroller</span> ${booking.kid_quantity}` : ''}</div>
-                <div class="itemdiv">${booking.full_day ? `<span class="material-symbols-outlined">update</span> ${booking.full_day}` : ''}</div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: end;">
-            ${booking.comments ? `
-                <div class="itemdiv" style="background: none; margin-top: 0px; font-size: 1.2em;">
-                    <div style="max-width: 390px; width: fit-content; line-height: 1.2em; font-size: 1em; color: rgb(29, 52, 124); background: rgb(255, 255, 200); display: inline-block; padding: 5px 5px 2px;"> 
-                        ${booking.comments}
-                    </div>
-                </div>` : '&nbsp;'}
-                <div>
-             <button onclick="checkIn('${booking.id}', this)" style="background: ${booking.checked_in ? 'rgb(255, 238, 0)' : 'rgb(143, 231, 126)'}" class="changeButton checkInButton">
-                  ${booking.checked_in ? 'Incheckad' : 'checka in'}</button>
-             <button onclick="checkOut('${booking.id}', this)" style="background: ${booking.checked_out ? 'rgb(255, 238, 0)' : 'rgb(255, 130, 101)'}" class="changeButton checkOutButton">
-                  ${booking.checked_out ? 'Utcheckad' : 'checka ut'}</button>
-             <button onclick="openUpdateBooking('${booking.id}')" class="changeButton">Ändra</button>
-             </div>
-            </div>
-        </div>
-    </div>
-`;
-                }).join('');
-
-                // Scroll bookings list into view
-                bookingsList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
+                if (shouldScroll) {
+                    bookingsList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
             } catch (err) {
                 console.error('Error loading bookings:', err);
-                const bookingsList = document.getElementById('bookings-list');
-                bookingsList.innerHTML = '<p class="error">Kunde inte ladda bokningar. Försök igen.</p>';
+                document.getElementById('bookings-list').innerHTML = '<p class="error">Kunde inte ladda bokningar. Försök igen.</p>';
             }
         }
+
 
         function openUpdateBooking(bookingId) {
             let modal = document.getElementById('updateBookingModal');
