@@ -97,10 +97,7 @@ class EmailService {
             const taxableAmount = totalAmountInSEK - rebookingSum; // Remove rebooking fee before VAT calc
             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
             const amountExVat = taxableAmount - vatAmount;
-    
-            // Determine payment method display text
-            const paymentMethodDisplay = latestPayment.payment_method === 'swish' ? 'Swish' : 'Kontokort';
-    
+        
             // Get gift card info if used
             let giftCardAmount = 0;
             if (booking.gift_card_number) {
@@ -178,7 +175,6 @@ class EmailService {
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
                     payment_date: new Date(latestPayment.date_paid).toLocaleDateString('sv-SE'),
-                    payment_method: paymentMethodDisplay,
                 }
             };
     
@@ -270,8 +266,8 @@ if (promoDiscount > subtotal) {
             const vatAmount = (taxableAmount * vatRate) / (1 + vatRate);
             const amountExVat = taxableAmount - vatAmount;
 
+          const toPay = totalAmountInSEK - booking.total_paid;
 
-console.log('promoDiscount:', promoDiscount);
 
     // Build rebooking URL with access token
 const rebookingUrl = booking.is_rebookable ? 
@@ -287,7 +283,7 @@ const msg = {
     // Choose template based on whether there's a payment link
     templateId: booking.quickpay_link ? 
         process.env.SENDGRID_ADMIN_BOOKING_ID : 
-        process.env.SENDGRID_ADMIN_FREE_BOOKING_ID,
+        process.env.SENDGRID_BOOKING_TEMPLATE_ID,
     dynamic_template_data: {
         booking_number: booking.booking_number,
         customer_name: booking.customer_name,
@@ -317,6 +313,8 @@ const msg = {
         amount_ex_vat: amountExVat.toFixed(2),
         vat_amount: vatAmount.toFixed(2),
         total_amount: totalAmountInSEK.toFixed(2),
+        amount_paid: booking.total_paid.toFixed(2),
+        to_pay: toPay.toFixed(2),
         payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE'),
         // Only include payment link if it exists
         ...(booking.quickpay_link && { payment_link: booking.quickpay_link })

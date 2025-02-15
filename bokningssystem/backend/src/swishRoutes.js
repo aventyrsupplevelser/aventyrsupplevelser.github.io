@@ -1026,7 +1026,7 @@ console.log(req.body)
             status = 'confirmed';
             payment_method = 'free';
         } else if (payment_method === 'invoice') {
-            status = 'confirmed';
+            status = 'invoice';
         } else {
             status = 'unpaid';
         }
@@ -1043,7 +1043,7 @@ console.log(req.body)
             p_customer_email: customer_email,
             p_customer_comment: customer_comment,
             p_status: status,
-            p_payment_method: payment_method
+           // p_payment_method: payment_method
         });
 
         if (bookingError) throw bookingError;
@@ -1314,108 +1314,56 @@ router.post('/admin-callback', async (req, res) => {
     }
 });
 
+// In swishRoutes.js, update the re-confirmation route:
+
+// In swishRoutes.js, update the re-confirmation route:
+
 router.post('/re-confirmation', async (req, res) => {
     try {
-        const { booking_id, difference } = req.body;  // difference from frontend
+        const { booking_id, email_type, difference, total_paid } = req.body;
 
-        // Get the booking with latest change
+        // Get the booking with complete details
         const { data: booking, error } = await supabase
             .from('bookings')
-            .select('*, time_slots(*)')
+            .select(`
+                *,
+                time_slots(*),
+                gift_cards(*),
+                promo_codes(*)
+            `)
             .eq('id', booking_id)
             .single();
 
         if (error) throw error;
 
-        const latestChange = booking.changes?.[booking.changes.length - 1];
-
-        if (booking.paid_amount > 0 && difference > 0) {
-            // Scenario 1: Add-on payment needed for existing paid booking
-            
-            // Get all unpaid changes
-            const unpaidChanges = booking.changes.filter(change => !change.payment_completed);
-            
-            // Sum up all added quantities
-            const totalAdultAdded = unpaidChanges.reduce((acc, change) => acc + (change.adult_added || 0), 0);
-            const totalYouthAdded = unpaidChanges.reduce((acc, change) => acc + (change.youth_added || 0), 0);
-            const totalKidAdded = unpaidChanges.reduce((acc, change) => acc + (change.kid_added || 0), 0);
-            const totalFullDayAdded = unpaidChanges.reduce((acc, change) => acc + (change.full_day_added || 0), 0);
-        
-            const addOnAmount = await calculateBookingAmount({
-                adult_quantity: totalAdultAdded,
-                youth_quantity: totalYouthAdded,
-                kid_quantity: totalKidAdded,
-                full_day: totalFullDayAdded,
-                is_rebookable: booking.is_rebookable
-            });
-        
-            console.log('Total amount to charge:', addOnAmount);
-        
-            // Get the latest change for the rebooking token
-            const latestChange = booking.changes[booking.changes.length - 1];
-        
+        // If this is a payment request and there's a difference to pay
+        if (email_type === 'payment' && difference > 0) {
+            // Create payment link
             const quickPayLink = await createQuickPayLink({
                 orderNumber: booking.booking_number,
-                amount: addOnAmount,
+                amount: difference,
                 callbackRoute: 'admin-callback',
-                accessToken: booking.access_token,
-                rebookingToken: latestChange.rebooking_token
+                accessToken: booking.access_token
             });
-        
-            // Update booking status to unpaid
+
+            // Update booking status
             await supabase
                 .from('bookings')
                 .update({ status: 'unpaid' })
                 .eq('id', booking_id);
-        
-            // Send add-on email with total of all unpaid changes
-            await EmailService.sendAddOnEmail({
+
+            // Send email with payment link
+            await EmailService.sendAdminConfirmation({
                 ...booking,
-                adult_added: totalAdultAdded,
-                youth_added: totalYouthAdded,
-                kid_added: totalKidAdded,
-                full_day_added: totalFullDayAdded,
                 quickpay_link: quickPayLink,
+                total_paid: total_paid,
                 start_time: booking.time_slots.start_time
             });
-
-        } else if ((!booking.paid_amount || booking.paid_amount === 0) && difference > 0) {
-            // Scenario 2: First payment for updated booking
-            const totalAmount = await calculateBookingAmount({
-                adult_quantity: booking.adult_quantity,
-                youth_quantity: booking.youth_quantity,
-                kid_quantity: booking.kid_quantity,
-                full_day: booking.full_day,
-                is_rebookable: booking.is_rebookable,
-                gift_card_number: booking.gift_card_number, // Pass the gift card identifier
-                promo_code: booking.promo_code              // Pass the promo code identifier
-            });
-            
-            console.log('Total amount to charge:', totalAmount);
-            const quickPayLink = await createQuickPayLink({
-                orderNumber: booking.booking_number,
-                amount: totalAmount,
-                callbackRoute: 'admin-callback',
-                accessToken: booking.access_token,
-                rebookingToken: latestChange.rebooking_token
-            });
-
-            // Update booking status to unpaid
-            await supabase
-                .from('bookings')
-                .update({ status: 'unpaid' })
-                .eq('id', booking_id);
-
-            await EmailService.sendAdminConfirmation({
-                ...booking,
-                start_time: booking.time_slots.start_time,
-                quickpay_link: quickPayLink
-            });
-
         } else {
-            // Scenario 3: No payment needed
+            // Send regular confirmation email
             await EmailService.sendAdminConfirmation({
                 ...booking,
+                paid_amount: booking.paid_amount || 0,
                 start_time: booking.time_slots.start_time
             });
         }

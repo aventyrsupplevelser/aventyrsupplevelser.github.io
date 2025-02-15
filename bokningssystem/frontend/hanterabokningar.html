@@ -346,7 +346,7 @@
                     const { data: bookings, error } = await supabaseClient
                         .from('bookings')
                         .select('time_slots(start_time)')
-                        .in('status', ['confirmed', 'unpaid'])
+                        .in('status', ['confirmed', 'unpaid', 'invoice'])
                         .gte('time_slots.start_time', startOfMonth.toISOString())
                         .lte('time_slots.start_time', endOfMonth.toISOString());
 
@@ -499,7 +499,7 @@
                     `)
                     .gte('start_time', startOfDay.toISOString())
                     .lte('start_time', endOfDay.toISOString())
-                    .in('bookings.status', ['confirmed', 'unpaid'])
+                    .in('bookings.status', ['confirmed', 'unpaid', 'invoice'])
                     .order('start_time');
 
                 if (error) throw error;
@@ -532,7 +532,7 @@
                     });
 
                     const bookingCount = slot.bookings.length;
-                    const fakturaCount = slot.bookings.filter(b => b.payment_method === 'invoice').length;
+                    const fakturaCount = slot.bookings.filter(b => b.status === 'invoice').length;
                     const unpaidCount = slot.bookings.filter(b => b.status === 'unpaid').length;
 
                     return `
@@ -592,7 +592,7 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
         )
     `)
                     .eq('time_slot_id', slotId)
-                    .in('status', ['confirmed', 'unpaid'])
+                    .in('status', ['confirmed', 'unpaid', 'invoice'])
                     .order('created_at');
 
                 if (error) throw error;
@@ -610,6 +610,7 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                         (booking.youth_quantity || 0) +
                         (booking.kid_quantity || 0);
 
+                    /*
                     // Calculate total cost
                     const adultCost = (booking.adult_quantity || 0) * 400;
                     const youthCost = (booking.youth_quantity || 0) * 300;
@@ -617,26 +618,28 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                     const fullDayCost = (booking.full_day || 0) * 100;
                     const rebookingCost = booking.is_rebookable ? totalParticipants * 25 : 0;
                     const baseTotal = adultCost + youthCost + kidCost + fullDayCost;
-
+                    
                     // Get gift card amount if used
                     let giftCardAmount = 0;
                     if (booking.gift_cards && booking.gift_cards.amount) {
-                        giftCardAmount = Math.min(booking.gift_cards.amount, baseTotal);
+                    giftCardAmount = Math.min(booking.gift_cards.amount, baseTotal);
                     }
-
+                    
                     // Calculate promo discount
                     let promoAmount = 0;
                     if (booking.promo_codes) {
-                        const subtotalAfterGiftCard = baseTotal - giftCardAmount;
-                        if (booking.promo_codes.is_percentage) {
-                            promoAmount = subtotalAfterGiftCard * (booking.promo_codes.discount_value / 100);
-                        } else {
-                            promoAmount = Math.min(booking.promo_codes.discount_value, subtotalAfterGiftCard);
-                        }
+                    const subtotalAfterGiftCard = baseTotal - giftCardAmount;
+                    if (booking.promo_codes.is_percentage) {
+                    promoAmount = subtotalAfterGiftCard * (booking.promo_codes.discount_value / 100);
+                    } else {
+                    promoAmount = Math.min(booking.promo_codes.discount_value, subtotalAfterGiftCard);
                     }
-
+                    }
+                    
                     const totalPaid = booking.paid_amount / 100;
                     const totalCost = baseTotal - giftCardAmount - promoAmount + rebookingCost;
+                    
+                    */
 
                     let paymentMethod = booking.payment_method;
                     if (paymentMethod === 'card') {
@@ -648,7 +651,7 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                     let status = booking.status;
 
 
-                    if (booking.payment_method === 'invoice') {
+                    if (booking.status === 'invoice') {
                         status = 'Faktura'
                     } else if (status === 'confirmed') {
                         status = 'Bekräftad'
