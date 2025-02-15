@@ -12,7 +12,7 @@
 
     <style>
         body {
-            max-width: 800px;
+            width: 800px;
             margin: 0 auto;
             padding: 20px;
             font-family: "Josefin Sans", sans-serif;
@@ -286,6 +286,10 @@
             door_back
         </span></a>
     <h1>Hantera bokningar</h1>
+
+    <input type="text" id="bookingSearch" placeholder="Search here"
+        style="width: 590px; display: block; padding: 20px 20px 15px; font-size: 1.3em; margin: 0px auto 20px; background: #262626; font-family: inherit; border-radius: 9px; color: rgb(255, 255, 255);">
+
 
     <div id="calendar"></div>
 
@@ -610,37 +614,6 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                         (booking.youth_quantity || 0) +
                         (booking.kid_quantity || 0);
 
-                    /*
-                    // Calculate total cost
-                    const adultCost = (booking.adult_quantity || 0) * 400;
-                    const youthCost = (booking.youth_quantity || 0) * 300;
-                    const kidCost = (booking.kid_quantity || 0) * 200;
-                    const fullDayCost = (booking.full_day || 0) * 100;
-                    const rebookingCost = booking.is_rebookable ? totalParticipants * 25 : 0;
-                    const baseTotal = adultCost + youthCost + kidCost + fullDayCost;
-                    
-                    // Get gift card amount if used
-                    let giftCardAmount = 0;
-                    if (booking.gift_cards && booking.gift_cards.amount) {
-                    giftCardAmount = Math.min(booking.gift_cards.amount, baseTotal);
-                    }
-                    
-                    // Calculate promo discount
-                    let promoAmount = 0;
-                    if (booking.promo_codes) {
-                    const subtotalAfterGiftCard = baseTotal - giftCardAmount;
-                    if (booking.promo_codes.is_percentage) {
-                    promoAmount = subtotalAfterGiftCard * (booking.promo_codes.discount_value / 100);
-                    } else {
-                    promoAmount = Math.min(booking.promo_codes.discount_value, subtotalAfterGiftCard);
-                    }
-                    }
-                    
-                    const totalPaid = booking.paid_amount / 100;
-                    const totalCost = baseTotal - giftCardAmount - promoAmount + rebookingCost;
-                    
-                    */
-
                     let paymentMethod = booking.payment_method;
                     if (paymentMethod === 'card') {
                         paymentMethod = 'kort';
@@ -834,6 +807,125 @@ align-items: center; gap: 1px; padding-top: 6px;">${unpaidCount} <span class="ma
                 alert('Ett fel uppstod vid in/utcheckning');
             }
         }
+
+        document.getElementById('bookingSearch').addEventListener('keyup', async (event) => {
+            const query = event.target.value.trim();
+
+            // Optional: Only search when query has at least 3 characters
+            if (query.length < 3) {
+                document.getElementById('bookings-list').classList.remove('visible');
+                return;
+            }
+
+            const { data: bookings, error } = await supabaseClient
+                .from('bookings')
+                .select(`
+      *,
+      time_slots(start_time)
+    `)
+                .or(`customer_name.ilike.%${query}%,customer_email.ilike.%${query}%,booking_number.ilike.%${query}%`);
+
+            if (error) {
+                console.error('Error searching bookings:', error);
+                return;
+            }
+
+            const bookingsList = document.getElementById('bookings-list');
+
+            if (!bookings || bookings.length === 0) {
+                bookingsList.innerHTML = '<p>No bookings found.</p>';
+            } else {
+                bookingsList.innerHTML = bookings.map(renderBookingItem).join('');
+            }
+            bookingsList.classList.add('visible');
+        });
+
+        function renderBookingItem(booking) {
+            const totalParticipants =
+                (booking.adult_quantity || 0) +
+                (booking.youth_quantity || 0) +
+                (booking.kid_quantity || 0);
+
+            let paymentMethod = booking.payment_method;
+            if (paymentMethod === 'card') {
+                paymentMethod = 'kort';
+            } else if (paymentMethod === 'invoice') {
+                paymentMethod = null;
+            }
+
+            let status = booking.status;
+            if (booking.status === 'invoice') {
+                status = 'Faktura';
+            } else if (status === 'confirmed') {
+                status = 'Bekräftad';
+            } else if (status === 'unpaid') {
+                status = 'Obetald';
+            }
+
+            return `
+    <div class="booking-item">
+      <div class="booking-header">
+        <div style="font-size: 1.3em;">
+          <span>${booking.customer_name || 'Namnlös bokning'}</span>
+          <span> – ${booking.booking_number}</span>
+          <span> – ${booking.customer_email || 'Ingen email'} </span>
+        </div>
+        <div>
+          <span class="status-${status}" style="font-size: 1.1em;">
+            ${status}
+          </span>
+        </div>
+      </div>
+      <div class="booking-details">
+        <div style="display: flex; gap: 0px; margin: 10px 0px 15px;">
+          <div class="itemdiv">${booking.adult_quantity
+                    ? `<span class="material-symbols-outlined">elderly_woman</span> ${booking.adult_quantity}`
+                    : ''
+                }</div>
+          <div class="itemdiv">${booking.youth_quantity
+                    ? `<span class="material-symbols-outlined">directions_run</span> ${booking.youth_quantity}`
+                    : ''
+                }</div>
+          <div class="itemdiv">${booking.kid_quantity
+                    ? `<span class="material-symbols-outlined">stroller</span> ${booking.kid_quantity}`
+                    : ''
+                }</div>
+          <div class="itemdiv">${booking.full_day
+                    ? `<span class="material-symbols-outlined">update</span> ${booking.full_day}`
+                    : ''
+                }</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: end;">
+          ${booking.comments
+                    ? `<div class="itemdiv" style="background: none; margin-top: 0px; font-size: 1.2em;">
+                   <div style="max-width: 390px; width: fit-content; line-height: 1.2em; font-size: 1em; color: rgb(29, 52, 124); background: rgb(255, 255, 200); display: inline-block; padding: 5px 5px 2px;">
+                     ${booking.comments}
+                   </div>
+                 </div>`
+                    : '&nbsp;'
+                }
+          <div>
+            <button onclick="checkIn('${booking.id}', this)" 
+                    style="background: ${booking.checked_in ? 'rgb(255, 238, 0)' : 'rgb(143, 231, 126)'}" 
+                    class="changeButton checkInButton">
+              ${booking.checked_in ? 'Incheckad' : 'checka in'}
+            </button>
+            <button onclick="checkOut('${booking.id}', this)" 
+                    style="background: ${booking.checked_out ? 'rgb(255, 238, 0)' : 'rgb(255, 130, 101)'}" 
+                    class="changeButton checkOutButton">
+              ${booking.checked_out ? 'Utcheckad' : 'checka ut'}
+            </button>
+            <button onclick="openUpdateBooking('${booking.id}')" class="changeButton">
+              Ändra
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+        }
+
+
 
         // Initialize calendar when page loads
         document.addEventListener('DOMContentLoaded', async () => {
