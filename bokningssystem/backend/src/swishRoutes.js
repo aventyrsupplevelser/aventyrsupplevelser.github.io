@@ -197,7 +197,7 @@ router.post('/swish-callback', express.json(), async (req, res) => {
                     start_time: booking.time_slots.start_time
                 };
 
-                await EmailService.sendBookingConfirmation(updatedBooking);
+                await EmailService.sendBookingEmail(updatedBooking);
                 console.log('Confirmation email sent successfully');
             } catch (emailError) {
                 console.error('Error sending confirmation email:', emailError);
@@ -420,7 +420,7 @@ router.post('/card-callback', express.json(), async (req, res) => {
                 start_time: booking.time_slots.start_time
             };
             
-            await EmailService.sendBookingConfirmation(updatedBooking);
+            await EmailService.sendBookingEmail(updatedBooking);
             console.log('Confirmation email sent successfully');
         } catch (emailError) {
             console.error('Error sending confirmation email:', emailError);
@@ -903,7 +903,7 @@ router.post('/free-booking', async (req, res) => {
                 start_time: booking.time_slots.start_time
             };
 
-            await EmailService.sendBookingConfirmation(updatedBooking);
+            await EmailService.sendBookingEmail(updatedBooking);
         } catch (emailError) {
             console.error('Error sending confirmation email:', emailError);
             // Don't throw here - booking is still valid even if email fails
@@ -1153,7 +1153,7 @@ const { data: updatedBookingData, error: fetchError } = await supabase
 
 // Then send it to the email service
 if (payment_method !== 'invoice') {
-    await EmailService.sendAdminConfirmation(bookingWithPaymentLink);
+    await EmailService.sendBookingEmail(bookingWithPaymentLink);
 }
 
         res.json({
@@ -1262,7 +1262,7 @@ router.post('/admin-callback', async (req, res) => {
         
             // Send add-on confirmation email with aggregated totals
             try {
-                await EmailService.sendAddOnConfirmation({
+                await EmailService.sendBookingEmail({
                     ...booking,
                     changes: booking.changes, // Pass all changes
                     adult_added: totalAdded.adult,
@@ -1298,7 +1298,7 @@ router.post('/admin-callback', async (req, res) => {
 
             // Send regular confirmation email
             try {
-                await EmailService.sendAdminConfirmation({
+                await EmailService.sendBookingEmail({
                     ...booking,
                     start_time: booking.time_slots.start_time,
                     paid_amount: paidAmountOre,
@@ -1361,7 +1361,7 @@ router.post('/re-confirmation', async (req, res) => {
             });
         } else {
             // Send regular confirmation email
-            await EmailService.sendAdminConfirmation({
+            await EmailService.sendBookingEmail({
                 ...booking,
                 paid_amount: booking.paid_amount || 0,
                 start_time: booking.time_slots.start_time
