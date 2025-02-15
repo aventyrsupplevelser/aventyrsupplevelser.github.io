@@ -165,7 +165,6 @@ router.post('/swish-callback', express.json(), async (req, res) => {
                 payment_method: 'swish',
                 date_paid: new Date().toISOString(),
                 is_paid: true,
-                payment_metadata: payment
             };
 
             // Create updated payments array
@@ -388,7 +387,6 @@ router.post('/card-callback', express.json(), async (req, res) => {
             payment_method: 'card',
             date_paid: new Date().toISOString(),
             is_paid: true,
-            payment_metadata: callbackData
         };
 
         // 8. Create updated payments array
@@ -1189,7 +1187,6 @@ router.post('/admin-callback', async (req, res) => {
             payment_method: 'card',
             date_paid: new Date().toISOString(),
             is_paid: true,
-            payment_metadata: callbackData
         };
 
         // Add to existing payments array
