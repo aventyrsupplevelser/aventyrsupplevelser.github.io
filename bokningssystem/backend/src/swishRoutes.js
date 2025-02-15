@@ -1218,7 +1218,7 @@ router.post('/admin-callback', async (req, res) => {
             await EmailService.sendBookingEmail({
                 ...updatedBooking,
                 start_time: updatedBooking.time_slots.start_time,
-                total_paid: totalPaid
+                total_paid: (totalPaid / 100)
             });
         } catch (emailError) {
             console.error('Error sending confirmation email:', emailError);
