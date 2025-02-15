@@ -951,9 +951,115 @@ router.post('/rebooking-confirmation', async (req, res) => {
     }
 });
 
+function calculateTotalPaid(payments = []) {
+    if (!payments) return 0;
+
+    return payments
+        .filter(payment => payment && payment.is_paid)
+        .reduce((total, payment) => total + (payment.amount || 0), 0);
+}
+
+// Helper function to calculate total paid amount
+function calculateTotalPaid(payments = []) {
+    return payments
+        .filter(payment => payment && payment.is_paid)
+        .reduce((total, payment) => total + (payment.amount || 0), 0);
+}
+
+router.post('/admin-callback', async (req, res) => {
+    try {
+        res.status(200).send('OK');
+        
+        const callbackData = req.body;
+        const bookingNumber = callbackData.order_id;
+        
+        if (!bookingNumber) {
+            console.error('Missing booking number in callback');
+            return;
+        }
+
+        const [baseBookingNumber, rebookingToken] = bookingNumber.split('_');
+
+        const callbackUrl = new URL(callbackData.link.callback_url);
+        const callbackIdentifier = callbackUrl.searchParams.get('callbackIdentifier');
+
+        if (!verifyCallbackId(callbackIdentifier, baseBookingNumber)) {
+            console.error('Invalid callback checksum');
+            return;
+        }
+
+        // Get booking with time slots
+        const { data: booking, error: bookingError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*), payments')
+            .eq('booking_number', baseBookingNumber)
+            .single();
+
+        if (bookingError || !booking) {
+            console.error('Booking not found');
+            return;
+        }
+
+        if (booking.status !== 'unpaid') {
+            console.log('Booking already processed:', booking.status);
+            return;
+        }
+
+        const isSuccess = callbackData.accepted && callbackData.state === 'processed';
+        if (!isSuccess) return;
+
+        const paidAmountOre = callbackData.link.amount;
+
+        // Create new payment record
+        const newPayment = {
+            amount: paidAmountOre,
+            payment_id: callbackData.id.toString(),
+            payment_method: 'card',
+            date_paid: new Date().toISOString(),
+            is_paid: true,
+            payment_metadata: callbackData
+        };
+
+        // Add to existing payments array
+        const updatedPayments = [...(booking.payments || []), newPayment];
+
+        // Update booking
+        const { data: updatedBooking, error: updateError } = await supabase
+            .from('bookings')
+            .update({
+                status: 'confirmed',
+                payments: updatedPayments
+            })
+            .eq('id', booking.id)
+            .eq('status', 'unpaid')
+            .select('*, time_slots(*)')
+            .single();
+
+        if (updateError) {
+            console.error('Error updating booking:', updateError);
+            return;
+        }
+
+        // Send confirmation email
+        try {
+            const totalPaid = calculateTotalPaid(updatedPayments);
+            await EmailService.sendBookingEmail({
+                ...updatedBooking,
+                start_time: updatedBooking.time_slots.start_time,
+                total_paid: totalPaid
+            });
+        } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
+        }
+
+    } catch (error) {
+        console.error('QuickPay callback error:', error);
+    }
+});
+
 router.post('/backend-book', async (req, res) => {
     try {
-console.log(req.body)
+        console.log(req.body);
         const {
             time_slot_id,
             adult_quantity = 0,
@@ -995,11 +1101,11 @@ console.log(req.body)
             if (promoData.success) promoCodeValid = promoData;
         }
 
-        // Calculate base amount (without rebooking)
+        // Calculate total amount
         let baseAmount = (adult_quantity * 400) + (youth_quantity * 300) + (kid_quantity * 200);
         if (full_day) baseAmount += (full_day * 100);
 
-        // Apply discounts to base amount only
+        // Apply discounts
         if (giftCardValid) {
             baseAmount -= giftCardValid.amount;
         }
@@ -1010,10 +1116,9 @@ console.log(req.body)
             baseAmount -= discountAmount;
         }
 
-        // Ensure base amount doesn't go below 0
         baseAmount = Math.max(0, baseAmount);
 
-        // Add rebooking fee AFTER discounts
+        // Add rebooking fee
         let totalAmount = baseAmount;
         if (is_rebookable) {
             totalAmount += ((adult_quantity + youth_quantity + kid_quantity) * 25);
@@ -1024,14 +1129,13 @@ console.log(req.body)
 
         if (totalAmount === 0) {
             status = 'confirmed';
-            payment_method = 'free';
         } else if (payment_method === 'invoice') {
             status = 'invoice';
         } else {
             status = 'unpaid';
         }
 
-        // Create booking first
+        // Create booking
         const { data: booking, error: bookingError } = await supabase.rpc('create_admin_booking', {
             p_time_slot_id: time_slot_id,
             p_adult_quantity: adult_quantity,
@@ -1042,119 +1146,47 @@ console.log(req.body)
             p_customer_name: customer_name,
             p_customer_email: customer_email,
             p_customer_comment: customer_comment,
-            p_status: status,
-           // p_payment_method: payment_method
+            p_status: status
         });
 
         if (bookingError) throw bookingError;
 
         // Create QuickPay link if needed
         if (status === 'unpaid') {
-            const apiKey = process.env.QUICKPAY_API_USER_KEY;
-            const callbackIdentifier = generateCallbackId(booking.booking_number);
-
-            const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/admin-callback');
-            callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
-            
-            // Create payment
-            const createPaymentResponse = await fetch('https://api.quickpay.net/payments', {
-                method: 'POST',
-                headers: {
-                    'Accept-Version': 'v10',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
-                },
-                body: JSON.stringify({
-                    order_id: booking.booking_number,
-                    currency: 'SEK'
-                })
+            quickPayLink = await createQuickPayLink({
+                bookingNumber: booking.booking_number,
+                accessToken: booking.access_token,
+                totalAmount,
+                callbackRoute: 'admin-callback'
             });
-
-            if (!createPaymentResponse.ok) {
-                throw new Error('Failed to create QuickPay payment');
-            }
-
-            const payment = await createPaymentResponse.json();
-
-            // Create payment link
-            const linkResponse = await fetch(`https://api.quickpay.net/payments/${payment.id}/link`, {
-                method: 'PUT',
-                headers: {
-                    'Accept-Version': 'v10',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${Buffer.from(':' + apiKey).toString('base64')}`
-                },
-                body: JSON.stringify({
-                    amount: totalAmount * 100, // Convert to öre
-                    continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${booking.booking_number}&access_token=${booking.access_token}`,
-                    cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
-                    callback_url: callbackUrl.toString(),
-                    auto_capture: true,
-                    payment_methods: 'creditcard,swish',
-                    language: 'sv'
-                })
-            });
-
-            if (!linkResponse.ok) {
-                throw new Error('Failed to create QuickPay payment link');
-            }
-
-            const link = await linkResponse.json();
-            quickPayLink = link.url;
         }
 
-        console.log('giftCardValid', giftCardValid)
-        console.log('promoCodeValid', promoCodeValid)
-        console.log('booking_id', booking.booking_id)
-        console.log('accessT', booking.access_token)
-        console.log('quickPayLink', quickPayLink)
+        // Apply gift card and promo codes
+        await applyValidCodes(booking, giftCardValid, promoCodeValid);
 
+        // Get updated booking data
+        const { data: updatedBookingData, error: fetchError } = await supabase
+            .from('bookings')
+            .select('*, time_slots(*)')
+            .eq('id', booking.booking_id)
+            .single();
 
-        // Apply codes if valid
-if (giftCardValid) {
-    const { data: giftResult, error: giftError } = await supabase.rpc('admin_validate_apply_code', {
-        p_code: gift_card.code,
-        p_booking_id: booking.booking_id,
-        p_access_token: booking.access_token
-    });
+        if (fetchError) throw fetchError;
 
-    if (giftError) {
-        console.error('Error applying gift card:', giftError);
-    } else {
-        console.log('Gift card application result:', giftResult);
-    }
-}
+        const bookingWithPaymentLink = {
+            ...updatedBookingData,
+            start_time: updatedBookingData.time_slots.start_time,
+            quickpay_link: quickPayLink
+        };
 
-if (promoCodeValid) {
-    const { data: promoResult, error: promoError } = await supabase.rpc('admin_validate_apply_code', {
-        p_code: promo_code.code,
-        p_booking_id: booking.booking_id,
-        p_access_token: booking.access_token
-    });
-
-    if (promoError) {
-        console.error('Error applying promo code:', promoError);
-    } else {
-        console.log('Promo code application result:', promoResult);
-    }
-}
-
-const { data: updatedBookingData, error: fetchError } = await supabase
-    .from('bookings')
-    .select('*, time_slots(*)')
-    .eq('id', booking.booking_id)
-    .single();
-
-    const bookingWithPaymentLink = {
-        ...updatedBookingData,
-        start_time: updatedBookingData.time_slots.start_time,
-        quickpay_link: quickPayLink      // This adds quickpay_link property
-    };
-
-// Then send it to the email service
-if (payment_method !== 'invoice') {
-    await EmailService.sendBookingEmail(bookingWithPaymentLink);
-}
+        // Send email if not invoice
+        if (payment_method !== 'invoice') {
+            const totalPaid = calculateTotalPaid(updatedBookingData.payments);
+            await EmailService.sendBookingEmail({
+                ...bookingWithPaymentLink,
+                total_paid: totalPaid
+            });
+        }
 
         res.json({
             success: true,
@@ -1184,7 +1216,6 @@ router.post('/admin-callback', async (req, res) => {
             return;
         }
 
-        // Split order_id to get booking number and potential rebooking token
         const [baseBookingNumber, rebookingToken] = bookingNumber.split('_');
 
         const callbackUrl = new URL(callbackData.link.callback_url);
@@ -1198,7 +1229,7 @@ router.post('/admin-callback', async (req, res) => {
         // Get booking with time slots
         const { data: booking, error: bookingError } = await supabase
             .from('bookings')
-            .select('*, time_slots(*)')
+            .select('*, time_slots(*), payments')
             .eq('booking_number', baseBookingNumber)
             .single();
 
@@ -1217,95 +1248,46 @@ router.post('/admin-callback', async (req, res) => {
 
         const paidAmountOre = callbackData.link.amount;
 
-        if (booking.paid_amount) {
-            // This is an add-on payment
-            // Get all unpaid changes that were included in this payment
-            const unpaidChanges = booking.changes.filter(c => !c.payment_completed);
-            
-            // Aggregate all the changes
-            const totalAdded = unpaidChanges.reduce((acc, change) => ({
-                adult: acc.adult + (change.adult_added || 0),
-                youth: acc.youth + (change.youth_added || 0),
-                kid: acc.kid + (change.kid_added || 0),
-                fullDay: acc.fullDay + (change.full_day_added || 0)
-            }), { adult: 0, youth: 0, kid: 0, fullDay: 0 });
-        
-            // Update changes array to mark all these changes as paid
-            const updatedChanges = booking.changes.map(change => 
-                !change.payment_completed ? 
-                    { ...change, payment_completed: true, payment_id: callbackData.id } : 
-                    change
-            );
-        
-            // Update booking
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    changes: updatedChanges,
-                    paid_amount: booking.paid_amount + paidAmountOre,
-                    payment_metadata: {
-                        ...booking.payment_metadata,
-                        add_on_payments: [
-                            ...(booking.payment_metadata?.add_on_payments || []),
-                            callbackData
-                        ]
-                    }
-                })
-                .eq('id', booking.id)
-                .eq('status', 'unpaid');
-        
-            if (updateError) {
-                console.error('Error updating booking:', updateError);
-                return;
-            }
-        
-            // Send add-on confirmation email with aggregated totals
-            try {
-                await EmailService.sendBookingEmail({
-                    ...booking,
-                    adult_added: totalAdded.adult,
-                    youth_added: totalAdded.youth,
-                    kid_added: totalAdded.kid,
-                    full_day_added: totalAdded.fullDay,
-                    start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString()
-                });
-            } catch (emailError) {
-                console.error('Error sending add-on confirmation email:', emailError);
-            }
-        } else {
-            // This is the initial payment
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    payment_method: 'card',
-                    payment_id: callbackData.id.toString(),
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString(),
-                    payment_metadata: callbackData
-                })
-                .eq('id', booking.id)
-                .eq('status', 'unpaid');
+        // Create new payment record
+        const newPayment = {
+            amount: paidAmountOre,
+            payment_id: callbackData.id.toString(),
+            payment_method: 'card',
+            date_paid: new Date().toISOString(),
+            is_paid: true,
+            payment_metadata: callbackData
+        };
 
-            if (updateError) {
-                console.error('Error updating booking:', updateError);
-                return;
-            }
+        // Add to existing payments array
+        const updatedPayments = [...(booking.payments || []), newPayment];
 
-            // Send regular confirmation email
-            try {
-                await EmailService.sendBookingEmail({
-                    ...booking,
-                    start_time: booking.time_slots.start_time,
-                    paid_amount: paidAmountOre,
-                    payment_completed_at: new Date().toISOString()
-                });
-            } catch (emailError) {
-                console.error('Error sending confirmation email:', emailError);
-            }
+        // Update booking
+        const { data: updatedBooking, error: updateError } = await supabase
+            .from('bookings')
+            .update({
+                status: 'confirmed',
+                payments: updatedPayments
+            })
+            .eq('id', booking.id)
+            .eq('status', 'unpaid')
+            .select('*, time_slots(*)')
+            .single();
+
+        if (updateError) {
+            console.error('Error updating booking:', updateError);
+            return;
+        }
+
+        // Send confirmation email
+        try {
+            const totalPaid = calculateTotalPaid(updatedPayments);
+            await EmailService.sendBookingEmail({
+                ...updatedBooking,
+                start_time: updatedBooking.time_slots.start_time,
+                total_paid: totalPaid
+            });
+        } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
         }
 
     } catch (error) {
