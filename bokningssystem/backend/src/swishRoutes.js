@@ -1056,6 +1056,8 @@ router.post('/backend-book', async (req, res) => {
 
         if (bookingError) throw bookingError;
 
+            console.log('data', booking)
+
         // Create QuickPay link if needed
         if (status === 'unpaid') {
             quickPayLink = await createQuickPayLink({
