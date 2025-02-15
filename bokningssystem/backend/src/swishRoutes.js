@@ -1234,7 +1234,6 @@ router.post('/re-confirmation', async (req, res) => {
     try {
         const { booking_id, email_type, difference, total_paid, rebooking_token } = req.body;
 
-        console.log('total_paid', total_paid)
         // Get the booking with complete details
         const { data: booking, error } = await supabase
             .from('bookings')
@@ -1251,9 +1250,12 @@ router.post('/re-confirmation', async (req, res) => {
 
         // If this is a payment request and there's a difference to pay
         if (email_type === 'payment' && difference > 0) {
+
+            const orderId = `${booking.booking_number}_${rebooking_token}`;
+
             // Create payment link
             const quickPayLink = await createQuickPayLink({
-                orderNumber: rebooking_token,
+                orderNumber: orderId,
                 amount: difference,
                 callbackRoute: 'admin-callback',
                 accessToken: booking.access_token
@@ -1275,10 +1277,9 @@ router.post('/re-confirmation', async (req, res) => {
         } else {
             // Send regular confirmation email
 
-            console.log('swishroute: booking.paid_amount', booking.paid_amount)
             await EmailService.sendBookingEmail({
                 ...booking,
-                paid_amount: total_paid || 0,
+                total_paid: total_paid || 0,
                 start_time: booking.time_slots.start_time
             });
         }
