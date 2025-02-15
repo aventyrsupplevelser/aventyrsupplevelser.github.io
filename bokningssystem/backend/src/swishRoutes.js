@@ -1061,7 +1061,7 @@ router.post('/backend-book', async (req, res) => {
         // Create QuickPay link if needed
         if (status === 'unpaid') {
             quickPayLink = await createQuickPayLink({
-                bookingNumber: booking.booking_number,
+                orderNumber: booking.booking_number,
                 accessToken: booking.access_token,
                 totalAmount,
                 callbackRoute: 'admin-callback'
