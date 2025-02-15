@@ -176,7 +176,7 @@ class EmailService {
                     amount_ex_vat: amountExVat.toFixed(2),
                     vat_amount: vatAmount.toFixed(2),
                     total_amount: totalAmountInSEK.toFixed(2),
-                    amount_paid: amountPaid.toFixed(2),
+                    amount_paid: amountPaid > 0 ? amountPaid.toFixed(2) : null,
                     to_pay: toPay.toFixed(2),
                     ...(booking.payment_completed_at && {
                         payment_date: new Date(booking.payment_completed_at).toLocaleDateString('sv-SE')

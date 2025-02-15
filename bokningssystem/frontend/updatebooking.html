@@ -1817,6 +1817,8 @@ arrow_right_alt
         }
 
         function calculateTotalPaid(payments = []) {
+            if (!payments) return 0;
+
             return payments
                 .filter(payment => payment.is_paid)
                 .reduce((total, payment) => total + payment.amount, 0);

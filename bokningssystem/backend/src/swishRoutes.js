@@ -1264,7 +1264,6 @@ router.post('/admin-callback', async (req, res) => {
             try {
                 await EmailService.sendBookingEmail({
                     ...booking,
-                    changes: booking.changes, // Pass all changes
                     adult_added: totalAdded.adult,
                     youth_added: totalAdded.youth,
                     kid_added: totalAdded.kid,
@@ -1314,9 +1313,6 @@ router.post('/admin-callback', async (req, res) => {
     }
 });
 
-// In swishRoutes.js, update the re-confirmation route:
-
-// In swishRoutes.js, update the re-confirmation route:
 
 router.post('/re-confirmation', async (req, res) => {
     try {
@@ -1353,8 +1349,12 @@ router.post('/re-confirmation', async (req, res) => {
                 .update({ status: 'unpaid' })
                 .eq('id', booking_id);
 
+                console.log('swishroute: total_paid', total_paid)
+
+                console.log('swishroute: booking.paid_amount', booking.paid_amount)
+
             // Send email with payment link
-            await EmailService.sendAdminConfirmation({
+            await EmailService.sendBookingEmail({
                 ...booking,
                 quickpay_link: quickPayLink,
                 total_paid: total_paid,
@@ -1362,9 +1362,11 @@ router.post('/re-confirmation', async (req, res) => {
             });
         } else {
             // Send regular confirmation email
+
+            console.log('swishroute: booking.paid_amount', booking.paid_amount)
             await EmailService.sendBookingEmail({
                 ...booking,
-                paid_amount: booking.paid_amount || 0,
+                paid_amount: total_paid || 0,
                 start_time: booking.time_slots.start_time
             });
         }
