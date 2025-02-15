@@ -959,12 +959,6 @@ function calculateTotalPaid(payments = []) {
         .reduce((total, payment) => total + (payment.amount || 0), 0);
 }
 
-// Helper function to calculate total paid amount
-function calculateTotalPaid(payments = []) {
-    return payments
-        .filter(payment => payment && payment.is_paid)
-        .reduce((total, payment) => total + (payment.amount || 0), 0);
-}
 
 
 
