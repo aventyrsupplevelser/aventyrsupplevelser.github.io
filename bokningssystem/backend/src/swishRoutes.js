@@ -1322,6 +1322,7 @@ router.post('/re-confirmation', async (req, res) => {
     try {
         const { booking_id, email_type, difference, total_paid } = req.body;
 
+        console.log('total_paid', total_paid)
         // Get the booking with complete details
         const { data: booking, error } = await supabase
             .from('bookings')

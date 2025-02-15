@@ -128,6 +128,9 @@ class EmailService {
             // Calculate amount paid and remaining
             const amountPaid = booking.total_paid || 0;
             const toPay = Math.max(0, totalAmountInSEK - amountPaid);
+
+            console.log('booking.total_paid', booking.total_paid)
+            console.log('toPay', toPay)
     
             // Build rebooking URL if applicable
             const rebookingUrl = booking.is_rebookable ? 
