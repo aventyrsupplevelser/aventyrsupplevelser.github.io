@@ -2076,7 +2076,7 @@ arrow_right_alt
                     // Open Swish app
                     console.log('shouldopennow')
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
-                    window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
+                    window.parent.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
