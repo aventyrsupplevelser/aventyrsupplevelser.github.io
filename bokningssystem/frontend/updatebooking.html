@@ -832,13 +832,14 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6YnZ0bXJxenZvdnl0enFva2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0OTEzNzAsImV4cCI6MjA1MTA2NzM3MH0.ndbAxa4eaqP8coL61aSWQ9oxt1kt3f9vmvumUcV8Olo'
         );
 
-        /*  async function checkAuth() {
-              const { data: { session }, error } = await supabaseClient.auth.getSession();
-              if (error || !session) {
-                  window.location.href = '/bokningssystem/frontend/login.html';
-                  return;
-              }
-          } */
+        async function checkAuth() {
+            console.log('checkingauth')
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = '/bokningssystem/frontend/login.html';
+                return;
+            }
+        }
 
         // After Supabase initialization and before the global state
         const available = "rgb(173, 240, 159)";
