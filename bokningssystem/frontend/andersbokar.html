@@ -1830,6 +1830,13 @@ arrow_right_alt
                     return;
                 }
 
+                const freeMessage = document.getElementById('freeMessage');
+                freeMessage.style.display = 'block';
+                freeMessage.style.backgroundColor = 'rgb(230, 241, 225)';
+                freeMessage.style.color = 'black';
+                freeMessage.innerHTML = result.message || 'bokar bokning...';
+                freeMessage.scrollIntoView({ behavior: 'smooth' });
+
                 // Get checkbox states
                 const invoicePayment = document.getElementById('På faktura').checked;
 
@@ -1884,7 +1891,6 @@ arrow_right_alt
                 const result = await response.json();
 
                 // Show success message
-                const freeMessage = document.getElementById('freeMessage');
                 freeMessage.style.display = 'block';
                 freeMessage.style.backgroundColor = 'rgb(230, 241, 225)';
                 freeMessage.style.color = 'black';

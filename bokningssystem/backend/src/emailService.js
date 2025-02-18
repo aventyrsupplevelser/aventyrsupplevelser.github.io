@@ -78,7 +78,8 @@ console.log('Raw booking.start_time:', booking.start_time);
 const formattedTime = new Date(booking.start_time).toLocaleString('sv-SE', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false
+    hour12: false,
+    timeZone: 'Europe/Stockholm'  // Add this explicit timezone
 });
 console.log('Formatted time:', formattedTime);
 
@@ -233,7 +234,8 @@ console.log('Formatted time:', formattedTime);
                     booking_time: new Date(start_time).toLocaleString('sv-SE', { 
                         hour: '2-digit', 
                         minute: '2-digit',
-                        hour12: false 
+                        hour12: false,
+                        timeZone: 'Europe/Stockholm'  // Add this explicit timezone
                     }),
                 }
             };
