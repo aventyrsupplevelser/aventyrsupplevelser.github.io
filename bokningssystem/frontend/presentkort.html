@@ -496,8 +496,8 @@
 
                 if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
-                    const returnUrl = `${window.location.origin}/tackfordittkop.html`;
-                    window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
+                    const returnUrl = `${window.parent.location.origin}/tackfordittkop.html`;
+                    window.parent.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
@@ -562,7 +562,7 @@
 
                     if (data && data.length > 0 && data[0].status === 'completed') {
                         clearInterval(checkStatus);
-                        window.location.href = `http://aventyrsupplevelser.com/tackfordittkop`;
+                        window.parent.location.href = `http://aventyrsupplevelser.com/tackfordittkop`;
                         return;
                     }
 

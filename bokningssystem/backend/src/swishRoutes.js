@@ -281,7 +281,7 @@ router.post('/get-payment-form', async (req, res) => {
         const linkRequestBody = {
             amount: amount,  // Make sure this is in smallest currency unit (öre)
             continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}&access_token=${access_token}`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
@@ -611,7 +611,7 @@ router.post('/get-gift-form', async (req, res) => {
         const linkRequestBody = {
             amount: amountInOre,  // Make sure this is in smallest currency unit (öre)
             continue_url: `https://aventyrsupplevelser.com/tackfordittkop`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
@@ -1344,7 +1344,7 @@ async function createQuickPayLink({
         body: JSON.stringify({
             amount: amount * 100, // Convert to öre
             continue_url: `http://127.0.0.1:5500/bokningssystem/frontend/tackfordinbokning.html?order_id=${orderNumber}&access_token=${accessToken}`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/payment-cancelled.html`,
+            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard,swish',

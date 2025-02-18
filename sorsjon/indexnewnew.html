@@ -24,13 +24,8 @@
 		Sörsjöns Äventyrspark
 	</title>
 	<link rel="stylesheet" href="/stylesheets/sorsjon.css">
-	<link rel="stylesheet" href="/bokningssystem/frontend/bookingstyles.css">
-	<link rel="stylesheet" href="/bokningssystem/frontend/giftstyles.css">
-	<script src="/bokningssystem/frontend/giftscript.js"></script>
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_left_alt,arrow_right_alt" />
-	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-	<script src="/bokningssystem/frontend/bookingscript.js"></script>
 
 	<link rel="shortcut icon" href="/sorsjon/favicon.png" type="image/x-icon">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,13 +61,12 @@
 			top: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(255, 255, 255, 0.737);
+			background: rgba(255, 255, 255, 0.95);
 			overflow-y: auto;
 		}
 
 		.modal-open {
 			overflow: hidden;
-			position: fixed;
 			width: 100%;
 		}
 
@@ -81,7 +75,6 @@
 			align-items: flex-start;
 			justify-content: center;
 			min-height: 100%;
-			padding: 20px;
 			box-sizing: border-box;
 		}
 
@@ -92,8 +85,9 @@
 			max-width: 640px;
 			position: relative;
 			margin: 40px 0;
-			box-shadow: rgb(199, 199, 199) 10px 10px 30px;
-			will-change: box-shadow;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+			opacity: 0;
+			transition: opacity 0.3s ease-in-out;
 		}
 
 		.modal-close {
@@ -109,18 +103,37 @@
 			text-align: center;
 			background: white;
 			border-radius: 50%;
-			/*	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-			padding-bottom: 3px;
+			padding: 0px 2px 4px 2px;
+			transition: background-color 0.2s ease;
+		}
+
+		.modal-close:hover {
+			background-color: #f0f0f0;
 		}
 
 		#booking-root {
-			/* Reset all inherited styles */
-			all: initial;
-			/* Keep the display block */
-			display: block;
-			/* Set a new stacking context */
 			position: relative;
 			z-index: 1001;
+		}
+
+		#booking-root iframe {
+			display: block;
+			width: 100%;
+			height: 100vh;
+			border: none;
+			background: white;
+		}
+
+		@media (max-width: 768px) {
+			.modal-frame {
+				margin: 20px 0;
+				width: 100%;
+			}
+
+			.modal-close {
+				right: 10px;
+				top: 10px;
+			}
 		}
 	</style>
 </head>
@@ -786,542 +799,106 @@
 
 	</div>
 
-	<form id="bookingForm">
-		<div id="messageContainer"
-			style="display: none; margin: 40px auto; width: fit-content; padding: 20px 20px 15px; background-color: rgb(216, 226, 212); border-radius: 4px; text-align: center; font-size: 1.2em;">
-		</div>
-		<div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
-			<div class="active">
-				<div class="yellowChooser"> Välj klätterdatum:</div>
-				<div class="form-group">
-				</div>
-			</div>
-
-			<div id="times">
-				<div class="yellowChooser">
-					Välj klättertid:</div>
-				<div class="time-slots" id="timeSlots">
-					<!-- Time slots will be populated here -->
-				</div>
-				<div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
-			</div>
-			<div id="tickets" style="margin-top: 80px;">
-				<div class="yellowChooser" style="margin-bottom: 25px;">
-					Välj antal äventyrare:</div>
-				<div class="ticket-section">
-					<!-- Available spots display -->
-
-					<!-- Adult tickets -->
-					<div class="ticket-selector">
-						<label>Vuxen 17+ år</label>
-						<div>400 kr</div>
-						<div class="quantity-selector">
-							<button type="button" class="quantity-btn minus" data-ticket-type="adult">-</button>
-							<span class="quantity" id="adultQuantity">0</span>
-							<button type="button" class="quantity-btn plus" data-ticket-type="adult">+</button>
-						</div>
-					</div>
-
-					<!-- Youth tickets -->
-					<div class="ticket-selector" style="background-color: rgb(245, 245, 245);">
-						<label>Ungdom 10-16 år</label>
-						<div>300 kr</div>
-						<div class="quantity-selector">
-							<button type="button" class="quantity-btn minus" data-ticket-type="youth">-</button>
-							<span class="quantity" id="youthQuantity">0</span>
-							<button type="button" class="quantity-btn plus" data-ticket-type="youth">+</button>
-						</div>
-					</div>
-
-					<!-- Kid tickets -->
-					<div class="ticket-selector">
-						<label style="height: 24px;">Barn 3-9 år* <br>
-							<span>*Måste klättra med vuxen</span></label>
-						<div>200 kr</div>
-						<div class="quantity-selector">
-							<button type="button" class="quantity-btn minus" data-ticket-type="kid">-</button>
-							<span class="quantity" id="kidQuantity">0</span>
-							<button type="button" class="quantity-btn plus" data-ticket-type="kid">+</button>
-						</div>
-					</div>
-
-
-					<div class="fulldaySection">
-						<div class="yellowChooser" style="margin-top: 40px;">
-							Välj antal som vill
-							förlänga tiden:</div>
-						<!-- Full day extension -->
-						<div class="ticket-selector" style="background-color: rgb(245, 245, 245);">
-							<label id="heldaglabel">Heldag <span>(till 17.00)</span></label>
-							<div>100 kr</div>
-							<div class="quantity-selector">
-								<button type="button" class="quantity-btn minus" data-ticket-type="fullday">-</button>
-								<span class="quantity" id="fulldayQuantity">0</span>
-								<button type="button" class="quantity-btn plus" data-ticket-type="fullday">+</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="rebooking">
-					<div class="yellowChooser" style="margin: 40px auto 20px;">
-						Vill ni ha ombokningsgaranti? </div>
-					<br>
-					<div style="color: #525252;
-                    margin-bottom: 10px;
-                    line-height: 1.4em;
-                    font-style: italic;">
-						Ger möjlighet att ändra dag och tid <br>
-						fram tills 24h innan klätterstart.
-					</div>
-					<label class="rebooking-switch">
-						<div style="font-size: 1.5em; font-weight: 500; padding-top: 9px;">25 kr per äventyrare</div>
-						<input type="checkbox" id="rebookingCheckbox">
-						<span class="slider"></span>
-					</label>
-				</div>
-
-				<br><br>
-				<div class="button-container" style="text-align: center; margin-top: 20px; margin-bottom: 50px;">
-					<button type="button" id="continueToPaymentBtn" style="display: none;" class="primary-button">
-						Fortsätt till betalning: 0 kr
-					</button>
-				</div>
-
-			</div>
-
-
-
-			<div id="customerSection" class="booking-section" style="display: none; margin-top: 30px; scroll-margin-top: 60px;
-">
-
-				<div class="yellowChooser" style="margin-bottom: 20px;">
-					Fyll i information:</div>
-				<div id="requiredInfoMessage" class="error"
-					style="display: none; margin-bottom: 20px; width: fit-content;">Vänligen fyll i namn och
-					e-postadress.</div>
-				<div id="customerbox">
-					<div class="form-group">
-						<label for="name">Namn*</label>
-						<input type="text" name="name" autocomplete="name" id="customerName" required data-required>
-					</div>
-
-					<div class="form-group">
-						<label>Email*</label>
-						<input type="email" name="email" autocomplete="email" id="customerEmail" required data-required>
-					</div>
-					<div class="form-group" style="grid-area: c;">
-						<label>Kommentar (valfritt)</label>
-						<textarea style="height: 80px" type="comment" id="customerComment"></textarea>
-					</div>
-				</div>
-				<div class="form-group" style="margin-bottom: 30px; font-size: 1.2em;">
-					<label class="custom-checkbox" style="display: block;">
-						<div style="display: flex; align-items: center;">
-							<input type="checkbox" id="kodbox">
-							<span class="checkmark"></span>
-							Jag har presentkort eller&nbsp;rabattkod
-						</div>
-					</label>
-					<div id="codeInput" style="display: none;">
-						<input type="text" placeholder="skriv din kod här" id="kod"
-							style="width: 200px; margin-right: 10px; margin-top: 0px !important;">
-						<button style=" font-family: inherit; padding: 12px 10px 8px;" id="useCode">Använd
-							kod</button>
-					</div>
-					<div id="codeMessage"
-						style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
-					</div>
-
-				</div>
-
-				<div id="bookingSummaryFinal" class="summary-box" style="background: rgb(255, 255, 255);">
-				</div>
-				<div class="form-group" style="margin-bottom: 20px; font-size: 1.2em;">
-					<label class="custom-checkbox">
-						<input type="checkbox" id="nyhetsbrev">
-						<span class="checkmark"></span>
-						<div style="padding-top: 18px;">Jaaa jag vill ha nyhetsbrev!<br><span
-								style="font-size: 0.7em; margin-top: 2px; color: #6c6c6c;">(äventyrstips och
-								hemliga
-								rabatter)</span></div>
-					</label>
-				</div>
-				<div class="form-group" style="margin-bottom: 40px; font-size: 1.2em;">
-					<label class="custom-checkbox">
-						<input type="checkbox" id="termsCheckbox">
-						<span class="checkmark"></span>
-						Jag accepterar&nbsp;<a style="color: rgb(45, 45, 45);"
-							href="http://aventyrsupplevelser.com/reglerochvillkor"> bokningsvillkor</a>
-					</label>
-					<div id="termsError" class="error" style="display: none;">
-						Du måste acceptera regler och villkor innan du kan fortsätta.
-					</div>
-				</div>
-
-				<div class="yellowChooser" style="margin-bottom: 20px;" id="choosePayMethod">
-					Välj betalsätt:</div>
-
-				<div id="paymentButtons" style="display: none;">
-					<div id="swishSection">
-						<div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
-							<input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
-								style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 2px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
-							<div id="swishPhoneError" class="error" style="display: none; width: auto;">
-								Skriv ditt telefonnummer för Swish
-							</div>
-						</div>
-
-						<button id="swishbutton" type="button" class="payment-button" onclick="handleSwishPayment()">
-							<span>Betala med Swish</span>
-							<img src="/images/swish2.png">
-						</button>
-						<div id="alternateDeviceSection" style="display: none; margin-top: 15px;">
-							<a href="#" onclick="showSwishPhoneInput(event)"
-								style="color: #4a4a4a; text-decoration: underline;">
-								Betala med Swish på en annan enhet
-							</a>
-						</div>
-					</div>
-					<div id="payment-container" class="payment-section" style="display: none;">
-					</div>
-					<div style="margin: 40px 0px 30px;">eller:</div>
-
-					<button type="button"
-						style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
-						id="kortbetalning" onclick="payByCard()">
-						<span id="kortSpan">Betala
-							med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
-								nytt
-								fönster)</span></span>
-						<img src="/images/cards.png">
-					</button>
-				</div>
-				<button type="button" id="freeConfirmBtn" style="display: none;" onclick="handleFreeBooking()"> Bekräfta
-					bokning (0
-					kr)</button>
-				<div id="freeMessage"
-					style="display: none; width: fit-content; padding: 15px 15px 10px; background-color: rgb(230, 241, 225); border-radius: 4px; font-size: 1em; margin-top: 7px;">
-				</div>
-
-			</div>
-
-
-
-
-		</div>
-
-	</form>
-
-	<div id="giftModal" class="modal">
-		<div class="modal-container">
-			<div class="modal-frame">
-				<span class="modal-close" id="giftModalClose">&times;</span>
-				<div id="gift-root"><!-- Gift modal content will be injected here --></div>
-			</div>
-		</div>
-	</div>
-
-	<div id="giftDiv" style="display:none;">
-
-		<div id="requiredSumMessage" class="error" style="display: none; width: fit-content; margin: 0px auto 20px;">
-			Vänligen välj en presentkortssumma större än 0.</div>
-		<div class="sum-selector">
-			<label
-				style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); display:inline-block; margin-bottom: 20px; font-size: 1em;">Välj
-				summa:</label>
-			<br>
-			<button id="minusBtn" class="quantity-btn" disabled>-</button>
-			<span id="sumValue">0 kr</span>
-			<button id="plusBtn" class="quantity-btn">+</button>
-		</div>
-
-		<div id="details">
-			<div id="requiredInfoMessage" class="error" style="display: none; margin-bottom: 20px; width: fit-content;">
-				Vänligen fyll i namn och
-				e-postadress.</div>
-			<label>Presentkortet är till:</label>
-			<input type="text" id="giftTo" placeholder="Mottagarens namn" />
-
-			<label>Presentkortet är från:</label>
-			<input type="text" id="giftFrom" placeholder="Ditt/era namn" />
-
-			<label>Din (köparens) e-post:</label>
-			<input type="email" id="purchaserEmail" placeholder="Din email" />
-			Presentkortet är giltigt i 12 månader.
-			<label class="custom-checkbox" style="margin-top: 60px;">
-				<input type="checkbox" id="termsCheckbox">
-				<span class="checkmark"></span>
-				Jag accepterar&nbsp;<a href="/reglerochvillkor">regler och villkor</a>
-			</label>
-			<div id="termsError" class="error">Du måste acceptera villkor innan du kan fortsätta.</div>
-		</div>
-
-		<div
-			style="background: linear-gradient(126deg, rgb(251, 255, 131) 0%, rgb(255, 255, 191) 100%); width: fit-content; margin: 40px auto 20px; text-align: center;">
-			Välj betalsätt:</div>
-
-		<div id="paymentButtons">
-			<div id="swishSection">
-				<div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
-					<input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
-						style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 1.5px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
-					<div id="swishPhoneError" class="error" style="display: none; width: auto;">
-						Skriv ditt telefonnummer för Swish
-					</div>
-				</div>
-
-				<button id="swishbutton" type="button" class="payment-button">
-					<span>Betala med Swish</span>
-					<img src="/images/swish2.png">
-				</button>
-				<div id="alternateDeviceSection" style="display: none; margin-top: 15px;">
-					<a href="#" onclick="showSwishPhoneInput(event)"
-						style="color: #4a4a4a; text-decoration: underline;">
-						Betala med Swish på en annan enhet
-					</a>
-				</div>
-			</div>
-			<div id="payment-container" class="payment-section" style="display: none;">
-			</div>
-			<div style="margin: 40px 0px 30px;">eller:</div>
-
-			<button type="button"
-				style="font-family: inherit; margin-top: 0px; font-size: 1.1em; text-align: left; line-height: 1.2em;"
-				id="kortbetalning">
-				<span id="kortSpan">Betala
-					med kontokort<span style="color: #525252; font-size: 0.8em; display: none;">(öppnar
-						nytt
-						fönster)</span></span>
-				<img src="/images/cards.png">
-			</button>
-		</div>
-
-
-	</div>
-
 	<script>
-		// JavaScript to handle the modal
+
+		// Modal functionality for booking and gift card systems
 		document.addEventListener('DOMContentLoaded', function () {
-			// Get the booking form and its styles
-			const bookingForm = document.getElementById('bookingForm');
-			const bookingStyles = document.querySelectorAll('link[href*="bookingstyles.css"]');
+			// Get modal elements
+			const modal = document.querySelector('.modal');
+			const modalFrame = document.querySelector('.modal-frame');
+			const modalClose = document.querySelector('.modal-close');
 			const bookingRoot = document.getElementById('booking-root');
 
-			function openBooking() {
-				const modal = document.querySelector('.modal');
-				const modalFrame = document.querySelector('.modal-frame');
+			// Get all booking buttons
+			const bookingButtons = document.querySelectorAll('.iframebutton');
+			const giftCardButton = document.getElementById('presentkort-button');
 
-				// Move booking form and its styles into isolated container
-				if (bookingForm && !bookingRoot.contains(bookingForm)) {
-					bookingRoot.appendChild(bookingForm);
-					bookingStyles.forEach(style => {
-						const styleCopy = style.cloneNode(true);
-						bookingRoot.appendChild(styleCopy);
-					});
-				}
-
-				modal.style.display = 'block';
-				document.body.style.overflow = 'hidden';
-
-				// Trigger animations
-				requestAnimationFrame(() => {
-					modal.classList.add('show');
-					modalFrame.classList.add('show');
+			// Handle booking button clicks
+			bookingButtons.forEach(button => {
+				button.addEventListener('click', () => {
+					openBookingModal();
 				});
+			});
 
-				// Reset booking state
+			// Handle gift card button click
+			if (giftCardButton) {
+				giftCardButton.addEventListener('click', () => {
+					openGiftCardModal();
+				});
 			}
 
-			function closeBooking() {
-				const modal = document.querySelector('.modal');
-				const modalFrame = document.querySelector('.modal-frame');
+			// Close modal when clicking the close button
+			modalClose.addEventListener('click', closeModal);
 
-				modal.classList.remove('show');
-				modalFrame.classList.remove('show');
+			// Close modal when clicking outside the frame
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) {
+					closeModal();
+				}
+			});
 
-				// Wait for animation to finish
+			// Close modal on escape key
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') {
+					closeModal();
+				}
+			});
+
+			function openBookingModal() {
+				// Clear previous content
+				bookingRoot.innerHTML = '';
+
+				// Create and load the booking iframe
+				const iframe = document.createElement('iframe');
+				iframe.src = '/bokningssystem/frontend/skapabokningchatgptnew.html';
+				iframe.style.width = '100%';
+				iframe.style.height = '100vh';
+				iframe.style.border = 'none';
+
+				bookingRoot.appendChild(iframe);
+
+				showModal();
+			}
+
+			function openGiftCardModal() {
+				// Clear previous content
+				bookingRoot.innerHTML = '';
+
+				// Create and load the gift card iframe
+				const iframe = document.createElement('iframe');
+				iframe.src = '/bokningssystem/frontend/presentkort.html';
+				iframe.style.width = '100%';
+				iframe.style.height = '100vh';
+				iframe.style.border = 'none';
+
+				bookingRoot.appendChild(iframe);
+
+				showModal();
+			}
+
+			function showModal() {
+				modal.style.display = 'block';
+				document.body.classList.add('modal-open');
+				modalFrame.style.opacity = '0';
+
+				// Add a small delay before fading in for smooth transition
 				setTimeout(() => {
-					modal.style.display = 'none';
-					document.body.style.overflow = '';
+					modalFrame.style.transition = 'opacity 0.3s ease-in-out';
+					modalFrame.style.opacity = '1';
 				}, 50);
 			}
 
-			// Add click handlers to all booking buttons
-			document.querySelectorAll('.iframebutton, .bokaknapp a').forEach(btn => {
-				btn.addEventListener('click', function (e) {
-					e.preventDefault();
-					openBooking();
-				});
-			});
+			function closeModal() {
+				modalFrame.style.opacity = '0';
 
-			// Close button handler
-			document.querySelector('.modal-close').addEventListener('click', closeBooking);
-
-			// Click outside to close - fixed version
-			document.querySelector('.modal').addEventListener('click', function (e) {
-				console.log('click')
-				// Check if click was on modal background (not its children)
-				if (e.target.classList.contains('modal')) {
-					console.log('notchildrenclick')
-					closeBooking();
-				}
-			});
-
-			// ESC key to close
-			document.addEventListener('keydown', function (e) {
-				if (e.key === 'Escape') {
-					closeBooking();
-				}
-			});
-		});
-
-		document.addEventListener('DOMContentLoaded', function () {
-			// ---------------- Booking Modal (already existing) ----------------
-			const bookingForm = document.getElementById('bookingForm');
-			const bookingStyles = document.querySelectorAll('link[href*="bookingstyles.css"]');
-			const bookingRoot = document.getElementById('booking-root');
-
-			function openBooking() {
-				const modal = document.querySelector('.modal');
-				const modalFrame = document.querySelector('.modal-frame');
-
-				// Move booking form and its styles into the isolated container
-				if (bookingForm && !bookingRoot.contains(bookingForm)) {
-					bookingRoot.appendChild(bookingForm);
-					bookingStyles.forEach(style => {
-						const styleCopy = style.cloneNode(true);
-						bookingRoot.appendChild(styleCopy);
-					});
-				}
-
-				modal.style.display = 'block';
-				document.body.style.overflow = 'hidden';
-
-				// Trigger animations
-				requestAnimationFrame(() => {
-					modal.classList.add('show');
-					modalFrame.classList.add('show');
-				});
-			}
-
-			function closeBooking() {
-				const modal = document.querySelector('.modal');
-				const modalFrame = document.querySelector('.modal-frame');
-
-				modal.classList.remove('show');
-				modalFrame.classList.remove('show');
-
-				// Wait for animation to finish
 				setTimeout(() => {
 					modal.style.display = 'none';
-					document.body.style.overflow = '';
-				}, 50);
+					document.body.classList.remove('modal-open');
+					bookingRoot.innerHTML = '';
+					modalFrame.style.transition = '';
+				}, 300);
 			}
-
-			document.querySelectorAll('.iframebutton, .bokaknapp a').forEach(btn => {
-				btn.addEventListener('click', function (e) {
-					e.preventDefault();
-					openBooking();
-				});
-			});
-
-			document.querySelector('.modal-close').addEventListener('click', closeBooking);
-
-			document.querySelector('.modal').addEventListener('click', function (e) {
-				if (e.target.classList.contains('modal')) {
-					closeBooking();
-				}
-			});
-
-			document.addEventListener('keydown', function (e) {
-				if (e.key === 'Escape') {
-					closeBooking();
-				}
-			});
-
-
-			// ---------------- Gift Card Modal ----------------
-			// Get the gift card content and its gift-specific styles.
-			document.addEventListener('DOMContentLoaded', function () {
-				// Get the gift modal content and the gift-specific stylesheet(s)
-				const giftDiv = document.getElementById('giftDiv');
-				// Select only the giftstyles.css links (assuming the href contains "giftstyles.css")
-				const giftStyles = document.querySelectorAll('link[href*="giftstyles.css"]');
-				const giftRoot = document.getElementById('gift-root');
-
-				function openGift() {
-					console.log('opening')
-					// Move the gift modal content and its styles into the isolated container if not already present
-					if (giftDiv && !giftRoot.contains(giftDiv)) {
-						// Append the giftDiv into gift-root
-						giftRoot.appendChild(giftDiv);
-						// Clone each gift stylesheet into gift-root so that the styles only affect the modal content
-						giftStyles.forEach(style => {
-							const styleCopy = style.cloneNode(true);
-							giftRoot.appendChild(styleCopy);
-						});
-					}
-
-					const giftModal = document.getElementById('giftModal');
-					giftModal.style.display = 'block';
-					document.body.style.overflow = 'hidden';
-
-					// Trigger animations (if you have CSS transitions for the "show" class)
-					const modalFrame = giftModal.querySelector('.modal-frame');
-					requestAnimationFrame(() => {
-						giftModal.classList.add('show');
-						modalFrame.classList.add('show');
-					});
-				}
-
-				function closeGift() {
-					const giftModal = document.getElementById('giftModal');
-					const modalFrame = giftModal.querySelector('.modal-frame');
-					giftModal.classList.remove('show');
-					modalFrame.classList.remove('show');
-
-					setTimeout(() => {
-						giftModal.style.display = 'none';
-						document.body.style.overflow = '';
-					}, 50);
-				}
-
-				// Add a click handler to the gift modal close button
-				const giftCloseBtn = document.getElementById('giftModalClose');
-				if (giftCloseBtn) {
-					giftCloseBtn.addEventListener('click', closeGift);
-				}
-
-				// Close when clicking outside the modal frame (i.e. on the modal background)
-				const giftModal = document.getElementById('giftModal');
-				giftModal.addEventListener('click', function (e) {
-					if (e.target.classList.contains('modal')) {
-						closeGift();
-					}
-				});
-
-				// Close on ESC key press if the gift modal is open
-				document.addEventListener('keydown', function (e) {
-					if (e.key === 'Escape' && giftModal.style.display === 'block') {
-						closeGift();
-					}
-				});
-
-				// When the "presentkort" button is clicked, open the gift modal.
-				// (Ensure your button has the id "presentkort-button")
-				const giftButton = document.getElementById('presentkort-button');
-				if (giftButton) {
-					giftButton.addEventListener('click', function (e) {
-						e.preventDefault();
-						console.log('triggered')
-						openGift();
-					});
-				}
-			});
-
 		});
-
-
 	</script>
 
 </body>

@@ -20,7 +20,7 @@
             font-family: "Josefin Sans", sans-serif;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 0px;
         }
 
         h2 {
@@ -58,11 +58,13 @@
         #tickets {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
+            display: none;
         }
 
         #times.visible,
         #tickets.visible {
             opacity: 1;
+            display: block;
         }
 
 
@@ -2066,7 +2068,7 @@ arrow_right_alt
                 if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
-                    window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
+                    window.parent.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
                     paymentContainer.innerHTML = `
@@ -2156,7 +2158,7 @@ arrow_right_alt
                 const existingLink = sessionData.QuickPayLink;
                 if (existingLink) {
                     console.log('Using existing payment link');
-                    window.location.href = existingLink;
+                    window.parent.location.href = existingLink;
                     return;
                 }
 
@@ -2183,7 +2185,7 @@ arrow_right_alt
 
 
                 // Redirect to the payment link
-                window.location.href = url;
+                window.parent.location.href = url;
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
@@ -2234,7 +2236,7 @@ arrow_right_alt
 
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             const bookingNumber = sessionData.booking_number;
-            const access_token = sessionData.access_token;
+            const access_token = sessionData.token;
 
             const checkStatus = setInterval(async () => {
                 try {
@@ -2271,7 +2273,7 @@ arrow_right_alt
                     // The function returns an array with one object, so check the first element
                     if (data?.[0]?.status === 'confirmed') {
                         clearInterval(checkStatus);
-                        window.location.href = `tackfordinbokning.html?order_id=${bookingNumber}&access_token=${access_token}`;
+                        window.parent.location.href = `tackfordinbokning.html?order_id=${bookingNumber}&access_token=${access_token}`;
                         return;
                     }
 
