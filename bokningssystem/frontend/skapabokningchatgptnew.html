@@ -2065,6 +2065,11 @@ arrow_right_alt
                     throw new Error(result.error || 'Payment failed');
                 }
 
+                console.log('isMobile', isMobile)
+                console.log('result.token', result.token)
+                console.log('phoneNumber', phoneNumber)
+
+
                 if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
                     console.log('shouldopennow')
