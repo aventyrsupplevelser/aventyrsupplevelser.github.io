@@ -112,6 +112,8 @@ router.post('/swish-payment', async (req, res) => {
             console.log('Payment request created')
          });
 
+         console.log('response:', response)
+
         res.json({
             success: true,
             paymentId: instructionId,

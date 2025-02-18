@@ -2036,10 +2036,10 @@ arrow_right_alt
                 swishPhoneError.style.display = 'none';
             }
 
-            alternateDeviceSection.style.display = 'none';
 
             const paymentContainer = document.getElementById('payment-container');
             paymentContainer.style.display = 'block';
+            alternateDeviceSection.style.display = 'none';
             paymentContainer.innerHTML = `
                 <div style="padding-left: 3px; font-size: 1.1em;">
                     Laddar swishbetalning..
@@ -2070,7 +2070,7 @@ arrow_right_alt
                 console.log('result:', result)
 
                 console.log('isMobile', isMobile)
-                console.log('result.paymentId', result.token)
+                console.log('result.paymentId', result.paymentId)
                 console.log('phoneNumber', phoneNumber)
 
 
