@@ -158,7 +158,7 @@ class EmailService {
                         month: 'long',
                         year: 'numeric'
                     }),
-                    booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', {
+                    booking_time: new Date(booking.start_time).toLocaleString('sv-SE', {
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: false
