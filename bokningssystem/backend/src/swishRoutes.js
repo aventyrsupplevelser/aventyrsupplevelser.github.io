@@ -111,17 +111,26 @@ router.post('/swish-payment', async (req, res) => {
             paymentData
           );
           
-          console.log('Swish API response:', response.data);
+       // Log the entire headers object to inspect its contents
+    console.log('Swish API response headers:', swishResponse.headers);
 
-        res.json({
-            success: true,
-            paymentId: instructionId,
-        });
-
-    } catch (error) {
-        console.error('Swish payment error:', error);
-        res.status(400).json({ success: false, error: error.message });
+    // The header key might be all lowercase depending on your HTTP client
+    const token = swishResponse.headers['paymentrequesttoken'] || swishResponse.headers['PaymentRequestToken'];
+    if (!token) {
+      throw new Error('PaymentRequestToken not found in response headers');
     }
+
+    console.log('Extracted PaymentRequestToken:', token);
+
+    // Return the token as paymentId to your frontend
+    res.json({
+      success: true,
+      paymentId: token,
+    });
+  } catch (error) {
+    console.error('Swish payment error:', error);
+    res.status(400).json({ success: false, error: error.message });
+  }
 });
 
 router.post('/swish-callback', express.json(), async (req, res) => {
