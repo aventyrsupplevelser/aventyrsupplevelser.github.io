@@ -452,8 +452,8 @@
     <script>
 
         /***************************************
-         * 1) Initialize Supabase client
-         ***************************************/
+       * 1) Initialize Supabase client
+       ***************************************/
         const { createClient } = supabase;
         const supabaseClient = createClient(
             'https://czbvtmrqzvovytzqokko.supabase.co',
@@ -734,7 +734,7 @@ arrow_right_alt
 
                         if (ratio === 0) {
                             day.style.backgroundColor = notAvailable;
-                            day.disabled = true;
+                            //day.disabled = true;
                         } else if (ratio <= 0.5) {
                             day.style.backgroundColor = fewLeft;
                             day.classList.add('available');

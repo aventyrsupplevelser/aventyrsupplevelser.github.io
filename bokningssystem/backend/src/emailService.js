@@ -79,7 +79,6 @@ const formattedTime = new Date(booking.start_time).toLocaleString('sv-SE', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-    timeZone: 'Europe/Stockholm'  // Add this explicit timezone
 });
 console.log('Formatted time:', formattedTime);
 
@@ -235,7 +234,6 @@ console.log('Formatted time:', formattedTime);
                         hour: '2-digit', 
                         minute: '2-digit',
                         hour12: false,
-                        timeZone: 'Europe/Stockholm'  // Add this explicit timezone
                     }),
                 }
             };

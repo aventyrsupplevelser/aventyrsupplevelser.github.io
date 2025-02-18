@@ -175,11 +175,14 @@
             const sessionData = JSON.parse(localStorage.getItem('bookingData'));
             let access_token = params.get('access_token');
             if (sessionData) {
-                const access_token = sessionData.token;
+                access_token = sessionData.token;
             }
+
+            console.log('access_token')
 
 
             try {
+                console.log('checking')
                 // Call the Postgres function instead of querying the table
                 const { data, error } = await supabaseClient
                     .rpc('get_booking_status', {
