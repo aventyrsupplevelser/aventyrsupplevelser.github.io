@@ -2086,7 +2086,7 @@ arrow_right_alt
 
                 if (isMobile && result.paymentId && !phoneNumber) {
                     // Open Swish app
-                    const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
+                    const returnUrl = `/bokningssystem/frontend/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.parent.location.href = `swish://paymentrequest?token=${result.paymentId}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
@@ -2292,7 +2292,7 @@ arrow_right_alt
                     // The function returns an array with one object, so check the first element
                     if (data?.[0]?.status === 'confirmed') {
                         clearInterval(checkStatus);
-                        window.parent.location.href = `tackfordinbokning.html?order_id=${bookingNumber}&access_token=${access_token}`;
+                        window.parent.location.href = `/bokningssystem/frontend/tackfordinbokning.html?order_id=${bookingNumber}&access_token=${access_token}`;
                         return;
                     }
 
