@@ -206,6 +206,8 @@ router.post('/swish-callback', express.json(), async (req, res) => {
                     start_time: booking.time_slots.start_time
                 };
 
+                console.log('start.time:', updatedBooking.start_time)
+
                 await EmailService.sendBookingEmail(updatedBooking);
                 console.log('Confirmation email sent successfully');
             } catch (emailError) {
