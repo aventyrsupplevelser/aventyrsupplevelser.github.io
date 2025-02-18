@@ -496,7 +496,7 @@
 
                 if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
-                    const returnUrl = `${window.parent.location.origin}/tackfordittkop.html`;
+                    const returnUrl = `${window.parent.location.origin}/tackfordittkop`;
                     window.parent.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
