@@ -522,7 +522,7 @@ router.post('/gift-swish', async (req, res) => {
             payeeAlias: '1231049352',
             currency: 'SEK',
             amount: sumValue,
-            message: 'Sörsjöns Äventyrspark - Presentkort',
+            message: 'Sörsjöns Äventyrspark',
             callbackIdentifier: callbackIdentifier
         };
         console.log('callbackIdentifier:', callbackIdentifier)
