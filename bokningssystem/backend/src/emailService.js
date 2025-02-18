@@ -69,6 +69,9 @@ class EmailService {
     static async sendBookingEmail(booking) {
         try {
             console.log('Processing booking email:', booking);
+            console.log('Raw booking.start_time:', booking.start_time);
+
+
     
             // Calculate individual sums
             const adultSum = booking.adult_quantity * 400;
@@ -310,45 +313,7 @@ class EmailService {
         }
     }
 
-    /*static async sendBookingReminder(booking) {
-        try {
-            if (!booking.customer_email) {
-                console.error('Customer email is required');
-                return null;
-            }
 
-            const msg = {
-                to: booking.customer_email,
-                from: {
-                    email: SENDGRID_FROM_EMAIL,
-                    name: 'Sörsjöns Äventyrspark'
-                },
-                subject: 'Påminnelse - Din bokning imorgon hos Sörsjöns Äventyrspark',
-                templateId: SENDGRID_REMINDER_TEMPLATE_ID,
-                dynamic_template_data: {
-                    booking_number: booking.booking_number,
-                    customer_name: booking.customer_name,
-                    booking_date: new Date(booking.start_time).toLocaleDateString('sv-SE'),
-                    booking_time: new Date(booking.start_time).toLocaleTimeString('sv-SE', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    })
-                }
-            };
-
-            console.log('Attempting to send reminder email to:', booking.customer_email);
-            const response = await sgMail.send(msg);
-            console.log('Reminder email sent successfully:', response[0].statusCode);
-            return response;
-        } catch (error) {
-            console.error('Error sending reminder email:', error);
-            if (error.response) {
-                console.error('Error details:', error.response.body);
-            }
-            return null;
-        }
-    }*/
 }
 
 export default EmailService;
