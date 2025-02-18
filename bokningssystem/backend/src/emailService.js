@@ -68,8 +68,19 @@ class EmailService {
 
     static async sendBookingEmail(booking) {
         try {
-            console.log('Processing booking email:', booking);
-            console.log('Raw booking.start_time:', booking.start_time);
+            // At the start of sendBookingEmail:
+console.log('Is payment link email:', !!booking.quickpay_link);
+console.log('Template ID being used:', booking.quickpay_link ? 
+    process.env.SENDGRID_ADMIN_BOOKING_ID : 
+    process.env.SENDGRID_BOOKING_TEMPLATE_ID
+);
+console.log('Raw booking.start_time:', booking.start_time);
+const formattedTime = new Date(booking.start_time).toLocaleString('sv-SE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+});
+console.log('Formatted time:', formattedTime);
 
 
     
@@ -161,11 +172,7 @@ class EmailService {
                         month: 'long',
                         year: 'numeric'
                     }),
-                    booking_time: new Date(booking.start_time).toLocaleString('sv-SE', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    }),
+                    booking_time: formattedTime,
                     adult_quantity: booking.adult_quantity,
                     youth_quantity: booking.youth_quantity,
                     kid_quantity: booking.kid_quantity,
