@@ -1019,7 +1019,7 @@
                         <img src="/images/cards.png">
                     </button>
                 </div>
-                <button type="button" id="freeConfirmBtn" style="display: none;" onclick="handleFreeBooking()"> Bekräfta
+                <button type="button" id="freeConfirmBtn" style="display: none;"> Bekräfta
                     bokning (0
                     kr)</button>
                 <div id="freeMessage"
@@ -2595,6 +2595,12 @@ arrow_right_alt
                     throw new Error('No active booking found');
                 }
 
+                // Show message while processing
+                const freeMessage = document.getElementById('freeMessage');
+                freeMessage.style.display = 'block';
+                freeMessage.innerHTML = 'Bekräftar din bokning...';
+                freeMessage.scrollIntoView({ behavior: 'smooth' });
+
                 // Update customer details first
                 await updateCustomer();
 
@@ -2614,11 +2620,6 @@ arrow_right_alt
                     throw new Error(errorData.error || 'Failed to process free booking');
                 }
 
-                // Show message while processing
-                const freeMessage = document.getElementById('freeMessage');
-                freeMessage.style.display = 'block';
-                freeMessage.innerHTML = 'Bekräftar din bokning...';
-                freeMessage.scrollIntoView({ behavior: 'smooth' });
 
                 // Start checking status
                 checkPaymentStatus();
