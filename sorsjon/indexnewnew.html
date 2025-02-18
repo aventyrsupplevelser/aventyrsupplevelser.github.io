@@ -33,6 +33,12 @@
 	<link
 		href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
 		rel="stylesheet">
+	<script>
+		// Save current scroll position in a CSS variable
+		window.addEventListener('scroll', () => {
+			document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+		});
+	</script>
 	<!-- Meta Pixel Code -->
 	<script>
 		!function (f, b, e, v, n, t, s) {
@@ -803,7 +809,6 @@
 
 	<script>
 
-		// Modal functionality for booking and gift card systems
 		document.addEventListener('DOMContentLoaded', function () {
 			// Get modal elements
 			const modal = document.querySelector('.modal');
@@ -811,7 +816,7 @@
 			const modalClose = document.querySelector('.modal-close');
 			const bookingRoot = document.getElementById('booking-root');
 
-			// Get all booking buttons
+			// Get all booking buttons and the gift card button
 			const bookingButtons = document.querySelectorAll('.iframebutton');
 			const giftCardButton = document.getElementById('presentkort-button');
 
@@ -879,11 +884,15 @@
 			}
 
 			function showModal() {
+				// Get the current scroll position from the CSS variable
+				const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
+				// Lock scroll by fixing the body in place
+				document.body.style.position = 'fixed';
+				document.body.style.top = `-${scrollY}`;
+				// Show the modal
 				modal.style.display = 'block';
-				document.body.classList.add('modal-open');
+				// Start with modal frame hidden then fade in
 				modalFrame.style.opacity = '0';
-
-				// Add a small delay before fading in for smooth transition
 				setTimeout(() => {
 					modalFrame.style.transition = 'opacity 0.3s ease-in-out';
 					modalFrame.style.opacity = '1';
@@ -891,16 +900,24 @@
 			}
 
 			function closeModal() {
+				// Fade out the modal frame
 				modalFrame.style.opacity = '0';
-
 				setTimeout(() => {
+					// Hide the modal
 					modal.style.display = 'none';
-					document.body.classList.remove('modal-open');
+					// Restore the body’s position so the page can scroll again
+					const scrollY = document.body.style.top;
+					document.body.style.position = '';
+					document.body.style.top = '';
+					// Parse the stored negative value and scroll back to the original position
+					window.scrollTo(0, parseInt(scrollY || '0') * -1);
+					// Clear the modal content
 					bookingRoot.innerHTML = '';
 					modalFrame.style.transition = '';
 				}, 300);
 			}
 		});
+
 	</script>
 
 </body>
