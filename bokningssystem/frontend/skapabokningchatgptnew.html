@@ -675,7 +675,7 @@
             }
 
             .yellowChooser {
-                margin: 30px auto;
+                margin: 30px 10px 20px;
                 display: block;
                 width: fit-content;
             }
@@ -735,6 +735,11 @@
                 font-size: 1.6em;
             }
 
+            .minus {
+                margin-bottom: 4px;
+            }
+
+
             .quantity {
                 padding: 8px 5px 3px;
                 font-size: 1em;
@@ -746,7 +751,7 @@
             }
 
             #rebooking {
-                margin: 0px 20px;
+                margin: 0px 10px;
             }
 
             #continueToPaymentBtn,
@@ -779,7 +784,8 @@
 
 
             #bookingSummaryFinal {
-                width: clamp(290px, 70vw, 380px);
+                /*   width: clamp(290px, 70vw, 380px); */
+                width: 92vw;
                 margin-left: 2vw;
                 margin-bottom: 20px;
                 font-size: 1.1em;
@@ -794,14 +800,17 @@
             }
 
             #paymentButtons {
-                display: flex;
+                /*   display: flex;
                 flex-direction: column;
-                align-items: center;
+                align-items: center; */
+                margin-left: 10px;
             }
 
             #alternateDeviceSection {
-                text-align: center;
+                /*  text-align: center; */
             }
+
+
 
 
         }
@@ -815,7 +824,7 @@
         </div>
         <div id="datetimeticketSection" class="booking-section" style="margin-top: 30px;">
             <div class="active">
-                <div class="yellowChooser"> Välj klätterdatum:</div>
+                <div class="yellowChooser" style="margin-bottom: 10px;"> Välj klätterdatum:</div>
                 <div class="form-group">
                 </div>
             </div>
@@ -829,7 +838,7 @@
                 <div id="spotsLeft" style="float: left; margin-top: 15px; margin-left: 2px;"></div>
             </div>
             <div id="tickets" style="margin-top: 80px;">
-                <div class="yellowChooser" style="margin-bottom: 25px;">
+                <div class="yellowChooser" style="margin-bottom: 15px;">
                     Välj antal äventyrare:</div>
                 <div class="ticket-section">
                     <!-- Available spots display -->
@@ -886,7 +895,7 @@
                     </div>
                 </div>
                 <div id="rebooking">
-                    <div class="yellowChooser" style="margin: 40px auto 20px;">
+                    <div class="yellowChooser" style="margin: 40px 0px 10px 0px;">
                         Vill ni ha ombokningsgaranti? </div>
                     <br>
                     <div style="color: #525252;

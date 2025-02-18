@@ -116,9 +116,6 @@ router.post('/swish-payment', async (req, res) => {
 
     // The header key might be all lowercase depending on your HTTP client
     const token = swishResponse.headers['paymentrequesttoken'] || swishResponse.headers['PaymentRequestToken'];
-    if (!token) {
-      throw new Error('PaymentRequestToken not found in response headers');
-    }
 
     console.log('Extracted PaymentRequestToken:', token);
 
