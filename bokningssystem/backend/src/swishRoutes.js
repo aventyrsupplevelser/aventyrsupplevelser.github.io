@@ -106,13 +106,12 @@ router.post('/swish-payment', async (req, res) => {
 
         console.log('Making Swish request:', paymentData);
 
-        const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+        const response = await swishClient.put(
+            `https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             paymentData
-        ).then((res) => {
-            console.log('Payment request created')
-         });
-
-         console.log('response:', response)
+          );
+          
+          console.log('Swish API response:', response.data);
 
         res.json({
             success: true,
