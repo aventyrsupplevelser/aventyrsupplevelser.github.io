@@ -631,7 +631,7 @@
                 const { url } = await response.json();
 
                 // Redirect to the payment link
-                window.location.href = url;
+                window.parent.location.href = url;
 
             } catch (error) {
                 console.error('Error in handlePayment:', error);
