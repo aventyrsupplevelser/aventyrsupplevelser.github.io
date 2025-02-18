@@ -2067,6 +2067,7 @@ arrow_right_alt
 
                 if (isMobile && result.token && !phoneNumber) {
                     // Open Swish app
+                    console.log('shouldopennow')
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {

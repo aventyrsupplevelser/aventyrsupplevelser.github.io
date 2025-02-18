@@ -486,6 +486,7 @@
                     let { data: slots, error } = await supabaseClient
                         .from('time_slots')
                         .select('*')
+                        .eq('blocked', false) // Add this line to exclude blocked slots
                         .gte('start_time', cutoffTime.toISOString()) // only future times
                         .gte('start_time', startOfMonth.toISOString())
                         .lte('start_time', endOfMonth.toISOString())
