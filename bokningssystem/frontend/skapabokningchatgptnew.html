@@ -2074,7 +2074,7 @@ arrow_right_alt
 
                 if (isMobile && result.paymentId && !phoneNumber) {
                     // Open Swish app
-                    console.log('shouldopennow')
+                    console.log('shouldopennow2')
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.parent.location.href = `swish://paymentrequest?token=${result.token}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
