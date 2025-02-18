@@ -536,17 +536,27 @@ router.post('/gift-swish', async (req, res) => {
 
         console.log('Making Swish request:', paymentData);
 
-        const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+        const swishResponse = await swishClient.put(
+            `https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             paymentData
-        ).then((res) => {
-            console.log('Payment request created')
-         });
+          );
+          
+       // Log the entire headers object to inspect its contents
+    console.log('Swish API response headers:', swishResponse.headers);
 
-        res.json({
-            success: true,
-            paymentId: instructionId,
-        });
+    // The header key might be all lowercase depending on your HTTP client
+    const token = swishResponse.headers['paymentrequesttoken'] || swishResponse.headers['PaymentRequestToken'];
+    if (!token) {
+      throw new Error('PaymentRequestToken not found in response headers');
+    }
 
+    console.log('Extracted PaymentRequestToken:', token);
+
+    // Return the token as paymentId to your frontend
+    res.json({
+      success: true,
+      token: token,
+    });
     } catch (error) {
         console.error('Swish payment error:', error);
         res.status(400).json({ success: false, error: error.message });

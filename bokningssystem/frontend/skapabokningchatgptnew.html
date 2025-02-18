@@ -2074,16 +2074,9 @@ arrow_right_alt
                     throw new Error(result.error || 'Payment failed');
                 }
 
-                console.log('result:', result)
-
-                console.log('isMobile', isMobile)
-                console.log('result.paymentId', result.paymentId)
-                console.log('phoneNumber', phoneNumber)
-
 
                 if (isMobile && result.paymentId && !phoneNumber) {
                     // Open Swish app
-                    console.log('shouldopennow2')
                     const returnUrl = `${window.location.origin}/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.parent.location.href = `swish://paymentrequest?token=${result.paymentId}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
