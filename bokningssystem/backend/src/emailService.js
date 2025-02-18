@@ -274,9 +274,11 @@ console.log('Formatted time:', formattedTime);
             // Calculate amount in SEK
             const totalAmountInSEK = giftCard.paid_amount / 100; // Convert from öre to SEK
             const vatRate = 0.06;
-            const amountExVat = Math.round(totalAmountInSEK / (1 + vatRate));
+            const amountExVat = totalAmountInSEK / (1 + vatRate);
             const vatAmount = totalAmountInSEK - amountExVat;
             const amountSEK = Math.round(totalAmountInSEK);
+
+
 
             // Generate URL for gift card generation
             const giftCardUrl = new URL('http://aventyrsupplevelser.com/bokningssystem/frontend/generategiftcard.html');
