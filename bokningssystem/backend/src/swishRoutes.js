@@ -533,15 +533,17 @@ router.post('/gift-swish', async (req, res) => {
 
         console.log('Making Swish request:', paymentData);
 
-        const response = await swishClient.put(`https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
+        const response = await swishClient.put(
+            `https://staging.getswish.pub.tds.tieto.com/swish-cpcapi/api/v2/paymentrequests/${instructionId}`,
             paymentData
-        ).then((res) => {
-            console.log('Payment request created')
-         });
+          );
+
+         const token = response.headers['paymentrequesttoken'] || response.headers['PaymentRequestToken'];
+
 
         res.json({
             success: true,
-            paymentId: instructionId,
+            token: token,
         });
 
     } catch (error) {
