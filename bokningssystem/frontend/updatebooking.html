@@ -990,6 +990,7 @@
                 this.render();
                 await this.fetchAvailableDates();
 
+                updateSpotsLeftDisplay();
                 // Remove the automatic date selection from here since we'll do it in initializeBooking
                 return this; // So we can await it
             }
