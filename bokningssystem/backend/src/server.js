@@ -2,7 +2,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import timeSlotRoutes from './timeSlotRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -66,15 +65,6 @@ try {
 console.log('Setting up static file serving from:', frontendPath);
 app.use(express.static(frontendPath));
 
-// 2. Mount API routes
-console.log('Available routes:');
-timeSlotRoutes.stack.forEach((r) => {
-    if (r.route && r.route.path) {
-        console.log(`${Object.keys(r.route.methods)} ${r.route.path}`);
-    }
-});
-
-app.use('/api', timeSlotRoutes);
 app.use('/api/swish', swishRoutes);
 
 console.log('Routes mounted');
