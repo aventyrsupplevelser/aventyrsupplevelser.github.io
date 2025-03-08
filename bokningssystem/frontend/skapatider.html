@@ -814,14 +814,14 @@
 
         function generateTimeCheckboxes() {
             const times = [];
-            for (let hour = 10; hour <= 15; hour++) {
+            for (let hour = 10; hour <= 17; hour++) {
                 times.push(
                     `<label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;">
                 <input type="checkbox" name="times" value="${hour}:00"><span class="checkmark"></span>
                 ${hour}:00</label>`
 
                 );
-                if (hour < 15) {
+                if (hour < 17) {
                     times.push(
                         `<label class="custom-checkbox" style="margin-right: 30px; margin-bottom: 30px; width: 100px;" >
                 <input type="checkbox" name="times" value="${hour}:30"><span class="checkmark"></span>

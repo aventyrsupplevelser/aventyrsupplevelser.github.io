@@ -24,3 +24,9 @@ npm-debug.log
 *.swo
 =======
 */.DS_Store
+bokningssystem/backend/swish_certificate_202503080002.pem
+bokningssystem/backend/CertificateSigningRequest.certSigningRequest
+bokningssystem/backend/PetterRylen.p12
+bokningssystem/backend/private_prod_key.base64
+bokningssystem/backend/private_prod_key.pem
+bokningssystem/backend/prod_certificate.base64
