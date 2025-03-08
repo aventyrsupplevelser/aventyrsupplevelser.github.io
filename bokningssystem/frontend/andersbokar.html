@@ -1049,6 +1049,10 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+
         /***************************************
          * 2) Constants & Global State
          ***************************************/

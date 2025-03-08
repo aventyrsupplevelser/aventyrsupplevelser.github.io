@@ -841,6 +841,10 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+
         // After Supabase initialization and before the global state
         const available = "rgb(173, 240, 159)";
 

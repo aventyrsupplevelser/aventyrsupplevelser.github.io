@@ -140,6 +140,10 @@
                 return;
             }
         }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
     </script>
 </body>
 

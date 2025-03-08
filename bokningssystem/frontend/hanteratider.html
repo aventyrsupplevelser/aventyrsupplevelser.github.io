@@ -474,6 +474,10 @@
             }
         }
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+
         const API_URL = 'https://aventyrsupplevelsergithubio-testing.up.railway.app/api';
 
 
