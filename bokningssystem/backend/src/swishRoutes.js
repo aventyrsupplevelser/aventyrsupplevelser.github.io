@@ -89,7 +89,7 @@ router.post('/swish-payment', async (req, res) => {
 
         const paymentData = {
             payeePaymentReference: bookingNumber,
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
+            callbackUrl: `https://booking-system-in-prod-production.up.railway.app/api/swish/swish-callback`,
             payeeAlias: '1233029683',
             currency: 'SEK',
             amount: amount,
@@ -280,7 +280,7 @@ router.post('/get-payment-form', async (req, res) => {
         const payment = JSON.parse(paymentResponseText);
         console.log('Payment created:', payment);
 
-        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/card-callback');
+        const callbackUrl = new URL('https://booking-system-in-prod-production.up.railway.app/api/swish/card-callback');
         callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
 
         console.log('Constructed callback URL:', callbackUrl.toString());
@@ -290,7 +290,7 @@ router.post('/get-payment-form', async (req, res) => {
         const linkRequestBody = {
             amount: amount,  // Make sure this is in smallest currency unit (öre)
             continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${order_id}&access_token=${access_token}`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
+            cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
@@ -518,7 +518,7 @@ router.post('/gift-swish', async (req, res) => {
 
         const paymentData = {
             payeePaymentReference: giftCardNumber,
-            callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/gift-swish-callback`,
+            callbackUrl: `https://booking-system-in-prod-production.up.railway.app/api/swish/gift-swish-callback`,
             payeeAlias: '1233029683',
             currency: 'SEK',
             amount: sumValue,
@@ -611,7 +611,7 @@ router.post('/get-gift-form', async (req, res) => {
         const payment = JSON.parse(paymentResponseText);
         console.log('Payment created:', payment);
 
-        const callbackUrl = new URL('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/gift-card-callback');
+        const callbackUrl = new URL('https://booking-system-in-prod-production.up.railway.app/api/swish/gift-card-callback');
         callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
 
         console.log('Constructed callback URL:', callbackUrl.toString());
@@ -622,7 +622,7 @@ router.post('/get-gift-form', async (req, res) => {
         const linkRequestBody = {
             amount: amountInOre,  // Make sure this is in smallest currency unit (öre)
             continue_url: `https://aventyrsupplevelser.com/tackfordittkop`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
+            cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard',
@@ -1320,7 +1320,7 @@ async function createQuickPayLink({
         orderNumber;
 
     const callbackIdentifier = generateCallbackId(orderNumber);
-    const callbackUrl = new URL(`https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/${callbackRoute}`);
+    const callbackUrl = new URL(`https://booking-system-in-prod-production.up.railway.app/api/swish/${callbackRoute}`);
     callbackUrl.searchParams.set('callbackIdentifier', callbackIdentifier);
 
     // Create payment
@@ -1355,7 +1355,7 @@ async function createQuickPayLink({
         body: JSON.stringify({
             amount: amount * 100, // Convert to öre
             continue_url: `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${orderNumber}&access_token=${accessToken}`,
-            cancel_url: `https://aventyrsupplevelsergithubio-testing.up.railway.app/bokningssystem/frontend/cancelled.html`,
+            cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
             payment_methods: 'creditcard,swish',
