@@ -2067,7 +2067,7 @@ arrow_right_alt
 
             try {
                 const response = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-payment',
+                    'https://booking-system-in-prod-production.up.railway.app/api/swish/swish-payment',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2186,7 +2186,7 @@ arrow_right_alt
 
                 // Get the payment link from the server
                 const response = await fetch(
-                    'https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/get-payment-form',
+                    'https://booking-system-in-prod-production.up.railway.app/api/swish/get-payment-form',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2609,7 +2609,7 @@ arrow_right_alt
                 await updateCustomer();
 
                 // Send request to process free booking
-                const response = await fetch('https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/free-booking', {
+                const response = await fetch('https://booking-system-in-prod-production.up.railway.app/api/swish/free-booking', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
