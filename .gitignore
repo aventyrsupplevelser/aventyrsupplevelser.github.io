@@ -30,3 +30,9 @@ bokningssystem/backend/PetterRylen.p12
 bokningssystem/backend/private_prod_key.base64
 bokningssystem/backend/private_prod_key.pem
 bokningssystem/backend/prod_certificate.base64
+bokningssystem/backend/keyhigh.p12
+bokningssystem/backend/private_key_high.pem
+bokningssystem/backend/private_key.pem
+bokningssystem/backend/private_key_high.base64
+bokningssystem/backend/private_key.base64
+bokningssystem/backend/keylow.p12

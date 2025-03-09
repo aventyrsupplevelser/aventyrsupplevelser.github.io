@@ -90,7 +90,7 @@ router.post('/swish-payment', async (req, res) => {
         const paymentData = {
             payeePaymentReference: bookingNumber,
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/swish-callback`,
-            payeeAlias: '1231049352',
+            payeeAlias: '1233029683',
             currency: 'SEK',
             amount: amount,
             message: 'Sörsjöns Äventyrspark',
@@ -519,7 +519,7 @@ router.post('/gift-swish', async (req, res) => {
         const paymentData = {
             payeePaymentReference: giftCardNumber,
             callbackUrl: `https://aventyrsupplevelsergithubio-testing.up.railway.app/api/swish/gift-swish-callback`,
-            payeeAlias: '1231049352',
+            payeeAlias: '1233029683',
             currency: 'SEK',
             amount: sumValue,
             message: 'Sörsjöns Äventyrspark',
