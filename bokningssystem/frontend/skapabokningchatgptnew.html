@@ -2086,10 +2086,12 @@ arrow_right_alt
                     throw new Error(result.error || 'Payment failed');
                 }
 
+                console.log('Swish payment result:', result);
+
 
                 if (isMobile && result.paymentId && !phoneNumber) {
                     // Open Swish app
-                    const returnUrl = `/bokningssystem/frontend/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
+                    const returnUrl = `https://aventyrsupplevelser.com/bokningssystem/frontend/tackfordinbokning.html?order_id=${bookingData.booking_number}`;
                     window.parent.location.href = `swish://paymentrequest?token=${result.paymentId}&callbackurl=${encodeURIComponent(returnUrl)}`;
                 } else {
                     // Show instructions for desktop users
