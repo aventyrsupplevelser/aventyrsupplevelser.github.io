@@ -293,7 +293,7 @@ router.post('/get-payment-form', async (req, res) => {
             cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
-            payment_methods: 'creditcard',
+            payment_methods: '3d-creditcard',
             language: 'sv',
             deadline: 1800
         };
@@ -625,7 +625,7 @@ router.post('/get-gift-form', async (req, res) => {
             cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
-            payment_methods: 'creditcard',
+            payment_methods: '3d-creditcard',
             language: 'sv',
         };
 
@@ -1358,7 +1358,7 @@ async function createQuickPayLink({
             cancel_url: `https://booking-system-in-prod-production.up.railway.app/bokningssystem/frontend/cancelled.html`,
             callback_url: callbackUrl.toString(),
             auto_capture: true,
-            payment_methods: 'creditcard,swish',
+            payment_methods: '3d-creditcard',
             language: 'sv'
         })
     });
