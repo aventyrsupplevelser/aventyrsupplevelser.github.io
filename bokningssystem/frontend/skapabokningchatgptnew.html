@@ -205,8 +205,8 @@
             border-radius: 4px;
             font-family: inherit;
             font-size: 16px;
-            margin-top: 5px;
-            background: rgba(239, 239, 239, 0.411);
+            /*   margin-top: 5px; 
+            background: rgba(239, 239, 239, 0.411);*/
         }
 
         .time-slot {
@@ -640,6 +640,58 @@
             margin-left: 3px;
         }
 
+        .floating-label-container {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .floating-input,
+        .floating-textarea {
+            width: 100%;
+            padding: 13px 8px 8px;
+            border: 2px solid #515151;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .floating-textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .floating-input:focus,
+        .floating-textarea:focus {
+            outline: none;
+            border-color: #088A29;
+        }
+
+        .floating-label {
+            position: absolute;
+            left: 10px;
+            top: 13px;
+            font-size: 16px;
+            color: #666;
+            pointer-events: none;
+            transition: 0.2s ease all;
+            background-color: transparent;
+        }
+
+        .floating-input:focus~.floating-label,
+        .floating-input:not(:placeholder-shown)~.floating-label,
+        .floating-textarea:focus~.floating-label,
+        .floating-textarea.has-content~.floating-label {
+            top: -7px;
+            left: 10px;
+            font-size: 14px;
+            color: #515151;
+            padding: 0 5px;
+            background-color: white;
+        }
+
         @media (max-width: 600px) {
 
             body {
@@ -806,8 +858,8 @@
                 margin-left: 10px;
             }
 
-            #alternateDeviceSection {
-                /*  text-align: center; */
+            .floating-label-container {
+                max-width: 84vw;
             }
 
 
@@ -932,21 +984,21 @@
                     style="display: none; margin-bottom: 20px; width: fit-content;">Vänligen fyll i namn och
                     e-postadress.</div>
                 <div id="customerbox">
-                    <div class="form-group">
-                        <label for="name"></label>
-                        <input type="text" name="name" placeholder="Namn" autocomplete="name" id="customerName" required
-                            data-required>
+                    <div class="floating-label-container">
+                        <input type="text" name="name" class="floating-input" autocomplete="name" id="customerName"
+                            required data-required placeholder=" ">
+                        <label class="floating-label" for="customerName">Namn</label>
                     </div>
 
-                    <div class="form-group">
-                        <label></label>
-                        <input type="email" placeholder="Email" name="email" autocomplete="email" id="customerEmail"
-                            required data-required>
+                    <div class="floating-label-container">
+                        <input type="email" name="email" class="floating-input" autocomplete="email" id="customerEmail"
+                            required data-required placeholder=" ">
+                        <label class="floating-label" for="customerEmail">Email</label>
                     </div>
-                    <div class="form-group" style="grid-area: c;">
-                        <label></label>
-                        <textarea placeholder="Kommentar (valfritt)" style="height: 80px" type="comment"
-                            id="customerComment"></textarea>
+
+                    <div class="floating-label-container" style="grid-area: c;">
+                        <textarea class="floating-textarea" id="customerComment" placeholder=" "></textarea>
+                        <label class="floating-label" for="customerComment">Kommentar (valfritt)</label>
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 30px; font-size: 1.2em;">
@@ -999,12 +1051,15 @@
                 <div id="paymentButtons" style="display: none;">
                     <div id="swishSection">
                         <div id="swishPhoneSection" style="display: none; margin-bottom: 10px;">
-                            <input type="tel" id="swishPhone" placeholder="Telefonnummer för Swish"
-                                style="width: 100%; box-sizing: border-box; padding: 12px 8px 8px; margin-top: 4px; border: 2px solid #515151; border-radius: 4px; font-family: inherit; font-size: 16px;">
+                            <div class="floating-label-container">
+                                <input type="tel" id="swishPhone" class="floating-input" placeholder=" ">
+                                <label class="floating-label" for="swishPhone">Telefonnummer för Swish</label>
+                            </div>
                             <div id="swishPhoneError" class="error" style="display: none; width: auto;">
                                 Skriv ditt telefonnummer för Swish
                             </div>
                         </div>
+
 
                         <button id="swishbutton" type="button" class="payment-button" onclick="handleSwishPayment()">
                             <span>Betala med Swish</span>
@@ -1856,6 +1911,8 @@ arrow_right_alt
                 customerSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 showSection('paymentButtons', true);
 
+                initFloatingLabels();
+
                 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
                 const swishPhoneSection = document.getElementById('swishPhoneSection');
                 const alternateDeviceSection = document.getElementById('alternateDeviceSection');
@@ -1973,9 +2030,17 @@ arrow_right_alt
 
         function showSwishPhoneInput(event) {
             if (event) event.preventDefault();
+
             document.getElementById('swishPhoneSection').style.display = 'block';
             document.getElementById('alternateDeviceSection').style.display = 'none';
-            document.getElementById('swishPhone').focus();
+
+            const swishPhoneInput = document.getElementById('swishPhone');
+            swishPhoneInput.focus();
+
+            // Check if the field already has content
+            if (swishPhoneInput.value.trim() !== '') {
+                swishPhoneInput.classList.add('has-content');
+            }
         }
 
         function formatSwishNumber(input) {
@@ -2640,6 +2705,45 @@ arrow_right_alt
                 freeMessage.scrollIntoView({ behavior: 'smooth' });
             }
         }
+
+        function initFloatingLabels() {
+            // Handle regular inputs with floating-input class
+            const inputs = document.querySelectorAll('.floating-input');
+            inputs.forEach(input => {
+                // Check initial state
+                if (input.value.trim() !== '') {
+                    input.classList.add('has-content');
+                }
+
+                // Add event listener
+                input.addEventListener('input', function () {
+                    if (this.value.trim() !== '') {
+                        this.classList.add('has-content');
+                    } else {
+                        this.classList.remove('has-content');
+                    }
+                });
+            });
+
+            // Handle textareas separately
+            const textareas = document.querySelectorAll('.floating-textarea');
+            textareas.forEach(textarea => {
+                // Check initial state
+                if (textarea.value.trim() !== '') {
+                    textarea.classList.add('has-content');
+                }
+
+                // Add event listener
+                textarea.addEventListener('input', function () {
+                    if (this.value.trim() !== '') {
+                        this.classList.add('has-content');
+                    } else {
+                        this.classList.remove('has-content');
+                    }
+                });
+            });
+        }
+
 
     </script>
 </body>
