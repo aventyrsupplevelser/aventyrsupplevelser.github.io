@@ -1,0 +1,20 @@
+{
+  "name": "Sörsjöns Äventyrspark",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node bokningssystem/backend/src/server.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "@dintero/checkout-web-sdk": "^0.8.15",
+    "@sendgrid/mail": "^8.1.4",
+    "@supabase/supabase-js": "^2.47.10",
+    "axios": "^1.7.9",
+    "express-rate-limit": "^7.5.0"
+  }
+}
