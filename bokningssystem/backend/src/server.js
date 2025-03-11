@@ -23,10 +23,36 @@ const __dirname = dirname(__filename);
 // And your website files are in: /root/
 const websiteRootPath = path.join(__dirname, '../..'); 
 
+// Add debug information
+console.log('Environment info:');
+console.log('__dirname:', __dirname);
+console.log('websiteRootPath:', websiteRootPath);
+
+// Check if index.html exists at startup
+const indexPath = path.join(websiteRootPath, 'index.html');
+fs.access(indexPath, fs.constants.R_OK, (err) => {
+  if (err) {
+    console.error('WARNING: Cannot access index.html at', indexPath);
+    console.error('Error details:', err);
+  } else {
+    console.log('index.html is accessible at', indexPath);
+  }
+});
+
+// List the contents of the website root
+try {
+  console.log('Contents of website root:');
+  const rootContents = fs.readdirSync(websiteRootPath);
+  console.log(rootContents);
+} catch (error) {
+  console.error('Error reading website root directory:', error);
+}
+
 // Define allowed origins
 const allowedOrigins = [
   'https://aventyrsupplevelser.com',
   'https://aventyrsupplevelsergithubio-testing.up.railway.app',
+  'https://booking-system-in-prod-production.up.railway.app',
   'http://127.0.0.1:5500',
   'http://localhost:5500'
 ];
@@ -61,6 +87,16 @@ app.options('*', cors(corsOptions));
 
 // Apply CORS to all routes
 app.use(cors(corsOptions));
+
+// Add Content Security Policy middleware
+app.use((req, res, next) => {
+  // Set Content Security Policy headers
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+  );
+  next();
+});
 
 // Basic middleware
 app.use(express.json());
@@ -100,7 +136,7 @@ app.get('*', (req, res, next) => {
     return next();
   }
   
-  // Skip backend files
+  // Skip protected paths
   if (
     req.path.includes('/backend/') ||
     req.path.includes('/.git/') ||
@@ -114,18 +150,32 @@ app.get('*', (req, res, next) => {
   if (req.path.endsWith('.html')) {
     // Try to serve the specific HTML file
     const htmlPath = path.join(websiteRootPath, req.path);
+    console.log('Attempting to serve HTML file:', htmlPath);
+    
     if (fs.existsSync(htmlPath)) {
       return res.sendFile(htmlPath);
     } else {
+      console.log('HTML file not found:', htmlPath);
       return res.status(404).json({ error: 'HTML file not found' });
     }
   } else {
-    // Default to main page (index.html) with no fallback
-    res.sendFile(path.join(websiteRootPath, 'index.html'), (err) => {
+    const indexPath = path.join(websiteRootPath, 'index.html');
+    console.log('Attempting to serve index.html:', indexPath);
+    
+    // Check if index.html exists before trying to serve it
+    fs.access(indexPath, fs.constants.R_OK, (err) => {
       if (err) {
-        // If index.html doesn't exist, proceed to 404 handler
-        next();
+        console.error('Error accessing index.html:', err);
+        return res.status(500).json({ error: 'Could not access index.html' });
       }
+      
+      // Serve index.html with better error handling
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error('Error serving index.html:', err);
+          return res.status(500).json({ error: 'Failed to serve index.html' });
+        }
+      });
     });
   }
 });
