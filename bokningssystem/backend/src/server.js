@@ -14,13 +14,31 @@ const port = process.env.PORT || 3000;
 
 console.log('Starting server setup...');
 
-// Compute repository root (assuming repository root is three levels up)
+// Compute repository root (assuming repo root is three levels up)
+// If your repository structure is like:
+//   /index.html
+//   /other-static-files...
+//   /bokningssystem/backend/src/server.js
+// then the repo root is 3 levels up.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = path.join(__dirname, '../../../'); 
 console.log('Project root is:', projectRoot);
 
-// CORS configuration remains the same.
+// Trust the proxy (Railway uses a reverse proxy)
+// Setting to 1 means trust the first proxy in front of the app.
+app.set('trust proxy', 1);
+
+// Middleware: Remove port (e.g. :8080) from Host header
+app.use((req, res, next) => {
+  if (req.headers.host) {
+    // Remove any colon and digits at the end of the host header.
+    req.headers.host = req.headers.host.replace(/:\d+$/, '');
+  }
+  next();
+});
+
+// CORS configuration
 const corsOptions = {
     origin: [
         'https://aventyrsupplevelser.com',
@@ -36,15 +54,10 @@ const corsOptions = {
     optionsSuccessStatus: 204
 };
 
-app.set('trust proxy', true);
-
-// Optional: Force correct protocol/host in forwarded headers if needed.
+// Optional: Force a default protocol if missing
 app.use((req, res, next) => {
     if (!req.headers['x-forwarded-proto']) {
         req.headers['x-forwarded-proto'] = 'https';
-    }
-    if (!req.headers['x-forwarded-host']) {
-        req.headers['x-forwarded-host'] = 'booking-system-in-prod-production.up.railway.app';
     }
     next();
 });
@@ -55,7 +68,7 @@ app.options('*', cors(corsOptions));
 // Apply CORS to all routes
 app.use(cors(corsOptions));
 
-// CORS debug middleware
+// Debug middleware for CORS
 app.use((req, res, next) => {
     console.log(`CORS Debug: Method=${req.method}, Origin=${req.headers.origin}, Path=${req.path}`);
     next();
@@ -64,37 +77,39 @@ app.use((req, res, next) => {
 // Parse JSON payloads
 app.use(express.json());
 
-// Mount API routes (they won’t be served as static files)
+// Mount API routes (these will not be served as static files)
 app.use('/api/swish', swishRoutes);
 console.log('API routes mounted');
 
-// Block access to the backend folder to avoid exposing backend code
+// Block access to the backend folder so that backend files aren’t served statically.
 app.use('/bokningssystem/backend', (req, res, next) => {
     res.status(404).send('Not Found');
 });
 
-// Serve static files from the repository root, disabling automatic redirects.
+// Serve static files from the repository root with automatic redirects disabled.
 app.use(express.static(projectRoot, { redirect: false }));
 
-// Middleware to handle directory requests manually.
-// If a request is for a directory (without trailing slash) and an index.html exists, serve it.
+// Custom middleware to manually serve a directory’s index.html when a directory is requested
 app.get('/*', (req, res, next) => {
-    const reqPath = req.path;
-    const potentialDirIndex = path.join(projectRoot, reqPath, 'index.html');
-
-    if (!reqPath.endsWith('/') && fs.existsSync(potentialDirIndex)) {
-        // Serve the directory’s index.html without redirecting
-        return res.sendFile(potentialDirIndex);
-    }
-    next();
+    const requestedPath = path.join(projectRoot, req.path);
+    fs.stat(requestedPath, (err, stats) => {
+        if (!err && stats.isDirectory()) {
+            const indexPath = path.join(requestedPath, 'index.html');
+            if (fs.existsSync(indexPath)) {
+                // Serve the directory’s index.html without issuing a redirect.
+                return res.sendFile(indexPath);
+            }
+        }
+        next();
+    });
 });
 
-// Final catch-all route: if nothing else matched, serve the global index.html (for client-side routing)
+// Final catch-all: serve the global index.html for client-side routing fallback.
 app.get('*', (req, res) => {
     res.sendFile(path.join(projectRoot, 'index.html'));
 });
 
-// Optional 404 handler (unlikely to be reached)
+// Optional 404 handler (unlikely to be reached due to the catch-all above)
 app.use((req, res) => {
     console.log(`404: Route not found for ${req.method} ${req.url}`);
     res.status(404).json({ error: 'Route not found' });
