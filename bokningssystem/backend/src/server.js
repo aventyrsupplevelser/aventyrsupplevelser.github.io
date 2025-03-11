@@ -18,37 +18,29 @@ console.log('Starting server setup...');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Update the websiteRootPath to point to where your files actually are
-// In Railway, your app is in /app/src/server.js and your website files 
-// are likely in /app/public or /app
-const websiteRootPath = path.join(__dirname, '/'); // Try '../public' first
+// Your server is at /bokningssystem/backend/src/server.js
+// To get to the root, we need to go up 3 levels
+const websiteRootPath = path.join(__dirname, '../../../');
 
 // Add debug information
 console.log('Environment info:');
 console.log('__dirname:', __dirname);
 console.log('websiteRootPath:', websiteRootPath);
 
-// Check multiple possible locations
-const possiblePaths = [
-  path.join(__dirname, '../public'),
-  path.join(__dirname, '..'),
-  path.join(__dirname, '../frontend'),
-  path.join(__dirname, '../dist')
-];
-
-console.log('Checking possible website root paths:');
-possiblePaths.forEach(pathToCheck => {
-  try {
-    if (fs.existsSync(pathToCheck)) {
-      console.log(`Path exists: ${pathToCheck}`);
-      console.log('Contents:', fs.readdirSync(pathToCheck));
-    } else {
-      console.log(`Path does not exist: ${pathToCheck}`);
-    }
-  } catch (error) {
-    console.error(`Error checking path ${pathToCheck}:`, error);
+// Check if index.html exists at the root
+try {
+  const indexPath = path.join(websiteRootPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    console.log('Found index.html at:', indexPath);
+  } else {
+    console.warn('index.html not found at:', indexPath);
   }
-});
+  
+  console.log('Root directory contents:');
+  console.log(fs.readdirSync(websiteRootPath));
+} catch (error) {
+  console.error('Error checking website root:', error);
+}
 
 // Define allowed origins - include null for requests without origin
 const allowedOrigins = [
@@ -56,9 +48,7 @@ const allowedOrigins = [
   'https://aventyrsupplevelsergithubio-testing.up.railway.app',
   'https://booking-system-in-prod-production.up.railway.app',
   'http://127.0.0.1:5500',
-  'http://localhost:5500',
-  'null',     // Allow requests with null origin
-  undefined   // Allow requests with undefined origin
+  'http://localhost:5500'
 ];
 
 // Improved CORS configuration
@@ -112,11 +102,11 @@ app.use(express.static(websiteRootPath, {
   setHeaders: (res, path) => {
     // Check if the requested path is in a sensitive directory
     if (
-      path.includes('/backend/') ||       // Exclude backend directory
-      path.includes('/.git/') ||          // Exclude git directory
-      path.includes('/.env') ||           // Exclude env files
+      path.includes('/bokningssystem/backend/') ||  // Exclude backend directory
+      path.includes('/.git/') ||                    // Exclude git directory
+      path.includes('/.env') ||                     // Exclude env files
       path.endsWith('.env') ||
-      path.includes('/node_modules/')     // Exclude node_modules
+      path.includes('/node_modules/')              // Exclude node_modules
     ) {
       res.status(404).end();  // Return 404 for sensitive paths
       return false;
@@ -133,7 +123,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// API routes
+// API health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
@@ -147,7 +137,7 @@ app.get('*', (req, res, next) => {
   
   // Skip protected paths
   if (
-    req.path.includes('/backend/') ||
+    req.path.includes('/bokningssystem/backend/') ||
     req.path.includes('/.git/') ||
     req.path.includes('/.env') ||
     req.path.endsWith('.env') ||
@@ -168,34 +158,15 @@ app.get('*', (req, res, next) => {
       return res.status(404).json({ error: 'HTML file not found' });
     }
   } else {
-    // For root path, try to find an index.html in the website root
-    let indexPath = path.join(websiteRootPath, 'index.html');
-    
-    // If we can't find index.html at the root, look for it in subdirectories
-    if (!fs.existsSync(indexPath)) {
-      console.log('index.html not found at', indexPath);
-      
-      // Try some common subdirectories
-      const possibleDirs = ['public', 'dist', 'build', 'frontend'];
-      for (const dir of possibleDirs) {
-        const altPath = path.join(websiteRootPath, dir, 'index.html');
-        if (fs.existsSync(altPath)) {
-          indexPath = altPath;
-          console.log('Found index.html at alternate location:', indexPath);
-          break;
-        }
-      }
-    }
-    
+    const indexPath = path.join(websiteRootPath, 'index.html');
     console.log('Attempting to serve index.html:', indexPath);
     
-    // Check if we found an index.html anywhere
     if (!fs.existsSync(indexPath)) {
-      console.error('Could not find index.html in any location');
+      console.error('index.html not found at:', indexPath);
       return res.status(500).send('Could not find index.html');
     }
     
-    // Serve the index.html we found
+    // Serve index.html
     res.sendFile(indexPath, (err) => {
       if (err) {
         console.error('Error serving index.html:', err);
