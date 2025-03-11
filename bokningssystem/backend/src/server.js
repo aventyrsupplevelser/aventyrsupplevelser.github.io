@@ -1,4 +1,4 @@
-// Simple server.js
+// Simple server.js with fixed redirects
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -55,9 +55,18 @@ app.get('*', (req, res) => {
     });
   }
   
-  // For paths without extensions, redirect to .html version
+  // For paths without extensions, try serving with .html
   if (!path.extname(req.path) && req.path !== '/') {
-    return res.redirect(`${req.path}.html`);
+    const htmlPath = path.join(websiteRootPath, `${req.path}.html`);
+    if (path.existsSync(htmlPath)) {
+      return res.sendFile(htmlPath);
+    }
+    
+    // Try adding index.html at the end
+    const indexPath = path.join(websiteRootPath, req.path, 'index.html');
+    if (path.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
+    }
   }
   
   // Default to index.html
