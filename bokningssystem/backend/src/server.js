@@ -14,12 +14,10 @@ const port = process.env.PORT || 3000;
 
 console.log('Starting server setup...');
 
-// Get the directory of this file and compute the repository root.
-// __dirname is "/bokningssystem/backend/src", so three levels up is the repo root.
+// Compute repository root (assuming repository root is three levels up)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = path.join(__dirname, '../../../'); 
-
 console.log('Project root is:', projectRoot);
 
 // CORS configuration remains the same.
@@ -40,6 +38,17 @@ const corsOptions = {
 
 app.set('trust proxy', true);
 
+// Optional: Force correct protocol/host in forwarded headers if needed.
+app.use((req, res, next) => {
+    if (!req.headers['x-forwarded-proto']) {
+        req.headers['x-forwarded-proto'] = 'https';
+    }
+    if (!req.headers['x-forwarded-host']) {
+        req.headers['x-forwarded-host'] = 'booking-system-in-prod-production.up.railway.app';
+    }
+    next();
+});
+
 // Handle OPTIONS preflight requests
 app.options('*', cors(corsOptions));
 
@@ -55,10 +64,7 @@ app.use((req, res, next) => {
 // Parse JSON payloads
 app.use(express.json());
 
-// Log the repository root directory contents for debugging
-console.log('Files in project root:', fs.readdirSync(projectRoot));
-
-// Mount API routes (these will not be served as static files)
+// Mount API routes (they won’t be served as static files)
 app.use('/api/swish', swishRoutes);
 console.log('API routes mounted');
 
@@ -67,17 +73,28 @@ app.use('/bokningssystem/backend', (req, res, next) => {
     res.status(404).send('Not Found');
 });
 
-// Serve static files from the repository root (which contains index.html and all other site assets)
-console.log('Serving static files from:', projectRoot);
-app.use(express.static(projectRoot));
+// Serve static files from the repository root, disabling automatic redirects.
+app.use(express.static(projectRoot, { redirect: false }));
 
-// Catch-all route: if a file is not found via the static middleware, serve index.html.
-// This supports client-side routing (SPA) where the URL might not match a physical file.
+// Middleware to handle directory requests manually.
+// If a request is for a directory (without trailing slash) and an index.html exists, serve it.
+app.get('/*', (req, res, next) => {
+    const reqPath = req.path;
+    const potentialDirIndex = path.join(projectRoot, reqPath, 'index.html');
+
+    if (!reqPath.endsWith('/') && fs.existsSync(potentialDirIndex)) {
+        // Serve the directory’s index.html without redirecting
+        return res.sendFile(potentialDirIndex);
+    }
+    next();
+});
+
+// Final catch-all route: if nothing else matched, serve the global index.html (for client-side routing)
 app.get('*', (req, res) => {
     res.sendFile(path.join(projectRoot, 'index.html'));
 });
 
-// Optional: 404 handler for any other requests (should rarely be reached)
+// Optional 404 handler (unlikely to be reached)
 app.use((req, res) => {
     console.log(`404: Route not found for ${req.method} ${req.url}`);
     res.status(404).json({ error: 'Route not found' });
