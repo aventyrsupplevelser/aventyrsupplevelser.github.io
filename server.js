@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
-import swishRoutes from './swishRoutes.js';
+import swishRoutes from './bokningssystem/backend/src/swishRoutes.js';
 
 
 
