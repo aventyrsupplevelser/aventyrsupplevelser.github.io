@@ -19,7 +19,7 @@ console.log('Starting server setup...');
 // Get directory paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const frontendPath = path.join(__dirname, '../../frontend');
+const frontendPath = path.join(__dirname, '/');
 
 // CORS configuration
 const corsOptions = {
