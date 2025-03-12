@@ -1,94 +1,104 @@
-// In bokningssystem/backend/src/server.js
+// In backend/src/server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import fs from 'fs';
 import swishRoutes from './swishRoutes.js';
 
-dotenv.config();
+
+
 const app = express();
 const port = process.env.PORT || 3000;
 
+dotenv.config();
 console.log('Starting server setup...');
-// Compute repository root (assuming your repository root is three levels up)
-// For a structure like:
-//   /index.html
-//   /other-static-files...
-//   /bokningssystem/backend/src/server.js
-// the repo root is:
+
+// Get directory paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const projectRoot = path.join(__dirname, '../../../');
-console.log('Project root is:', projectRoot);
-
-// Trust the proxy so Express uses the forwarded headers correctly.
-app.set('trust proxy', 1);
-
-// Middleware: override res.redirect to remove any instance of ":8080" from redirect URLs.
-app.use((req, res, next) => {
-  const originalRedirect = res.redirect.bind(res);
-  res.redirect = function(url, ...args) {
-    if (typeof url === 'string') {
-      url = url.replace(/:8080/g, ''); // strip :8080 from any URL
-    }
-    return originalRedirect(url, ...args);
-  };
-  next();
-});
-
-// (Optional) Strip any port from the Host header as well.
-app.use((req, res, next) => {
-  if (req.headers.host) {
-    req.headers.host = req.headers.host.replace(/:\d+$/, '');
-  }
-  next();
-});
+const frontendPath = path.join(__dirname, '../../frontend');
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    'https://aventyrsupplevelser.com',
-    'https://aventyrsupplevelsergithubio-testing.up.railway.app',
-    'booking-system-in-prod-production.up.railway.app',
-    'http://127.0.0.1:5500',
-    'http://localhost:5500'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Access-Control-Allow-Origin',
-    'QuickPay-Checksum-Sha256'
-  ],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+    origin: [
+        'https://aventyrsupplevelser.com',
+        'https://aventyrsupplevelsergithubio-testing.up.railway.app',
+        'booking-system-in-prod-production.up.railway.app',
+        'http://127.0.0.1:5500',      
+        'http://localhost:5500'    
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'QuickPay-Checksum-Sha256'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 };
 
+app.set('trust proxy', true);
+
+// Handle OPTIONS preflight requests
+app.options('*', cors(corsOptions));
+
+// Apply CORS to all routes
 app.use(cors(corsOptions));
-app.use(express.json());
 
-// Mount API routes (these will not be served as static files)
-app.use('/api/swish', swishRoutes);
-console.log('API routes mounted');
-
-// Block access to the backend folder (prevent backend code from being served as static assets)
-app.use('/bokningssystem/backend', (req, res) => {
-  res.status(404).send('Not Found');
+// CORS debug middleware
+app.use((req, res, next) => {
+    console.log(`CORS Debug: Method=${req.method}, Origin=${req.headers.origin}, Path=${req.path}`);
+    next();
 });
 
-// Serve static files from the repository root. Express.static will
-// automatically issue a redirect for directories missing a trailing slash,
-// but our override will strip the port from that redirect.
-app.use(express.static(projectRoot));
+// Basic middleware
+app.use(express.json());
 
-// Catch-all: serve the global index.html (for client-side routing fallback)
+// Log frontend directory contents
+console.log('Looking for frontend files in:', frontendPath);
+try {
+    console.log('Files in frontend path:', fs.readdirSync(frontendPath));
+} catch (error) {
+    console.error('Error reading frontend directory:', error);
+}
+
+// 1. Serve static files FIRST
+console.log('Setting up static file serving from:', frontendPath);
+app.use(express.static(frontendPath));
+
+app.use('/api/swish', swishRoutes);
+
+console.log('Routes mounted');
+
+// 3. Request logger
+app.use((req, res, next) => {
+    console.log(`Request received for ${req.method} ${req.url}`);
+    next();
+});
+
+// 4. Catch-all route for HTML files
 app.get('*', (req, res) => {
-  res.sendFile(path.join(projectRoot, 'index.html'));
+    if (req.path.endsWith('.html')) {
+        // Try to serve the specific HTML file
+        const htmlPath = path.join(frontendPath, req.path);
+        if (fs.existsSync(htmlPath)) {
+            res.sendFile(htmlPath);
+        } else {
+            res.status(404).json({ error: 'HTML file not found' });
+        }
+    } else {
+        // Default to main booking page
+        res.sendFile(path.join(frontendPath, 'skapabokningchatgpt.html'));
+    }
+});
+
+// 5. 404 handler (last)
+app.use((req, res) => {
+    console.log(`404: Route not found for ${req.method} ${req.url}`);
+    res.status(404).json({ error: 'Route not found' });
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
+    console.log('Routes have been set up');
 });
