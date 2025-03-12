@@ -90,8 +90,6 @@ app.get('*', (req, res) => {
         }
         return res.status(404).json({ error: 'HTML file not found' });
     }
-    // Optionally serve index.html for client-side routing fallback
-    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // 5. 404 handler (last)
