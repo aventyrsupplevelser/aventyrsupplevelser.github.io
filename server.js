@@ -2,7 +2,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import compression from 'compression';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -39,9 +38,6 @@ const corsOptions = {
 };
 
 app.set('trust proxy', true);
-
-// Use compression middleware to speed up responses
-app.use(compression());
 
 // Handle OPTIONS preflight requests
 app.options('*', cors(corsOptions));
