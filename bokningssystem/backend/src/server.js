@@ -86,9 +86,6 @@ app.get('*', (req, res) => {
         } else {
             res.status(404).json({ error: 'HTML file not found' });
         }
-    } else {
-        // Default to main booking page
-        res.sendFile(path.join(frontendPath, 'skapabokningchatgpt.html'));
     }
 });
 
